@@ -2,6 +2,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { NextApiRequest, NextApiResponse } from 'next';
 import handler from '../login';
+import { supabase } from '@/lib/supabase';
+const supabaseMock = supabase as any;
 
 // Mock the modules
 vi.mock('@/lib/supabase', () => ({
@@ -107,10 +109,8 @@ describe('/api/auth/login', () => {
   });
 
   it('should return 401 for invalid credentials', async () => {
-    const { supabase } = require('@/lib/supabase');
-    
     // Mock failed authentication
-    supabase.auth.signInWithPassword.mockResolvedValueOnce({
+    supabaseMock.auth.signInWithPassword.mockResolvedValueOnce({
       data: { user: null },
       error: { message: 'Invalid login credentials' },
     });
@@ -133,8 +133,6 @@ describe('/api/auth/login', () => {
   });
 
   it('should successfully login with valid credentials', async () => {
-    const { supabase } = require('@/lib/supabase');
-    
     // Mock successful authentication
     const mockUser = {
       id: 'user-123',
@@ -149,12 +147,12 @@ describe('/api/auth/login', () => {
       role: 'user',
     };
 
-    supabase.auth.signInWithPassword.mockResolvedValueOnce({
+    supabaseMock.auth.signInWithPassword.mockResolvedValueOnce({
       data: { user: mockUser },
       error: null,
     });
 
-    supabase.from.mockReturnValueOnce({
+    supabaseMock.from.mockReturnValueOnce({
       select: vi.fn().mockReturnValueOnce({
         eq: vi.fn().mockReturnValueOnce({
           single: vi.fn().mockResolvedValueOnce({

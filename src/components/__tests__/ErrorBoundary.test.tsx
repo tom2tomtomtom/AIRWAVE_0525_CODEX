@@ -1,5 +1,6 @@
+import React from 'react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import * as userEvent from '@testing-library/user-event';
 import ErrorBoundary from '../ErrorBoundary';
 
@@ -41,7 +42,7 @@ describe('ErrorBoundary', () => {
 
     expect(screen.getByText('Oops! Something went wrong')).toBeInTheDocument();
     expect(
-      screen.getByText('We\'re sorry for the inconvenience. An unexpected error occurred.')
+      screen.getByText("We're sorry for the inconvenience. An unexpected error occurred.")
     ).toBeInTheDocument();
   });
 
@@ -125,20 +126,21 @@ describe('ErrorBoundary', () => {
     // Verify error state
     expect(screen.getByText('Oops! Something went wrong')).toBeInTheDocument();
 
-    // Click try again
+    // Update props to stop throwing and re-render
     shouldThrow = false;
-    const tryAgainButton = screen.getByText('Try Again');
-    await user.click(tryAgainButton);
-
-    // Re-render with no error
     rerender(
       <ErrorBoundary>
         <ThrowError shouldThrow={shouldThrow} />
       </ErrorBoundary>
     );
 
+    const tryAgainButton = screen.getByText('Try Again');
+    await user.click(tryAgainButton);
+
     // Verify normal state is restored
-    expect(screen.getByText('No error')).toBeInTheDocument();
-    expect(screen.queryByText('Oops! Something went wrong')).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.queryByText('Oops! Something went wrong')).not.toBeInTheDocument();
+      expect(screen.getByText('No error')).toBeInTheDocument();
+    });
   });
 });

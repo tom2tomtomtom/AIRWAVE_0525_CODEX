@@ -5,7 +5,7 @@ export interface BaseModel {
   lastModified: string;
   createdBy: string;
   version: number;
-  metadata: Record<string, any>;
+  metadata: Record<string, unknown>;
 }
 
 // Client Model
@@ -134,8 +134,8 @@ export interface CampaignTarget {
   languages?: string[];
   customAudiences?: string[];
   exclusions?: {
-    demographics?: any;
-    locations?: any;
+    demographics?: unknown;
+    locations?: unknown;
     interests?: string[];
     behaviors?: string[];
   };
@@ -169,7 +169,7 @@ export interface CampaignContent {
     comments: number;
     likes: number;
   };
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 // Campaign Performance Model
@@ -223,7 +223,7 @@ export interface AssetMetadata {
   expiryDate?: string;
   aiGenerated?: boolean;
   aiPrompt?: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 // Template Model

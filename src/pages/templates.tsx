@@ -39,14 +39,7 @@ import TikTokIcon from '@mui/icons-material/MusicNote';
 import EditIcon from '@mui/icons-material/Edit';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import DeleteIcon from '@mui/icons-material/Delete';
-
-let DashboardLayout: React.FC<{ title: string; children: React.ReactNode }>;
-try {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  DashboardLayout = require('@/components/DashboardLayout').default;
-} catch {
-  DashboardLayout = ({ children }) => <div>{children}</div>;
-}
+import DashboardLayout from '@/components/DashboardLayout';
 
 import { useQuery } from '@tanstack/react-query';
 import type { Database } from '../lib/supabase';
@@ -101,7 +94,9 @@ const TemplateCard: React.FC<{
           position: 'relative',
         }}
       >
-        {platformIcons[template.platform] || <AspectRatioIcon sx={{ fontSize: 48, color: 'grey.400' }} />}
+        {platformIcons[template.platform] || (
+          <AspectRatioIcon sx={{ fontSize: 48, color: 'grey.400' }} />
+        )}
         <Box
           sx={{
             position: 'absolute',
@@ -129,19 +124,34 @@ const TemplateCard: React.FC<{
               'aria-labelledby': `template-menu-${template.id}`,
             }}
           >
-            <MenuItem onClick={() => { handleClose(); onEdit(template); }}>
+            <MenuItem
+              onClick={() => {
+                handleClose();
+                onEdit(template);
+              }}
+            >
               <ListItemIcon>
                 <EditIcon fontSize="small" />
               </ListItemIcon>
               <ListItemText>Edit</ListItemText>
             </MenuItem>
-            <MenuItem onClick={() => { handleClose(); onDuplicate(template); }}>
+            <MenuItem
+              onClick={() => {
+                handleClose();
+                onDuplicate(template);
+              }}
+            >
               <ListItemIcon>
                 <ContentCopyIcon fontSize="small" />
               </ListItemIcon>
               <ListItemText>Duplicate</ListItemText>
             </MenuItem>
-            <MenuItem onClick={() => { handleClose(); onDelete(template.id); }}>
+            <MenuItem
+              onClick={() => {
+                handleClose();
+                onDelete(template.id);
+              }}
+            >
               <ListItemIcon>
                 <DeleteIcon fontSize="small" />
               </ListItemIcon>
@@ -160,11 +170,7 @@ const TemplateCard: React.FC<{
             icon={platformIcons[template.platform] as React.ReactElement}
             label={template.platform}
           />
-          <Chip
-            size="small"
-            icon={<AspectRatioIcon />}
-            label={template.aspect_ratio}
-          />
+          <Chip size="small" icon={<AspectRatioIcon />} label={template.aspect_ratio} />
         </Stack>
         <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
           {template.description}
@@ -180,18 +186,14 @@ const TemplateCard: React.FC<{
               sx={{
                 mb: 1,
                 fontWeight: 'bold',
-                py: 1
+                py: 1,
               }}
             >
               SELECT
             </Button>
           </Grid>
           <Grid item xs={6}>
-            <Button
-              variant="outlined"
-              fullWidth
-              onClick={() => onCreateMatrix(template.id)}
-            >
+            <Button variant="outlined" fullWidth onClick={() => onCreateMatrix(template.id)}>
               Use Template
             </Button>
           </Grid>
@@ -219,7 +221,11 @@ const TemplateCard: React.FC<{
 };
 
 const TemplatesNew: React.FC = () => {
-  const { data: templates, isLoading, error } = useQuery({
+  const {
+    data: templates,
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: ['templates'],
     queryFn: fetchTemplates,
   });
@@ -235,20 +241,21 @@ const TemplatesNew: React.FC = () => {
     // Platform filter
     if (platformFilter !== 'All' && template.platform !== platformFilter) return false;
     // Search filter
-    if (searchQuery && !template.name.toLowerCase().includes(searchQuery.toLowerCase())) return false;
+    if (searchQuery && !template.name.toLowerCase().includes(searchQuery.toLowerCase()))
+      return false;
     // Add more filters as needed
     return true;
   });
-  
+
   const handlePlatformFilterChange = (e: SelectChangeEvent) => {
     setPlatformFilter(e.target.value as string);
   };
-  
+
   const handleAddTemplate = () => {
     setCurrentTemplate(null);
     setOpenDialog(true);
   };
-  
+
   const handleCloseDialog = () => {
     setOpenDialog(false);
     setCurrentTemplate(null);
@@ -277,14 +284,18 @@ const TemplatesNew: React.FC = () => {
 
   if (isLoading) {
     return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+      <Box
+        sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}
+      >
         <CircularProgress />
       </Box>
     );
   }
   if (error) {
     return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+      <Box
+        sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}
+      >
         <Typography color="error">Failed to load templates</Typography>
       </Box>
     );
@@ -337,12 +348,13 @@ const TemplatesNew: React.FC = () => {
                 </Select>
               </FormControl>
             </Grid>
-            <Grid item xs={12} md={5} sx={{ display: 'flex', justifyContent: { xs: 'flex-start', md: 'flex-end' } }}>
-              <Button
-                variant="contained"
-                startIcon={<AddIcon />}
-                onClick={handleAddTemplate}
-              >
+            <Grid
+              item
+              xs={12}
+              md={5}
+              sx={{ display: 'flex', justifyContent: { xs: 'flex-start', md: 'flex-end' } }}
+            >
+              <Button variant="contained" startIcon={<AddIcon />} onClick={handleAddTemplate}>
                 Create Template
               </Button>
             </Grid>
@@ -370,12 +382,10 @@ const TemplatesNew: React.FC = () => {
             </Grid>
           )}
         </Grid>
-        
+
         {/* Create/Edit Template Dialog */}
         <Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="md" fullWidth>
-          <DialogTitle>
-            {currentTemplate ? 'Edit Template' : 'Create New Template'}
-          </DialogTitle>
+          <DialogTitle>{currentTemplate ? 'Edit Template' : 'Create New Template'}</DialogTitle>
           <DialogContent>
             <Box sx={{ pt: 1 }}>
               <TextField
@@ -435,9 +445,7 @@ const TemplatesNew: React.FC = () => {
           </DialogContent>
           <DialogActions>
             <Button onClick={handleCloseDialog}>Cancel</Button>
-            <Button variant="contained">
-              {currentTemplate ? 'Update' : 'Create'}
-            </Button>
+            <Button variant="contained">{currentTemplate ? 'Update' : 'Create'}</Button>
           </DialogActions>
         </Dialog>
       </DashboardLayout>

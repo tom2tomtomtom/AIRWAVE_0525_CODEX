@@ -35,7 +35,7 @@ const getAuthToken = (): string | null => {
   try {
     const user = localStorage.getItem('airwave_user');
     if (!user) return null;
-    
+
     const userData = JSON.parse(user);
     return userData.token || null;
   } catch (error) {
@@ -45,34 +45,31 @@ const getAuthToken = (): string | null => {
 };
 
 // Base API request function with authentication
-export const apiRequest = async <T>(
-  url: string,
-  options: RequestInit = {}
-): Promise<T> => {
+export const apiRequest = async <T>(url: string, options: RequestInit = {}): Promise<T> => {
   try {
     const token = getAuthToken();
-    
+
     // Set default headers
     const headers = {
       'Content-Type': 'application/json',
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...options.headers,
     };
-    
+
     // Make the request
     const response = await fetch(url, {
       ...options,
       headers,
     });
-    
+
     // Parse the response
     const data = await response.json();
-    
+
     // Handle error responses
     if (!response.ok) {
       throw new Error(data.message || `API request failed with status ${response.status}`);
     }
-    
+
     return data as T;
   } catch (error) {
     console.error(`API request error for ${url}:`, error);
@@ -96,7 +93,7 @@ export const authApi = {
       body: JSON.stringify({ email, password }),
     });
   },
-  
+
   signup: async (email: string, password: string, name: string) => {
     return apiRequest<{
       success: boolean;
@@ -131,7 +128,7 @@ export const clientApi = {
       clients: Client[];
     }>('/api/clients');
   },
-  
+
   createClient: async (clientData: Omit<Client, 'id' | 'userId'>) => {
     return apiRequest<{
       success: boolean;
@@ -141,7 +138,7 @@ export const clientApi = {
       body: JSON.stringify(clientData),
     });
   },
-  
+
   updateClient: async (id: string, clientData: Partial<Omit<Client, 'id' | 'userId'>>) => {
     return apiRequest<{
       success: boolean;
@@ -151,7 +148,7 @@ export const clientApi = {
       body: JSON.stringify(clientData),
     });
   },
-  
+
   deleteClient: async (id: string) => {
     return apiRequest<{
       success: boolean;
@@ -185,7 +182,7 @@ export const assetApi = {
       assets: Asset[];
     }>(url);
   },
-  
+
   createAsset: async (assetData: Omit<Asset, 'id' | 'dateCreated' | 'userId'>) => {
     return apiRequest<{
       success: boolean;
@@ -195,7 +192,7 @@ export const assetApi = {
       body: JSON.stringify(assetData),
     });
   },
-  
+
   updateAsset: async (id: string, assetData: Partial<Omit<Asset, 'id' | 'userId'>>) => {
     return apiRequest<{
       success: boolean;
@@ -205,7 +202,7 @@ export const assetApi = {
       body: JSON.stringify(assetData),
     });
   },
-  
+
   deleteAsset: async (id: string) => {
     return apiRequest<{
       success: boolean;
@@ -220,7 +217,7 @@ export const assetApi = {
 export interface GenerationPrompt {
   prompt: string;
   type: 'text' | 'image' | 'video' | 'voice';
-  parameters?: Record<string, any>;
+  parameters?: Record<string, unknown>;
   clientId: string;
 }
 
@@ -244,7 +241,7 @@ export const aiApi = {
       body: JSON.stringify(promptData),
     });
   },
-  
+
   getGenerations: async (clientId?: string) => {
     const url = clientId ? `/api/ai/generations?clientId=${clientId}` : '/api/ai/generations';
     return apiRequest<{
@@ -254,9 +251,11 @@ export const aiApi = {
   },
 };
 
-export default {
+const api = {
   auth: authApi,
   client: clientApi,
   asset: assetApi,
   ai: aiApi,
 };
+
+export default api;

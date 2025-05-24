@@ -21,18 +21,28 @@ import {
   DialogContent,
   IconButton,
 } from '@mui/material';
-import {
-  AutoAwesome,
-  Close as CloseIcon,
-  Download,
-  ContentCopy,
-} from '@mui/icons-material';
+import { AutoAwesome, Close as CloseIcon, Download, ContentCopy } from '@mui/icons-material';
 import axios from 'axios';
+
+interface GeneratedImage {
+  asset: { url: string };
+  generation_details: {
+    original_prompt: string;
+    enhanced_prompt?: string;
+    revised_prompt?: string;
+    model: string;
+    settings: {
+      size: string;
+      quality: string;
+      style: string;
+    };
+  };
+}
 
 interface AIImageGeneratorProps {
   clientId: string;
-  onImageGenerated?: (asset: any) => void;
-  brandGuidelines?: any;
+  onImageGenerated?: (asset: GeneratedImage) => void;
+  brandGuidelines?: Record<string, unknown>;
 }
 
 export const AIImageGenerator: React.FC<AIImageGeneratorProps> = ({
@@ -43,9 +53,9 @@ export const AIImageGenerator: React.FC<AIImageGeneratorProps> = ({
   const [prompt, setPrompt] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [generatedImage, setGeneratedImage] = useState<any>(null);
+  const [generatedImage, setGeneratedImage] = useState<GeneratedImage | null>(null);
   const [showDialog, setShowDialog] = useState(false);
-  
+
   // Generation options
   const [options, setOptions] = useState({
     size: '1024x1024',
@@ -72,23 +82,22 @@ export const AIImageGenerator: React.FC<AIImageGeneratorProps> = ({
         brand_guidelines: brandGuidelines,
         tags: ['ai-generated', options.purpose],
       });
+      const data = response.data as { success: boolean; message?: string } & GeneratedImage;
 
-      if (response.data.success) {
-        setGeneratedImage(response.data);
+      if (data.success) {
+        setGeneratedImage(data as GeneratedImage);
         setShowDialog(true);
-        
+
         if (onImageGenerated) {
-          onImageGenerated(response.data.asset);
+          onImageGenerated(data);
         }
       } else {
-        setError(response.data.message);
+        setError(data.message ?? null);
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Generation error:', err);
-      setError(
-        err.response?.data?.message || 
-        'Failed to generate image. Please try again.'
-      );
+      const errorObj = err as { response?: { data?: { message?: string } } };
+      setError(errorObj.response?.data?.message || 'Failed to generate image. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -126,7 +135,7 @@ export const AIImageGenerator: React.FC<AIImageGeneratorProps> = ({
               rows={3}
               label="Describe the image you want to create"
               value={prompt}
-              onChange={(e) => setPrompt(e.target.value)}
+              onChange={e => setPrompt(e.target.value)}
               placeholder="A modern office space with natural lighting, minimalist design, and plants..."
               disabled={loading}
             />
@@ -137,7 +146,7 @@ export const AIImageGenerator: React.FC<AIImageGeneratorProps> = ({
               <InputLabel>Image Size</InputLabel>
               <Select
                 value={options.size}
-                onChange={(e) => setOptions({ ...options, size: e.target.value })}
+                onChange={e => setOptions({ ...options, size: e.target.value })}
                 disabled={loading}
               >
                 <MenuItem value="1024x1024">Square (1024×1024)</MenuItem>
@@ -152,7 +161,7 @@ export const AIImageGenerator: React.FC<AIImageGeneratorProps> = ({
               <InputLabel>Purpose</InputLabel>
               <Select
                 value={options.purpose}
-                onChange={(e) => setOptions({ ...options, purpose: e.target.value })}
+                onChange={e => setOptions({ ...options, purpose: e.target.value })}
                 disabled={loading}
               >
                 <MenuItem value="general">General</MenuItem>
@@ -171,7 +180,7 @@ export const AIImageGenerator: React.FC<AIImageGeneratorProps> = ({
               <InputLabel>Quality</InputLabel>
               <Select
                 value={options.quality}
-                onChange={(e) => setOptions({ ...options, quality: e.target.value })}
+                onChange={e => setOptions({ ...options, quality: e.target.value })}
                 disabled={loading}
               >
                 <MenuItem value="standard">Standard</MenuItem>
@@ -185,7 +194,7 @@ export const AIImageGenerator: React.FC<AIImageGeneratorProps> = ({
               <InputLabel>Style</InputLabel>
               <Select
                 value={options.style}
-                onChange={(e) => setOptions({ ...options, style: e.target.value })}
+                onChange={e => setOptions({ ...options, style: e.target.value })}
                 disabled={loading}
               >
                 <MenuItem value="vivid">Vivid</MenuItem>
@@ -199,7 +208,7 @@ export const AIImageGenerator: React.FC<AIImageGeneratorProps> = ({
               control={
                 <Switch
                   checked={options.enhance_prompt}
-                  onChange={(e) => setOptions({ ...options, enhance_prompt: e.target.checked })}
+                  onChange={e => setOptions({ ...options, enhance_prompt: e.target.checked })}
                   disabled={loading}
                 />
               }
@@ -230,12 +239,7 @@ export const AIImageGenerator: React.FC<AIImageGeneratorProps> = ({
         </Grid>
 
         {/* Result Dialog */}
-        <Dialog
-          open={showDialog}
-          onClose={() => setShowDialog(false)}
-          maxWidth="lg"
-          fullWidth
-        >
+        <Dialog open={showDialog} onClose={() => setShowDialog(false)} maxWidth="lg" fullWidth>
           <DialogTitle>
             <Box display="flex" justifyContent="space-between" alignItems="center">
               <Typography variant="h6">Generated Image</Typography>
@@ -288,7 +292,9 @@ export const AIImageGenerator: React.FC<AIImageGeneratorProps> = ({
                       </Typography>
                       <IconButton
                         size="small"
-                        onClick={() => copyPrompt(generatedImage.generation_details.enhanced_prompt)}
+                        onClick={() =>
+                          copyPrompt(generatedImage.generation_details.enhanced_prompt || '')
+                        }
                       >
                         <ContentCopy fontSize="small" />
                       </IconButton>

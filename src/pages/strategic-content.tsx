@@ -34,7 +34,6 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
-  Stack,
 } from '@mui/material';
 import {
   Add as AddIcon,
@@ -69,20 +68,26 @@ const mockStrategicContent = [
       {
         id: 'idea1',
         title: 'Beach Lifestyle Series',
-        description: 'Create a series of posts showcasing products in beach settings, emphasizing relaxation and summer fun.',
-        details: 'Focus on bright, sunny imagery with vibrant colors. Include user testimonials about how products enhance summer experiences. Create a branded hashtag for user-generated content.',
+        description:
+          'Create a series of posts showcasing products in beach settings, emphasizing relaxation and summer fun.',
+        details:
+          'Focus on bright, sunny imagery with vibrant colors. Include user testimonials about how products enhance summer experiences. Create a branded hashtag for user-generated content.',
       },
       {
         id: 'idea2',
         title: 'Summer Essentials Guide',
-        description: 'Develop a comprehensive guide featuring products as must-have summer essentials.',
-        details: 'Structure as a downloadable PDF or swipeable carousel. Include practical tips for summer activities that incorporate products. Partner with complementary brands for cross-promotion.',
+        description:
+          'Develop a comprehensive guide featuring products as must-have summer essentials.',
+        details:
+          'Structure as a downloadable PDF or swipeable carousel. Include practical tips for summer activities that incorporate products. Partner with complementary brands for cross-promotion.',
       },
       {
         id: 'idea3',
         title: 'Limited Edition Summer Collection',
-        description: 'Launch a limited-time summer-themed product collection with special packaging.',
-        details: 'Create urgency with countdown timers. Design special summer packaging with tropical or beach themes. Offer bundle discounts for multiple summer collection items.',
+        description:
+          'Launch a limited-time summer-themed product collection with special packaging.',
+        details:
+          'Create urgency with countdown timers. Design special summer packaging with tropical or beach themes. Offer bundle discounts for multiple summer collection items.',
       },
     ],
   },
@@ -98,13 +103,15 @@ const mockStrategicContent = [
         id: 'segment1',
         title: 'Urban Professionals (25-34)',
         description: 'Career-focused individuals in metropolitan areas with disposable income.',
-        details: 'Values convenience, quality, and status. Highly active on Instagram and LinkedIn. Shopping behavior primarily mobile-first with preference for premium brands. Responds well to lifestyle content that showcases integration of products into busy professional life.',
+        details:
+          'Values convenience, quality, and status. Highly active on Instagram and LinkedIn. Shopping behavior primarily mobile-first with preference for premium brands. Responds well to lifestyle content that showcases integration of products into busy professional life.',
       },
       {
         id: 'segment2',
         title: 'Conscious Consumers (30-45)',
         description: 'Environmentally and socially conscious buyers who prioritize sustainability.',
-        details: 'Values transparency, ethical production, and eco-friendly practices. Active on Pinterest and Instagram. Willing to pay premium for sustainable products. Responds to detailed content about sourcing, manufacturing processes, and company values.',
+        details:
+          'Values transparency, ethical production, and eco-friendly practices. Active on Pinterest and Instagram. Willing to pay premium for sustainable products. Responds to detailed content about sourcing, manufacturing processes, and company values.',
       },
     ],
   },
@@ -120,25 +127,29 @@ const mockStrategicContent = [
         id: 'pillar1',
         title: 'Product Education',
         description: 'Content that explains features, benefits, and use cases.',
-        details: 'Tutorial videos, how-to guides, feature spotlights, comparison content, FAQ content, product demos, and technical specifications.',
+        details:
+          'Tutorial videos, how-to guides, feature spotlights, comparison content, FAQ content, product demos, and technical specifications.',
       },
       {
         id: 'pillar2',
         title: 'Brand Storytelling',
         description: 'Content that communicates brand values and mission.',
-        details: 'Origin stories, behind-the-scenes content, team spotlights, customer testimonials, impact stories, and vision/mission content.',
+        details:
+          'Origin stories, behind-the-scenes content, team spotlights, customer testimonials, impact stories, and vision/mission content.',
       },
       {
         id: 'pillar3',
         title: 'Lifestyle Integration',
         description: 'Content showing how products enhance customer lifestyles.',
-        details: 'Day-in-the-life content, seasonal usage scenarios, user-generated content, influencer partnerships, and aspirational lifestyle imagery.',
+        details:
+          'Day-in-the-life content, seasonal usage scenarios, user-generated content, influencer partnerships, and aspirational lifestyle imagery.',
       },
       {
         id: 'pillar4',
         title: 'Industry Authority',
         description: 'Content establishing expertise in the industry.',
-        details: 'Trend analysis, research reports, expert interviews, thought leadership articles, industry news commentary, and educational webinars.',
+        details:
+          'Trend analysis, research reports, expert interviews, thought leadership articles, industry news commentary, and educational webinars.',
       },
     ],
   },
@@ -191,7 +202,9 @@ const StrategicContentCard: React.FC<{
   return (
     <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
       <CardContent sx={{ flexGrow: 1, pb: 1 }}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
+        <Box
+          sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}
+        >
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Avatar sx={{ bgcolor: 'primary.light', mr: 1 }}>
               {contentTypeIcons[item.type] || <AIIcon />}
@@ -220,19 +233,34 @@ const StrategicContentCard: React.FC<{
               'aria-labelledby': `content-menu-${item.id}`,
             }}
           >
-            <MuiMenuItem onClick={() => { handleClose(); onEdit(item); }}>
+            <MuiMenuItem
+              onClick={() => {
+                handleClose();
+                onEdit(item);
+              }}
+            >
               <ListItemIcon>
                 <EditIcon fontSize="small" />
               </ListItemIcon>
               <ListItemText>Edit</ListItemText>
             </MuiMenuItem>
-            <MuiMenuItem onClick={() => { handleClose(); onDuplicate(item); }}>
+            <MuiMenuItem
+              onClick={() => {
+                handleClose();
+                onDuplicate(item);
+              }}
+            >
               <ListItemIcon>
                 <DuplicateIcon fontSize="small" />
               </ListItemIcon>
               <ListItemText>Duplicate</ListItemText>
             </MuiMenuItem>
-            <MuiMenuItem onClick={() => { handleClose(); onDelete(item.id); }}>
+            <MuiMenuItem
+              onClick={() => {
+                handleClose();
+                onDelete(item.id);
+              }}
+            >
               <ListItemIcon>
                 <DeleteIcon fontSize="small" />
               </ListItemIcon>
@@ -253,12 +281,7 @@ const StrategicContentCard: React.FC<{
         </Typography>
       </CardContent>
       <Box sx={{ p: 2, pt: 0 }}>
-        <Button
-          variant="outlined"
-          size="small"
-          fullWidth
-          onClick={() => onEdit(item)}
-        >
+        <Button variant="outlined" size="small" fullWidth onClick={() => onEdit(item)}>
           View Content
         </Button>
       </Box>
@@ -270,8 +293,10 @@ const StrategicContent: React.FC = () => {
   const router = useRouter();
   const { isAuthenticated, loading: authLoading } = useAuth();
   const { activeClient, loading: clientLoading } = useClient();
-  const [strategicContent, setStrategicContent] = useState<StrategicContentItem[]>(mockStrategicContent);
-  const [filteredContent, setFilteredContent] = useState<StrategicContentItem[]>(mockStrategicContent);
+  const [strategicContent, setStrategicContent] =
+    useState<StrategicContentItem[]>(mockStrategicContent);
+  const [filteredContent, setFilteredContent] =
+    useState<StrategicContentItem[]>(mockStrategicContent);
   const [searchQuery, setSearchQuery] = useState('');
   const [typeFilter, setTypeFilter] = useState<string>('All');
   const [openDialog, setOpenDialog] = useState(false);
@@ -298,9 +323,10 @@ const StrategicContent: React.FC = () => {
     let filtered = strategicContent;
 
     if (searchQuery) {
-      filtered = filtered.filter(item =>
-        item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item.description.toLowerCase().includes(searchQuery.toLowerCase())
+      filtered = filtered.filter(
+        item =>
+          item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          item.description.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
 
@@ -338,12 +364,12 @@ const StrategicContent: React.FC = () => {
   };
 
   const handleDuplicateContent = (item: StrategicContentItem) => {
-    const newItem = {
+    const newItem: StrategicContentItem = {
       ...item,
       id: `sc${Date.now()}`,
       title: `${item.title} (Copy)`,
-      dateCreated: new Date().toISOString().split('T')[0],
-      lastModified: new Date().toISOString().split('T')[0],
+      dateCreated: new Date().toISOString().split('T')[0]!,
+      lastModified: new Date().toISOString().split('T')[0]!,
     };
     setStrategicContent([...strategicContent, newItem]);
   };
@@ -360,33 +386,39 @@ const StrategicContent: React.FC = () => {
       setGenerating(false);
       // Add new generated content
       const timestamp = Date.now();
-      const newContent = {
+      const newContent: StrategicContentItem = {
         id: `sc${timestamp}`,
-        title: "AI-Generated Content Strategy",
-        type: "framework",
-        description: "Automatically generated content strategy based on your brand profile",
-        dateCreated: new Date().toISOString().split("T")[0],
-        lastModified: new Date().toISOString().split("T")[0],
+        title: 'AI-Generated Content Strategy',
+        type: 'framework',
+        description: 'Automatically generated content strategy based on your brand profile',
+        dateCreated: new Date().toISOString().split('T')[0]!,
+        lastModified: new Date().toISOString().split('T')[0]!,
         content: [
           {
             id: `idea${timestamp}-1`,
-            title: "Authentic Storytelling",
-            description: "Focus on authentic brand narratives that connect emotionally with your audience.",
-            details: "Develop a series of behind-the-scenes content showing your team and processes. Share customer success stories with permission. Create a founders corner for personal insights from leadership."
+            title: 'Authentic Storytelling',
+            description:
+              'Focus on authentic brand narratives that connect emotionally with your audience.',
+            details:
+              'Develop a series of behind-the-scenes content showing your team and processes. Share customer success stories with permission. Create a founders corner for personal insights from leadership.',
           },
           {
             id: `idea${timestamp}-2`,
-            title: "Educational Content Series",
-            description: "Establish authority through educational content that solves audience problems.",
-            details: "Create a weekly how-to series addressing common pain points. Develop downloadable guides for complex topics. Host expert interviews or webinars on industry trends."
+            title: 'Educational Content Series',
+            description:
+              'Establish authority through educational content that solves audience problems.',
+            details:
+              'Create a weekly how-to series addressing common pain points. Develop downloadable guides for complex topics. Host expert interviews or webinars on industry trends.',
           },
           {
             id: `idea${timestamp}-3`,
-            title: "User-Generated Content Campaign",
-            description: "Leverage customer content to build community and showcase real-world usage.",
-            details: "Create a branded hashtag for customers to share experiences. Feature customer content weekly with permission. Develop a rewards program for outstanding user content."
-          }
-        ]
+            title: 'User-Generated Content Campaign',
+            description:
+              'Leverage customer content to build community and showcase real-world usage.',
+            details:
+              'Create a branded hashtag for customers to share experiences. Feature customer content weekly with permission. Develop a rewards program for outstanding user content.',
+          },
+        ],
       };
       setStrategicContent([newContent, ...strategicContent]);
     }, 3000);
@@ -399,7 +431,7 @@ const StrategicContent: React.FC = () => {
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          height: '100vh'
+          height: '100vh',
         }}
       >
         <CircularProgress />
@@ -433,7 +465,8 @@ const StrategicContent: React.FC = () => {
                 </Typography>
               </Box>
               <Typography variant="body2" sx={{ mb: 2 }}>
-                Let our AI analyze your brand profile and generate strategic content recommendations tailored to your audience and goals.
+                Let our AI analyze your brand profile and generate strategic content recommendations
+                tailored to your audience and goals.
               </Typography>
               {generating && (
                 <Box sx={{ width: '100%', mb: 2 }}>
@@ -441,7 +474,12 @@ const StrategicContent: React.FC = () => {
                 </Box>
               )}
             </Grid>
-            <Grid item xs={12} md={4} sx={{ display: 'flex', justifyContent: { xs: 'flex-start', md: 'flex-end' } }}>
+            <Grid
+              item
+              xs={12}
+              md={4}
+              sx={{ display: 'flex', justifyContent: { xs: 'flex-start', md: 'flex-end' } }}
+            >
               <Button
                 variant="contained"
                 color="secondary"
@@ -453,7 +491,7 @@ const StrategicContent: React.FC = () => {
                   color: 'primary.main',
                   '&:hover': {
                     bgcolor: 'grey.100',
-                  }
+                  },
                 }}
               >
                 {generating ? 'Generating...' : 'Generate Content Strategy'}
@@ -492,12 +530,13 @@ const StrategicContent: React.FC = () => {
                 </Select>
               </FormControl>
             </Grid>
-            <Grid item xs={12} md={5} sx={{ display: 'flex', justifyContent: { xs: 'flex-start', md: 'flex-end' } }}>
-              <Button
-                variant="contained"
-                startIcon={<AddIcon />}
-                onClick={handleAddContent}
-              >
+            <Grid
+              item
+              xs={12}
+              md={5}
+              sx={{ display: 'flex', justifyContent: { xs: 'flex-start', md: 'flex-end' } }}
+            >
+              <Button variant="contained" startIcon={<AddIcon />} onClick={handleAddContent}>
                 Create Strategic Content
               </Button>
             </Grid>
@@ -517,7 +556,7 @@ const StrategicContent: React.FC = () => {
         {/* Content Grid */}
         <Grid container spacing={3}>
           {filteredContent.length > 0 ? (
-            filteredContent.map((item) => (
+            filteredContent.map(item => (
               <Grid item key={item.id} xs={12} sm={6} md={4}>
                 <StrategicContentCard
                   item={item}
@@ -572,7 +611,7 @@ const StrategicContent: React.FC = () => {
                   {currentContent.description}
                 </Typography>
                 <Divider sx={{ my: 2 }} />
-                {currentContent.content.map((item) => (
+                {currentContent.content.map(item => (
                   <Accordion key={item.id} sx={{ mb: 1 }}>
                     <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                       <Typography variant="subtitle1">{item.title}</Typography>
@@ -591,7 +630,6 @@ const StrategicContent: React.FC = () => {
             ) : (
               <Box sx={{ pt: 1 }}>
                 <TextField
-                  autoFocus
                   margin="dense"
                   id="title"
                   label="Content Title"
@@ -659,20 +697,14 @@ const StrategicContent: React.FC = () => {
                     size="small"
                   />
                 </Paper>
-                <Button
-                  startIcon={<AddIcon />}
-                  variant="outlined"
-                  size="small"
-                >
+                <Button startIcon={<AddIcon />} variant="outlined" size="small">
                   Add Item
                 </Button>
               </Box>
             )}
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleCloseDialog}>
-              {currentContent ? 'Close' : 'Cancel'}
-            </Button>
+            <Button onClick={handleCloseDialog}>{currentContent ? 'Close' : 'Cancel'}</Button>
             {!currentContent && (
               <Button variant="contained" onClick={handleCloseDialog}>
                 Create Content
