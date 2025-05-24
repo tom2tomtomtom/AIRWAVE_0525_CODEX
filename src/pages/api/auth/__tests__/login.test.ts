@@ -2,9 +2,10 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { NextApiRequest, NextApiResponse } from 'next';
 import handler from '../login';
+import { supabase } from '../../../../lib/supabase';
 
 // Mock the modules
-vi.mock('@/lib/supabase', () => ({
+vi.mock('../../../../lib/supabase', () => ({
   supabase: {
     auth: {
       signInWithPassword: vi.fn(),
@@ -24,7 +25,7 @@ vi.mock('@/lib/supabase', () => ({
   },
 }));
 
-vi.mock('@/lib/env', () => ({
+vi.mock('../../../../lib/env', () => ({
   env: {
     JWT_SECRET: 'test-secret-key-for-testing-purposes-only',
     JWT_EXPIRY: '24h',
@@ -107,8 +108,6 @@ describe('/api/auth/login', () => {
   });
 
   it('should return 401 for invalid credentials', async () => {
-    const { supabase } = require('@/lib/supabase');
-    
     // Mock failed authentication
     supabase.auth.signInWithPassword.mockResolvedValueOnce({
       data: { user: null },
@@ -133,8 +132,6 @@ describe('/api/auth/login', () => {
   });
 
   it('should successfully login with valid credentials', async () => {
-    const { supabase } = require('@/lib/supabase');
-    
     // Mock successful authentication
     const mockUser = {
       id: 'user-123',
