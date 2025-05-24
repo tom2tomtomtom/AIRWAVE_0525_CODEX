@@ -338,12 +338,13 @@ const StrategicContent: React.FC = () => {
   };
 
   const handleDuplicateContent = (item: StrategicContentItem) => {
-    const newItem = {
+    const currentDate = new Date().toISOString().split('T')[0] ?? '';
+    const newItem: StrategicContentItem = {
       ...item,
       id: `sc${Date.now()}`,
       title: `${item.title} (Copy)`,
-      dateCreated: new Date().toISOString().split('T')[0],
-      lastModified: new Date().toISOString().split('T')[0],
+      dateCreated: currentDate,
+      lastModified: currentDate,
     };
     setStrategicContent([...strategicContent, newItem]);
   };
@@ -360,13 +361,14 @@ const StrategicContent: React.FC = () => {
       setGenerating(false);
       // Add new generated content
       const timestamp = Date.now();
-      const newContent = {
+      const currentDate = new Date().toISOString().split("T")[0] ?? '';
+      const newContent: StrategicContentItem = {
         id: `sc${timestamp}`,
         title: "AI-Generated Content Strategy",
         type: "framework",
         description: "Automatically generated content strategy based on your brand profile",
-        dateCreated: new Date().toISOString().split("T")[0],
-        lastModified: new Date().toISOString().split("T")[0],
+        dateCreated: currentDate,
+        lastModified: currentDate,
         content: [
           {
             id: `idea${timestamp}-1`,
