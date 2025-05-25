@@ -142,5 +142,3 @@ export const TableSkeleton: React.FC<{ rows?: number; columns?: number }> = ({
     </Box>
   );
 };
-
-export default LoadingSpinner;
