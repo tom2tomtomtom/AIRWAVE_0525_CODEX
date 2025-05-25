@@ -127,9 +127,12 @@ export const AIImageGenerator: React.FC<AIImageGeneratorProps> = ({
           asset: {
             ...demoImage,
             name: `AI Generated - ${prompt.substring(0, 50)}...`,
-            ai_prompt: prompt,
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString(),
+            metadata: {
+              ...demoImage.metadata,
+              aiPrompt: prompt,
+            },
+            dateCreated: new Date().toISOString(),
+            lastModified: new Date().toISOString(),
           } as Asset,
           generation_details: {
             original_prompt: prompt,
@@ -208,9 +211,9 @@ export const AIImageGenerator: React.FC<AIImageGeneratorProps> = ({
   };
 
   const handleDownload = async () => {
-    if (generatedImage?.asset?.file_url) {
+    if (generatedImage?.asset?.url) {
       const link = document.createElement('a');
-      link.href = generatedImage.asset.file_url;
+      link.href = generatedImage.asset.url;
       link.download = `ai-generated-${Date.now()}.png`;
       document.body.appendChild(link);
       link.click();
@@ -389,7 +392,7 @@ export const AIImageGenerator: React.FC<AIImageGeneratorProps> = ({
               <Box>
                 <Box
                   component="img"
-                  src={generatedImage.asset.file_url}
+                  src={generatedImage.asset.url}
                   alt="Generated image"
                   sx={{
                     width: '100%',
@@ -487,5 +490,3 @@ export const AIImageGenerator: React.FC<AIImageGeneratorProps> = ({
     </Card>
   );
 };
-
-export default AIImageGenerator;

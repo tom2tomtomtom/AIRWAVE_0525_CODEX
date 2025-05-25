@@ -212,21 +212,37 @@ export interface CampaignPerformance {
   byDate?: Record<string, Partial<CampaignPerformance>>;
 }
 
-// Asset Model
-export interface Asset extends BaseModel {
+// Asset Model - Updated to match demo data structure
+export interface Asset {
+  id: string;
   name: string;
   type: 'image' | 'video' | 'audio' | 'document' | 'copy';
   url: string;
   thumbnail?: string;
-  clientId: string;
+  clientId?: string;
   tags: string[];
-  status: 'active' | 'archived' | 'deleted';
-  permissions: {
+  status?: 'active' | 'archived' | 'deleted';
+  permissions?: {
     public: boolean;
     userIds: string[];
     roleIds: string[];
   };
   metadata: AssetMetadata;
+  // Additional fields from demo data
+  file_url?: string;
+  thumbnail_url?: string;
+  file_size?: number;
+  mime_type?: string;
+  dimensions?: { width: number; height: number };
+  ai_generated?: boolean;
+  ai_prompt?: string;
+  created_at?: string;
+  updated_at?: string;
+  // Support both naming conventions
+  dateCreated?: string;
+  lastModified?: string;
+  createdBy?: string;
+  version?: number;
 }
 
 // Asset Metadata Model
@@ -246,38 +262,56 @@ export interface AssetMetadata {
   [key: string]: string | number | boolean | null | undefined;
 }
 
-// Template Model
-export interface Template extends BaseModel {
+// Template Model - Updated to match demo data structure
+export interface Template {
+  id: string;
   name: string;
   platform: string;
-  aspectRatio: string;
+  aspect_ratio?: string;
+  aspectRatio?: string;
   description: string;
-  thumbnail: string;
+  thumbnail?: string;
+  thumbnail_url?: string;
   category: string;
-  industry: string;
-  contentType: string;
+  industry?: string;
+  content_type?: string;
+  contentType?: string;
   dimensions: string;
-  recommendedUsage: string;
-  usageCount: number;
-  performance: {
+  recommendedUsage?: string;
+  usage_count?: number;
+  usageCount?: number;
+  performance?: {
     views: number;
     engagement: number;
     conversion: number;
     score: number;
   };
-  dynamicFields: DynamicField[];
-  isCreatomate: boolean;
+  performance_score?: number;
+  dynamic_fields?: DynamicField[];
+  dynamicFields?: DynamicField[];
+  is_creatomate?: boolean;
+  isCreatomate?: boolean;
+  creatomate_id?: string;
   creatomateId?: string;
   isOwner?: boolean;
   isShared?: boolean;
-  clientId: string;
+  is_public?: boolean;
+  clientId?: string;
+  // Support both naming conventions
+  created_at?: string;
+  updated_at?: string;
+  dateCreated?: string;
+  lastModified?: string;
+  createdBy?: string;
+  version?: number;
+  metadata?: BaseMetadata;
 }
 
 // Dynamic Field Model
 export interface DynamicField {
   id: string;
   name: string;
-  type: 'text' | 'image' | 'video' | 'audio' | 'color';
+  type: 'text' | 'image' | 'video' | 'audio' | 'color' | 'link';
   required: boolean;
   description: string;
   defaultValue?: string;
