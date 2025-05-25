@@ -20,7 +20,7 @@ import {
   Edit as EditIcon,
   Refresh as RefreshIcon
 } from '@mui/icons-material';
-import { Template, DynamicField, Asset } from '@/types/models';
+import { Template, Asset } from '@/types/models';
 
 export interface MatrixProject {
   id: string;

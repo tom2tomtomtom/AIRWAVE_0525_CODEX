@@ -14,7 +14,6 @@ import {
   Paper,
   CircularProgress,
   IconButton,
-  Slider,
   FormControlLabel,
   Switch,
 } from '@mui/material';

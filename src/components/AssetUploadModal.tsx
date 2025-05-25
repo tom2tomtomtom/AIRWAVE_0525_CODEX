@@ -8,7 +8,6 @@ import {
   Box,
   Typography,
   LinearProgress,
-  Chip,
   IconButton,
   Alert,
 } from '@mui/material';
@@ -90,7 +89,7 @@ export const AssetUploadModal: React.FC<AssetUploadModalProps> = ({
         const { file } = filePreview;
         
         // Upload file
-        const { url, path, error } = await uploadFile(file, activeClient.id);
+        const { url, error } = await uploadFile(file, activeClient.id);
         
         if (error) {
           showNotification(`Failed to upload ${file.name}: ${error.message}`, 'error');
