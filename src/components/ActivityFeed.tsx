@@ -1,492 +1,432 @@
 import React, { useState, useEffect } from 'react';
 import {
   Box,
-  Paper,
+  Card,
+  CardContent,
   Typography,
   List,
   ListItem,
-  ListItemAvatar,
   ListItemText,
+  ListItemAvatar,
   Avatar,
-  IconButton,
-  Badge,
   Chip,
+  IconButton,
   Divider,
-  Button,
-  Menu,
-  MenuItem,
-  Tooltip,
+  LinearProgress,
   Collapse,
-  Alert,
-  Stack,
-  TextField,
-  InputAdornment,
+  Button,
+  Badge,
 } from '@mui/material';
 import {
-  Notifications as NotificationsIcon,
-  MoreVert as MoreIcon,
-  Comment as CommentIcon,
-  ThumbUp as LikeIcon,
-  Share as ShareIcon,
-  Campaign as CampaignIcon,
-  Image as AssetIcon,
+  PlayArrow as PlayIcon,
+  Check as CheckIcon,
+  Error as ErrorIcon,
+  Warning as WarningIcon,
+  CloudUpload as UploadIcon,
+  Image as ImageIcon,
+  VideoFile as VideoIcon,
   Edit as EditIcon,
-  CheckCircle as ApprovalIcon,
-  Group as TeamIcon,
-  TrendingUp as AnalyticsIcon,
-  Send as SendIcon,
-  Circle as OnlineIcon,
-  ExpandMore as ExpandMoreIcon,
-  ExpandLess as ExpandLessIcon,
+  Delete as DeleteIcon,
+  Person as PersonIcon,
+  Campaign as CampaignIcon,
   Refresh as RefreshIcon,
+  MoreVert as MoreIcon,
+  NotificationsActive as NotificationIcon,
+  CheckCircle as ApprovedIcon,
+  Cancel as RejectedIcon,
 } from '@mui/icons-material';
 import { formatDistanceToNow } from 'date-fns';
-import { useClient } from '@/contexts/ClientContext';
-import { useAuth } from '@/contexts/AuthContext';
 import { useNotification } from '@/contexts/NotificationContext';
 
 interface Activity {
   id: string;
-  type: 'campaign_created' | 'asset_uploaded' | 'matrix_updated' | 'approval_requested' | 
-        'comment_added' | 'team_joined' | 'analytics_milestone' | 'content_published';
-  user: {
-    id: string;
-    name: string;
-    avatar?: string;
-    isOnline?: boolean;
-  };
+  type: 'render' | 'upload' | 'edit' | 'delete' | 'campaign' | 'user' | 'approval';
+  action: string;
+  description: string;
   timestamp: Date;
-  data: {
-    entityId?: string;
-    entityName?: string;
-    message?: string;
-    metadata?: any;
+  status?: 'success' | 'error' | 'warning' | 'info' | 'pending';
+  progress?: number;
+  metadata?: {
+    campaignName?: string;
+    assetName?: string;
+    assetType?: string;
+    userName?: string;
+    clientName?: string;
+    count?: number;
+    [key: string]: string | number | undefined;
   };
-  reactions?: {
-    likes: number;
-    comments: number;
-    hasLiked?: boolean;
-  };
-  isRead?: boolean;
 }
 
 interface ActivityFeedProps {
-  maxHeight?: number;
-  showHeader?: boolean;
-  filterTypes?: Activity['type'][];
-  realtime?: boolean;
+  maxItems?: number;
+  showNotifications?: boolean;
+  autoRefresh?: boolean;
+  refreshInterval?: number;
 }
 
-export const ActivityFeed: React.FC<ActivityFeedProps> = ({
-  maxHeight = 600,
-  showHeader = true,
-  filterTypes,
-  realtime = true,
+const ActivityFeed: React.FC<ActivityFeedProps> = ({
+  maxItems = 10,
+  showNotifications = true,
+  autoRefresh = true,
+  refreshInterval = 30000,
 }) => {
-  const { activeClient } = useClient();
-  const { user } = useAuth();
-  const { showNotification } = useNotification();
-  
   const [activities, setActivities] = useState<Activity[]>([]);
-  const [unreadCount, setUnreadCount] = useState(0);
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [loading, setLoading] = useState(true);
   const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
-  const [commentInputs, setCommentInputs] = useState<Record<string, string>>({});
-  const [isConnected, setIsConnected] = useState(false);
-  const [autoRefresh, setAutoRefresh] = useState(true);
+  const { showNotification } = useNotification();
 
-  // Simulate real-time activities
+  // Mock activities for demonstration
+  const mockActivities: Activity[] = [
+    {
+      id: '1',
+      type: 'render',
+      action: 'Video Rendered',
+      description: 'Campaign video successfully rendered',
+      timestamp: new Date(Date.now() - 1000 * 60 * 5),
+      status: 'success',
+      metadata: {
+        campaignName: 'Summer Sale 2024',
+        assetName: 'hero-video-v2.mp4',
+        assetType: 'video',
+      },
+    },
+    {
+      id: '2',
+      type: 'upload',
+      action: 'Assets Uploaded',
+      description: '15 new assets uploaded',
+      timestamp: new Date(Date.now() - 1000 * 60 * 15),
+      status: 'info',
+      metadata: {
+        count: 15,
+        clientName: 'Acme Corp',
+      },
+    },
+    {
+      id: '3',
+      type: 'approval',
+      action: 'Campaign Approved',
+      description: 'Client approved campaign materials',
+      timestamp: new Date(Date.now() - 1000 * 60 * 30),
+      status: 'success',
+      metadata: {
+        campaignName: 'Product Launch Q2',
+        clientName: 'Tech Innovations',
+        userName: 'John Smith',
+      },
+    },
+    {
+      id: '4',
+      type: 'render',
+      action: 'Render Failed',
+      description: 'Video render failed due to missing assets',
+      timestamp: new Date(Date.now() - 1000 * 60 * 45),
+      status: 'error',
+      metadata: {
+        campaignName: 'Holiday Special',
+        assetName: 'promo-video.mp4',
+      },
+    },
+    {
+      id: '5',
+      type: 'campaign',
+      action: 'Campaign Created',
+      description: 'New campaign created',
+      timestamp: new Date(Date.now() - 1000 * 60 * 60),
+      status: 'info',
+      metadata: {
+        campaignName: 'Back to School 2024',
+        userName: 'Sarah Johnson',
+      },
+    },
+    {
+      id: '6',
+      type: 'edit',
+      action: 'Matrix Updated',
+      description: 'Campaign matrix modified',
+      timestamp: new Date(Date.now() - 1000 * 60 * 90),
+      status: 'info',
+      metadata: {
+        campaignName: 'Spring Collection',
+        userName: 'Mike Davis',
+      },
+    },
+    {
+      id: '7',
+      type: 'approval',
+      action: 'Changes Requested',
+      description: 'Client requested revisions',
+      timestamp: new Date(Date.now() - 1000 * 60 * 120),
+      status: 'warning',
+      metadata: {
+        campaignName: 'Brand Refresh',
+        clientName: 'Global Brands Inc',
+      },
+    },
+    {
+      id: '8',
+      type: 'render',
+      action: 'Batch Render Started',
+      description: 'Rendering 25 video variations',
+      timestamp: new Date(Date.now() - 1000 * 60 * 180),
+      status: 'pending',
+      progress: 65,
+      metadata: {
+        campaignName: 'Multi-Platform Campaign',
+        count: 25,
+      },
+    },
+  ];
+
   useEffect(() => {
-    if (!realtime || !activeClient) return;
+    // Simulate loading activities
+    const loadActivities = () => {
+      setLoading(true);
+      setTimeout(() => {
+        setActivities(mockActivities.slice(0, maxItems));
+        setLoading(false);
+      }, 1000);
+    };
 
-    // Initial activities
-    const initialActivities: Activity[] = [
-      {
-        id: 'act-1',
-        type: 'campaign_created',
-        user: { id: 'u1', name: 'Sarah Johnson', isOnline: true },
-        timestamp: new Date(Date.now() - 1000 * 60 * 5), // 5 minutes ago
-        data: {
-          entityId: 'camp-1',
-          entityName: 'Summer Fitness Campaign',
-          message: 'created a new campaign',
-        },
-        reactions: { likes: 3, comments: 1, hasLiked: false },
-        isRead: false,
-      },
-      {
-        id: 'act-2',
-        type: 'asset_uploaded',
-        user: { id: 'u2', name: 'Mike Chen', isOnline: true },
-        timestamp: new Date(Date.now() - 1000 * 60 * 15), // 15 minutes ago
-        data: {
-          entityId: 'asset-1',
-          entityName: 'Hero Banner Image',
-          message: 'uploaded 5 new assets',
-          metadata: { count: 5, type: 'image' },
-        },
-        reactions: { likes: 1, comments: 0 },
-        isRead: true,
-      },
-      {
-        id: 'act-3',
-        type: 'approval_requested',
-        user: { id: 'u3', name: 'Emily Davis', isOnline: false },
-        timestamp: new Date(Date.now() - 1000 * 60 * 30), // 30 minutes ago
-        data: {
-          entityId: 'matrix-1',
-          entityName: 'Instagram Story Matrix',
-          message: 'requested approval for',
-        },
-        reactions: { likes: 0, comments: 2 },
-        isRead: false,
-      },
-      {
-        id: 'act-4',
-        type: 'analytics_milestone',
-        user: { id: 'system', name: 'AIrWAVE System' },
-        timestamp: new Date(Date.now() - 1000 * 60 * 60), // 1 hour ago
-        data: {
-          message: 'Campaign "Spring Collection" reached 100K views! 🎉',
-          metadata: { milestone: '100K views', campaignId: 'camp-2' },
-        },
-        reactions: { likes: 8, comments: 3, hasLiked: true },
-        isRead: true,
-      },
-    ];
+    loadActivities();
 
-    setActivities(initialActivities);
-    setUnreadCount(initialActivities.filter(a => !a.isRead).length);
-    setIsConnected(true);
+    // Auto refresh
+    if (autoRefresh) {
+      const interval = setInterval(loadActivities, refreshInterval);
+      return () => clearInterval(interval);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [maxItems, autoRefresh, refreshInterval]);
 
-    // Simulate new activities
-    const interval = setInterval(() => {
-      if (!autoRefresh) return;
+  const getActivityIcon = (activity: Activity) => {
+    switch (activity.type) {
+      case 'render':
+        return <VideoIcon />;
+      case 'upload':
+        return <UploadIcon />;
+      case 'edit':
+        return <EditIcon />;
+      case 'delete':
+        return <DeleteIcon />;
+      case 'campaign':
+        return <CampaignIcon />;
+      case 'user':
+        return <PersonIcon />;
+      case 'approval':
+        return activity.status === 'success' ? <ApprovedIcon /> : <RejectedIcon />;
+      default:
+        return <NotificationIcon />;
+    }
+  };
 
+  const getStatusColor = (status?: string): "default" | "primary" | "secondary" | "error" | "info" | "success" | "warning" => {
+    switch (status) {
+      case 'success':
+        return 'success';
+      case 'error':
+        return 'error';
+      case 'warning':
+        return 'warning';
+      case 'info':
+        return 'info';
+      case 'pending':
+        return 'primary';
+      default:
+        return 'default';
+    }
+  };
+
+  const getStatusIcon = (status?: string) => {
+    switch (status) {
+      case 'success':
+        return <CheckIcon fontSize="small" />;
+      case 'error':
+        return <ErrorIcon fontSize="small" />;
+      case 'warning':
+        return <WarningIcon fontSize="small" />;
+      case 'pending':
+        return <PlayIcon fontSize="small" />;
+      default:
+        return null;
+    }
+  };
+
+  const toggleExpanded = (id: string) => {
+    const newExpanded = new Set(expandedItems);
+    if (newExpanded.has(id)) {
+      newExpanded.delete(id);
+    } else {
+      newExpanded.add(id);
+    }
+    setExpandedItems(newExpanded);
+  };
+
+  const handleRefresh = () => {
+    setLoading(true);
+    setTimeout(() => {
+      // Add a new activity at the beginning to simulate real-time updates
       const newActivity: Activity = {
-        id: `act-${Date.now()}`,
-        type: ['campaign_created', 'asset_uploaded', 'comment_added', 'content_published'][
-          Math.floor(Math.random() * 4)
-        ] as Activity['type'],
-        user: {
-          id: `u${Math.floor(Math.random() * 5)}`,
-          name: ['Alex Wilson', 'Rachel Green', 'Tom Anderson', 'Lisa Park'][
-            Math.floor(Math.random() * 4)
-          ],
-          isOnline: Math.random() > 0.3,
-        },
+        id: `new-${Date.now()}`,
+        type: 'render',
+        action: 'New Render Started',
+        description: 'Just started rendering a new video',
         timestamp: new Date(),
-        data: {
-          entityName: 'New Content Item',
-          message: 'performed an action',
+        status: 'pending',
+        progress: 10,
+        metadata: {
+          campaignName: 'Latest Campaign',
+          assetName: 'new-video.mp4',
         },
-        reactions: { likes: 0, comments: 0 },
-        isRead: false,
       };
-
-      setActivities(prev => [newActivity, ...prev].slice(0, 50)); // Keep last 50
-      setUnreadCount(prev => prev + 1);
+      setActivities([newActivity, ...mockActivities].slice(0, maxItems));
+      setLoading(false);
       
-      if (realtime) {
-        showNotification(`New activity from ${newActivity.user.name}`, 'info');
+      if (showNotifications) {
+        showNotification('Activity feed refreshed', 'info');
       }
-    }, 30000); // Every 30 seconds
-
-    return () => clearInterval(interval);
-  }, [activeClient, realtime, autoRefresh, showNotification]);
-
-  const getActivityIcon = (type: Activity['type']) => {
-    switch (type) {
-      case 'campaign_created': return <CampaignIcon />;
-      case 'asset_uploaded': return <AssetIcon />;
-      case 'matrix_updated': return <EditIcon />;
-      case 'approval_requested': return <ApprovalIcon />;
-      case 'comment_added': return <CommentIcon />;
-      case 'team_joined': return <TeamIcon />;
-      case 'analytics_milestone': return <AnalyticsIcon />;
-      case 'content_published': return <SendIcon />;
-      default: return <NotificationsIcon />;
-    }
+    }, 1000);
   };
 
-  const getActivityColor = (type: Activity['type']) => {
-    switch (type) {
-      case 'campaign_created': return 'primary';
-      case 'asset_uploaded': return 'secondary';
-      case 'approval_requested': return 'warning';
-      case 'analytics_milestone': return 'success';
-      case 'content_published': return 'info';
-      default: return 'default';
-    }
-  };
-
-  const handleLike = (activityId: string) => {
-    setActivities(prev => prev.map(activity => 
-      activity.id === activityId
-        ? {
-            ...activity,
-            reactions: {
-              ...activity.reactions!,
-              likes: activity.reactions!.hasLiked 
-                ? activity.reactions!.likes - 1 
-                : activity.reactions!.likes + 1,
-              hasLiked: !activity.reactions!.hasLiked,
-            }
-          }
-        : activity
-    ));
-  };
-
-  const handleComment = (activityId: string) => {
-    const comment = commentInputs[activityId];
-    if (!comment?.trim()) return;
-
-    setActivities(prev => prev.map(activity => 
-      activity.id === activityId
-        ? {
-            ...activity,
-            reactions: {
-              ...activity.reactions!,
-              comments: activity.reactions!.comments + 1,
-            }
-          }
-        : activity
-    ));
-
-    setCommentInputs(prev => ({ ...prev, [activityId]: '' }));
-    showNotification('Comment added', 'success');
-  };
-
-  const handleMarkAllRead = () => {
-    setActivities(prev => prev.map(a => ({ ...a, isRead: true })));
-    setUnreadCount(0);
-  };
-
-  const toggleExpanded = (activityId: string) => {
-    setExpandedItems(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(activityId)) {
-        newSet.delete(activityId);
-      } else {
-        newSet.add(activityId);
-      }
-      return newSet;
-    });
-  };
-
-  const filteredActivities = filterTypes
-    ? activities.filter(a => filterTypes.includes(a.type))
-    : activities;
-
-  if (!activeClient) {
+  if (loading && activities.length === 0) {
     return (
-      <Paper sx={{ p: 3, textAlign: 'center' }}>
-        <Typography color="text.secondary">
-          Select a client to view activity
-        </Typography>
-      </Paper>
+      <Card>
+        <CardContent>
+          <LinearProgress />
+          <Typography variant="body2" color="text.secondary" sx={{ mt: 2, textAlign: 'center' }}>
+            Loading activities...
+          </Typography>
+        </CardContent>
+      </Card>
     );
   }
 
   return (
-    <Paper sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-      {showHeader && (
-        <>
-          <Box sx={{ p: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <Badge badgeContent={unreadCount} color="error">
-                <NotificationsIcon />
-              </Badge>
-              <Typography variant="h6">Activity Feed</Typography>
-              {isConnected && (
-                <Tooltip title="Real-time updates active">
-                  <OnlineIcon sx={{ fontSize: 12, color: 'success.main' }} />
-                </Tooltip>
-              )}
-            </Box>
-            <Box sx={{ display: 'flex', gap: 1 }}>
-              <IconButton size="small" onClick={() => setAutoRefresh(!autoRefresh)}>
-                <RefreshIcon color={autoRefresh ? 'primary' : 'inherit'} />
+    <Card>
+      <CardContent>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+          <Typography variant="h6" component="h2">
+            Recent Activity
+          </Typography>
+          <Box>
+            {showNotifications && (
+              <IconButton size="small" sx={{ mr: 1 }}>
+                <Badge badgeContent={3} color="error">
+                  <NotificationIcon />
+                </Badge>
               </IconButton>
-              <IconButton
-                size="small"
-                onClick={(e) => setAnchorEl(e.currentTarget)}
-              >
-                <MoreIcon />
-              </IconButton>
-            </Box>
+            )}
+            <IconButton size="small" onClick={handleRefresh} disabled={loading}>
+              <RefreshIcon />
+            </IconButton>
           </Box>
-          <Divider />
-        </>
-      )}
+        </Box>
 
-      <Box sx={{ flex: 1, overflowY: 'auto', maxHeight }}>
-        {filteredActivities.length === 0 ? (
-          <Box sx={{ p: 4, textAlign: 'center' }}>
-            <Typography color="text.secondary">
-              No activities yet
-            </Typography>
-          </Box>
-        ) : (
-          <List sx={{ p: 0 }}>
-            {filteredActivities.map((activity, index) => (
-              <React.Fragment key={activity.id}>
-                {index > 0 && <Divider />}
-                <ListItem
-                  sx={{
-                    opacity: activity.isRead ? 0.8 : 1,
-                    bgcolor: activity.isRead ? 'transparent' : 'action.hover',
-                  }}
-                >
-                  <ListItemAvatar>
-                    <Badge
-                      overlap="circular"
-                      anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                      badgeContent={
-                        activity.user.isOnline && (
-                          <OnlineIcon sx={{ fontSize: 12, color: 'success.main' }} />
-                        )
-                      }
-                    >
-                      <Avatar sx={{ bgcolor: `${getActivityColor(activity.type)}.light` }}>
-                        {getActivityIcon(activity.type)}
-                      </Avatar>
-                    </Badge>
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary={
-                      <Box>
-                        <Typography variant="body2">
-                          <strong>{activity.user.name}</strong> {activity.data.message}{' '}
-                          {activity.data.entityName && (
+        {loading && <LinearProgress sx={{ mb: 2 }} />}
+
+        <List sx={{ width: '100%' }}>
+          {activities.map((activity, index) => (
+            <React.Fragment key={activity.id}>
+              {index > 0 && <Divider variant="inset" component="li" />}
+              <ListItem
+                alignItems="flex-start"
+                secondaryAction={
+                  <IconButton edge="end" size="small">
+                    <MoreIcon />
+                  </IconButton>
+                }
+              >
+                <ListItemAvatar>
+                  <Avatar
+                    sx={{
+                      bgcolor: `${getStatusColor(activity.status)}.light`,
+                      color: `${getStatusColor(activity.status)}.main`,
+                    }}
+                  >
+                    {getActivityIcon(activity)}
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText
+                  primary={
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <Typography variant="subtitle2">
+                        {activity.action}
+                      </Typography>
+                      {activity.status && (
+                        <Chip
+                          size="small"
+                          label={activity.status}
+                          color={getStatusColor(activity.status)}
+                          icon={getStatusIcon(activity.status)}
+                        />
+                      )}
+                    </Box>
+                  }
+                  secondary={
+                    <Box>
+                      <Typography
+                        component="span"
+                        variant="body2"
+                        color="text.primary"
+                      >
+                        {activity.description}
+                      </Typography>
+                      {activity.metadata && (
+                        <Box sx={{ mt: 0.5 }}>
+                          {activity.metadata.campaignName && (
                             <Chip
-                              label={activity.data.entityName}
+                              label={activity.metadata.campaignName}
                               size="small"
-                              sx={{ ml: 0.5 }}
+                              sx={{ mr: 0.5, mb: 0.5 }}
                             />
                           )}
-                        </Typography>
-                      </Box>
-                    }
-                    secondary={
-                      <Box>
-                        <Typography variant="caption" color="text.secondary">
-                          {formatDistanceToNow(activity.timestamp, { addSuffix: true })}
-                        </Typography>
-                        
-                        {activity.reactions && (
-                          <Stack direction="row" spacing={2} sx={{ mt: 1 }}>
-                            <Button
+                          {activity.metadata.clientName && (
+                            <Chip
+                              label={activity.metadata.clientName}
                               size="small"
-                              startIcon={<LikeIcon />}
-                              onClick={() => handleLike(activity.id)}
-                              color={activity.reactions.hasLiked ? 'primary' : 'inherit'}
-                            >
-                              {activity.reactions.likes}
-                            </Button>
-                            <Button
-                              size="small"
-                              startIcon={<CommentIcon />}
-                              onClick={() => toggleExpanded(activity.id)}
-                            >
-                              {activity.reactions.comments}
-                            </Button>
-                            <Button size="small" startIcon={<ShareIcon />}>
-                              Share
-                            </Button>
-                          </Stack>
-                        )}
-
-                        <Collapse in={expandedItems.has(activity.id)}>
-                          <Box sx={{ mt: 2 }}>
-                            <TextField
-                              size="small"
-                              fullWidth
-                              placeholder="Add a comment..."
-                              value={commentInputs[activity.id] || ''}
-                              onChange={(e) => setCommentInputs(prev => ({
-                                ...prev,
-                                [activity.id]: e.target.value
-                              }))}
-                              onKeyPress={(e) => {
-                                if (e.key === 'Enter') {
-                                  handleComment(activity.id);
-                                }
-                              }}
-                              InputProps={{
-                                endAdornment: (
-                                  <InputAdornment position="end">
-                                    <IconButton
-                                      size="small"
-                                      onClick={() => handleComment(activity.id)}
-                                    >
-                                      <SendIcon />
-                                    </IconButton>
-                                  </InputAdornment>
-                                ),
-                              }}
+                              variant="outlined"
+                              sx={{ mr: 0.5, mb: 0.5 }}
                             />
-                          </Box>
-                        </Collapse>
-                      </Box>
-                    }
-                  />
-                </ListItem>
-              </React.Fragment>
-            ))}
-          </List>
-        )}
-      </Box>
+                          )}
+                        </Box>
+                      )}
+                      {activity.progress !== undefined && (
+                        <Box sx={{ mt: 1 }}>
+                          <LinearProgress
+                            variant="determinate"
+                            value={activity.progress}
+                            sx={{ height: 6, borderRadius: 3 }}
+                          />
+                          <Typography variant="caption" color="text.secondary">
+                            {activity.progress}% complete
+                          </Typography>
+                        </Box>
+                      )}
+                      <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 0.5 }}>
+                        {formatDistanceToNow(activity.timestamp, { addSuffix: true })}
+                      </Typography>
+                    </Box>
+                  }
+                />
+              </ListItem>
+              <Collapse in={expandedItems.has(activity.id)} timeout="auto" unmountOnExit>
+                <Box sx={{ pl: 9, pr: 2, pb: 2 }}>
+                  <Typography variant="body2" color="text.secondary">
+                    Additional details about this activity would appear here...
+                  </Typography>
+                  <Button size="small" sx={{ mt: 1 }}>View Details</Button>
+                </Box>
+              </Collapse>
+            </React.Fragment>
+          ))}
+        </List>
 
-      <Menu
-        anchorEl={anchorEl}
-        open={Boolean(anchorEl)}
-        onClose={() => setAnchorEl(null)}
-      >
-        <MenuItem onClick={handleMarkAllRead}>Mark all as read</MenuItem>
-        <MenuItem>Filter activities</MenuItem>
-        <MenuItem>Settings</MenuItem>
-      </Menu>
-    </Paper>
-  );
-};
-
-// Notification Badge Component
-export const NotificationBadge: React.FC = () => {
-  const [unreadCount, setUnreadCount] = useState(3);
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-
-  return (
-    <>
-      <IconButton
-        color="inherit"
-        onClick={(e) => setAnchorEl(e.currentTarget)}
-      >
-        <Badge badgeContent={unreadCount} color="error">
-          <NotificationsIcon />
-        </Badge>
-      </IconButton>
-      
-      <Menu
-        anchorEl={anchorEl}
-        open={Boolean(anchorEl)}
-        onClose={() => setAnchorEl(null)}
-        PaperProps={{
-          sx: { width: 400, maxHeight: 500 }
-        }}
-      >
-        <Box sx={{ p: 2 }}>
-          <Typography variant="h6" gutterBottom>
-            Notifications
+        {activities.length === 0 && !loading && (
+          <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center', py: 4 }}>
+            No recent activities
           </Typography>
-          <ActivityFeed
-            maxHeight={400}
-            showHeader={false}
-            realtime={false}
-          />
-        </Box>
-      </Menu>
-    </>
+        )}
+      </CardContent>
+    </Card>
   );
 };
 

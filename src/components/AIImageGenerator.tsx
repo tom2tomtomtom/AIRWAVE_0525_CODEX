@@ -3,52 +3,43 @@ import {
   Box,
   TextField,
   Button,
-  Grid,
   Typography,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
+  Paper,
+  Grid,
+  CircularProgress,
+  Card,
+  CardMedia,
+  CardContent,
+  CardActions,
+  IconButton,
   Chip,
   Alert,
-  Paper,
-  CircularProgress,
-  IconButton,
-  Slider,
-  FormControlLabel,
-  Switch,
 } from '@mui/material';
-import { AutoAwesome, Close, Download } from '@mui/icons-material';
-import axios from 'axios';
-import { useClient } from '@/contexts/ClientContext';
-import LoadingSpinner from './LoadingSpinner';
-import ErrorMessage, { getUserFriendlyErrorMessage } from './ErrorMessage';
+import {
+  Download as DownloadIcon,
+  Refresh as RefreshIcon,
+  Save as SaveIcon,
+  ContentCopy as CopyIcon,
+  Delete as DeleteIcon,
+} from '@mui/icons-material';
+import Image from 'next/image';
 
-interface AIImageGeneratorProps {
-  clientId: string;
-  onImageGenerated?: (asset: any) => void;
-  onClose?: () => void;
+interface GeneratedImage {
+  id: string;
+  url: string;
+  prompt: string;
+  createdAt: Date;
+  saved: boolean;
 }
 
-const AIImageGenerator: React.FC<AIImageGeneratorProps> = ({
-  clientId,
-  onImageGenerated,
-  onClose,
-}) => {
-  const { activeClient } = useClient();
+const AIImageGenerator: React.FC = () => {
   const [prompt, setPrompt] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
+  const [generatedImages, setGeneratedImages] = useState<GeneratedImage[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const [generatedImage, setGeneratedImage] = useState<any>(null);
-  
-  // DALL-E 3 Settings
-  const [size, setSize] = useState<'1024x1024' | '1792x1024' | '1024x1792'>('1024x1024');
-  const [quality, setQuality] = useState<'standard' | 'hd'>('standard');
-  const [style, setStyle] = useState<'vivid' | 'natural'>('vivid');
-  const [purpose, setPurpose] = useState<string>('social');
-  const [enhancePrompt, setEnhancePrompt] = useState(true);
-  const [tags, setTags] = useState<string[]>([]);
-  const [tagInput, setTagInput] = useState('');
+  const [selectedSize, setSelectedSize] = useState('1024x1024');
+  const [selectedStyle, setSelectedStyle] = useState('realistic');
+  const [imageCount, setImageCount] = useState(1);
 
   const handleGenerate = async () => {
     if (!prompt.trim()) {
@@ -58,258 +49,270 @@ const AIImageGenerator: React.FC<AIImageGeneratorProps> = ({
 
     setIsGenerating(true);
     setError(null);
-    setGeneratedImage(null);
 
     try {
-      const response = await axios.post('/api/dalle', {
-        prompt,
-        client_id: clientId,
-        model: 'dall-e-3',
-        size,
-        quality,
-        style,
-        n: 1,
-        purpose,
-        tags,
-        enhance_prompt: enhancePrompt,
-        brand_guidelines: activeClient?.brandGuidelines,
-      }, {
+      const response = await fetch('/api/dalle', {
+        method: 'POST',
         headers: {
-          'x-user-id': 'current-user', // In real app, get from auth
-          'x-demo-mode': process.env.NEXT_PUBLIC_DEMO_MODE || 'false',
+          'Content-Type': 'application/json',
         },
+        body: JSON.stringify({
+          prompt,
+          size: selectedSize,
+          style: selectedStyle,
+          n: imageCount,
+        }),
       });
 
-      if (response.data.success) {
-        setGeneratedImage(response.data.asset);
-        if (onImageGenerated) {
-          onImageGenerated(response.data.asset);
-        }
-      } else {
-        setError(response.data.message || 'Failed to generate image');
+      if (!response.ok) {
+        throw new Error('Failed to generate image');
       }
-    } catch (err: any) {
-      console.error('Generation error:', err);
-      setError(getUserFriendlyErrorMessage(err));
+
+      const data = await response.json();
+      const newImages = data.images.map((imageData: { url: string }) => ({
+        id: `img-${Date.now()}-${Math.random()}`,
+        url: imageData.url,
+        prompt,
+        createdAt: new Date(),
+        saved: false,
+      }));
+
+      setGeneratedImages([...newImages, ...generatedImages]);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
       setIsGenerating(false);
     }
   };
 
-  const handleAddTag = () => {
-    if (tagInput.trim() && !tags.includes(tagInput.trim())) {
-      setTags([...tags, tagInput.trim()]);
-      setTagInput('');
+  const handleSaveImage = async (image: GeneratedImage) => {
+    try {
+      const response = await fetch('/api/assets/upload', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          url: image.url,
+          type: 'ai-generated',
+          metadata: {
+            prompt: image.prompt,
+            generatedAt: image.createdAt,
+          },
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to save image');
+      }
+
+      setGeneratedImages(
+        generatedImages.map(img =>
+          img.id === image.id ? { ...img, saved: true } : img
+        )
+      );
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to save image');
     }
   };
 
-  const handleRemoveTag = (tagToRemove: string) => {
-    setTags(tags.filter(tag => tag !== tagToRemove));
+  const handleDownload = (image: GeneratedImage) => {
+    const link = document.createElement('a');
+    link.href = image.url;
+    link.download = `ai-generated-${image.id}.png`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
-  const handleDownload = () => {
-    if (generatedImage?.url) {
-      window.open(generatedImage.url, '_blank');
-    }
+  const handleCopyPrompt = (text: string) => {
+    navigator.clipboard.writeText(text);
   };
+
+  const handleDeleteImage = (imageId: string) => {
+    setGeneratedImages(generatedImages.filter(img => img.id !== imageId));
+  };
+
+  const styles = [
+    { value: 'realistic', label: 'Realistic' },
+    { value: 'artistic', label: 'Artistic' },
+    { value: 'cartoon', label: 'Cartoon' },
+    { value: 'abstract', label: 'Abstract' },
+    { value: '3d', label: '3D Render' },
+  ];
+
+  const sizes = [
+    { value: '1024x1024', label: 'Square (1024x1024)' },
+    { value: '1792x1024', label: 'Landscape (1792x1024)' },
+    { value: '1024x1792', label: 'Portrait (1024x1792)' },
+  ];
 
   return (
-    <Paper elevation={0} sx={{ p: 3 }}>
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
-        <Typography variant="h5" display="flex" alignItems="center" gap={1}>
-          <AutoAwesome color="primary" />
-          AI Image Generator (DALL-E 3)
+    <Box>
+      <Paper sx={{ p: 3, mb: 3 }}>
+        <Typography variant="h6" gutterBottom>
+          AI Image Generator
         </Typography>
-        {onClose && (
-          <IconButton onClick={onClose}>
-            <Close />
-          </IconButton>
-        )}
-      </Box>
-
-      {error && (
-        <ErrorMessage
-          title="Generation Failed"
-          message={error}
-          variant="inline"
-          onRetry={() => setError(null)}
-        />
-      )}
-
-      <Grid container spacing={3}>
-        <Grid item xs={12} md={6}>
-          <Box>
+        
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
             <TextField
               fullWidth
               multiline
-              rows={4}
-              label="Describe your image"
-              placeholder="A modern office space with natural lighting, minimalist design..."
+              rows={3}
+              label="Enter your prompt"
+              placeholder="Describe the image you want to generate..."
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
               disabled={isGenerating}
-              sx={{ mb: 2 }}
             />
-
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
-                <FormControl fullWidth size="small">
-                  <InputLabel>Size</InputLabel>
-                  <Select value={size} onChange={(e) => setSize(e.target.value as any)}>
-                    <MenuItem value="1024x1024">Square (1024x1024)</MenuItem>
-                    <MenuItem value="1792x1024">Landscape (1792x1024)</MenuItem>
-                    <MenuItem value="1024x1792">Portrait (1024x1792)</MenuItem>
-                  </Select>
-                </FormControl>
-              </Grid>
-
-              <Grid item xs={12} sm={6}>
-                <FormControl fullWidth size="small">
-                  <InputLabel>Purpose</InputLabel>
-                  <Select value={purpose} onChange={(e) => setPurpose(e.target.value)}>
-                    <MenuItem value="hero">Hero Image</MenuItem>
-                    <MenuItem value="background">Background</MenuItem>
-                    <MenuItem value="product">Product</MenuItem>
-                    <MenuItem value="social">Social Media</MenuItem>
-                    <MenuItem value="banner">Banner</MenuItem>
-                    <MenuItem value="icon">Icon</MenuItem>
-                  </Select>
-                </FormControl>
-              </Grid>
-
-              <Grid item xs={12} sm={6}>
-                <FormControl fullWidth size="small">
-                  <InputLabel>Quality</InputLabel>
-                  <Select value={quality} onChange={(e) => setQuality(e.target.value as any)}>
-                    <MenuItem value="standard">Standard</MenuItem>
-                    <MenuItem value="hd">HD (2x cost)</MenuItem>
-                  </Select>
-                </FormControl>
-              </Grid>
-
-              <Grid item xs={12} sm={6}>
-                <FormControl fullWidth size="small">
-                  <InputLabel>Style</InputLabel>
-                  <Select value={style} onChange={(e) => setStyle(e.target.value as any)}>
-                    <MenuItem value="vivid">Vivid</MenuItem>
-                    <MenuItem value="natural">Natural</MenuItem>
-                  </Select>
-                </FormControl>
-              </Grid>
-
-              <Grid item xs={12}>
-                <FormControlLabel
-                  control={
-                    <Switch
-                      checked={enhancePrompt}
-                      onChange={(e) => setEnhancePrompt(e.target.checked)}
-                    />
-                  }
-                  label="Enhance prompt with AI"
-                />
-              </Grid>
-
-              <Grid item xs={12}>
-                <Box display="flex" gap={1} alignItems="center">
-                  <TextField
-                    size="small"
-                    placeholder="Add tags..."
-                    value={tagInput}
-                    onChange={(e) => setTagInput(e.target.value)}
-                    onKeyPress={(e) => e.key === 'Enter' && handleAddTag()}
-                  />
-                  <Button size="small" onClick={handleAddTag}>Add</Button>
-                </Box>
-                <Box mt={1} display="flex" flexWrap="wrap" gap={0.5}>
-                  {tags.map((tag) => (
-                    <Chip
-                      key={tag}
-                      label={tag}
-                      size="small"
-                      onDelete={() => handleRemoveTag(tag)}
-                    />
-                  ))}
-                </Box>
-              </Grid>
-            </Grid>
-
-            <Button
+          </Grid>
+          
+          <Grid item xs={12} md={4}>
+            <TextField
+              select
               fullWidth
+              label="Style"
+              value={selectedStyle}
+              onChange={(e) => setSelectedStyle(e.target.value)}
+              disabled={isGenerating}
+              SelectProps={{ native: true }}
+            >
+              {styles.map(style => (
+                <option key={style.value} value={style.value}>
+                  {style.label}
+                </option>
+              ))}
+            </TextField>
+          </Grid>
+          
+          <Grid item xs={12} md={4}>
+            <TextField
+              select
+              fullWidth
+              label="Size"
+              value={selectedSize}
+              onChange={(e) => setSelectedSize(e.target.value)}
+              disabled={isGenerating}
+              SelectProps={{ native: true }}
+            >
+              {sizes.map(size => (
+                <option key={size.value} value={size.value}>
+                  {size.label}
+                </option>
+              ))}
+            </TextField>
+          </Grid>
+          
+          <Grid item xs={12} md={4}>
+            <TextField
+              type="number"
+              fullWidth
+              label="Number of Images"
+              value={imageCount}
+              onChange={(e) => setImageCount(Math.min(4, Math.max(1, parseInt(e.target.value) || 1)))}
+              disabled={isGenerating}
+              inputProps={{ min: 1, max: 4 }}
+            />
+          </Grid>
+          
+          <Grid item xs={12}>
+            <Button
               variant="contained"
+              color="primary"
               size="large"
               onClick={handleGenerate}
               disabled={isGenerating || !prompt.trim()}
-              startIcon={isGenerating ? <CircularProgress size={20} /> : <AutoAwesome />}
-              sx={{ mt: 3 }}
+              startIcon={isGenerating ? <CircularProgress size={20} /> : <RefreshIcon />}
             >
-              {isGenerating ? 'Generating...' : 'Generate Image'}
+              {isGenerating ? 'Generating...' : 'Generate Images'}
             </Button>
-          </Box>
+          </Grid>
         </Grid>
+        
+        {error && (
+          <Alert severity="error" sx={{ mt: 2 }} onClose={() => setError(null)}>
+            {error}
+          </Alert>
+        )}
+      </Paper>
 
-        <Grid item xs={12} md={6}>
-          <Box
-            sx={{
-              height: 400,
-              bgcolor: 'grey.100',
-              borderRadius: 2,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              position: 'relative',
-              overflow: 'hidden',
-            }}
-          >
-            {isGenerating ? (
-              <LoadingSpinner message="Creating your image..." />
-            ) : generatedImage ? (
-              <>
-                <img
-                  src={generatedImage.url}
-                  alt={generatedImage.name}
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'contain',
-                  }}
-                />
-                <IconButton
-                  sx={{
-                    position: 'absolute',
-                    top: 8,
-                    right: 8,
-                    bgcolor: 'background.paper',
-                  }}
-                  onClick={handleDownload}
-                >
-                  <Download />
-                </IconButton>
-              </>
-            ) : (
-              <Box textAlign="center" color="text.secondary">
-                <AutoAwesome sx={{ fontSize: 48, opacity: 0.3, mb: 1 }} />
-                <Typography variant="body2">
-                  Your generated image will appear here
-                </Typography>
-              </Box>
-            )}
-          </Box>
-
-          {generatedImage && (
-            <Box mt={2}>
-              <Alert severity="success">
-                Image generated successfully! It has been saved to your asset library.
-              </Alert>
-              <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}>
-                Revised prompt: {generatedImage.metadata?.revised_prompt}
-              </Typography>
-            </Box>
-          )}
-        </Grid>
-      </Grid>
-    </Paper>
+      {generatedImages.length > 0 && (
+        <Box>
+          <Typography variant="h6" gutterBottom>
+            Generated Images
+          </Typography>
+          
+          <Grid container spacing={2}>
+            {generatedImages.map(image => (
+              <Grid item xs={12} sm={6} md={4} key={image.id}>
+                <Card>
+                  <CardMedia
+                    component="div"
+                    sx={{ position: 'relative', paddingTop: '100%' }}
+                  >
+                    <Image
+                      src={image.url}
+                      alt={image.prompt}
+                      fill
+                      style={{ objectFit: 'cover' }}
+                    />
+                  </CardMedia>
+                  <CardContent>
+                    <Typography variant="body2" color="text.secondary" gutterBottom>
+                      {image.prompt}
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      Generated {image.createdAt.toLocaleString()}
+                    </Typography>
+                    {image.saved && (
+                      <Chip
+                        label="Saved"
+                        color="success"
+                        size="small"
+                        sx={{ ml: 1 }}
+                      />
+                    )}
+                  </CardContent>
+                  <CardActions>
+                    <IconButton
+                      size="small"
+                      onClick={() => handleSaveImage(image)}
+                      disabled={image.saved}
+                      title="Save to assets"
+                    >
+                      <SaveIcon />
+                    </IconButton>
+                    <IconButton
+                      size="small"
+                      onClick={() => handleDownload(image)}
+                      title="Download"
+                    >
+                      <DownloadIcon />
+                    </IconButton>
+                    <IconButton
+                      size="small"
+                      onClick={() => handleCopyPrompt(image.prompt)}
+                      title="Copy prompt"
+                    >
+                      <CopyIcon />
+                    </IconButton>
+                    <IconButton
+                      size="small"
+                      onClick={() => handleDeleteImage(image.id)}
+                      title="Delete"
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </CardActions>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        </Box>
+      )}
+    </Box>
   );
 };
 
-export { AIImageGenerator };
 export default AIImageGenerator;
