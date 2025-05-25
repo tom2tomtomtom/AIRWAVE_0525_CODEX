@@ -14,41 +14,12 @@ import {
   ThumbUp as ThumbUpIcon,
   MoreVert as MoreIcon,
 } from '@mui/icons-material';
-
-export interface Asset {
-  id: string;
-  name: string;
-  type: 'image' | 'video' | 'audio' | 'document' | 'other';
-  url: string;
-  description: string;
-  tags: string[];
-  categories: string[];
-  dateAdded: string;
-  dateModified: string;
-  isFavorite: boolean;
-  metadata: {
-    fileSize: string;
-    dimensions?: string;
-    duration?: string;
-    format: string;
-    creator: string;
-    source: string;
-    license: string;
-    usageRights: string;
-    expirationDate?: string;
-  };
-  performance?: {
-    views: number;
-    engagement: number;
-    conversion: number;
-    score: number;
-  };
-}
+import { Asset } from '@/types/models';
 
 interface AssetCardProps {
   asset: Asset;
-  onClick?: (asset: Asset) => void;
-  onMenuClick?: (asset: Asset, event: React.MouseEvent) => void;
+  onSelect?: (asset: Asset) => void;
+  onDelete?: (asset: Asset) => void;
   showPerformance?: boolean;
   compact?: boolean;
   maxTags?: number;
@@ -56,8 +27,8 @@ interface AssetCardProps {
 
 const AssetCard: React.FC<AssetCardProps> = ({
   asset,
-  onClick,
-  onMenuClick,
+  onSelect,
+  onDelete,
   showPerformance = false,
   compact = false,
   maxTags = 2,
@@ -76,28 +47,36 @@ const AssetCard: React.FC<AssetCardProps> = ({
   };
 
   const handleCardClick = () => {
-    if (onClick) {
-      onClick(asset);
+    if (onSelect) {
+      onSelect(asset);
     }
   };
 
   const handleMenuClick = (event: React.MouseEvent) => {
     event.stopPropagation();
-    if (onMenuClick) {
-      onMenuClick(asset, event);
+    if (onDelete) {
+      onDelete(asset);
     }
+  };
+
+  const formatFileSize = (bytes: number) => {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   };
 
   return (
     <Card
       variant="outlined"
       sx={{
-        cursor: onClick ? 'pointer' : 'default',
+        cursor: onSelect ? 'pointer' : 'default',
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
         transition: 'all 0.2s ease-in-out',
-        '&:hover': onClick ? {
+        '&:hover': onSelect ? {
           borderColor: 'primary.main',
           boxShadow: '0 0 0 1px rgba(25, 118, 210, 0.5)',
           transform: 'translateY(-2px)',
@@ -106,10 +85,10 @@ const AssetCard: React.FC<AssetCardProps> = ({
       onClick={handleCardClick}
     >
       {/* Media Preview */}
-      {asset.type === 'image' ? (
+      {asset.type === 'image' && asset.thumbnail_url ? (
         <Box
           component="img"
-          src={asset.url}
+          src={asset.thumbnail_url || asset.file_url}
           alt={asset.name}
           sx={{
             width: '100%',
@@ -142,16 +121,16 @@ const AssetCard: React.FC<AssetCardProps> = ({
           <Typography 
             variant={compact ? "body2" : "subtitle2"} 
             noWrap 
-            sx={{ maxWidth: onMenuClick ? '80%' : '90%', fontWeight: 500 }}
+            sx={{ maxWidth: onDelete ? '80%' : '90%', fontWeight: 500 }}
             title={asset.name}
           >
             {asset.name}
           </Typography>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-            {asset.isFavorite && (
-              <ThumbUpIcon fontSize="small" color="primary" />
+            {asset.ai_generated && (
+              <Chip label="AI" size="small" color="primary" sx={{ height: 20 }} />
             )}
-            {onMenuClick && (
+            {onDelete && (
               <IconButton
                 size="small"
                 onClick={handleMenuClick}
@@ -165,31 +144,13 @@ const AssetCard: React.FC<AssetCardProps> = ({
 
         {/* Metadata */}
         <Typography variant="caption" color="text.secondary" display="block">
-          {asset.type.charAt(0).toUpperCase() + asset.type.slice(1)} • {asset.metadata.fileSize}
+          {asset.type.charAt(0).toUpperCase() + asset.type.slice(1)} • {formatFileSize(asset.file_size)}
         </Typography>
 
-        {asset.metadata.dimensions && (
+        {asset.dimensions && (
           <Typography variant="caption" color="text.secondary" display="block">
-            {asset.metadata.dimensions}
+            {asset.dimensions.width} × {asset.dimensions.height}
           </Typography>
-        )}
-
-        {asset.metadata.duration && (
-          <Typography variant="caption" color="text.secondary" display="block">
-            Duration: {asset.metadata.duration}
-          </Typography>
-        )}
-
-        {/* Performance metrics */}
-        {showPerformance && asset.performance && (
-          <Box sx={{ mt: 1, mb: 1 }}>
-            <Typography variant="caption" color="text.secondary" display="block">
-              {asset.performance.views} views • {asset.performance.engagement}% engagement
-            </Typography>
-            <Typography variant="caption" color="primary.main" display="block">
-              Score: {asset.performance.score}/100
-            </Typography>
-          </Box>
         )}
 
         {/* Tags */}
@@ -215,8 +176,8 @@ const AssetCard: React.FC<AssetCardProps> = ({
           </Box>
         )}
 
-        {/* Description (if not compact) */}
-        {!compact && asset.description && (
+        {/* AI Prompt (if ai generated) */}
+        {!compact && asset.ai_prompt && (
           <Typography 
             variant="caption" 
             color="text.secondary" 
@@ -228,7 +189,7 @@ const AssetCard: React.FC<AssetCardProps> = ({
               overflow: 'hidden',
             }}
           >
-            {asset.description}
+            {asset.ai_prompt}
           </Typography>
         )}
       </CardContent>
