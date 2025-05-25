@@ -20,15 +20,18 @@ import {
   DialogTitle,
   DialogContent,
   IconButton,
+  FormHelperText,
 } from '@mui/material';
 import {
   AutoAwesome,
   Close as CloseIcon,
   Download,
   ContentCopy,
+  Info as InfoIcon,
 } from '@mui/icons-material';
 import axios, { AxiosError } from 'axios';
 import { Asset, BrandGuidelines } from '@/types/models';
+import { demoAssets } from '@/utils/demoData';
 
 // Define the response type for generated images
 interface GeneratedImageResponse {
@@ -62,6 +65,7 @@ export const AIImageGenerator: React.FC<AIImageGeneratorProps> = ({
   const [prompt, setPrompt] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [validationError, setValidationError] = useState<string | null>(null);
   const [generatedImage, setGeneratedImage] = useState<GeneratedImageResponse | null>(null);
   const [showDialog, setShowDialog] = useState(false);
   
@@ -74,16 +78,87 @@ export const AIImageGenerator: React.FC<AIImageGeneratorProps> = ({
     enhance_prompt: true,
   });
 
+  const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === 'true';
+  const hasApiKey = process.env.NEXT_PUBLIC_OPENAI_API_KEY || false;
+
+  const validateInput = (): string[] => {
+    const errors: string[] = [];
+    
+    if (!prompt || prompt.trim().length === 0) {
+      errors.push('Please enter a description for your image');
+    } else if (prompt.trim().length < 3) {
+      errors.push('Description must be at least 3 characters long');
+    } else if (prompt.trim().length > 1000) {
+      errors.push('Description must be less than 1000 characters');
+    }
+    
+    // Check for inappropriate content
+    const bannedWords = ['explicit', 'violence', 'gore']; // Add more as needed
+    const lowerPrompt = prompt.toLowerCase();
+    if (bannedWords.some(word => lowerPrompt.includes(word))) {
+      errors.push('Your prompt contains inappropriate content');
+    }
+    
+    return errors;
+  };
+
   const handleGenerate = async () => {
-    if (!prompt.trim()) {
-      setError('Please enter a prompt');
+    // Clear previous errors
+    setError(null);
+    setValidationError(null);
+
+    // Validate input
+    const validationErrors = validateInput();
+    if (validationErrors.length > 0) {
+      setValidationError(validationErrors.join('. '));
       return;
     }
 
     setLoading(true);
-    setError(null);
 
     try {
+      // Demo mode - return a random demo image
+      if (isDemoMode) {
+        await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate delay
+        
+        const demoImage = demoAssets[Math.floor(Math.random() * 3)]; // Random AI generated asset
+        const response: GeneratedImageResponse = {
+          success: true,
+          asset: {
+            ...demoImage,
+            name: `AI Generated - ${prompt.substring(0, 50)}...`,
+            ai_prompt: prompt,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          } as Asset,
+          generation_details: {
+            original_prompt: prompt,
+            enhanced_prompt: isDemoMode ? `[DEMO MODE] Enhanced: ${prompt}` : undefined,
+            model: 'dall-e-3',
+            settings: {
+              size: options.size,
+              quality: options.quality,
+              style: options.style,
+            },
+          },
+        };
+        
+        setGeneratedImage(response);
+        setShowDialog(true);
+        
+        if (onImageGenerated) {
+          onImageGenerated(response.asset);
+        }
+        return;
+      }
+
+      // Check for API key
+      if (!hasApiKey) {
+        setError('OpenAI API key is not configured. Please add NEXT_PUBLIC_OPENAI_API_KEY to your environment variables.');
+        return;
+      }
+
+      // Make actual API call
       const response = await axios.post<GeneratedImageResponse>('/api/dalle', {
         prompt,
         client_id: clientId,
@@ -106,15 +181,26 @@ export const AIImageGenerator: React.FC<AIImageGeneratorProps> = ({
       console.error('Generation error:', err);
       
       if (axios.isAxiosError(err)) {
-        const axiosError = err as AxiosError<{ message?: string }>;
-        setError(
-          axiosError.response?.data?.message || 
-          'Failed to generate image. Please try again.'
-        );
+        const axiosError = err as AxiosError<{ message?: string; error?: string }>;
+        
+        // Specific error messages based on status codes
+        if (axiosError.response?.status === 401) {
+          setError('Invalid API key. Please check your OpenAI API key configuration.');
+        } else if (axiosError.response?.status === 429) {
+          setError('Rate limit exceeded. Please try again in a few moments.');
+        } else if (axiosError.response?.status === 400) {
+          setError(axiosError.response?.data?.message || 'Invalid request. Please check your prompt and try again.');
+        } else {
+          setError(
+            axiosError.response?.data?.message || 
+            axiosError.response?.data?.error ||
+            'Failed to generate image. Please try again.'
+          );
+        }
       } else if (err instanceof Error) {
         setError(err.message);
       } else {
-        setError('An unexpected error occurred');
+        setError('An unexpected error occurred. Please try again.');
       }
     } finally {
       setLoading(false);
@@ -122,9 +208,9 @@ export const AIImageGenerator: React.FC<AIImageGeneratorProps> = ({
   };
 
   const handleDownload = async () => {
-    if (generatedImage?.asset?.url) {
+    if (generatedImage?.asset?.file_url) {
       const link = document.createElement('a');
-      link.href = generatedImage.asset.url;
+      link.href = generatedImage.asset.file_url;
       link.download = `ai-generated-${Date.now()}.png`;
       document.body.appendChild(link);
       link.click();
@@ -143,7 +229,27 @@ export const AIImageGenerator: React.FC<AIImageGeneratorProps> = ({
         <Box display="flex" alignItems="center" mb={3}>
           <AutoAwesome sx={{ mr: 1, color: 'primary.main' }} />
           <Typography variant="h5">AI Image Generator (DALL-E 3)</Typography>
+          {isDemoMode && (
+            <Chip 
+              label="DEMO MODE" 
+              size="small" 
+              color="info" 
+              sx={{ ml: 2 }}
+            />
+          )}
         </Box>
+
+        {isDemoMode && (
+          <Alert severity="info" sx={{ mb: 3 }} icon={<InfoIcon />}>
+            You're in demo mode. Generated images will be sample images for demonstration purposes.
+          </Alert>
+        )}
+
+        {!hasApiKey && !isDemoMode && (
+          <Alert severity="warning" sx={{ mb: 3 }}>
+            OpenAI API key is not configured. Add NEXT_PUBLIC_OPENAI_API_KEY to your .env file to enable image generation.
+          </Alert>
+        )}
 
         <Grid container spacing={3}>
           <Grid item xs={12}>
@@ -153,9 +259,14 @@ export const AIImageGenerator: React.FC<AIImageGeneratorProps> = ({
               rows={3}
               label="Describe the image you want to create"
               value={prompt}
-              onChange={(e) => setPrompt(e.target.value)}
+              onChange={(e) => {
+                setPrompt(e.target.value);
+                setValidationError(null); // Clear validation error on change
+              }}
               placeholder="A modern office space with natural lighting, minimalist design, and plants..."
               disabled={loading}
+              error={!!validationError}
+              helperText={validationError || `${prompt.length}/1000 characters`}
             />
           </Grid>
 
@@ -171,6 +282,7 @@ export const AIImageGenerator: React.FC<AIImageGeneratorProps> = ({
                 <MenuItem value="1792x1024">Landscape (1792×1024)</MenuItem>
                 <MenuItem value="1024x1792">Portrait (1024×1792)</MenuItem>
               </Select>
+              <FormHelperText>Choose based on your intended use</FormHelperText>
             </FormControl>
           </Grid>
 
@@ -190,6 +302,7 @@ export const AIImageGenerator: React.FC<AIImageGeneratorProps> = ({
                 <MenuItem value="banner">Banner</MenuItem>
                 <MenuItem value="icon">Icon/Logo</MenuItem>
               </Select>
+              <FormHelperText>Helps categorize your generated images</FormHelperText>
             </FormControl>
           </Grid>
 
@@ -202,7 +315,7 @@ export const AIImageGenerator: React.FC<AIImageGeneratorProps> = ({
                 disabled={loading}
               >
                 <MenuItem value="standard">Standard</MenuItem>
-                <MenuItem value="hd">HD (costs 2x)</MenuItem>
+                <MenuItem value="hd">HD (2x cost)</MenuItem>
               </Select>
             </FormControl>
           </Grid>
@@ -215,8 +328,8 @@ export const AIImageGenerator: React.FC<AIImageGeneratorProps> = ({
                 onChange={(e) => setOptions({ ...options, style: e.target.value })}
                 disabled={loading}
               >
-                <MenuItem value="vivid">Vivid</MenuItem>
-                <MenuItem value="natural">Natural</MenuItem>
+                <MenuItem value="vivid">Vivid (More artistic)</MenuItem>
+                <MenuItem value="natural">Natural (More realistic)</MenuItem>
               </Select>
             </FormControl>
           </Grid>
@@ -276,7 +389,7 @@ export const AIImageGenerator: React.FC<AIImageGeneratorProps> = ({
               <Box>
                 <Box
                   component="img"
-                  src={generatedImage.asset.url}
+                  src={generatedImage.asset.file_url}
                   alt="Generated image"
                   sx={{
                     width: '100%',
@@ -343,6 +456,7 @@ export const AIImageGenerator: React.FC<AIImageGeneratorProps> = ({
                   <Chip label={generatedImage.generation_details.settings.size} size="small" />
                   <Chip label={generatedImage.generation_details.settings.quality} size="small" />
                   <Chip label={generatedImage.generation_details.settings.style} size="small" />
+                  {isDemoMode && <Chip label="DEMO" size="small" color="info" />}
                 </Box>
 
                 <Box display="flex" gap={2} mt={3}>
@@ -373,3 +487,5 @@ export const AIImageGenerator: React.FC<AIImageGeneratorProps> = ({
     </Card>
   );
 };
+
+export default AIImageGenerator;
