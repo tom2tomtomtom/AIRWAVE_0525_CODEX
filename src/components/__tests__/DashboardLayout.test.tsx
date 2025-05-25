@@ -27,19 +27,20 @@ describe('DashboardLayout', () => {
   it('renders navigation menu', () => {
     render(<DashboardLayout><div>Content</div></DashboardLayout>);
     expect(screen.getByText(/Dashboard/i)).toBeInTheDocument();
-    expect(screen.getByText(/Generate/i)).toBeInTheDocument();
-    expect(screen.getByText(/Templates/i)).toBeInTheDocument();
-    expect(screen.getByText(/Matrix/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/Generate/i)[0]).toBeInTheDocument();
+    expect(screen.getAllByText(/Templates/i)[0]).toBeInTheDocument();
+    expect(screen.getAllByText(/Matrix/i)[0]).toBeInTheDocument();
   });
 
   it('highlights active route', () => {
     (useRouter as ReturnType<typeof vi.fn>).mockReturnValue({
-      pathname: '/generate',
+      pathname: '/generate-enhanced',
       push: mockPush,
     });
     
     render(<DashboardLayout><div>Content</div></DashboardLayout>);
-    const generateLink = screen.getByText(/Generate/i).closest('a');
-    expect(generateLink).toHaveClass('active');
+    const generateItem = screen.getAllByText(/Generate/i)[0];
+    const wrapper = generateItem.closest('[role="button"]');
+    expect(wrapper).toHaveClass('Mui-selected');
   });
 });
