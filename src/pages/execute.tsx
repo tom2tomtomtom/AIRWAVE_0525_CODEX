@@ -5,10 +5,8 @@ import {
   Grid,
   Card,
   CardContent,
-  CardActions,
   Button,
   Chip,
-  IconButton,
   Dialog,
   DialogTitle,
   DialogContent,
@@ -30,6 +28,7 @@ import {
   List,
   ListItem,
   ListItemIcon,
+  ListItemText,
   Avatar,
   Divider,
   Paper,
@@ -51,16 +50,9 @@ import {
   CheckCircle as CheckIcon,
   Cancel as CancelIcon,
   Pending as PendingIcon,
-  ContentCopy as CopyIcon,
-  InsertDriveFile as FileIcon,
-  Image as ImageIcon,
-  VideoFile as VideoIcon,
   CalendarMonth as CalendarIcon,
-  Group as GroupIcon,
   AttachMoney as BudgetIcon,
-  Analytics as AnalyticsIcon,
 } from '@mui/icons-material';
-import { useRouter } from 'next/router';
 import Head from 'next/head';
 import DashboardLayout from '@/components/DashboardLayout';
 import LoadingSkeleton from '@/components/LoadingSkeleton';
@@ -105,12 +97,11 @@ interface ExecutionTask {
 }
 
 const ExecutePage: React.FC = () => {
-  const router = useRouter();
   const { activeClient } = useClient();
   const { showNotification } = useNotification();
   const { data: campaigns, isLoading: campaignsLoading } = useCampaigns(activeClient?.id);
   const { data: matrices, isLoading: matricesLoading } = useMatrices(activeClient?.id);
-  const { data: assets, isLoading: assetsLoading } = useAssets(activeClient?.id);
+  const { isLoading: assetsLoading } = useAssets(activeClient?.id);
   
   const [activeStep, setActiveStep] = useState(0);
   const [selectedCampaign, setSelectedCampaign] = useState<Campaign | null>(null);
@@ -213,7 +204,6 @@ const ExecutePage: React.FC = () => {
     }, 2000);
   };
 
-  const activeCampaigns = campaigns?.filter(c => c.status === 'active') || [];
   const readyCampaigns = campaigns?.filter(c => 
     matrices?.some(m => m.clientId === c.clientId && m.status === 'approved')
   ) || [];
