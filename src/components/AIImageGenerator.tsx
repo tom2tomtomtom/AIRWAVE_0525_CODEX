@@ -487,5 +487,3 @@ export const AIImageGenerator: React.FC<AIImageGeneratorProps> = ({
     </Card>
   );
 };
-
-export default AIImageGenerator;
