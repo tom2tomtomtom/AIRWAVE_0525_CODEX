@@ -17,7 +17,6 @@ import {
   MenuItem,
   Tooltip,
   Collapse,
-  Alert,
   Stack,
   TextField,
   InputAdornment,
@@ -36,13 +35,10 @@ import {
   TrendingUp as AnalyticsIcon,
   Send as SendIcon,
   Circle as OnlineIcon,
-  ExpandMore as ExpandMoreIcon,
-  ExpandLess as ExpandLessIcon,
   Refresh as RefreshIcon,
 } from '@mui/icons-material';
 import { formatDistanceToNow } from 'date-fns';
 import { useClient } from '@/contexts/ClientContext';
-import { useAuth } from '@/contexts/AuthContext';
 import { useNotification } from '@/contexts/NotificationContext';
 
 interface Activity {
@@ -84,7 +80,6 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({
   realtime = true,
 }) => {
   const { activeClient } = useClient();
-  const { user } = useAuth();
   const { showNotification } = useNotification();
   
   const [activities, setActivities] = useState<Activity[]>([]);
@@ -172,7 +167,7 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({
           id: `u${Math.floor(Math.random() * 5)}`,
           name: ['Alex Wilson', 'Rachel Green', 'Tom Anderson', 'Lisa Park'][
             Math.floor(Math.random() * 4)
-          ],
+          ] || 'Unknown User',
           isOnline: Math.random() > 0.3,
         },
         timestamp: new Date(),
@@ -453,7 +448,7 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({
 
 // Notification Badge Component
 export const NotificationBadge: React.FC = () => {
-  const [unreadCount, setUnreadCount] = useState(3);
+  const [unreadCount] = useState(3);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   return (
