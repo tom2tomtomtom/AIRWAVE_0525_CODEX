@@ -10,6 +10,10 @@ env:
   NODE_VERSION: '20'
   CACHE_VERSION: v1
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   # Quality Gates - Run in parallel for faster feedback
   lint:
@@ -109,11 +113,92 @@ jobs:
 
       - name: Validate environment configuration
         run: npm run validate:env || echo "Environment validation failed - this is expected in CI"
+        
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          
+      - name: Upload Trivy scan results
+        uses: github/codeql-action/upload-sarif@v2
+        if: always()
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+  # Database Tests
+  database-tests:
+    name: 🗄️ Database Tests
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: test
+          POSTGRES_DB: airwave_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+          
+      redis:
+        image: redis:7
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+          
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Setup test environment
+        run: |
+          cp .env.example .env.test
+          echo "DATABASE_URL=postgresql://test:test@localhost:5432/airwave_test" >> .env.test
+          echo "REDIS_URL=redis://localhost:6379" >> .env.test
+          echo "NODE_ENV=test" >> .env.test
+
+      - name: Test database migration system
+        run: npm run db:migrate:test
+        env:
+          NODE_ENV: test
+          DATABASE_URL: postgresql://test:test@localhost:5432/airwave_test
+          
+      - name: Test database seeding
+        run: npm run db:seed:test
+        env:
+          NODE_ENV: test
+          DATABASE_URL: postgresql://test:test@localhost:5432/airwave_test
+          
+      - name: Validate schema integrity
+        run: npm run db:validate
+        env:
+          NODE_ENV: test
+          DATABASE_URL: postgresql://test:test@localhost:5432/airwave_test
 
   build:
     name: 🏗️ Build Application
     runs-on: ubuntu-latest
-    needs: [lint, typecheck, test, security]
+    needs: [lint, typecheck, test, security, database-tests]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -136,6 +221,16 @@ jobs:
         run: |
           echo "Build completed successfully"
           du -sh .next/ || echo "Build directory not found"
+          
+      - name: Validate build health
+        run: |
+          echo "Validating production build health..."
+          if [ -f ".next/BUILD_ID" ]; then
+            echo "✅ Build ID found: $(cat .next/BUILD_ID)"
+          fi
+          if [ -f ".next/routes-manifest.json" ]; then
+            echo "✅ Routes manifest found"
+          fi
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
