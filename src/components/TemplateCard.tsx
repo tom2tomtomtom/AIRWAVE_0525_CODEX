@@ -11,8 +11,7 @@ import {
   Typography,
   Button,
   Chip,
-  Grid,
-} from '@mui/material';
+  Grid} from '@mui/material';
 import {
   MoreVert as MoreIcon,
   Edit as EditIcon,
@@ -24,8 +23,7 @@ import {
   Twitter as TwitterIcon,
   YouTube as YouTubeIcon,
   LinkedIn as LinkedInIcon,
-  Pinterest as PinterestIcon,
-} from '@mui/icons-material';
+  Pinterest as PinterestIcon} from '@mui/icons-material';
 import { Template } from '@/types/models';
 const platformIcons: Record<string, React.ReactNode> = {
   Instagram: <InstagramIcon sx={{ color: '#E1306C' }} />,
@@ -47,8 +45,7 @@ const TemplateCard: React.FC<TemplateCardProps> = ({
   onEdit,
   onDelete,
   onDuplicate,
-  onCreateMatrix,
-}) => {
+  onCreateMatrix}) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {

@@ -94,11 +94,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       // Call the login API endpoint
       const response = await fetch('/api/auth/login-simple', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
+        headers: {},
+          'Content-Type': 'application/json'},
+        body: JSON.stringify({ email, password })});
 
       const data = await response.json();
 
@@ -132,11 +130,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       // Call the signup API endpoint
       const response = await fetch('/api/auth/signup-simple', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password, name }),
-      });
+        headers: {},
+          'Content-Type': 'application/json'},
+        body: JSON.stringify({ email, password, name })});
 
       const data = await response.json();
 
@@ -186,6 +182,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
+    <div>Content</div>
+  );
     <AuthContext.Provider
       value={{
         user,

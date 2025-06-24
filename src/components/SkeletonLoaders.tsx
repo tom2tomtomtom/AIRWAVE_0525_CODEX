@@ -62,8 +62,7 @@ export const ListItemSkeleton: React.FC<{ items?: number }> = ({ items = 5 }) =>
 // Table skeleton
 export const TableSkeleton: React.FC<{ rows?: number; columns?: number }> = ({
   rows = 5,
-  columns = 4,
-}) => (
+  columns = 4}) => (
   <Box>
     {/* Header */}
     <Box display="flex" gap={2} mb={2} p={2} bgcolor="background.paper">

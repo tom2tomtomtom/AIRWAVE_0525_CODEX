@@ -134,8 +134,7 @@ export class MigrationManager {
       version,
       up: upSection.trim(),
       down: downSection.trim(),
-      checksum,
-    };
+      checksum};
   }
 
   // Generate SHA-256 checksum
@@ -211,14 +210,12 @@ export class MigrationManager {
 
       loggers.general.info(`Migration applied successfully: ${migration.name}`, {
         version: migration.version,
-        executionTime,
-      });
+        executionTime});
 
       return {
         success: true,
         migration,
-        executionTime,
-      };
+        executionTime};
     } catch (error: any) {
       const executionTime = Date.now() - startTime;
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
@@ -226,15 +223,13 @@ export class MigrationManager {
       loggers.general.error(`Migration failed: ${migration.name}`, {
         version: migration.version,
         error: errorMessage,
-        executionTime,
-      });
+        executionTime});
 
       return {
         success: false,
         migration,
         error: errorMessage,
-        executionTime,
-      };
+        executionTime};
     }
   }
 
@@ -271,14 +266,12 @@ export class MigrationManager {
 
       loggers.general.info(`Migration rolled back successfully: ${migration.name}`, {
         version: migration.version,
-        executionTime,
-      });
+        executionTime});
 
       return {
         success: true,
         migration,
-        executionTime,
-      };
+        executionTime};
     } catch (error: any) {
       const executionTime = Date.now() - startTime;
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
@@ -286,15 +279,13 @@ export class MigrationManager {
       loggers.general.error(`Rollback failed: ${migration.name}`, {
         version: migration.version,
         error: errorMessage,
-        executionTime,
-      });
+        executionTime});
 
       return {
         success: false,
         migration,
         error: errorMessage,
-        executionTime,
-      };
+        executionTime};
     }
   }
 
@@ -330,8 +321,7 @@ export class MigrationManager {
     loggers.general.info('Migration batch completed', {
       total: results.length,
       successful,
-      failed,
-    });
+      failed});
 
     return results;
   }
@@ -385,8 +375,7 @@ export class MigrationManager {
       total: results.length,
       successful,
       failed,
-      targetVersion,
-    });
+      targetVersion});
 
     return results;
   }
@@ -407,8 +396,7 @@ export class MigrationManager {
       applied,
       pending,
       total,
-      currentVersion,
-    };
+      currentVersion};
   }
 
   // Validate migration checksums
@@ -437,14 +425,12 @@ export class MigrationManager {
 
       return {
         valid: errors.length === 0,
-        errors,
-      };
+        errors};
     } catch (error: any) {
       errors.push(`Validation failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
       return {
         valid: false,
-        errors,
-      };
+        errors};
     }
   }
 }

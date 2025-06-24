@@ -115,7 +115,7 @@ const NewCampaign: React.FC = () => {
         budget: campaignData.budget ? parseFloat(campaignData.budget) : 0,
         start_date: campaignData.startDate?.toISOString(),
         end_date: campaignData.endDate?.toISOString(),
-        targeting: {
+        targeting: {},
           audience: campaignData.targetAudience || '',
           frequency: campaignData.frequency || 'daily',
           estimatedPosts: campaignData.estimatedPosts || ''
@@ -129,7 +129,7 @@ const NewCampaign: React.FC = () => {
 
             const response = await fetch('/api/campaigns', {
         method: 'POST',
-        headers: {
+        headers: {},
         'Content-Type': 'application/json'
         },
         body: JSON.stringify(apiData)});
@@ -164,6 +164,8 @@ const NewCampaign: React.FC = () => {
     switch (step) {
       case 0:
         return (
+    <div>Content</div>
+  );
           <CampaignBasicInfo
             campaignData={campaignData}
             setCampaignData={setCampaignData}
@@ -172,6 +174,8 @@ const NewCampaign: React.FC = () => {
         );
       case 1:
         return (
+    <div>Content</div>
+  );
           <PlatformSelection
             campaignData={campaignData}
             setCampaignData={setCampaignData}
@@ -181,6 +185,8 @@ const NewCampaign: React.FC = () => {
         );
       case 2:
         return (
+    <div>Content</div>
+  );
           <CampaignSchedule
             campaignData={campaignData}
             setCampaignData={setCampaignData}
@@ -195,6 +201,8 @@ const NewCampaign: React.FC = () => {
 
   if (!activeClient) {
     return (
+    <div>Content</div>
+  );
       <DashboardLayout title="Create Campaign">
         <Container maxWidth="md">
           <Alert severity="warning" sx={{ mt: 4 }}>
@@ -206,6 +214,8 @@ const NewCampaign: React.FC = () => {
   }
 
   return (
+    <div>Content</div>
+  );
     <DashboardLayout title="Create Campaign">
       <Container maxWidth="md">
         <Box sx={{ mb: 4 }}>

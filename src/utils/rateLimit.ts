@@ -14,7 +14,7 @@ interface RateLimitConfig {
 }
 
 interface RateLimitStore {
-  [key: string]: {,
+  [key: string]: {
     count: number;,
     resetTime: number;
   };
@@ -107,45 +107,39 @@ export function createRateLimit(config: RateLimitConfig) {
  */
 export const rateLimiters = {
   // Strict rate limiting for authentication endpoints
-  auth: createRateLimit({,
+  auth: createRateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
     maxRequests: 5, // 5 attempts per 15 minutes
-    message: 'Too many authentication attempts, please try again later',
-  }),
+    message: 'Too many authentication attempts, please try again later'}),
 
   // Moderate rate limiting for API endpoints
-  api: createRateLimit({,
+  api: createRateLimit({
     windowMs: 60 * 1000, // 1 minute
     maxRequests: 60, // 60 requests per minute
-    message: 'Too many API requests, please slow down',
-  }),
+    message: 'Too many API requests, please slow down'}),
 
   // Strict rate limiting for AI generation endpoints
-  aiGeneration: createRateLimit({,
+  aiGeneration: createRateLimit({
     windowMs: 60 * 1000, // 1 minute
     maxRequests: 10, // 10 generations per minute
-    message: 'Too many AI generation requests, please wait before trying again',
-  }),
+    message: 'Too many AI generation requests, please wait before trying again'}),
 
   // Lenient rate limiting for general endpoints
-  general: createRateLimit({,
+  general: createRateLimit({
     windowMs: 60 * 1000, // 1 minute
     maxRequests: 100, // 100 requests per minute
-    message: 'Too many requests, please slow down',
-  }),
+    message: 'Too many requests, please slow down'}),
 
   // Very strict rate limiting for expensive operations
-  expensive: createRateLimit({,
+  expensive: createRateLimit({
     windowMs: 5 * 60 * 1000, // 5 minutes
     maxRequests: 3, // 3 requests per 5 minutes
-    message: 'This operation is rate limited, please try again later',
-  }),
-};
+    message: 'This operation is rate limited, please try again later'})};
 
 /**
  * Middleware wrapper for rate limiting
  */
-export function withRateLimit(
+export function withRateLimit('test case', () => {
   rateLimit: ReturnType<typeof createRateLimit>,
   handler: (req: NextApiRequest, res: NextApiResponse) => Promise<void>
 ) {
@@ -168,7 +162,7 @@ export function withRateLimit(
 /**
  * Check if request is rate limited without incrementing counter
  */
-export function checkRateLimit(
+export function checkRateLimit('test case', () => {
   req: NextApiRequest,
   config: RateLimitConfig
 ): {
@@ -230,8 +224,7 @@ export function getRateLimitStats(): {
   return {
     totalEntries: Object.keys(rateLimitStore).length,
     activeEntries: activeEntries.length,
-    topEndpoints,
-  };
+    topEndpoints};
 }
 
 /**

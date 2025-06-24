@@ -156,7 +156,7 @@ export class StructuredLogger {
   }): void {
     this.info(`AUDIT: ${action}`, {
       ...context,
-      metadata: {
+      metadata: {},
         auditType: 'user_action',
         ...context.metadata
       
@@ -170,7 +170,7 @@ export class StructuredLogger {
       context: { }
         ...context,
         duration,
-        metadata: {
+        metadata: {},
         performanceType: 'operation_timing',
           ...context?.metadata
         
@@ -185,7 +185,7 @@ export class StructuredLogger {
   }): void {
     this.warn(`SECURITY: ${event}`, {
       ...context,
-      metadata: {
+      metadata: {},
         securityType: 'security_event',
         ...context.metadata
       
@@ -205,7 +205,7 @@ export class StructuredLogger {
     this.logger[level](`API: ${context.method} ${context.route}`, {
       context: { }
         ...context,
-        metadata: {
+        metadata: {},
         requestType: 'api_request',
           ...context.metadata
         
@@ -227,7 +227,7 @@ export class StructuredLogger {
     this.logger[level](`AI: ${context.generationType} via ${context.provider}`, {
       context: { }
         ...context,
-        metadata: {
+        metadata: {},
         aiType: 'generation_request',
           ...context.metadata
         
@@ -241,7 +241,7 @@ export class StructuredLogger {
     this.logger[level](`WORKFLOW: ${step} ${status}`, {
       context: { }
         ...context,
-        metadata: {
+        metadata: {},
         workflowType: 'workflow_step',
           workflowId,
           step,

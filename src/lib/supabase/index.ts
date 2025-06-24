@@ -9,8 +9,7 @@ export {
   isAuthError,
   isNetworkError,
   isRateLimitError,
-  getErrorMessage,
-} from './errors';
+  getErrorMessage} from './errors';
 export { withRetry, withTransaction, withRLS, queryWithCache } from './helpers';
 
 // Re-export database types
@@ -41,5 +40,4 @@ export type {
   UserClient,
   Tables,
   Inserts,
-  Updates,
-} from '@/types/database';
+  Updates} from '@/types/database';

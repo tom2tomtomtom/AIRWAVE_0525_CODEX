@@ -1,0 +1,745 @@
+import React, { useState, useEffect } from 'react';
+import Head from 'next/head';
+import {
+  Box,
+  Typography,
+  Card,
+  CardContent,
+  Grid,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Tabs,
+  Tab,
+  Paper,
+  Chip,
+  Alert,
+  CircularProgress,
+  IconButton,
+  Tooltip,
+  Stack,
+  Avatar,
+  Divider,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  ListItemSecondaryAction} from '@mui/material';
+import {
+  Analytics as AnalyticsIcon,
+  TrendingUp,
+  TrendingDown,
+  Visibility,
+  ThumbUp,
+  Refresh,
+  Timeline,
+  ShowChart,
+  Campaign,
+  VideoLibrary,
+  Assessment} from '@mui/icons-material';
+import {
+  AreaChart,
+  Area,
+  PieChart as RechartsPieChart,
+  Pie,
+  Cell,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip as ChartTooltip,
+  Legend,
+  ResponsiveContainer} from 'recharts';
+import DashboardLayout from '@/components/DashboardLayout';
+import PerformanceDashboard from '@/components/analytics/PerformanceDashboard';
+import { useClient } from '@/contexts/ClientContext';
+import { useNotification } from '@/contexts/NotificationContext';
+
+interface AnalyticsOverview {
+  performanceData: Array<{
+    date: string;
+    views: number;
+    engagement: number;
+    conversions: number;
+    impressions: number;
+    clicks: number;
+    spend: number;
+  }>;
+  platformData: Array<{
+    name: string;
+    value: number;
+    color: string;
+    campaigns: number;
+    spend: number;
+  }>;
+  topPerformingContent: Array<{
+    id: string;
+    title: string;
+    platform: string;
+    views: number;
+    engagement: number;
+    conversion: number;
+    trend: 'up' | 'down' | 'neutral';
+    campaignId: string;
+    matrixId?: string;
+  }>;
+  kpiSummary: {},
+    totalImpressions: number;
+    totalClicks: number;
+    totalConversions: number;
+    totalSpend: number;
+    averageCTR: number;
+    averageConversionRate: number;
+    averageCPC: number;
+    roas: number;
+  };
+}
+
+interface AnalyticsInsights {
+  performance_insights: Array<{
+    metric: string;
+    insight: string;
+    impact: 'high' | 'medium' | 'low';
+    recommendation: string;
+  }>;
+  optimization_opportunities: Array<{
+    area: string;
+    opportunity: string;
+    potential_impact: string;
+    effort_required: 'low' | 'medium' | 'high';
+  }>;
+  trend_analysis: Array<{
+    metric: string;
+    trend: 'increasing' | 'decreasing' | 'stable';
+    change_percentage: number;
+    time_period: string;
+  }>;
+  anomaly_detection: Array<{
+    metric: string;
+    anomaly_type: 'spike' | 'drop' | 'unusual_pattern';
+    detected_at: string;
+    severity: 'low' | 'medium' | 'high';
+    description: string;
+  }>;
+  predictions: Array<{
+    metric: string;
+    predicted_value: number;
+    confidence: number;
+    time_horizon: string;
+  }>;
+}
+
+const AnalyticsPage: React.FC = () => {
+  const { activeClient } = useClient();
+  const { showNotification } = useNotification();
+
+  // State management
+  const [activeTab, setActiveTab] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [dateRange, setDateRange] = useState('30d');
+  const [selectedPlatform, setSelectedPlatform] = useState('all');
+
+  // Analytics data
+  const [overview, setOverview] = useState<AnalyticsOverview | null>(null);
+  const [insights, setInsights] = useState<AnalyticsInsights | null>(null);
+  const [performanceData, setPerformanceData] = useState<any>(null);
+
+  // Fetch analytics overview
+  const fetchAnalyticsOverview = async () => {
+    if (!activeClient) return;
+
+    try {
+      const params = new URLSearchParams({
+        client_id: activeClient.id,
+        date_range: dateRange,
+        platform: selectedPlatform});
+
+      const response = await fetch(`/api/analytics/overview?${params}`);
+      const result = await response.json();
+
+      if (result.success) {
+        setOverview(result.data);
+      } else {
+        throw new Error(result.error || 'Failed to fetch analytics overview');
+      }
+    } catch (err: any) {
+      setError(err instanceof Error ? err.message : 'Failed to load analytics');
+    }
+  };
+
+  // Fetch analytics insights
+  const fetchAnalyticsInsights = async () => {
+    if (!activeClient) return;
+
+    try {
+      const params = new URLSearchParams({
+        client_id: activeClient.id,
+        insight_types: 'performance,optimization,trends,anomalies,predictions',
+        date_range: dateRange});
+
+      const response = await fetch(`/api/analytics/insights?${params}`);
+      const result = await response.json();
+
+      if (result.success) {
+        setInsights(result.data);
+      } else {
+        throw new Error(result.error || 'Failed to fetch analytics insights');
+      }
+    } catch (err: any) {
+      console.error('Error fetching insights:', err);
+    }
+  };
+
+  // Fetch performance data
+  const fetchPerformanceData = async () => {
+    if (!activeClient) return;
+
+    try {
+      const params = new URLSearchParams({
+        client_id: activeClient.id,
+        date_range: dateRange,
+        granularity: 'daily',
+        metrics: 'impressions,clicks,conversions,spend,engagement'});
+
+      const response = await fetch(`/api/analytics/performance?${params}`);
+      const result = await response.json();
+
+      if (result.success) {
+        setPerformanceData(result.data);
+      } else {
+        throw new Error(result.error || 'Failed to fetch performance data');
+      }
+    } catch (err: any) {
+      console.error('Error fetching performance data:', err);
+    }
+  };
+
+  // Load all analytics data
+  const loadAnalyticsData = async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      await Promise.all([
+        fetchAnalyticsOverview(),
+        fetchAnalyticsInsights(),
+        fetchPerformanceData(),
+      ]);
+    } catch (err: any) {
+      setError(err instanceof Error ? err.message : 'Failed to load analytics');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Load data on mount and when dependencies change
+  useEffect(() => {
+    if (activeClient) {
+      loadAnalyticsData();
+    }
+  }, [activeClient, dateRange, selectedPlatform]);
+
+  // Handle refresh
+  const handleRefresh = () => {
+    loadAnalyticsData();
+    showNotification('Analytics data refreshed', 'success');
+  };
+
+  // Get trend icon and color
+  const getTrendIcon = (trend: 'up' | 'down' | 'neutral' | 'increasing' | 'decreasing' | 'stable') => {
+    switch (trend) {
+      case 'up':
+      case 'increasing':
+        return <TrendingUp color="success" />;
+      case 'down':
+      case 'decreasing':
+        return <TrendingDown color="error" />;
+      default:
+        return <Timeline color="action" />;
+    }
+  };
+
+  const getTrendColor = (trend: 'up' | 'down' | 'neutral' | 'increasing' | 'decreasing' | 'stable') => {
+    switch (trend) {
+      case 'up':
+      case 'increasing':
+        return 'success.main';
+      case 'down':
+      case 'decreasing':
+        return 'error.main';
+      default:
+        return 'text.secondary';
+    }
+  };
+
+  // Format numbers
+  const formatNumber = (num: number): string => {
+    if (num >= 1000000) {
+      return `${(num / 1000000).toFixed(1)}M`;
+    } else if (num >= 1000) {
+      return `${(num / 1000).toFixed(1)}K`;
+    }
+    return num.toString();
+  };
+
+  const formatCurrency = (amount: number): string => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD'}).format(amount);
+  };
+
+  const formatPercentage = (value: number): string => {
+    return `${(value * 100).toFixed(1)}%`;
+  };
+
+  return (
+    <>
+       <Head>
+        <title>Analytics Dashboard | AIRFLOW</title>
+      </Head>
+      <DashboardLayout title="Analytics">
+        <Box sx={{ mb: 4 }}>
+          <Box display="flex" alignItems="center" justifyContent="space-between" mb={3}>
+            <Box display="flex" alignItems="center" gap={2}>
+              <AnalyticsIcon sx={{ color: 'primary.main', fontSize: 32 }} />
+              <Box>
+                <Typography variant="h4" component="h1" gutterBottom fontWeight={600}>
+                  Analytics Dashboard
+                </Typography>
+                <Typography variant="body1" color="text.secondary">
+                  Comprehensive performance insights and metrics
+                </Typography>
+              </Box>
+            </Box>
+            <Stack direction="row" spacing={2}>
+              <FormControl size="small" sx={{ minWidth: 120 }}>
+                <InputLabel>Date Range</InputLabel>
+                <Select
+                  value={dateRange}
+                  label="Date Range"
+                  onChange={(e) => setDateRange(e.target.value)}
+                >
+                  <MenuItem value="7d">Last 7 days</MenuItem>
+                  <MenuItem value="30d">Last 30 days</MenuItem>
+                  <MenuItem value="90d">Last 90 days</MenuItem>
+                  <MenuItem value="1y">Last year</MenuItem>
+                </Select>
+              </FormControl>
+              <FormControl size="small" sx={{ minWidth: 120 }}>
+                <InputLabel>Platform</InputLabel>
+                <Select
+                  value={selectedPlatform}
+                  label="Platform"
+                  onChange={(e) => setSelectedPlatform(e.target.value)}
+                >
+                  <MenuItem value="all">All Platforms</MenuItem>
+                  <MenuItem value="facebook">Facebook</MenuItem>
+                  <MenuItem value="instagram">Instagram</MenuItem>
+                  <MenuItem value="youtube">YouTube</MenuItem>
+                  <MenuItem value="linkedin">LinkedIn</MenuItem>
+                  <MenuItem value="tiktok">TikTok</MenuItem>
+                </Select>
+              </FormControl>
+              <Tooltip title="Refresh Data">
+                <IconButton onClick={handleRefresh} disabled={loading}>
+                  <Refresh />
+                </IconButton>
+              </Tooltip>
+            </Stack>
+          </Box>
+
+          {!activeClient && (
+            <Alert severity="warning" sx={{ mb: 3 }}>
+              Please select a client to view analytics data.
+            </Alert>
+          )}
+
+          {error && (
+            <Alert severity="error" sx={{ mb: 3 }}>
+              {error}
+            </Alert>
+          )}
+
+          {loading && (
+            <Box display="flex" justifyContent="center" p={4}>
+              <CircularProgress />
+            </Box>
+          )}
+
+          {!loading && activeClient && overview && (
+            <Box>
+              {/* KPI Summary Cards */}
+              <Grid container spacing={3} sx={{ mb: 4 }}>
+                <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+                  <Card>
+                    <CardContent>
+                      <Box display="flex" alignItems="center" justifyContent="space-between">
+                        <Box>
+                          <Typography color="text.secondary" variant="body2">
+                            Total Impressions
+                          </Typography>
+                          <Typography variant="h4">
+                            {formatNumber(overview.kpiSummary.totalImpressions)}
+                          </Typography>
+                        </Box>
+                        <Avatar sx={{ bgcolor: 'primary.main' }}>
+                          <Visibility />
+                        </Avatar>
+                      </Box>
+                    </CardContent>
+                  </Card>
+                </Grid>
+                <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+                  <Card>
+                    <CardContent>
+                      <Box display="flex" alignItems="center" justifyContent="space-between">
+                        <Box>
+                          <Typography color="text.secondary" variant="body2">
+                            Total Clicks
+                          </Typography>
+                          <Typography variant="h4">
+                            {formatNumber(overview.kpiSummary.totalClicks)}
+                          </Typography>
+                          <Typography variant="body2" color="text.secondary">
+                            CTR: {formatPercentage(overview.kpiSummary.averageCTR)}
+                          </Typography>
+                        </Box>
+                        <Avatar sx={{ bgcolor: 'success.main' }}>
+                          <ThumbUp />
+                        </Avatar>
+                      </Box>
+                    </CardContent>
+                  </Card>
+                </Grid>
+                <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+                  <Card>
+                    <CardContent>
+                      <Box display="flex" alignItems="center" justifyContent="space-between">
+                        <Box>
+                          <Typography color="text.secondary" variant="body2">
+                            Conversions
+                          </Typography>
+                          <Typography variant="h4">
+                            {formatNumber(overview.kpiSummary.totalConversions)}
+                          </Typography>
+                          <Typography variant="body2" color="text.secondary">
+                            Rate: {formatPercentage(overview.kpiSummary.averageConversionRate)}
+                          </Typography>
+                        </Box>
+                        <Avatar sx={{ bgcolor: 'warning.main' }}>
+                          <Assessment />
+                        </Avatar>
+                      </Box>
+                    </CardContent>
+                  </Card>
+                </Grid>
+                <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+                  <Card>
+                    <CardContent>
+                      <Box display="flex" alignItems="center" justifyContent="space-between">
+                        <Box>
+                          <Typography color="text.secondary" variant="body2">
+                            Total Spend
+                          </Typography>
+                          <Typography variant="h4">
+                            {formatCurrency(overview.kpiSummary.totalSpend)}
+                          </Typography>
+                          <Typography variant="body2" color="text.secondary">
+                            ROAS: {overview.kpiSummary.roas.toFixed(2)}x
+                          </Typography>
+                        </Box>
+                        <Avatar sx={{ bgcolor: 'error.main' }}>
+                          <Campaign />
+                        </Avatar>
+                      </Box>
+                    </CardContent>
+                  </Card>
+                </Grid>
+              </Grid>
+
+              {/* Tabs for different views */}
+              <Paper sx={{ mb: 3 }}>
+                <Tabs value={activeTab} onChange={(_, newValue) => setActiveTab(newValue)}>
+                  <Tab label="Overview" icon={<ShowChart />} />
+                  <Tab label="Performance" icon={<Timeline />} />
+                  <Tab label="Insights" icon={<Assessment />} />
+                  <Tab label="Content" icon={<VideoLibrary />} />
+                </Tabs>
+              </Paper>
+
+              {/* Tab Content */}
+              {activeTab === 0 && (
+                <Grid container spacing={3}>
+                  {/* Performance Chart */}
+                  <Grid size={{ xs: 12, lg: 8 }}>
+                    <Card>
+                      <CardContent>
+                        <Typography variant="h6" gutterBottom>
+                          Performance Over Time
+                        </Typography>
+                        <Box sx={{ height: 400 }}>
+                          <ResponsiveContainer width="100%" height="100%">
+                            <AreaChart data={overview.performanceData}>
+                              <CartesianGrid strokeDasharray="3 3" />
+                              <XAxis dataKey="date" />
+                              <YAxis />
+                              <ChartTooltip />
+                              <Legend />
+                              <Area
+                                type="monotone"
+                                dataKey="impressions"
+                                stackId="1"
+                                stroke="#8884d8"
+                                fill="#8884d8"
+                                name="Impressions"
+                              />
+                              <Area
+                                type="monotone"
+                                dataKey="clicks"
+                                stackId="1"
+                                stroke="#82ca9d"
+                                fill="#82ca9d"
+                                name="Clicks"
+                              />
+                              <Area
+                                type="monotone"
+                                dataKey="conversions"
+                                stackId="1"
+                                stroke="#ffc658"
+                                fill="#ffc658"
+                                name="Conversions"
+                              />
+                            </AreaChart>
+                          </ResponsiveContainer>
+                        </Box>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+
+                  {/* Platform Distribution */}
+                  <Grid size={{ xs: 12, lg: 4 }}>
+                    <Card>
+                      <CardContent>
+                        <Typography variant="h6" gutterBottom>
+                          Platform Distribution
+                        </Typography>
+                        <Box sx={{ height: 300 }}>
+                          <ResponsiveContainer width="100%" height="100%">
+                            <RechartsPieChart>
+                              <Pie
+                                data={overview.platformData}
+                                cx="50%"
+                                cy="50%"
+                                outerRadius={80}
+                                fill="#8884d8"
+                                dataKey="value"
+                                label={(entry) => `${entry.name}: ${entry.value}%`}
+                              >
+                                {overview.platformData.map((entry, index) => (
+                                  <Cell key={`cell-${index}`} fill={entry.color} />
+                                ))}
+                              </Pie>
+                              <ChartTooltip />
+                            </RechartsPieChart>
+                          </ResponsiveContainer>
+                        </Box>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+
+                  {/* Top Performing Content */}
+                  <Grid size={{ xs: 12 }}>
+                    <Card>
+                      <CardContent>
+                        <Typography variant="h6" gutterBottom>
+                          Top Performing Content
+                        </Typography>
+                        <List>
+                          {overview.topPerformingContent.slice(0, 5).map((content, index) => (
+                            <React.Fragment key={content.id}>
+                              {index > 0 && <Divider />}
+                              <ListItem>
+                                <ListItemIcon>
+                                  <Avatar sx={{ bgcolor: 'primary.main' }}>
+                                    {index + 1}
+                                  </Avatar>
+                                </ListItemIcon>
+                                <ListItemText
+                                  primary={content.title}
+                                  secondary={
+                                    <Box>
+                                      <Typography variant="body2" color="text.secondary">
+                                        {content.platform} • {formatNumber(content.views)} views
+                                      </Typography>
+                                      <Box display="flex" gap={1} mt={0.5}>
+                                        <Chip
+                                          label={`${content.engagement}% engagement`}
+                                          size="small"
+                                          variant="outlined"
+                                        />
+                                        <Chip
+                                          label={`${content.conversion}% conversion`}
+                                          size="small"
+                                          variant="outlined"
+                                        />
+                                      </Box>
+                                    </Box>
+                                  }
+                                />
+                                <ListItemSecondaryAction>
+                                  {getTrendIcon(content.trend)}
+                                </ListItemSecondaryAction>
+                              </ListItem>
+                            </React.Fragment>
+                          ))}
+                        </List>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                </Grid>
+              )}
+
+              {activeTab === 1 && performanceData && (
+                <PerformanceDashboard
+                  clientId={activeClient.id}
+                  dateRange={{
+                    start: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
+                    end: new Date().toISOString()}}
+                />
+              )}
+
+              {activeTab === 2 && insights && (
+                <Grid container spacing={3}>
+                  {/* Performance Insights */}
+                  <Grid size={{ xs: 12, md: 6 }}>
+                    <Card>
+                      <CardContent>
+                        <Typography variant="h6" gutterBottom>
+                          Performance Insights
+                        </Typography>
+                        <List>
+                          {insights.performance_insights.map((insight, index) => (
+                            <ListItem key={index}>
+                              <ListItemIcon>
+                                <Chip
+                                  label={insight.impact}
+                                  size="small"
+                                  color={
+                                    insight.impact === 'high'
+                                      ? 'error'
+                                      : insight.impact === 'medium'
+                                      ? 'warning'
+                                      : 'success'
+                                  }
+                                />
+                              </ListItemIcon>
+                              <ListItemText
+                                primary={insight.metric}
+                                secondary={
+                                  <Box>
+                                    <Typography variant="body2">{insight.insight}</Typography>
+                                    <Typography variant="caption" color="primary">
+                                      Recommendation: {insight.recommendation}
+                                    </Typography>
+                                  </Box>
+                                }
+                              />
+                            </ListItem>
+                          ))}
+                        </List>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+
+                  {/* Optimization Opportunities */}
+                  <Grid size={{ xs: 12, md: 6 }}>
+                    <Card>
+                      <CardContent>
+                        <Typography variant="h6" gutterBottom>
+                          Optimization Opportunities
+                        </Typography>
+                        <List>
+                          {insights.optimization_opportunities.map((opportunity, index) => (
+                            <ListItem key={index}>
+                              <ListItemIcon>
+                                <Chip
+                                  label={opportunity.effort_required}
+                                  size="small"
+                                  variant="outlined"
+                                />
+                              </ListItemIcon>
+                              <ListItemText
+                                primary={opportunity.area}
+                                secondary={
+                                  <Box>
+                                    <Typography variant="body2">{opportunity.opportunity}</Typography>
+                                    <Typography variant="caption" color="success.main">
+                                      Impact: {opportunity.potential_impact}
+                                    </Typography>
+                                  </Box>
+                                }
+                              />
+                            </ListItem>
+                          ))}
+                        </List>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+
+                  {/* Trend Analysis */}
+                  <Grid size={{ xs: 12 }}>
+                    <Card>
+                      <CardContent>
+                        <Typography variant="h6" gutterBottom>
+                          Trend Analysis
+                        </Typography>
+                        <Grid container spacing={2}>
+                          {insights.trend_analysis.map((trend, index) => (
+                            <Grid size={{ xs: 12, sm: 6, md: 4 }} key={index}>
+                              <Paper sx={{ p: 2 }}>
+                                <Box display="flex" alignItems="center" justifyContent="space-between" mb={1}>
+                                  <Typography variant="subtitle2">{trend.metric}</Typography>
+                                  {getTrendIcon(trend.trend)}
+                                </Box>
+                                <Typography
+                                  variant="h6"
+                                  color={getTrendColor(trend.trend)}
+                                  gutterBottom
+                                >
+                                  {trend.change_percentage > 0 ? '+' : ''}{trend.change_percentage.toFixed(1)}%
+                                </Typography>
+                                <Typography variant="caption" color="text.secondary">
+                                  {trend.time_period}
+                                </Typography>
+                              </Paper>
+                            </Grid>
+                          ))}
+                        </Grid>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                </Grid>
+              )}
+
+              {activeTab === 3 && (
+                <Card>
+                  <CardContent>
+                    <Typography variant="h6" gutterBottom>
+                      Content Performance Analysis
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Detailed content performance analysis will be displayed here.
+                    </Typography>
+                  </CardContent>
+                </Card>
+              )}
+            </Box>
+          )}
+        </Box>
+      </DashboardLayout>
+    </>
+  );
+};
+
+export default AnalyticsPage;

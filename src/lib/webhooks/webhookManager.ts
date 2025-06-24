@@ -25,7 +25,7 @@ export async function sendWebhook(
   try {
     const response = await fetch(endpoint.url, {
       method: 'POST',
-      headers: {
+      headers: {},
         'Content-Type': 'application/json',
         'User-Agent': 'AIrWAVE-Webhook/1.0',
         ...(endpoint.secret && {

@@ -53,7 +53,7 @@ export default async function handler(
         height: null,
         client_id,
         tags,
-        metadata: {
+        metadata: {},
         ...metadata,
           content, // Store the actual text/voice content in metadata
           saved_at: new Date().toISOString() },

@@ -18,8 +18,7 @@ import {
   Select,
   MenuItem,
   Slider,
-  Grid,
-} from '@mui/material';
+  Grid} from '@mui/material';
 import {
   Videocam as VideocamIcon,
   Star as StarIcon,
@@ -29,8 +28,7 @@ import {
   Save as SaveIcon,
   Refresh as RefreshIcon,
   Stop as StopIcon,
-  PlayArrow as PlayArrowIcon,
-} from '@mui/icons-material';
+  PlayArrow as PlayArrowIcon} from '@mui/icons-material';
 
 interface GeneratedVideo {
   id: string;
@@ -71,9 +69,10 @@ const LazyVideoGenerationSection: React.FC<LazyVideoGenerationSectionProps> = ({
   isGeneratingVideo,
   generatedVideos,
   handleGenerateVideo,
-  handleToggleVideoFavorite,
-}) => {
+  handleToggleVideoFavorite}) => {
   return (
+    <div>Content</div>
+  );
     <Box>
       <Typography variant="h6" gutterBottom>
         Generate Videos
@@ -222,8 +221,7 @@ const LazyVideoGenerationSection: React.FC<LazyVideoGenerationSectionProps> = ({
                               position: 'absolute',
                               top: '50%',
                               left: '50%',
-                              transform: 'translate(-50%, -50%)',
-                            }}
+                              transform: 'translate(-50%, -50%)'}}
                           >
                             <CircularProgress color="primary" />
                           </Box>
@@ -243,9 +241,7 @@ const LazyVideoGenerationSection: React.FC<LazyVideoGenerationSectionProps> = ({
                                 backgroundColor: 'rgba(0, 0, 0, 0.6)',
                                 color: 'white',
                                 '&:hover': {
-                                  backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                                },
-                              }}
+                                  backgroundColor: 'rgba(0, 0, 0, 0.8)'}}}
                             >
                               <PlayArrowIcon />
                             </IconButton>

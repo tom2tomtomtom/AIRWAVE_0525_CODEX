@@ -194,8 +194,7 @@ import {
   methodNotAllowed,
   validateRequiredFields,
   createPaginationMeta,
-  ApiErrorCode,
-} from '@/lib/api-response';
+  ApiErrorCode} from '@/lib/api-response';
 
 export interface Asset {
   id: string;
@@ -277,8 +276,7 @@ async function getAssets(req: NextApiRequest, res: NextApiResponse, user: any): 
       type = '',
       clientId = '',
       sortBy = 'created_at',
-      sortOrder = 'desc',
-    } = req.query;
+      sortOrder = 'desc'} = req.query;
 
     const pageNum = parseInt(page as string, 10);
     const limitNum = Math.min(parseInt(limit as string, 10), 100); // Cap at 100
@@ -386,8 +384,7 @@ async function createAsset(req: NextApiRequest, res: NextApiResponse, user: any)
       mimeType,
       duration,
       width,
-      height,
-    } = req.body;
+      height} = req.body;
 
     // Validate required fields
     const missingFields = validateRequiredFields(req.body, ['name', 'type', 'url']);
@@ -404,8 +401,7 @@ async function createAsset(req: NextApiRequest, res: NextApiResponse, user: any)
     if (!['image', 'video', 'text', 'voice'].includes(type)) {
       return res.status(400).json({
         success: false,
-        message: 'Type must be one of: image, video, text, voice',
-      });
+        message: 'Type must be one of: image, video, text, voice'});
     }
 
     // Prepare data for database (map to correct field names)
@@ -463,8 +459,7 @@ async function createAsset(req: NextApiRequest, res: NextApiResponse, user: any)
     return res.status(201).json({
       success: true,
       message: 'Asset created successfully',
-      asset,
-    });
+      asset});
   } catch (error: any) {
     const message = getErrorMessage(error);
     console.error('Create asset error:', error);
@@ -547,8 +542,7 @@ async function updateAsset(req: NextApiRequest, res: NextApiResponse, user: any)
     return res.status(200).json({
       success: true,
       message: 'Asset updated successfully',
-      asset,
-    });
+      asset});
   } catch (error: any) {
     const message = getErrorMessage(error);
     console.error('Update asset error:', error);

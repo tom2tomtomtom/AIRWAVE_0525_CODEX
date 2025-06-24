@@ -621,7 +621,7 @@ export class SecurityLogger {
       if (process.env.SECURITY_WEBHOOK_URL) {
         fetch(process.env.SECURITY_WEBHOOK_URL, {
           method: 'POST',
-          headers: {
+          headers: {},
         'Content-Type': 'application/json' 
       },
           body: JSON.stringify(event)}).catch(error => {

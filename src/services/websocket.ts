@@ -249,8 +249,7 @@ class WebSocketService extends EventEmitter {
       type: 'render_progress',
       payload: data,
       timestamp: Date.now(),
-      userId,
-    };
+      userId};
 
     if (userId) {
       this.broadcastToUser(userId, message);
@@ -264,8 +263,7 @@ class WebSocketService extends EventEmitter {
       type: 'render_complete',
       payload: data,
       timestamp: Date.now(),
-      userId,
-    };
+      userId};
 
     if (userId) {
       this.broadcastToUser(userId, message);
@@ -279,8 +277,7 @@ class WebSocketService extends EventEmitter {
       type: 'notification',
       payload: data,
       timestamp: Date.now(),
-      userId,
-    };
+      userId};
 
     if (userId) {
       this.broadcastToUser(userId, message);
@@ -294,8 +291,7 @@ class WebSocketService extends EventEmitter {
       type: 'activity_update',
       payload: data,
       timestamp: Date.now(),
-      userId,
-    };
+      userId};
 
     if (userId) {
       this.broadcastToUser(userId, message);

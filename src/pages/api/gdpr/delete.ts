@@ -42,8 +42,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void>
           <p>Your AIrFLOW account and all associated data have been permanently deleted.</p>
           <p>Deletion completed at: ${new Date().toISOString()}</p>
           <p>If you have any questions, please contact our support team.</p>
-        `,
-      });
+        `});
     }
 
     // Log the user out by clearing their session

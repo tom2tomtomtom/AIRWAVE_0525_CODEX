@@ -9,8 +9,7 @@ import {
   Button,
   Card,
   CardContent,
-  Grid,
-} from '@mui/material';
+  Grid} from '@mui/material';
 import {
   Facebook,
   Instagram,
@@ -19,8 +18,7 @@ import {
   LinkedIn,
   MusicNote as TikTok,
   ArrowBack as ArrowBackIcon,
-  ArrowForward as ArrowForwardIcon,
-} from '@mui/icons-material';
+  ArrowForward as ArrowForwardIcon} from '@mui/icons-material';
 const platformOptions = [
   {
     value: 'facebook',
@@ -59,8 +57,7 @@ const PlatformSelection: React.FC<PlatformSelectionProps> = ({
   campaignData,
   setCampaignData,
   onNext,
-  onBack,
-}) => {
+  onBack}) => {
   const isValid = campaignData.platforms && campaignData.platforms.length > 0;
   return (
     <Box>

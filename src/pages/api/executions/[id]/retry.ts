@@ -138,7 +138,7 @@ async function handleRetry(req: NextApiRequest, res: NextApiResponse, user: any,
   await supabase
     .from('executions')
     .update({
-      metadata: {
+      metadata: {},
         ...execution.metadata,
         retry_info: {},
   retried_at: new Date().toISOString(),
@@ -278,7 +278,7 @@ async function prepareRetryExecution(originalExecution: any, retryData: any, use
     content_type: originalExecution.content_type,
     platform: originalExecution.platform,
     status: retryData.delay_seconds > 0 ? 'scheduled' : 'pending',
-    metadata: {
+    metadata: {},
         ...originalExecution.metadata,
       is_retry: true,
       original_execution_id: originalExecution.id,
@@ -318,7 +318,7 @@ async function triggerRetryExecution(retryExecution: any, delaySeconds: number):
       .from('executions')
       .update({
         status: triggerResult.success ? 'processing' : 'failed',
-        metadata: {
+        metadata: {},
         ...retryExecution.metadata,
           trigger_result: triggerResult,
           triggered_at: new Date().toISOString()

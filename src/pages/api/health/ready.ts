@@ -74,8 +74,7 @@ export default async function handler(
     const response: ReadinessResponse = {
       ready: allReady,
       timestamp: new Date().toISOString(),
-      checks,
-    };
+      checks};
 
     loggers.general.debug('Readiness check completed', { ready: allReady, checks });
 
@@ -91,7 +90,6 @@ export default async function handler(
           service: 'readiness-check',
           ready: false,
           error: error instanceof Error ? error.message : 'Readiness check execution failed' },
-      ],
-    });
+      ]});
   }
 }

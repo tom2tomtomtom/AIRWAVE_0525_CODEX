@@ -31,7 +31,7 @@ interface RequestContext {
 }
 
 // Default configuration
-const DEFAULT_CONFIG: Required<MetricsConfig> = {,
+const DEFAULT_CONFIG: Required<MetricsConfig> = {
     trackResponseTime: true,
   trackRequestCount: true,
   trackErrorRate: true,
@@ -135,8 +135,7 @@ function trackRequestStart(context: RequestContext, customTags: Record<string, s
     method: context.method,
     endpoint: context.endpoint,
     user_agent: getUserAgentCategory(context.userAgent),
-    ...customTags,
-  };
+    ...customTags};
 
   metrics.counter('api.requests.started', 1, tags);
 
@@ -164,8 +163,7 @@ function trackRequestCompletion(
     status_code: statusCode.toString(),
     status_class: statusClass,
     user_agent: getUserAgentCategory(context.userAgent),
-    ...config.customTags,
-  };
+    ...config.customTags};
 
   // Track request completion
   if (config.trackRequestCount) {
@@ -241,8 +239,7 @@ function trackError(context: RequestContext, error: unknown, customTags: Record<
     endpoint: context.endpoint,
     error_type: error.constructor.name,
     error_message: error.message?.substring(0, 100) || 'unknown',
-    ...customTags,
-  };
+    ...customTags};
 
   metrics.counter('api.errors.total', 1, tags);
 
@@ -274,8 +271,7 @@ function trackUserAction(
     user_id: context.userId,
     client_id: context.clientId || 'none',
     success: statusCode < 400 ? 'true' : 'false',
-    ...baseTags,
-  };
+    ...baseTags};
 
   // Infer action type from endpoint
   const action = inferActionFromEndpoint(context.endpoint, context.method);

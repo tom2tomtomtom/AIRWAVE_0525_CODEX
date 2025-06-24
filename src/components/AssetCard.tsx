@@ -24,7 +24,7 @@ export interface Asset {
   dateAdded: string;
   dateModified: string;
   isFavorite: boolean;
-  metadata: {
+  metadata: {},
         fileSize: string;
     dimensions?: string;
     duration?: string;
@@ -87,6 +87,8 @@ const AssetCard: React.FC<AssetCardProps> = ({
   };
 
   return (
+    <div>Content</div>
+  );
     <Card
       className="floating-card"
       sx={{

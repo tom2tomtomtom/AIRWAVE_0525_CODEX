@@ -20,8 +20,7 @@ const CreateAlertRuleSchema = z.object({
     operator: z.enum(['>', '<', '=', '!=', '>=', '<=']),
     value: z.number(),
     timeWindow: z.number().min(60).max(86400), // 1 minute to 24 hours
-    aggregation: z.enum(['avg', 'sum', 'max', 'min', 'count']).optional(),
-  }),
+    aggregation: z.enum(['avg', 'sum', 'max', 'min', 'count']).optional()}),
   evaluation: z.object({
     intervalSeconds: z.number().min(30).max(3600),
     forDuration: z.number().min(0).max(3600) }),
@@ -38,10 +37,8 @@ const CreateAlertRuleSchema = z.object({
             .object({
               start: z.string(),
               end: z.string() })
-            .optional(),
-        })
-        .optional(),
-    })
+            .optional()})
+        .optional()})
   ),
   runbook: z.string().url().optional(),
   tags: z.record(z.string()).optional(),
@@ -109,10 +106,9 @@ async function handleGetAlerts(req: NextApiRequest, res: NextApiResponse) {
       return res.status(200).json({
         success: true,
         data: { rules  },
-  meta: {
+  meta: {},
           count: rules.length,
-          timestamp: new Date().toISOString() },
-      });
+          timestamp: new Date().toISOString() }});
     }
 
     // Return active alerts
@@ -141,12 +137,11 @@ async function handleGetAlerts(req: NextApiRequest, res: NextApiResponse) {
 
     return res.status(200).json({
       success: true,
-      data: {
+      data: {},
         alerts: alerts.map(alert => ({
           ...alert,
           duration: alert.lastSeen.getTime() - alert.firstSeen.getTime() })),
-        stats,
-      },
+        stats},
       meta: { timestamp: new Date().toISOString()  }
     });
   } catch (error) {
@@ -164,8 +159,7 @@ async function handleCreateRule(req: NextApiRequest, res: NextApiResponse) {
 
     const rule: AlertRule = {
       id: `rule_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-      ...validatedData,
-    };
+      ...validatedData};
 
     alerting.addRule(rule);
 
@@ -178,11 +172,10 @@ async function handleCreateRule(req: NextApiRequest, res: NextApiResponse) {
     if (error instanceof z.ZodError) {
       return res.status(400).json({
         success: false,
-        error: {
+        error: {},
           code: 'VALIDATION_ERROR',
           message: 'Invalid rule data',
-          details: error.errors },
-      });
+          details: error.errors }});
     }
 
     console.error('Failed to create alert rule:', error);
@@ -226,11 +219,10 @@ async function handleUpdateRule(req: NextApiRequest, res: NextApiResponse) {
     if (error instanceof z.ZodError) {
       return res.status(400).json({
         success: false,
-        error: {
+        error: {},
           code: 'VALIDATION_ERROR',
           message: 'Invalid rule data',
-          details: error.errors },
-      });
+          details: error.errors }});
     }
 
     console.error('Failed to update alert rule:', error);
@@ -322,23 +314,21 @@ async function handleAcknowledgeAlert(req: NextApiRequest, res: NextApiResponse)
 
     return res.status(200).json({
       success: true,
-      data: {
+      data: {},
         acknowledged: true,
         alertId,
         acknowledgedBy,
-        comment,
-      },
+        comment},
       meta: { timestamp: new Date().toISOString()  }
     });
   } catch (error) {
     if (error instanceof z.ZodError) {
       return res.status(400).json({
         success: false,
-        error: {
+        error: {},
           code: 'VALIDATION_ERROR',
           message: 'Invalid acknowledgment data',
-          details: error.errors },
-      });
+          details: error.errors }});
     }
     throw error;
   }
@@ -363,7 +353,7 @@ async function handleSilenceAlert(req: NextApiRequest, res: NextApiResponse) {
 
     return res.status(200).json({
       success: true,
-      data: {
+      data: {},
         silenced: true,
         alertId,
         duration,
@@ -375,11 +365,10 @@ async function handleSilenceAlert(req: NextApiRequest, res: NextApiResponse) {
     if (error instanceof z.ZodError) {
       return res.status(400).json({
         success: false,
-        error: {
+        error: {},
           code: 'VALIDATION_ERROR',
           message: 'Invalid silence data',
-          details: error.errors },
-      });
+          details: error.errors }});
     }
     throw error;
   }
@@ -411,7 +400,7 @@ async function handleResolveAlert(req: NextApiRequest, res: NextApiResponse) {
 
   return res.status(200).json({
     success: true,
-    data: {
+    data: {},
       resolved: true,
       alertId,
       resolvedAt: alert.resolvedAt.toISOString() },

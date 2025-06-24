@@ -51,12 +51,12 @@ interface PreviewItem {
   status: 'draft' | 'pending_approval' | 'approved' | 'rejected' | 'published';
   created_at: string;
   updated_at: string;
-  created_by: {
+  created_by: {},
     id: string;
     name: string;
     avatar_url?: string;
   };
-  client: {
+  client: {},
     id: string;
     name: string;
     logo?: string;
@@ -139,11 +139,11 @@ const PreviewPage: React.FC = () => {
           status: data.status || 'draft',
           created_at: data.created_at,
           updated_at: data.updated_at,
-          created_by: {
+          created_by: {},
             id: data.created_by || data.user_id || 'unknown',
             name: data.profiles?.full_name || data.creator?.name || 'Unknown User',
             avatar_url: data.profiles?.avatar_url || data.creator?.avatar_url },
-          client: {
+          client: {},
             id: data.client_id || activeClient?.id || 'unknown',
             name: data.clients?.name || activeClient?.name || 'Unknown Client',
             logo: data.clients?.logo || activeClient?.logo },
@@ -168,7 +168,7 @@ const PreviewPage: React.FC = () => {
     try {
       const response = await fetch('/api/approvals', {
         method: 'POST',
-        headers: {
+        headers: {},
         'Content-Type': 'application/json'
       
       },
@@ -178,7 +178,7 @@ const PreviewPage: React.FC = () => {
           approval_type: 'content',
           priority: 'normal',
           notes: approvalDecision.comments,
-          metadata: {
+          metadata: {},
         decision: approvalDecision.action,
             changes_requested: approvalDecision.changes_requested
       }})});
@@ -213,6 +213,8 @@ const PreviewPage: React.FC = () => {
     switch (type) {
       case 'motivation':
         return (
+    <div>Content</div>
+  );
           <Card>
             <CardContent>
               <Typography variant="h6" gutterBottom>
@@ -244,6 +246,8 @@ const PreviewPage: React.FC = () => {
       case 'content_variation':
       case 'copy_asset':
         return (
+    <div>Content</div>
+  );
           <Card>
             <CardContent>
               <Typography variant="h6" gutterBottom>
@@ -267,6 +271,8 @@ const PreviewPage: React.FC = () => {
 
       case 'video':
         return (
+    <div>Content</div>
+  );
           <Card>
             <CardContent>
               <Typography variant="h6" gutterBottom>
@@ -295,6 +301,8 @@ const PreviewPage: React.FC = () => {
 
       default:
         return (
+    <div>Content</div>
+  );
           <Card>
             <CardContent>
               <Typography variant="h6" gutterBottom>
@@ -325,6 +333,8 @@ const PreviewPage: React.FC = () => {
   };
 
   return (
+    <div>Content</div>
+  );
     <>
        <Head>
         <title>Content Preview | AIRFLOW</title>

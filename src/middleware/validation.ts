@@ -58,12 +58,11 @@ export const commonSchemas = {
     .refine(path => !path.includes('..') && !path.includes('~'), 'Invalid file path'),
 
   // Pagination
-  pagination: z.object({,
+  pagination: z.object({
     page: z.number().int().min(1).default(1),
     limit: z.number().int().min(1).max(100).default(20),
     sortBy: z.string().optional(),
-    sortOrder: z.enum(['asc', 'desc']).default('desc'),
-  }),
+    sortOrder: z.enum(['asc', 'desc']).default('desc')}),
 
   // Date range
   dateRange: z
@@ -74,8 +73,7 @@ export const commonSchemas = {
       data =>
         !data.startDate || !data.endDate || new Date(data.startDate) <= new Date(data.endDate),
       'Start date must be before end date'
-    ),
-};
+    )};
 
 // Sanitize string to prevent SQL injection
 export function sanitizeSQLString(input: string): string {
@@ -109,22 +107,20 @@ export function sanitizeObject<T extends Record<string, unknown>>(obj: T): T {
 
 // Validation error response
 export function validationErrorResponse(error: ZodError): NextResponse {
-  const errors = error.errors.map((err: unknown) => ({,
+  const errors = error.errors.map((err: unknown) => ({
     field: err.path.join('.'),
     message: err.message }));
 
   logger.warn('Validation error', {
     message: 'Validation failed',
     errorCount: errors.length,
-    fields: errors.map((e: unknown) => e.field).join(', '),
-  });
+    fields: errors.map((e: unknown) => e.field).join(', ')});
 
   return NextResponse.json(
     {
       success: false,
       message: 'Validation error',
-      errors,
-    },
+      errors},
     { status: 400 }
   );
 }
@@ -170,8 +166,7 @@ export async function validateRequest<T>(
           error: NextResponse.json(
             { success: false, message: 'Invalid JSON body'  }
             { status: 400 }
-          ),
-        };
+          )};
       }
     }
 
@@ -191,8 +186,7 @@ export async function validateRequest<T>(
       error: NextResponse.json(
         { success: false, message: 'Internal validation error'  }
         { status: 500 }
-      ),
-    };
+      )};
   }
 }
 
@@ -206,8 +200,7 @@ const fileAllowedTypes = {
     'application/msword',
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
     'text/plain',
-  ],
-};
+  ]};
 
 const fileMaxSizes = {
   image: 10 * 1024 * 1024, // 10MB
@@ -269,8 +262,7 @@ export const fileValidation: FileValidation = {
       'application/pdf': ['pdf'],
       'application/msword': ['doc'],
       'application/vnd.openxmlformats-officedocument.wordprocessingml.document': ['docx'],
-      'text/plain': ['txt'],
-    };
+      'text/plain': ['txt']};
 
     const validExtensions = expectedExtensions[file.type];
     if (validExtensions && extension && !validExtensions.includes(extension)) {
@@ -278,8 +270,7 @@ export const fileValidation: FileValidation = {
     }
 
     return true;
-  },
-};
+  }};
 
 // CSRF token validation
 export async function validateCSRFToken(request: NextRequest): Promise<boolean> {
@@ -298,7 +289,7 @@ export async function validateCSRFToken(request: NextRequest): Promise<boolean> 
 }
 
 // Rate limiting check (integrates with middleware rate limiting)
-export function checkAPIRateLimit(
+export function checkAPIRateLimit('test case', () => {
   __identifier: string,
   _limit: number = 100,
   _window: number = 60000
@@ -312,12 +303,11 @@ export function checkAPIRateLimit(
 // Export validation schemas for specific API routes
 export const apiSchemas = {
   // Auth schemas
-  login: z.object({,
+  login: z.object({
     email: commonSchemas.email,
-    password: z.string().min(1, 'Password is required'),
-  }),
+    password: z.string().min(1, 'Password is required')}),
 
-  signup: z.object({,
+  signup: z.object({
     email: commonSchemas.email,
     password: commonSchemas.password,
     name: z
@@ -325,11 +315,10 @@ export const apiSchemas = {
       .min(2, 'Name must be at least 2 characters')
       .transform(str => str.trim())
       .refine(str => !/<[^>]*>/.test(str), 'HTML tags are not allowed')
-      .refine(str => !/[<>'"`;]/.test(str), 'Special characters not allowed'),
-  }),
+      .refine(str => !/[<>'"`;]/.test(str), 'Special characters not allowed')}),
 
   // Client schemas
-  createClient: z.object({,
+  createClient: z.object({
     name: z
       .string()
       .min(2, 'Client name is required')
@@ -344,17 +333,16 @@ export const apiSchemas = {
     secondaryColor: z
       .string()
       .regex(/^#[0-9A-Fa-f]{6}$/, 'Invalid color format')
-      .optional(),
-  }),
+      .optional()}),
 
   // Asset schemas
-  uploadAsset: z.object({,
+  uploadAsset: z.object({
     clientId: commonSchemas.uuid,
     category: z.enum(['image', 'video', 'audio', 'document']),
     tags: z.array(commonSchemas.safeString).optional() }),
 
   // Brief schemas
-  createBrief: z.object({,
+  createBrief: z.object({
     clientId: commonSchemas.uuid,
     title: z
       .string()
@@ -364,5 +352,4 @@ export const apiSchemas = {
       .refine(str => !/[<>'"`;]/.test(str), 'Special characters not allowed'),
     content: commonSchemas.safeText,
     objectives: z.array(commonSchemas.safeText).optional(),
-    targetAudience: commonSchemas.safeText.optional() }),
-};
+    targetAudience: commonSchemas.safeText.optional() })};

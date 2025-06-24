@@ -84,11 +84,9 @@ export const useCSRF = () => {
     return fetch(url, {
       ...options,
       credentials: 'include',
-      headers: {
+      headers: {},
         ...csrfHeaders,
-        ...options.headers,
-      },
-    });
+        ...options.headers}});
   }, [getCSRFHeaders]);
 
   // Initialize token on mount
@@ -157,9 +155,8 @@ export const makeCSRFRequest = async (
   return fetch(url, {
     ...options,
     credentials: 'include',
-    headers: {
+    headers: {},
         'x-csrf-token': token,
       ...options.headers
-      },
-  });
+      }});
 };

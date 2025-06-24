@@ -26,16 +26,14 @@ import {
   DialogContent,
   DialogActions,
   Stack,
-  LinearProgress,
-} from '@mui/material';
+  LinearProgress} from '@mui/material';
 import {
   Campaign as CampaignIcon,
   Add as AddIcon,
   ArrowForward as NextIcon,
   ArrowBack as BackIcon,
   Save as SaveIcon,
-  ContentCopy as TemplateIcon,
-} from '@mui/icons-material';
+  ContentCopy as TemplateIcon} from '@mui/icons-material';
 import DashboardLayout from '@/components/DashboardLayout';
 import { useClient } from '@/contexts/ClientContext';
 import { useNotification } from '@/contexts/NotificationContext';
@@ -329,8 +327,7 @@ const CampaignBuilderPage: React.FC = () => {
                                   transition: 'all 0.2s',
                                   '&:hover': {
                                     boxShadow: 2,
-                                    transform: 'translateY(-2px)' },
-                                }}
+                                    transform: 'translateY(-2px)' }}}
                                 onClick={() => handleTemplateSelect(template)}
                               >
                                 <CardContent>

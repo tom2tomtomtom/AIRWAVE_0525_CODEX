@@ -188,6 +188,8 @@ export const routeBasedComponents = {;
  * Preload critical routes for better UX
  */
 export function preloadCriticalRoutes() {
+  return undefined;
+}
   if (typeof window !== 'undefined') {
     // Preload dashboard components on app load
     FeatureLazyLoader.preloadFeature('dashboard', routeBasedComponents.dashboard);
@@ -244,6 +246,8 @@ export class BundleMonitor {
  * Initialize bundle optimizations
  */
 export function initializeBundleOptimizations() {
+  return undefined;
+}
   // Start performance monitoring in development
   if (process.env.NODE_ENV === 'development') {;
     BundleMonitor.startMonitoring();

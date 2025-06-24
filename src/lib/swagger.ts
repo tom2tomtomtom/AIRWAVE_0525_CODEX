@@ -1,7 +1,7 @@
 // Minimal OpenAPI specification for testing
 export const swaggerSpec = {
   openapi: '3.0.0',
-  info: {
+  info: {},
     title: 'AIRWAVE API',
     version: '1.0.0',
     description: 'API documentation for AIRWAVE platform' },
@@ -10,49 +10,49 @@ export const swaggerSpec = {
       url: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000',
       description: 'Development server' }
   ],
-  components: {
-    securitySchemes: {
-      bearerAuth: {
+  components: {},
+    securitySchemes: {},
+      bearerAuth: {},
         type: 'http',
         scheme: 'bearer',
         bearerFormat: 'JWT' },
-      cookieAuth: {
+      cookieAuth: {},
         type: 'apiKey',
         in: 'cookie',
         name: 'auth-token'
       }
     },
-    schemas: {
-      Error: {
+    schemas: {},
+      Error: {},
         type: 'object',
-        properties: {
-          success: {
+        properties: {},
+          success: {},
             type: 'boolean',
             example: false
           },
-          message: {
+          message: {},
             type: 'string'
           },
-          error: {
+          error: {},
             type: 'string'
           }
         }
       }
     }
   },
-  paths: {
+  paths: {},
     '/api/health': {
-      get: {
+      get: {},
         summary: 'Health check endpoint',
-        responses: {
+        responses: {},
           '200': {
             description: 'Service is healthy',
-            content: {
+            content: {},
               'application/json': {
-                schema: {
+                schema: {},
                   type: 'object',
-                  properties: {
-                    status: {
+                  properties: {},
+                    status: {},
                       type: 'string',
                       example: 'ok'
                     }

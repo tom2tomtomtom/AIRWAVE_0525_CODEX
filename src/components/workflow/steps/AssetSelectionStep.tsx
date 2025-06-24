@@ -78,7 +78,7 @@ export const AssetSelectionStep: React.FC<AssetSelectionStepProps> = ({
       type: workflowType,
       url: browserAsset.url,
       content: browserAsset.type === 'text' ? browserAsset.description : undefined,
-      metadata: {
+      metadata: {},
         ...browserAsset.metadata,
         name: browserAsset.name,
         description: browserAsset.description,
@@ -113,7 +113,7 @@ export const AssetSelectionStep: React.FC<AssetSelectionStepProps> = ({
       id: generatedAsset.id || `ai-${Date.now()}`,
       type: 'image',
       url: generatedAsset.url,
-      metadata: {
+      metadata: {},
         ...generatedAsset.metadata,
         name: generatedAsset.name,
         description: generatedAsset.description || 'AI Generated Image',
@@ -293,6 +293,8 @@ export const AssetSelectionStep: React.FC<AssetSelectionStepProps> = ({
   );
 
   return (
+    <div>Content</div>
+  );
     <Box sx={{ maxWidth: 1200, mx: 'auto', p: 3 }}>
       <Typography variant="h4" gutterBottom>
         Asset Selection

@@ -31,8 +31,8 @@ export interface MyAppProps extends AppProps {
 
 // Create a client
 const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
+  defaultOptions: {},
+    queries: {},
       staleTime: 1000 * 60 * 5, // 5 minutes
       refetchOnWindowFocus: false,
       retry: (failureCount, error: any) => {
@@ -49,6 +49,8 @@ const queryClient = new QueryClient({
 // Component that provides all the context providers
 function AppProviders({ children }: { children: React.ReactNode }) {
   return (
+    <div>Content</div>
+  );
     <>
        <CssBaseline />
       <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -80,6 +82,8 @@ function ThemedApp(props: MyAppProps) {
   const theme = mode === 'light' ? lightTheme : darkTheme;
 
   return (
+    <div>Content</div>
+  );
     <ThemeProvider theme={theme}>
       <AppProviders>
         <Component {...pageProps} />
@@ -143,6 +147,8 @@ function MyApp(props: MyAppProps) {
   }, []);
 
   return (
+    <div>Content</div>
+  );
     <CacheProvider value={emotionCache}>
       <Head>
         <title>AIrFLOW - AI-Powered Campaign Management</title>

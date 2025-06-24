@@ -7,8 +7,7 @@ import {
   Audiotrack as AudiotrackIcon,
   ColorLens as ColorLensIcon,
   Link as LinkIcon,
-  Edit as EditIcon,
-} from '@mui/icons-material';
+  Edit as EditIcon} from '@mui/icons-material';
 import { Asset } from './AssetCard';
 
 export interface DynamicField {
@@ -42,8 +41,7 @@ const FieldEditor: React.FC<FieldEditorProps> = ({
   asset,
   onTextChange,
   onAssetSelect,
-  compact = false,
-}) => {
+  compact = false}) => {
   const getFieldTypeIcon = useCallback((type: string) => {
     switch (type) {
       case 'text':
@@ -90,8 +88,7 @@ const FieldEditor: React.FC<FieldEditorProps> = ({
           sx={{
             '& .MuiInputBase-input[type="color"]': {
               minHeight: '2rem',
-              padding: '4px' },
-          }}
+              padding: '4px' }}}
         />
       );
     }

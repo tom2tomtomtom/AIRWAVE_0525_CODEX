@@ -14,14 +14,12 @@ import {
   InputAdornment,
   IconButton,
   Checkbox,
-  FormControlLabel,
-} from '@mui/material';
+  FormControlLabel} from '@mui/material';
 import {
   Visibility,
   VisibilityOff,
   Email as EmailIcon,
-  Lock as LockIcon,
-} from '@mui/icons-material';
+  Lock as LockIcon} from '@mui/icons-material';
 
 const LoginPage: React.FC = () => {
   const router = useRouter();
@@ -167,8 +165,7 @@ const LoginPage: React.FC = () => {
                   <InputAdornment position="start">
                     <EmailIcon color="action" />
                   </InputAdornment>
-                ),
-              }}
+                )}}
             />
 
             <TextField
@@ -202,8 +199,7 @@ const LoginPage: React.FC = () => {
                       {showPassword ? <VisibilityOff /> : <Visibility />}
                     </IconButton>
                   </InputAdornment>
-                ),
-              }}
+                )}}
             />
 
             <FormControlLabel
@@ -233,12 +229,10 @@ const LoginPage: React.FC = () => {
                 color: '#000000',
                 '&:hover': {
                   backgroundColor: '#F59E0B',
-                  boxShadow: '0 0 0 2px rgba(251, 191, 36, 0.3)',
-                },
+                  boxShadow: '0 0 0 2px rgba(251, 191, 36, 0.3)'},
                 '&:disabled': {
                   backgroundColor: '#6B7280',
-                  color: '#9CA3AF' },
-              }}
+                  color: '#9CA3AF' }}}
             >
               {loading ? (
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>

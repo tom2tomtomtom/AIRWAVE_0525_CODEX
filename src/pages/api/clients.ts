@@ -216,8 +216,7 @@ import {
   methodNotAllowed,
   validateRequiredFields,
   createPaginationMeta,
-  ApiErrorCode,
-} from '@/lib/api-response';
+  ApiErrorCode} from '@/lib/api-response';
 import { getAdminSupabaseClient } from '@/lib/supabase';
 
 // Get admin Supabase client for server-side operations
@@ -232,8 +231,7 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse, user: any): 
       offset = 0,
       sort_by = 'name',
       sort_order = 'asc',
-      include_stats = false,
-    } = req.query;
+      include_stats = false} = req.query;
 
     const limitNum = Math.min(parseInt(limit as string) || 50, 100);
     const offsetNum = parseInt(offset as string) || 0;
@@ -336,8 +334,7 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse, user: any):
       secondaryColor,
       socialMedia,
       brand_guidelines,
-      contacts,
-    } = req.body;
+      contacts} = req.body;
 
     // Validate required fields
     const missingFields = validateRequiredFields(req.body, ['name', 'industry']);

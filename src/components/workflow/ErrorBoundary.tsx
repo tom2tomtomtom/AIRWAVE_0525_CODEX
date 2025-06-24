@@ -9,15 +9,13 @@ import {
   Stack,
   Accordion,
   AccordionSummary,
-  AccordionDetails,
-} from '@mui/material';
+  AccordionDetails} from '@mui/material';
 import {
   Error as ErrorIcon,
   Refresh as RefreshIcon,
   BugReport as BugReportIcon,
   ExpandMore as ExpandMoreIcon,
-  Home as HomeIcon,
-} from '@mui/icons-material';
+  Home as HomeIcon} from '@mui/icons-material';
 
 interface Props {
   children: ReactNode;
@@ -48,15 +46,13 @@ export class WorkflowErrorBoundary extends Component<Props, State> {
     return {
       hasError: true,
       error,
-      errorId: `error_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-    };
+      errorId: `error_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`};
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     this.setState({
       error,
-      errorInfo,
-    });
+      errorInfo});
 
     // Log error to monitoring service
     console.error('Workflow Error Boundary caught an error:', error, errorInfo);

@@ -295,6 +295,8 @@ const PublishingAnalytics: React.FC<PublishingAnalyticsProps> = ({
 
   if (loading || !analyticsData) {
     return (
+    <div>Content</div>
+  );
       <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
         <CircularProgress />
       </Box>
@@ -302,6 +304,8 @@ const PublishingAnalytics: React.FC<PublishingAnalyticsProps> = ({
   }
 
   return (
+    <div>Content</div>
+  );
     <Box sx={{ p: 3 }}>
       {/* Header Controls */}
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>

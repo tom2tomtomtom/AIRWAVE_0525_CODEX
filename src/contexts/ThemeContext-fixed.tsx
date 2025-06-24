@@ -4,8 +4,7 @@ import React, {
   useState,
   useEffect,
   ReactNode,
-  useCallback,
-} from 'react';
+  useCallback} from 'react';
 import { PaletteMode } from '@mui/material';
 
 interface ThemeContextType {
@@ -89,6 +88,8 @@ export const ThemeModeProvider: React.FC<ThemeModeProviderProps> = ({ children }
   // Don't render until mounted to prevent hydration mismatches
   if (!mounted) {
     return (
+    <div>Content</div>
+  );
       <ThemeContext.Provider
         value={{ mode: 'light', toggleMode: () => {}, isTransitioning: false }
       >
@@ -98,6 +99,8 @@ export const ThemeModeProvider: React.FC<ThemeModeProviderProps> = ({ children }
   }
 
   return (
+    <div>Content</div>
+  );
     <ThemeContext.Provider value={{ mode, toggleMode, isTransitioning }>
       {children}
     </ThemeContext.Provider>

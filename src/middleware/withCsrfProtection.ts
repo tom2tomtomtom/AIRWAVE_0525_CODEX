@@ -21,7 +21,7 @@ export interface CsrfOptions {
   validateToken?: (token: string, cookieToken: string) => boolean;
 }
 
-const DEFAULT_OPTIONS: Required<CsrfOptions> = {,
+const DEFAULT_OPTIONS: Required<CsrfOptions> = {
     tokenLength: 32,
   cookieName: '_csrf',
   headerName: 'x-csrf-token',

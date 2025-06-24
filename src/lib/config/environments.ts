@@ -77,9 +77,7 @@ export const environmentValidationRules = {
     warnings: [
       'Development environment detected - some security features are disabled'
     ]
-  ,
-
-    },
+  },
   test: { }
     // Test environment minimal requirements
     requiredSecrets: ['JWT_SECRET'],
@@ -87,9 +85,7 @@ export const environmentValidationRules = {
     warnings: [
       'Test environment - analytics and monitoring disabled'
     ]
-  ,
-
-    },
+  },
   staging: { }
     // Staging should be close to production
     requiredSecrets: [
@@ -105,9 +101,7 @@ export const environmentValidationRules = {
     warnings: [
       'Staging environment - ensure all production secrets are tested'
     ]
-  ,
-
-    },
+  },
   production: { }
     // Production requires all security measures
     requiredSecrets: [

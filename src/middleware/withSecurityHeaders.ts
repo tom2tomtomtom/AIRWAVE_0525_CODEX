@@ -24,7 +24,7 @@ export interface SecurityHeadersOptions {
   hstsPreload?: boolean;
 }
 
-const DEFAULT_OPTIONS: SecurityHeadersOptions = {,
+const DEFAULT_OPTIONS: SecurityHeadersOptions = {
     enableCSP: true,
   enableHSTS: true,
   enablePermissionsPolicy: true,

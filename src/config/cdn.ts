@@ -4,22 +4,20 @@ export const cdnConfig = {
   assetPrefix: process.env.CDN_URL || '',
   
   // Image CDN optimization
-  images: {
+  images: {},
     loader: 'custom',
     loaderFile: './src/utils/image-loader.js',
     domains: [
       'localhost',
       'cdn.example.com',
       process.env.NEXT_PUBLIC_DOMAIN
-    ],
-  },
+    ]},
   
   // Edge caching configuration
-  edgeConfig: {
-    cacheControl: {
+  edgeConfig: {},
+    cacheControl: {},
       static: 'public, max-age=31536000, immutable',
       dynamic: 'public, max-age=60, s-maxage=300',
-      api: 'public, max-age=0, s-maxage=60',
-    }
+      api: 'public, max-age=0, s-maxage=60'}
   }
 };

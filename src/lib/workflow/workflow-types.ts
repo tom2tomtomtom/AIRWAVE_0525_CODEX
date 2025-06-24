@@ -7,8 +7,7 @@ export enum WorkflowStep {
   ASSET_SELECTION = 3,
   TEMPLATE_SELECTION = 4,
   MATRIX_BUILD = 5,
-  RENDERING = 6,
-}
+  RENDERING = 6}
 
 export interface WorkflowStepInfo {
   id: string;

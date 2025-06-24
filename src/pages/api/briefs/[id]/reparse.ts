@@ -88,7 +88,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void>
       try {
         const parseResponse = await fetch(`${req.headers.origin}/api/brief-upload`, {
           method: 'POST',
-          headers: {
+          headers: {},
         'Content-Type': 'application/json',
             'Authorization': req.headers.authorization || ''
       },
@@ -125,7 +125,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void>
     try {
       const parseResponse = await fetch(`${req.headers.origin}/api/brief-parse`, {
         method: 'POST',
-        headers: {
+        headers: {},
         'Content-Type': 'application/json',
           'Authorization': req.headers.authorization || ''
       },

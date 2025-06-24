@@ -229,7 +229,7 @@ const VideoStudioPage: React.FC = () => {
 
       const response = await fetch('/api/video/generate', {
         method: 'POST',
-        headers: {
+        headers: {},
         'Content-Type': 'application/json'
       
       },
@@ -329,6 +329,8 @@ const VideoStudioPage: React.FC = () => {
   };
 
   return (
+    <div>Content</div>
+  );
     <>
        <Head>
         <title>Video Studio | AIRFLOW</title>

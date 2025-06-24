@@ -160,7 +160,7 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse, user: any):
     try {
       await fetch(`${req.headers.origin}/api/brief-parse`, {
         method: 'POST',
-        headers: {
+        headers: {},
         'Content-Type': 'application/json',
           'Authorization': req.headers.authorization || ''
       },

@@ -7,16 +7,14 @@ import {
   Alert,
   AlertTitle,
   Collapse,
-  IconButton,
-} from '@mui/material';
+  IconButton} from '@mui/material';
 import {
   Error as ErrorIcon,
   Warning as WarningIcon,
   Info as InfoIcon,
   Refresh as RefreshIcon,
   ExpandMore as ExpandMoreIcon,
-  ExpandLess as ExpandLessIcon,
-} from '@mui/icons-material';
+  ExpandLess as ExpandLessIcon} from '@mui/icons-material';
 import { ActionButton } from '../buttons/ActionButton';
 
 interface ErrorStateProps {
@@ -42,8 +40,7 @@ export const ErrorState: React.FC<ErrorStateProps> = ({
   retryText = 'Try Again',
   icon,
   variant = 'card',
-  collapsible = false,
-}) => {
+  collapsible = false}) => {
   const [expanded, setExpanded] = React.useState(false);
 
   const getIcon = () => {
@@ -210,8 +207,7 @@ export const ErrorState: React.FC<ErrorStateProps> = ({
       sx={{
         borderRadius: 2,
         '& .MuiAlert-message': {
-          width: '100%' },
-      }}
+          width: '100%' }}}
     >
       {title && <AlertTitle>{title}</AlertTitle>}
       <Typography variant="body2" sx={{ mb: details ? 1 : 0 }}>

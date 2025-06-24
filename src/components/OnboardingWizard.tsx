@@ -344,6 +344,8 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
   const progress = ((activeStep + 1) / steps.length) * 100;
 
   return (
+    <div>Content</div>
+  );
     <Dialog 
       open={open} 
       onClose={onClose} 

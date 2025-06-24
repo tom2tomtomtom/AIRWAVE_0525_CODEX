@@ -186,7 +186,7 @@ async function parseBriefAsync(briefId: string, content: string): Promise<void> 
     // Make API call to parse endpoint
     await fetch(`${env.NEXT_PUBLIC_API_URL}/api/briefs/parse`, {
       method: 'POST',
-      headers: {
+      headers: {},
         'Content-Type': 'application/json'
       
       },

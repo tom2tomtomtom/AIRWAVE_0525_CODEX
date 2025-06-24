@@ -30,8 +30,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             RAISE NOTICE 'brand_guidelines column already exists';
           END IF;
         END $$;
-      `,
-    });
+      `});
 
     if (columnError) {
       console.error('❌ Migration failed:', columnError);

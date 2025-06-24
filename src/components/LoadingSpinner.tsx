@@ -12,8 +12,7 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
   message = 'Loading...',
   size = 'medium',
   fullScreen = false,
-  variant = 'circular',
-}) => {
+  variant = 'circular'}) => {
   const sizes = {
     small: 30,
     medium: 40,
@@ -103,8 +102,7 @@ export const AssetGridSkeleton: React.FC<{ count?: number }> = ({ count = 6 }) =
 // Table Loading Skeleton
 export const TableSkeleton: React.FC<{ rows?: number; columns?: number }> = ({
   rows = 5,
-  columns = 4,
-}) => {
+  columns = 4}) => {
   return (
     <Box>
       {/* Header */}

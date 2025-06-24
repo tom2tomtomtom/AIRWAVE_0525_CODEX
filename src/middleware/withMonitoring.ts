@@ -25,7 +25,7 @@ interface MonitoringConfig {
 }
 
 // Default configuration
-const DEFAULT_CONFIG: Required<MonitoringConfig> = {,
+const DEFAULT_CONFIG: Required<MonitoringConfig> = {
     collectMetrics: true,
   trackPerformance: true,
   enableAlerting: true,

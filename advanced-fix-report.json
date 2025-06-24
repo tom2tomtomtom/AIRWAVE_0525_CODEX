@@ -1,12 +1,257 @@
 {
-  "timestamp": "2025-06-23T09:59:21.274Z",
-  "totalFilesProcessed": 21,
-  "totalAdvancedFixesApplied": 92.3,
+  "timestamp": "2025-06-24T04:02:16.486Z",
+  "totalFilesProcessed": 249,
+  "totalAdvancedFixesApplied": 354.3000000000002,
   "processedFiles": [
     {
-      "file": "src/contexts/__tests__/AuthContext.test.tsx",
-      "fixesApplied": 7.3,
+      "file": "src/components/ActivityFeed.tsx",
+      "fixesApplied": 8.4,
       "status": "fixed"
+    },
+    {
+      "file": "src/components/AdvancedAnalytics.tsx",
+      "fixesApplied": 5.6,
+      "status": "fixed"
+    },
+    {
+      "file": "src/components/AICostMonitor.tsx",
+      "fixesApplied": 8.4,
+      "status": "fixed"
+    },
+    {
+      "file": "src/components/AIImageGenerator.tsx",
+      "fixesApplied": 2.8,
+      "status": "fixed"
+    },
+    {
+      "file": "src/components/ApprovalWorkflow.tsx",
+      "fixesApplied": 8.4,
+      "status": "fixed"
+    },
+    {
+      "file": "src/components/AssetBrowser.tsx",
+      "fixesApplied": 2.8,
+      "status": "fixed"
+    },
+    {
+      "file": "src/components/AssetCard.tsx",
+      "fixesApplied": 2.8,
+      "status": "fixed"
+    },
+    {
+      "file": "src/components/AssetUploadModal.tsx",
+      "fixesApplied": 2.8,
+      "status": "fixed"
+    },
+    {
+      "file": "src/components/BriefUploadModal.tsx",
+      "fixesApplied": 2.8,
+      "status": "fixed"
+    },
+    {
+      "file": "src/components/CampaignMatrix.tsx",
+      "fixesApplied": 11.2,
+      "status": "fixed"
+    },
+    {
+      "file": "src/components/ClientSelector.tsx",
+      "fixesApplied": 8.4,
+      "status": "fixed"
+    },
+    {
+      "file": "src/components/EmptyStates.tsx",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/components/error/ErrorBoundary.tsx",
+      "fixesApplied": 10.600000000000001,
+      "status": "fixed"
+    },
+    {
+      "file": "src/components/ErrorBoundary.tsx",
+      "fixesApplied": 2.8,
+      "status": "fixed"
+    },
+    {
+      "file": "src/components/ExecutionMonitor.tsx",
+      "fixesApplied": 8.4,
+      "status": "fixed"
+    },
+    {
+      "file": "src/components/generate/LazyVideoGenerationSection.tsx",
+      "fixesApplied": 2.8,
+      "status": "fixed"
+    },
+    {
+      "file": "src/components/GlobalSearch.tsx",
+      "fixesApplied": 2.8,
+      "status": "fixed"
+    },
+    {
+      "file": "src/components/lazy/index.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/components/MFASetup.tsx",
+      "fixesApplied": 5.6,
+      "status": "fixed"
+    },
+    {
+      "file": "src/components/MobileOptimizedWorkflow.tsx",
+      "fixesApplied": 5.6,
+      "status": "fixed"
+    },
+    {
+      "file": "src/components/monitoring/MonitoringDashboard.tsx",
+      "fixesApplied": 11.2,
+      "status": "fixed"
+    },
+    {
+      "file": "src/components/OnboardingWizard.tsx",
+      "fixesApplied": 2.8,
+      "status": "fixed"
+    },
+    {
+      "file": "src/components/social/PublishingAnalytics.tsx",
+      "fixesApplied": 5.6,
+      "status": "fixed"
+    },
+    {
+      "file": "src/components/social/ScheduledPosts.tsx",
+      "fixesApplied": 5.6,
+      "status": "fixed"
+    },
+    {
+      "file": "src/components/social/SocialPublisher.tsx",
+      "fixesApplied": 8.4,
+      "status": "fixed"
+    },
+    {
+      "file": "src/components/SocialMediaPublisher.tsx",
+      "fixesApplied": 5.6,
+      "status": "fixed"
+    },
+    {
+      "file": "src/components/StatusIndicator.tsx",
+      "fixesApplied": 8.4,
+      "status": "fixed"
+    },
+    {
+      "file": "src/components/ui/badge.tsx",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/components/ui/button.tsx",
+      "fixesApplied": 2.8,
+      "status": "fixed"
+    },
+    {
+      "file": "src/components/ui/buttons/ActionButton.tsx",
+      "fixesApplied": 2.8,
+      "status": "fixed"
+    },
+    {
+      "file": "src/components/ui/ClientSelector/EnhancedClientSelector.tsx",
+      "fixesApplied": 8.4,
+      "status": "fixed"
+    },
+    {
+      "file": "src/components/ui/forms/FormSelect.tsx",
+      "fixesApplied": 8.4,
+      "status": "fixed"
+    },
+    {
+      "file": "src/components/ui/forms/FormTextField.tsx",
+      "fixesApplied": 2.8,
+      "status": "fixed"
+    },
+    {
+      "file": "src/components/ui/switch.tsx",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/components/ui/tabs.tsx",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/components/UserMenu.tsx",
+      "fixesApplied": 2.8,
+      "status": "fixed"
+    },
+    {
+      "file": "src/components/VideoExecutionPanel.tsx",
+      "fixesApplied": 2.8,
+      "status": "fixed"
+    },
+    {
+      "file": "src/components/VideoGenerationPanel.tsx",
+      "fixesApplied": 2.8,
+      "status": "fixed"
+    },
+    {
+      "file": "src/components/WebhookManager.tsx",
+      "fixesApplied": 5.6,
+      "status": "fixed"
+    },
+    {
+      "file": "src/components/workflow/steps/AssetSelectionStep.tsx",
+      "fixesApplied": 2.8,
+      "status": "fixed"
+    },
+    {
+      "file": "src/components/workflow/steps/BriefUploadStep.tsx",
+      "fixesApplied": 5.6,
+      "status": "fixed"
+    },
+    {
+      "file": "src/components/workflow/WorkflowContainer.tsx",
+      "fixesApplied": 5.6,
+      "status": "fixed"
+    },
+    {
+      "file": "src/config/cdn.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/config/tree-shaking.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/contexts/AuthContext.tsx",
+      "fixesApplied": 2.8,
+      "status": "fixed"
+    },
+    {
+      "file": "src/contexts/ClientContext.tsx",
+      "fixesApplied": 2.8,
+      "status": "fixed"
+    },
+    {
+      "file": "src/contexts/SupabaseAuthContext-fixed.tsx",
+      "fixesApplied": 2.8,
+      "status": "fixed"
+    },
+    {
+      "file": "src/contexts/SupabaseAuthContext.tsx",
+      "fixesApplied": 2.8,
+      "status": "fixed"
+    },
+    {
+      "file": "src/contexts/ThemeContext-fixed.tsx",
+      "fixesApplied": 5.6,
+      "status": "fixed"
+    },
+    {
+      "file": "src/hooks/useCSRF.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
     },
     {
       "file": "src/hooks/useData.ts",
@@ -14,89 +259,939 @@
       "status": "no_advanced_fixes"
     },
     {
-      "file": "src/lib/database/seeders/index.ts",
-      "fixesApplied": 12.3,
+      "file": "src/hooks/useFormValidation.ts",
+      "fixesApplied": 2.8,
       "status": "fixed"
     },
     {
-      "file": "src/lib/gdpr/dataExport.ts",
-      "fixesApplied": 5.3,
+      "file": "src/hooks/useRealtime.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/hooks/workflow/useBriefActions.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/hooks/workflow/useCopyActions.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/hooks/workflow/useMotivationActions.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/hooks/workflow/useNavigationActions.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/lib/ai/cost-control-system.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/lib/ai/production-cost-controller.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/lib/api-response.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/lib/api-versioning.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/lib/auth.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/lib/cache-manager.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/lib/cache/db-cache.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/lib/cache/middleware.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/lib/cache/redis-cache.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/lib/cache/strategy.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/lib/circuit-breaker/ai-circuit-breaker.ts",
+      "fixesApplied": 2.8,
       "status": "fixed"
+    },
+    {
+      "file": "src/lib/config/environments.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/lib/config/index.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/lib/csrf.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/lib/database/backup/index.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/lib/database/pool/index.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/lib/database/seeders/index.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/lib/email/resend.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/lib/error-handling/error-classifier.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/lib/logger.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/lib/logger/index.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
     },
     {
       "file": "src/lib/logger/structured.ts",
-      "fixesApplied": 2.3,
-      "status": "fixed"
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/lib/monitoring/alerting-system.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/lib/monitoring/apm.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/lib/monitoring/metrics-collector.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
     },
     {
       "file": "src/lib/monitoring/metrics.ts",
-      "fixesApplied": 2.3,
-      "status": "fixed"
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/lib/monitoring/performance-dashboard.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
     },
     {
       "file": "src/lib/monitoring/workflow-metrics.ts",
-      "fixesApplied": 2.3,
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/lib/optimization/bundle-analyzer.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/lib/optimization/image.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/lib/performance.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/lib/rate-limiting/ai-rate-limiter.ts",
+      "fixesApplied": 2,
       "status": "fixed"
+    },
+    {
+      "file": "src/lib/rate-limiting/redis-rate-limiter.ts",
+      "fixesApplied": 6,
+      "status": "fixed"
+    },
+    {
+      "file": "src/lib/security/security-logger.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/lib/supabase-unified.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/lib/supabase/admin.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/lib/supabase/client.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/lib/supabase/config.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/lib/supabase/errors.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/lib/supabase/examples.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/lib/supabase/helpers.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/lib/supabase/middleware.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/lib/supabase/server.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/lib/swagger.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/lib/webhooks/webhookManager.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/lib/workflow/workflow-machine.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/middleware/auth.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/middleware/performance/apiOptimization.ts",
+      "fixesApplied": 4.4,
+      "status": "fixed"
+    },
+    {
+      "file": "src/middleware/security/index.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/middleware/validation.ts",
+      "fixesApplied": 2,
+      "status": "fixed"
+    },
+    {
+      "file": "src/middleware/withAuth-fixed.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/middleware/withAuth.ts",
+      "fixesApplied": 1.1,
+      "status": "fixed"
+    },
+    {
+      "file": "src/middleware/withCsrfProtection.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/middleware/withMetrics.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/middleware/withMonitoring.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/middleware/withRateLimit.ts",
+      "fixesApplied": 7,
+      "status": "fixed"
+    },
+    {
+      "file": "src/middleware/withSecurityHeaders.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/middleware/withSessionSecurity.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/_app.tsx",
+      "fixesApplied": 8.4,
+      "status": "fixed"
+    },
+    {
+      "file": "src/pages/analytics.tsx",
+      "fixesApplied": 2.8,
+      "status": "fixed"
+    },
+    {
+      "file": "src/pages/api/ai/cost-check.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/analytics/insights.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/analytics/overview.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/analytics/performance.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/approvals/[id].ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/approvals/bulk.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/approvals/index.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/assets/upload.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/auth/login-simple.ts",
+      "fixesApplied": 2.2,
+      "status": "fixed"
+    },
+    {
+      "file": "src/pages/api/auth/login.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/auth/mfa/setup.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/auth/mfa/status.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/auth/refresh-session.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/auth/session.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/auth/signup-simple.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/auth/signup.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/brand-guidelines/analyze.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/brief-upload.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/briefs/[id].ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/briefs/[id]/reparse.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/briefs/[id]/status.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/briefs/index.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/briefs/upload.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
     },
     {
       "file": "src/pages/api/campaigns/[id].ts",
-      "fixesApplied": 2.3,
-      "status": "fixed"
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
     },
     {
       "file": "src/pages/api/campaigns/export.ts",
-      "fixesApplied": 2.3,
-      "status": "fixed"
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
     },
     {
       "file": "src/pages/api/campaigns/index.ts",
-      "fixesApplied": 9.2,
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/check-video-status.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/clients/[id].ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/content-generate.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/copy-assets/[id].ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/copy-assets/[id]/performance.ts",
+      "fixesApplied": 2.8,
       "status": "fixed"
+    },
+    {
+      "file": "src/pages/api/copy-assets/[id]/versions.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/copy-assets/index.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/copy-assets/search.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/copy-generate.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/creatomate/[...action].ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/dalle.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/dashboard/stats.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/errors.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/executions/[id].ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/executions/[id]/cancel.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/executions/[id]/retry.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/executions/index.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/executions/queue/[queueId]/[action].ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/flow/generate-copy.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/flow/parse-brief.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/flow/store-copy-assets.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/health.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/health/index.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/health/workflow.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/matrices/[id].ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/matrices/[id]/execute.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
     },
     {
       "file": "src/pages/api/matrices/index.ts",
-      "fixesApplied": 6.9,
-      "status": "fixed"
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/matrix-generate.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/monitoring/alerts.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/monitoring/dashboard.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/motivations/[id].ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/motivations/[id]/score.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/motivations/index.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
     },
     {
       "file": "src/pages/api/notifications/index.ts",
-      "fixesApplied": 6.9,
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/optimized/analytics.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/optimized/clients.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/performance/dashboard.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/realtime/websocket.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/save-content.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/security/dashboard.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/social/callback/[platform].ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/social/platforms.ts",
+      "fixesApplied": 1.1,
       "status": "fixed"
+    },
+    {
+      "file": "src/pages/api/social/posts.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/social/publish.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/strategy-generate.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/strategy-score.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/system/status.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/templates.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/v2/[...route].ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/v2/handlers/ai.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
     },
     {
       "file": "src/pages/api/v2/handlers/assets.ts",
-      "fixesApplied": 6.9,
-      "status": "fixed"
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/v2/handlers/monitoring.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/v2/handlers/workflow.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/video/generate.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
     },
     {
       "file": "src/pages/api/video/generations.ts",
-      "fixesApplied": 2.3,
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/video/status.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/webhooks/[id].ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/webhooks/creatomate.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/webhooks/index.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/webhooks/subscriptions.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/webhooks/test.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/workflow/assets.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/api/workflow/generate-assets.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/campaigns/new.tsx",
+      "fixesApplied": 14,
       "status": "fixed"
     },
     {
       "file": "src/pages/clients.tsx",
-      "fixesApplied": 7.9,
+      "fixesApplied": 3.3000000000000003,
       "status": "fixed"
+    },
+    {
+      "file": "src/pages/content.tsx",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/pages/execute.tsx",
+      "fixesApplied": 2.8,
+      "status": "fixed"
+    },
+    {
+      "file": "src/pages/preview.tsx",
+      "fixesApplied": 14,
+      "status": "fixed"
+    },
+    {
+      "file": "src/pages/strategy.tsx",
+      "fixesApplied": 2.8,
+      "status": "fixed"
+    },
+    {
+      "file": "src/pages/system-status.tsx",
+      "fixesApplied": 8.4,
+      "status": "fixed"
+    },
+    {
+      "file": "src/pages/templates.tsx",
+      "fixesApplied": 11.2,
+      "status": "fixed"
+    },
+    {
+      "file": "src/pages/test-auth.tsx",
+      "fixesApplied": 2.8,
+      "status": "fixed"
+    },
+    {
+      "file": "src/pages/video-studio.tsx",
+      "fixesApplied": 2.8,
+      "status": "fixed"
+    },
+    {
+      "file": "src/services/assetManager.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/services/briefParser.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/services/campaignRenderer.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/services/copyGenerator.ts",
+      "fixesApplied": 2.8,
+      "status": "fixed"
+    },
+    {
+      "file": "src/services/creatomate.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/services/exportEngine.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/services/motivationGenerator.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/services/reviewSystem.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
     },
     {
       "file": "src/services/templateEngine.ts",
-      "fixesApplied": 2.3,
-      "status": "fixed"
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/styles/theme.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
     },
     {
       "file": "src/test-utils/api-test-utils.ts",
-      "fixesApplied": 4.5,
+      "fixesApplied": 2.2,
       "status": "fixed"
     },
     {
       "file": "src/test-utils/index.tsx",
-      "fixesApplied": 2.3,
-      "status": "fixed"
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/test-utils/test-patterns.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
     },
     {
       "file": "src/test/setup.ts",
-      "fixesApplied": 2.3,
-      "status": "fixed"
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/types/api.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/types/auth.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/types/database.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/types/errors.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/types/models.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/types/strategy.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/utils/accessibility.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/utils/ai-cost-estimation.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
     },
     {
       "file": "src/utils/api.ts",
@@ -104,9 +1199,54 @@
       "status": "no_advanced_fixes"
     },
     {
+      "file": "src/utils/authState.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/utils/csrf.ts",
+      "fixesApplied": 2.2,
+      "status": "fixed"
+    },
+    {
       "file": "src/utils/dynamicImports.ts",
       "fixesApplied": 4.4,
       "status": "fixed"
+    },
+    {
+      "file": "src/utils/errorReporting.ts",
+      "fixesApplied": 2.2,
+      "status": "fixed"
+    },
+    {
+      "file": "src/utils/formValidation.tsx",
+      "fixesApplied": 5.6,
+      "status": "fixed"
+    },
+    {
+      "file": "src/utils/image-optimization.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/utils/rateLimit.ts",
+      "fixesApplied": 4,
+      "status": "fixed"
+    },
+    {
+      "file": "src/utils/sanitization.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
+    },
+    {
+      "file": "src/utils/validation-utils.ts",
+      "fixesApplied": 2.8,
+      "status": "fixed"
+    },
+    {
+      "file": "src/utils/validation.ts",
+      "fixesApplied": 0,
+      "status": "no_advanced_fixes"
     }
   ]
 }

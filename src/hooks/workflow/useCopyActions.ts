@@ -22,7 +22,7 @@ if (typeof window === 'undefined') {
 }
 
 interface UseCopyActionsProps {
-  state: {
+  state: {},
     briefData: BriefData | null;
     motivations: Motivation[];
   };
@@ -97,11 +97,10 @@ export const useCopyActions = ({
           model: 'gpt-4o-mini',
           estimatedTokens,
           operation: 'generate-copy',
-          operationData: {
+          operationData: {},
             motivations: selectedMotivations,
             briefData: state.briefData,
-            platforms: state?.briefData?.platforms },
-        })
+            platforms: state?.briefData?.platforms }})
       });
 
       const { allowed, reason, fallbackModel, usageStats } = await costCheck.json();

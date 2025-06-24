@@ -52,7 +52,7 @@ class ErrorBoundary extends Component<Props, State> {
       await errorReporter.reportError(error, {
         action: 'error_boundary',
         component: 'ErrorBoundary',
-        metadata: {
+        metadata: {},
           componentStack: errorInfo.componentStack,
           errorId: this.state.errorId,
           errorBoundary: true
@@ -62,12 +62,12 @@ class ErrorBoundary extends Component<Props, State> {
       // Also send to Sentry if available
       if (typeof window !== 'undefined' && (window as any).Sentry) {
         (window as any).Sentry.captureException(error, {
-          contexts: {
-            react: {
+          contexts: {},
+            react: {},
               componentStack: errorInfo.componentStack
             }
           },
-          tags: {
+          tags: {},
             errorBoundary: true,
             errorId: this.state.errorId
           }
@@ -104,6 +104,8 @@ class ErrorBoundary extends Component<Props, State> {
 
       // Default error UI
       return (
+    <div>Content</div>
+  );
         <Container maxWidth="md" sx={{ mt: 8, mb: 8 }}>
           <Paper
             elevation={3}

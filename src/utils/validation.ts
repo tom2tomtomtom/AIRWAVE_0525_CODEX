@@ -19,8 +19,8 @@ export interface ValidationSchema {
 }
 
 export interface ValidationResult {
-  isValid: boolean;,
-    errors: { [key: string]: string };
+  isValid: boolean;
+  errors: { [key: string]: string };
   sanitizedData: { [key: string]: unknown };
 }
 
@@ -30,7 +30,8 @@ export interface ValidationResult {
 export function sanitizeHtml(html: string): string {
   return DOMPurify.sanitize(html, {
     ALLOWED_TAGS: ['b', 'i', 'em', 'strong', 'p', 'br', 'ul', 'ol', 'li', 'a'],
-    ALLOWED_ATTR: ['href']});
+    ALLOWED_ATTR: ['href']
+  });
 }
 
 /**
@@ -122,7 +123,7 @@ export function validateFileType(filename: string, allowedTypes: string[]): bool
 /**
  * Validate file size
  */
-export function validateFileSize(_sizeInBytes: number, maxSizeMB: number): boolean {
+export function validateFileSize(sizeInBytes: number, maxSizeMB: number): boolean {
   const maxSizeBytes = maxSizeMB * 1024 * 1024;
   return sizeInBytes <= maxSizeBytes;
 }
@@ -199,7 +200,8 @@ export function validatePassword(password: string): { isValid: boolean; errors: 
   
   return {
     isValid: errors.length === 0,
-    errors};
+    errors
+  };
 }
 
 /**
@@ -345,99 +347,124 @@ export function validateData(data: unknown, schema: ValidationSchema): Validatio
  */
 export const validationSchemas = {
   // User registration
-  userRegistration: {},
-  email: {},
-  required: true,
+  userRegistration: {
+    email: {
+      required: true,
       type: 'email' as const,
-      maxLength: 255 },
-  password: {},
-  required: true,
+      maxLength: 255
+    },
+    password: {
+      required: true,
       type: 'string' as const,
       minLength: 8,
       maxLength: 128,
-      pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/ },
-  name: {},
-  required: true,
+      pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/
+    },
+    name: {
+      required: true,
       type: 'string' as const,
       minLength: 2,
-      maxLength: 100  }
+      maxLength: 100
+    }
+  },
   // User login
-  login: {},
-  email: {},
-  required: true,
+  login: {
+    email: {
+      required: true,
       type: 'email' as const,
-      maxLength: 255 },
-  password: {},
-  required: true,
+      maxLength: 255
+    },
+    password: {
+      required: true,
       type: 'string' as const,
       minLength: 1,
-      maxLength: 128  }
+      maxLength: 128
+    }
+  },
   // User signup
-  signup: {},
-  email: {},
-  required: true,
+  signup: {
+    email: {
+      required: true,
       type: 'email' as const,
-      maxLength: 255 },
-  password: {},
-  required: true,
+      maxLength: 255
+    },
+    password: {
+      required: true,
       type: 'string' as const,
       minLength: 8,
       maxLength: 128,
-      pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/ },
-  name: {},
-  required: true,
+      pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/
+    },
+    name: {
+      required: true,
       type: 'string' as const,
       minLength: 2,
-      maxLength: 100  }
+      maxLength: 100
+    }
+  },
   // Client creation
-  clientCreation: {},
-  name: {},
-  required: true,
+  clientCreation: {
+    name: {
+      required: true,
       type: 'string' as const,
       minLength: 2,
-      maxLength: 100 },
-  industry: {},
-  required: false,
+      maxLength: 100
+    },
+    industry: {
+      required: false,
       type: 'string' as const,
-      maxLength: 100 },
-  description: {},
-  required: false,
+      maxLength: 100
+    },
+    description: {
+      required: false,
       type: 'string' as const,
-      maxLength: 1000  }
+      maxLength: 1000
+    }
+  },
   // Campaign creation
-  campaignCreation: {},
-  name: {},
-  required: true,
+  campaignCreation: {
+    name: {
+      required: true,
       type: 'string' as const,
       minLength: 2,
-      maxLength: 200 },
-  description: {},
-  required: false,
+      maxLength: 200
+    },
+    description: {
+      required: false,
       type: 'string' as const,
-      maxLength: 2000 },
-  budget: {},
-  required: false,
+      maxLength: 2000
+    },
+    budget: {
+      required: false,
       type: 'number' as const,
-      custom: (value: number) => value >= 0 || 'Budget must be positive'  }
+      custom: (value: number) => value >= 0 || 'Budget must be positive'
+    }
+  },
   // AI generation request
-  aiGeneration: {},
-  prompt: {},
-  required: true,
+  aiGeneration: {
+    prompt: {
+      required: true,
       type: 'string' as const,
       minLength: 10,
-      maxLength: 2000 },
-  type: {},
-  required: true,
+      maxLength: 2000
+    },
+    type: {
+      required: true,
       type: 'string' as const,
-      pattern: /^(text|image|video|voice)$/ },
-  clientId: {},
-  required: true,
+      pattern: /^(text|image|video|voice)$/
+    },
+    clientId: {
+      required: true,
       type: 'string' as const,
-      minLength: 1 },
-  style: {},
-  required: false,
+      minLength: 1
+    },
+    style: {
+      required: false,
       type: 'string' as const,
-      maxLength: 100 };
+      maxLength: 100
+    }
+  }
+};
 
 /**
  * Middleware for request validation
@@ -453,7 +480,8 @@ export function withValidation(
       return res.status(400).json({
         error: 'Validation failed',
         code: 'VALIDATION_ERROR',
-        details: validation.errors});
+        details: validation.errors
+      });
     }
     
     // Replace request body with sanitized data
@@ -466,7 +494,7 @@ export function withValidation(
 /**
  * Sanitize file upload data
  */
-export function sanitizeFileData(file: unknown): {,
+export function sanitizeFileData(file: unknown): {
     isValid: boolean;
   error?: string;
   sanitizedFile?: unknown;

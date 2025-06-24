@@ -37,8 +37,7 @@ export function withAuth(handler: AuthenticatedHandler) {
             },
             set(name: string, value: string, options: unknown) {
               // We don't need to set cookies in API routes
-            ,
- }
+            }
             remove(name: string, options: unknown) {
               // We don't need to remove cookies in API routes }
       );

@@ -13,8 +13,7 @@ export const WorkflowStepWrapper: React.FC<WorkflowStepWrapperProps> = ({
   children,
   title,
   description,
-  showStepper = true,
-}) => {
+  showStepper = true}) => {
   const { state } = useWorkflow();
 
   const steps = [

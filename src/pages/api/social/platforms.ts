@@ -45,7 +45,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void>
         const connection = connections?.find((c: any) => c.platform === platform.name);
 
         // Check if token is expired
-        const isExpired =
+        const isExpired = undefined;
           connection?.token_expires_at && new Date(connection.token_expires_at) < new Date();
 
         return {
@@ -59,8 +59,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void>
 
       return res.status(200).json({
         success: true,
-        platforms,
-      });
+        platforms});
     }
 
     res.setHeader('Allow', ['GET']);

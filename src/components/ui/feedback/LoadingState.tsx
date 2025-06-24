@@ -6,8 +6,7 @@ import {
   Typography,
   LinearProgress,
   Card,
-  CardContent,
-} from '@mui/material';
+  CardContent} from '@mui/material';
 import { createLoadingProps } from '@/utils/accessibility';
 
 interface LoadingStateProps {
@@ -27,8 +26,7 @@ export const LoadingState: React.FC<LoadingStateProps> = ({
   progress,
   children,
   fullHeight = false,
-  rows = 3,
-}) => {
+  rows = 3}) => {
   const loadingProps = createLoadingProps(true, message);
 
   const getSizeValue = () => {
@@ -60,8 +58,7 @@ export const LoadingState: React.FC<LoadingStateProps> = ({
         sx={{
           color: 'primary.main',
           '& .MuiCircularProgress-circle': {
-            strokeLinecap: 'round' },
-        }}
+            strokeLinecap: 'round' }}}
       />
       {message && (
         <Typography
@@ -124,9 +121,7 @@ export const LoadingState: React.FC<LoadingStateProps> = ({
             backgroundColor: 'action.hover',
             '& .MuiLinearProgress-bar': {
               borderRadius: 4,
-              background: 'linear-gradient(135deg, #7C3AED 0%, #EC4899 100%)',
-            },
-          }}
+              background: 'linear-gradient(135deg, #7C3AED 0%, #EC4899 100%)'}}}
         />
       </Box>
       {progress !== undefined && (
@@ -162,8 +157,7 @@ export const LoadingState: React.FC<LoadingStateProps> = ({
             sx={{
               color: 'primary.main',
               '& .MuiCircularProgress-circle': {
-                strokeLinecap: 'round' },
-            }}
+                strokeLinecap: 'round' }}}
           />
           <Box sx={{ textAlign: 'center' }}>
             <Typography variant="h6" sx={{ mb: 1, fontWeight: 600 }}>

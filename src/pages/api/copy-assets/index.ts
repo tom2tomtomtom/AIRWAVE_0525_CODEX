@@ -191,7 +191,7 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse, user: any):
       title,
       character_count: characterCount,
       word_count: wordCount,
-      metadata: {
+      metadata: {},
         ...assetData.metadata,
         readability_score: calculateReadabilityScore(content),
         sentiment: analyzeSentiment(content),

@@ -213,8 +213,7 @@ export class AICostMonitor {
       percentUsed,
       timestamp: Date.now(),
       acknowledged: false,
-      severity,
-    };
+      severity};
 
     await this.storeAlert(alert);
     await this.sendAlert(alert);
@@ -507,8 +506,7 @@ export class AICostMonitor {
       recentAlerts,
       totalSpent,
       totalBudget,
-      overallPercentUsed,
-    };
+      overallPercentUsed};
   }
 }
 

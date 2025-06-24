@@ -38,7 +38,7 @@ export default async function handler(
   if (process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/`, {
-        headers: {
+        headers: {},
         'apikey': process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
       }});
       supabaseStatus = response.ok ? '✅ Connected' : `❌ Error: ${response.status}`;

@@ -50,11 +50,10 @@ export class AIRateLimiter {
       windowMs: 60 * 1000, // 1 minute
       maxRequests: 20, // 20 requests per minute
     },
-    default: {
+    default: {},
       windowMs: 60 * 1000, // 1 minute
       maxRequests: 10, // 10 requests per minute
-    },
-  };
+    }};
 
   static getInstance(): AIRateLimiter {
     if (!AIRateLimiter.instance) {
@@ -84,15 +83,14 @@ export class AIRateLimiter {
   /**
    * Check if an AI operation is allowed for a user
    */
-  async checkLimit(
+  async checkLimit('test case', () => {
     userId: string,
     operation: string,
     customConfig?: Partial<RateLimitConfig>
   ): Promise<RateLimitResult> {
     const config = {
       ...(this.defaultLimits[operation] || this.defaultLimits.default),
-      ...customConfig,
-    };
+      ...customConfig};
 
     const key = this.generateKey(userId, operation);
 
@@ -289,8 +287,7 @@ export class AIRateLimiter {
   updateConfig(operation: string, config: Partial<RateLimitConfig>): void {
     this.defaultLimits[operation] = {
       ...(this.defaultLimits[operation] || this.defaultLimits.default),
-      ...config,
-    };
+      ...config};
   }
 
   /**

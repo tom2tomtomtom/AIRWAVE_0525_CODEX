@@ -4,8 +4,7 @@ import {
   Error as ErrorIcon,
   Refresh as RefreshIcon,
   ExpandMore as ExpandMoreIcon,
-  ExpandLess as ExpandLessIcon,
-} from '@mui/icons-material';
+  ExpandLess as ExpandLessIcon} from '@mui/icons-material';
 import { loggers } from '@/lib/logger';
 
 interface ErrorBoundaryState {
@@ -57,8 +56,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
     return {
       hasError: true,
       error,
-      errorId,
-    };
+      errorId};
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
@@ -82,8 +80,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
         scope.setTag('errorBoundary', true);
         scope.setContext('errorInfo', {
           componentStack: errorInfo.componentStack,
-          errorId,
-        });
+          errorId});
         (window as any).Sentry.captureException(error);
       });
     }
@@ -177,8 +174,7 @@ const DefaultErrorFallback: React.FC<ErrorFallbackProps> = ({
   resetError,
   showDetails,
   toggleDetails,
-  level,
-}) => {
+  level}) => {
   const isPageLevel = level === 'page';
   const isSectionLevel = level === 'section';
 
@@ -265,8 +261,7 @@ const DefaultErrorFallback: React.FC<ErrorFallbackProps> = ({
                 mt: 2,
                 textAlign: 'left',
                 '& .MuiAlert-message': {
-                  width: '100%' },
-              }}
+                  width: '100%' }}}
             >
               <AlertTitle>Error Details</AlertTitle>
 

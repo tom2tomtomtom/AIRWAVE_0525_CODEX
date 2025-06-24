@@ -137,7 +137,7 @@ class SlackNotificationChannel extends NotificationChannel {
       
       const response = await fetch(config.target, {
         method: 'POST',
-        headers: {
+        headers: {},
         'Content-Type': 'application/json' 
       },
         body: JSON.stringify(slackPayload)});
@@ -212,7 +212,7 @@ class WebhookNotificationChannel extends NotificationChannel {
 
       const response = await fetch(config.target, {
         method: 'POST',
-        headers: {
+        headers: {},
         'Content-Type': 'application/json' 
       },
         body: JSON.stringify(payload)});

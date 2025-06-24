@@ -61,7 +61,7 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse, user: any): 
     status_distribution: {},
   priority_distribution: {},
   type_distribution: {},
-  budget_summary: {
+  budget_summary: {},
       total_budget: 0,
       total_spent: 0,
       remaining_budget: 0,
@@ -72,7 +72,7 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse, user: any): 
     data: [],
     count: 0,
     portfolio_stats: portfolioStats,
-    pagination: {
+    pagination: {},
       limit: parseInt(limit as string),
       offset: parseInt(offset as string),
       total: 0 },
@@ -107,7 +107,7 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse, user: any):
     updated_at: new Date().toISOString(),
     approval_status: 'pending',
     // Add mock client data
-    clients: {
+    clients: {},
       name: 'Mock Client',
       slug: 'mock-client',
       primary_color: '#1976d2'
@@ -199,7 +199,7 @@ function calculatePortfolioStats(campaigns: any[]): any {
     status_distribution: statusCount,
     priority_distribution: priorityCount,
     type_distribution: typeCount,
-    budget_summary: {
+    budget_summary: {},
       total_budget: totalBudget,
       total_spent: totalSpent,
       remaining_budget: totalBudget - totalSpent,
@@ -230,7 +230,7 @@ async function initializeCampaignAnalytics(campaignId: string): Promise<void> {
         clicks: 0,
         conversions: 0,
         spend: 0,
-        raw_data: {
+        raw_data: {},
           initialized: true,
           created_at: new Date().toISOString()}
       });

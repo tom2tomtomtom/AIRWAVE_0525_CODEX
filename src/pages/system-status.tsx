@@ -48,6 +48,8 @@ export default function SystemStatusPage() {
 
   if (loading) {
     return (
+    <div>Content</div>
+  );
       <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
         <CircularProgress />
       </Box>
@@ -56,6 +58,8 @@ export default function SystemStatusPage() {
 
   if (error) {
     return (
+    <div>Content</div>
+  );
       <Container maxWidth="md" sx={{ mt: 4 }}>
         <Alert severity="error">{error}</Alert>
       </Container>
@@ -71,6 +75,8 @@ export default function SystemStatusPage() {
   };
 
   return (
+    <div>Content</div>
+  );
     <Container maxWidth="lg" sx={{ py: 4 }}>
       <Typography variant="h3" gutterBottom align="center">
         AIrFLOW System Status

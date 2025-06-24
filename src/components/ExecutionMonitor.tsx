@@ -124,7 +124,7 @@ const ExecutionMonitor: React.FC<ExecutionMonitorProps> = ({
         ...(matrixId && { matrix_id: matrixId })});
 
       const response = await fetch(`/api/executions?${params}`, {
-        headers: {
+        headers: {},
         'Authorization': `Bearer ${localStorage.getItem('token')
       }`}});
 
@@ -147,7 +147,7 @@ const ExecutionMonitor: React.FC<ExecutionMonitorProps> = ({
     try {
       const response = await fetch(`/api/executions/${selectedExecution.id}/retry`, {
         method: 'POST',
-        headers: {
+        headers: {},
         'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token')
       }`},
@@ -175,7 +175,7 @@ const ExecutionMonitor: React.FC<ExecutionMonitorProps> = ({
     try {
       const response = await fetch(`/api/executions/${selectedExecution.id}/cancel`, {
         method: 'POST',
-        headers: {
+        headers: {},
         'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token')
       }`},
@@ -275,6 +275,8 @@ const ExecutionMonitor: React.FC<ExecutionMonitorProps> = ({
 
   if (!activeClient) {
     return (
+    <div>Content</div>
+  );
       <Card>
         <CardContent>
           <Typography color="text.secondary" align="center">
@@ -286,6 +288,8 @@ const ExecutionMonitor: React.FC<ExecutionMonitorProps> = ({
   }
 
   return (
+    <div>Content</div>
+  );
     <Box>
       {showHeader && (
         <Box sx={{ mb: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -359,6 +363,8 @@ const ExecutionMonitor: React.FC<ExecutionMonitorProps> = ({
                 const platformDisplay = getPlatformDisplay(execution.platform);
                 
                 return (
+    <div>Content</div>
+  );
                   <React.Fragment key={execution.id}>
                     {index > 0 && <Divider />}
                     <ListItem

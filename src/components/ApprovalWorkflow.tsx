@@ -123,7 +123,7 @@ const ApprovalWorkflow: React.FC<ApprovalWorkflowProps> = ({
         ...(itemId && { item_id: itemId })});
 
       const response = await fetch(`/api/approvals?${params}`, {
-        headers: {
+        headers: {},
         'Authorization': `Bearer ${localStorage.getItem('token')
       }`}});
 
@@ -146,7 +146,7 @@ const ApprovalWorkflow: React.FC<ApprovalWorkflowProps> = ({
     try {
       const response = await fetch(`/api/approvals/${selectedApproval.id}`, {
         method: 'PUT',
-        headers: {
+        headers: {},
         'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token')
       }`},
@@ -175,7 +175,7 @@ const ApprovalWorkflow: React.FC<ApprovalWorkflowProps> = ({
     try {
       const response = await fetch('/api/approvals/bulk', {
         method: 'PUT',
-        headers: {
+        headers: {},
         'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token')
       }`},
@@ -311,6 +311,8 @@ const ApprovalWorkflow: React.FC<ApprovalWorkflowProps> = ({
 
   if (!activeClient && !clientId) {
     return (
+    <div>Content</div>
+  );
       <Card>
         <CardContent>
           <Typography color="text.secondary" align="center">
@@ -322,6 +324,8 @@ const ApprovalWorkflow: React.FC<ApprovalWorkflowProps> = ({
   }
 
   return (
+    <div>Content</div>
+  );
     <Box>
       {showHeader && (
         <Box sx={{ mb: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -423,6 +427,8 @@ const ApprovalWorkflow: React.FC<ApprovalWorkflowProps> = ({
                 const overdue = isOverdue(approval);
                 
                 return (
+    <div>Content</div>
+  );
                   <React.Fragment key={approval.id}>
                     {index > 0 && <Divider />}
                     <ListItem

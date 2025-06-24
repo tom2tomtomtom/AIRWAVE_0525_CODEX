@@ -41,17 +41,16 @@ export class ErrorReporter {
     window.addEventListener('unhandledrejection', (_event) => {
       this.reportError(new Error(`Unhandled Promise Rejection: ${event.reason}`), {
         action: 'unhandled_promise_rejection',
-        metadata: {
+        metadata: {},
           reason: event.reason,
-          promise: event.promise },
-      });
+          promise: event.promise }});
     });
 
     // Handle global JavaScript errors
     window.addEventListener('error', (_event) => {
       this.reportError(new Error(event.message), {
         action: 'global_error',
-        metadata: {
+        metadata: {},
         filename: event.filename,
           lineno: event.lineno,
           colno: event.colno,
@@ -76,7 +75,7 @@ export class ErrorReporter {
       // Send to error reporting API
       const response = await fetch('/api/errors', {
         method: 'POST',
-        headers: {
+        headers: {},
         'Content-Type': 'application/json'
       },
         body: JSON.stringify(errorReport)});
@@ -100,7 +99,7 @@ export class ErrorReporter {
   async reportAPIError(error: Error, endpoint: string, method: string = 'GET') {
     return this.reportError(error, {
       action: 'api_error',
-      metadata: {
+      metadata: {},
         endpoint,
         method,
         timestamp: new Date().toISOString()
@@ -111,7 +110,7 @@ export class ErrorReporter {
     return this.reportError(error, {
       action: 'ui_error',
       component,
-      metadata: {
+      metadata: {},
         userAction: action,
         timestamp: new Date().toISOString()
       }});
@@ -121,7 +120,7 @@ export class ErrorReporter {
     return this.reportError(error, {
       action: 'validation_error',
       component: form,
-      metadata: {
+      metadata: {},
         field,
         timestamp: new Date().toISOString()
       }});
@@ -146,6 +145,8 @@ export const reportValidationError = (error: Error, form: string, field?: string
 
 // Hook for React components
 export function useErrorReporting() {
+  return undefined;
+}
   return {
     reportError: errorReporter.reportError.bind(errorReporter),
     reportAPIError: errorReporter.reportAPIError.bind(errorReporter),

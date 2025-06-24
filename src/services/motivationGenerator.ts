@@ -38,7 +38,7 @@ export interface MotivationSet {
   motivations: PsychologicalMotivation[];
   generatedAt: Date;
   version: number;
-  metadata: {
+  metadata: {},
         totalMotivations: number;
     diversityScore: number;
     averageConfidence: number;

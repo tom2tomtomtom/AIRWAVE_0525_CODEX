@@ -30,6 +30,5 @@ export const useAssetActions = ({ dispatch }: UseAssetActionsProps) => {
   return {
     selectAsset,
     removeAsset,
-    selectTemplate,
-  };
+    selectTemplate};
 };

@@ -375,7 +375,7 @@ async function processVideoGeneration(jobsData: any): Promise<any> {
         .update({
           status: renderResult.success ? 'processing' : 'failed',
           render_job_id: renderResult.job_id,
-          metadata: {
+          metadata: {},
         ...job.config,
             render_started_at: new Date().toISOString(),
             estimated_completion: renderResult.estimated_completion
@@ -561,7 +561,7 @@ function convertToCreatomateFormat(job: any): any {
     templateId,
     modifications,
     webhookUrl: `${process.env.NEXT_PUBLIC_APP_URL}/api/webhooks/creatomate`,
-    metadata: {
+    metadata: {},
         job_id: job.id,
       generation_id: job.generation_id,
       client_id: job.client_id,

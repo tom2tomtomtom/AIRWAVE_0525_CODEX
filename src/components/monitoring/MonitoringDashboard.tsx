@@ -203,7 +203,7 @@ const MonitoringDashboard: React.FC = () => {
     try {
       const response = await fetch('/api/monitoring/alerts?action=acknowledge', {
         method: 'PATCH',
-        headers: {
+        headers: {},
         'Content-Type': 'application/json' 
       },
         body: JSON.stringify({
@@ -304,6 +304,8 @@ const MonitoringDashboard: React.FC = () => {
 
   if (loading) {
     return (
+    <div>Content</div>
+  );
       <Box display="flex" justifyContent="center" alignItems="center" minHeight={400}>
         <CircularProgress />
       </Box>
@@ -312,6 +314,8 @@ const MonitoringDashboard: React.FC = () => {
 
   if (!dashboardData) {
     return (
+    <div>Content</div>
+  );
       <Alert severity="error">
         <AlertTitle>Error</AlertTitle>
         Failed to load dashboard data. Please try refreshing the page.
@@ -322,6 +326,8 @@ const MonitoringDashboard: React.FC = () => {
   const tabLabels = ['Overview', ...dashboardData.sections.map(s => s.title), 'Alerts'];
 
   return (
+    <div>Content</div>
+  );
     <Box>
       {/* Header */}
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
@@ -420,6 +426,8 @@ const MonitoringDashboard: React.FC = () => {
         (() => {
           const section = dashboardData.sections[selectedTab - 1];
           return (
+    <div>Content</div>
+  );
             <Box>
               <Grid container spacing={3}>
                 {/* Metrics */}

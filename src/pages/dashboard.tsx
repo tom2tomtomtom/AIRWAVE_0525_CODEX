@@ -13,8 +13,7 @@ import {
   IconButton,
   Chip,
   Alert,
-  Grid,
-} from '@mui/material';
+  Grid} from '@mui/material';
 import {
   Image as ImageIcon,
   Description as DescriptionIcon,
@@ -22,8 +21,7 @@ import {
   AutoAwesome as AIIcon,
   ArrowForward,
   Add,
-  Business as BusinessIcon,
-} from '@mui/icons-material';
+  Business as BusinessIcon} from '@mui/icons-material';
 import DashboardLayout from '@/components/DashboardLayout';
 import { AnimatedActionButton } from '@/components/AnimatedComponents';
 import { useSupabaseAuth } from '@/contexts/SupabaseAuthContext';
@@ -123,8 +121,7 @@ const DashboardPage = () => {
                     transition: 'transform 0.2s',
                     '&:hover': {
                       transform: 'translateY(-4px)',
-                      boxShadow: 3 },
-                  }}
+                      boxShadow: 3 }}}
                   onClick={() => router.push(action.href)}
                 >
                   <CardContent>

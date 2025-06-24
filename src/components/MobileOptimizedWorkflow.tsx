@@ -139,12 +139,14 @@ export const MobileOptimizedWorkflow: React.FC<MobileOptimizedWorkflowProps> = (
   }
 
   return (
+    <div>Content</div>
+  );
     <Dialog
       open={open}
       onClose={onClose}
       fullScreen
       PaperProps={{
-        sx: {
+        sx: {},
           bgcolor: 'background.default'
         }
       }}
@@ -345,6 +347,8 @@ const MobileMotivationsStep: React.FC<{ onSelect: (data: any) => void }> = ({ on
   };
 
   return (
+    <div>Content</div>
+  );
     <Box>
       {motivations.map((motivation: any) => (
         <Card

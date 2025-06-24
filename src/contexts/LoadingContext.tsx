@@ -62,9 +62,7 @@ export const LoadingProvider: React.FC<LoadingProviderProps> = ({ children }) =>
             sx={{
               height: '3px',
               '& .MuiLinearProgress-bar': {
-                background: 'linear-gradient(90deg, #7C3AED, #EC4899)',
-              },
-            }}
+                background: 'linear-gradient(90deg, #7C3AED, #EC4899)'}}}
           />
         </Box>
       )}

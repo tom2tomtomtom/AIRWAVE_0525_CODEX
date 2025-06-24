@@ -4,8 +4,7 @@ import {
   Motivation,
   CopyVariation,
   Asset,
-  Template,
-} from './workflow-types';
+  Template} from './workflow-types';
 
 // Action types
 export type WorkflowAction =
@@ -75,8 +74,7 @@ export function workflowReducer(state: WorkflowState, action: WorkflowAction): W
         ...state,
         motivations: state?.motivations?.map((m: any) =>
           m.id === action.id ? { ...m, selected: !m.selected } : m
-        ),
-      };
+        )};
 
     case 'SET_COPY_VARIATIONS':
       return { ...state, copyVariations: action.copyVariations };
@@ -86,8 +84,7 @@ export function workflowReducer(state: WorkflowState, action: WorkflowAction): W
         ...state,
         copyVariations: state?.copyVariations?.map((c: any) =>
           c.id === action.id ? { ...c, selected: !c.selected } : c
-        ),
-      };
+        )};
 
     case 'SET_SELECTED_ASSETS':
       return { ...state, selectedAssets: action.assets };
@@ -95,8 +92,7 @@ export function workflowReducer(state: WorkflowState, action: WorkflowAction): W
     case 'ADD_ASSET':
       return {
         ...state,
-        selectedAssets: [...state.selectedAssets, action.asset],
-      };
+        selectedAssets: [...state.selectedAssets, action.asset]};
 
     case 'REMOVE_ASSET':
       return {

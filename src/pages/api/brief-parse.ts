@@ -112,8 +112,7 @@ Return ONLY the JSON object, no additional text or formatting.`;
       timeline: 'Not specified',
       tone: 'Professional',
       deliverables: [],
-      extraction_note: 'AI parsing returned invalid format, please review manually',
-    });
+      extraction_note: 'AI parsing returned invalid format, please review manually'});
   }
 }
 

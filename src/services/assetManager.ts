@@ -172,7 +172,7 @@ export class AssetManager {
         mimeType: file.type,
         fileSize: file.size,
         url: '',
-        metadata: {
+        metadata: {},
         description,
           altText,
           keywords: tags }

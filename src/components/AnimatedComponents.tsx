@@ -12,8 +12,7 @@ import {
   Slide,
   Zoom,
   styled,
-  keyframes,
-} from '@mui/material';
+  keyframes} from '@mui/material';
 import {
   Favorite,
   FavoriteBorder,
@@ -21,8 +20,7 @@ import {
   Check,
   CloudUpload,
   PlayArrow,
-  Pause,
-} from '@mui/icons-material';
+  Pause} from '@mui/icons-material';
 
 // Keyframe animations
 const pulse = keyframes`
@@ -66,21 +64,17 @@ const AnimatedCard = styled(Card)(({ theme }) => ({
     transform: 'translateY(-8px)',
     boxShadow: theme.shadows[8],
     '& .card-overlay': {
-      opacity: 1 },
-  },
+      opacity: 1 }},
   '&:active': {
-    transform: 'translateY(-4px)' },
-}));
+    transform: 'translateY(-4px)' }}));
 
 const PulseButton = styled(Button)({
   '&.pulse': {
-    animation: `${pulse} 2s infinite` },
-});
+    animation: `${pulse} 2s infinite` }});
 
 const BounceIcon = styled(Box)({
   '&.bounce': {
-    animation: `${bounce} 1s ease-in-out` },
-});
+    animation: `${bounce} 1s ease-in-out` }});
 
 const ShimmerBox = styled(Box)({
   background: `
@@ -121,8 +115,7 @@ export const AnimatedActionButton: React.FC<{
           transform: 'translateY(-2px)',
           boxShadow: 3 },
         '&:active': {
-          transform: 'scale(0.95)' },
-      }}
+          transform: 'scale(0.95)' }}}
     >
       {loading ? (
         <Box
@@ -136,8 +129,7 @@ export const AnimatedActionButton: React.FC<{
             animation: 'spin 1s linear infinite',
             '@keyframes spin': {
               '0%': { transform: 'rotate(0deg)' },
-              '100%': { transform: 'rotate(360deg)' } },
-          }}
+              '100%': { transform: 'rotate(360deg)' } }}}
         />
       ) : success ? (
         <Zoom in={success}>
@@ -171,8 +163,7 @@ export const AnimatedLikeButton: React.FC<{
         transition: 'all 0.3s ease',
         '&:hover': {
           transform: 'scale(1.1)',
-          backgroundColor: liked ? 'error.light' : 'action.hover' },
-      }}
+          backgroundColor: liked ? 'error.light' : 'action.hover' }}}
       aria-label="Icon button"
     >
       {' '}
@@ -207,8 +198,7 @@ export const AnimatedUploadZone: React.FC<{
       '&:hover': {
         borderColor: 'primary.main',
         backgroundColor: 'action.hover',
-        transform: 'scale(1.01)' },
-    }}
+        transform: 'scale(1.01)' }}}
   >
     <BounceIcon className={isDragActive ? 'bounce' : ''}>
       <CloudUpload
@@ -353,8 +343,7 @@ export const AnimatedFAB: React.FC<{
         transform: hovered ? 'scale(1.1) translateY(-2px)' : 'scale(1)',
         boxShadow: hovered ? 6 : 3,
         '&:active': {
-          transform: 'scale(0.95)' },
-      }}
+          transform: 'scale(0.95)' }}}
     >
       <Box
         sx={{

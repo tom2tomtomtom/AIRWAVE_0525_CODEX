@@ -98,18 +98,16 @@ export const STORAGE_BUCKETS = {
 
 // Default Supabase client options
 export const DEFAULT_CLIENT_OPTIONS = {
-  auth: {
+  auth: {},
     autoRefreshToken: true,
     persistSession: true,
     detectSessionInUrl: true,
     storageKey: 'airwave-auth-token' },
-  global: {
-    headers: {
+  global: {},
+    headers: {},
         'x-application-name': 'airwave'
-      },
-  },
-  db: {
+      }},
+  db: {},
     schema: 'public' },
-  realtime: {
-    enabled: false },
-} as const;
+  realtime: {},
+    enabled: false }} as const;

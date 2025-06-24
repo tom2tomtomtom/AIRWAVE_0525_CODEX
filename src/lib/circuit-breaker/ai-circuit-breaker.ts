@@ -35,28 +35,27 @@ export class AICircuitBreaker {
 
   // Default configurations for different AI services
   private configs: Record<string, CircuitBreakerConfig> = {
-    openai: {
+    openai: {},
       failureThreshold: 5, // Open after 5 failures
       recoveryTimeout: 60000, // 1 minute recovery timeout
       monitoringPeriod: 300000, // 5 minute monitoring window
       halfOpenMaxCalls: 3, // Allow 3 test calls in half-open state
     },
-    anthropic: {
+    anthropic: {},
       failureThreshold: 5,
       recoveryTimeout: 60000,
       monitoringPeriod: 300000,
       halfOpenMaxCalls: 3 },
-    elevenlabs: {
+    elevenlabs: {},
       failureThreshold: 3, // More sensitive for voice services
       recoveryTimeout: 30000, // Shorter recovery timeout
       monitoringPeriod: 180000, // 3 minute monitoring window
       halfOpenMaxCalls: 2 },
-    default: {
+    default: {},
       failureThreshold: 5,
       recoveryTimeout: 60000,
       monitoringPeriod: 300000,
-      halfOpenMaxCalls: 3 },
-  };
+      halfOpenMaxCalls: 3 }};
 
   static getInstance(): AICircuitBreaker {
     if (!AICircuitBreaker.instance) {
@@ -170,6 +169,8 @@ export class AICircuitBreaker {
 
     // Fallback to local stats
     return (
+    <div>Content</div>
+  );
       this.localStats.get(circuitKey) || {
         state: CircuitState.CLOSED,
         failureCount: 0,
@@ -409,8 +410,7 @@ export class AICircuitBreaker {
   updateConfig(service: string, config: Partial<CircuitBreakerConfig>): void {
     this.configs[service] = {
       ...(this.configs[service] || this.configs.default),
-      ...config,
-    };
+      ...config};
   }
 }
 

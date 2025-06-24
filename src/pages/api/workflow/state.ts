@@ -65,8 +65,7 @@ import {
   errorResponse,
   handleApiError,
   methodNotAllowed,
-  ApiErrorCode,
-} from '@/lib/api-response';
+  ApiErrorCode} from '@/lib/api-response';
 
 interface WorkflowState {
   id: string;
@@ -196,8 +195,7 @@ async function updateWorkflowState(
         {
           id: workflowId,
           user_id: userId,
-          ...updateData,
-        },
+          ...updateData},
         {
           onConflict: 'id' }
       )

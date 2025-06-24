@@ -66,7 +66,7 @@ export const useRealtime = (options: UseRealtimeOptions = {}) => {
         ...(lastFetch && { since: lastFetch })});
 
       const response = await fetch(`/api/realtime/websocket?${params}`, {
-        headers: {
+        headers: {},
         'Authorization': `Bearer ${localStorage.getItem('token')
       }`}});
 
@@ -128,7 +128,7 @@ export const useRealtime = (options: UseRealtimeOptions = {}) => {
       }
 
       const response = await fetch(`/api/notifications?${params}`, {
-        headers: {
+        headers: {},
         'Authorization': `Bearer ${token
       }`,
           'Content-Type': 'application/json'}});
@@ -159,7 +159,7 @@ export const useRealtime = (options: UseRealtimeOptions = {}) => {
     try {
       await fetch('/api/realtime/websocket', {
         method: 'PUT',
-        headers: {
+        headers: {},
         'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token')
       }`},
@@ -182,7 +182,7 @@ export const useRealtime = (options: UseRealtimeOptions = {}) => {
     try {
       await fetch(`/api/notifications/${notificationId}`, {
         method: 'PUT',
-        headers: {
+        headers: {},
         'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token')
       }`},
@@ -207,7 +207,7 @@ export const useRealtime = (options: UseRealtimeOptions = {}) => {
     try {
       await fetch(`/api/notifications/${notificationId}`, {
         method: 'DELETE',
-        headers: {
+        headers: {},
         'Authorization': `Bearer ${localStorage.getItem('token')
       }`}});
 
@@ -230,7 +230,7 @@ export const useRealtime = (options: UseRealtimeOptions = {}) => {
     try {
       await fetch('/api/realtime/websocket', {
         method: 'POST',
-        headers: {
+        headers: {},
         'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token')
       }`},
@@ -318,8 +318,6 @@ export const useRealtime = (options: UseRealtimeOptions = {}) => {
     refresh: () => {
       fetchEvents();
       fetchNotifications();
-    ,
-
     }
     // Control
     startPolling,

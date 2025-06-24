@@ -4,8 +4,7 @@ import React, {
   useState,
   useEffect,
   ReactNode,
-  useCallback,
-} from 'react';
+  useCallback} from 'react';
 import { PaletteMode } from '@mui/material';
 
 interface ThemeContextType {

@@ -108,7 +108,7 @@ export default function SocialMediaPublisher() {
 
       const response = await fetch('/api/social/publish', {
         method: 'POST',
-        headers: {
+        headers: {},
         'Content-Type': 'application/json'
       
       },
@@ -155,6 +155,8 @@ export default function SocialMediaPublisher() {
 
   if (loading) {
     return (
+    <div>Content</div>
+  );
       <Box display="flex" justifyContent="center" p={4}>
         <CircularProgress />
       </Box>
@@ -162,6 +164,8 @@ export default function SocialMediaPublisher() {
   }
 
   return (
+    <div>Content</div>
+  );
     <Paper sx={{ p: 3 }}>
       <Typography variant="h5" gutterBottom>
         Social Media Publisher

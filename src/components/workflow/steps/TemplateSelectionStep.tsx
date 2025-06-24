@@ -8,15 +8,13 @@ import {
   Chip,
   Alert,
   Paper,
-  CircularProgress,
-} from '@mui/material';
+  CircularProgress} from '@mui/material';
 import {
   ArrowForward as ArrowForwardIcon,
   ArrowBack as ArrowBackIcon,
   VideoLibrary as VideoLibraryIcon,
   CheckCircle as CheckCircleIcon,
-  Refresh as RefreshIcon,
-} from '@mui/icons-material';
+  Refresh as RefreshIcon} from '@mui/icons-material';
 import { useWorkflow } from '../WorkflowProvider';
 import { StepComponentProps, Template } from '@/lib/workflow/workflow-types';
 import { creatomateService, CreatomateTemplate } from '@/services/creatomate';
@@ -25,8 +23,7 @@ interface TemplateSelectionStepProps extends StepComponentProps {}
 
 export const TemplateSelectionStep: React.FC<TemplateSelectionStepProps> = ({
   onNext,
-  onPrevious,
-}) => {
+  onPrevious}) => {
   const { state, actions } = useWorkflow();
   const { briefData, selectedTemplate, lastError } = state;
 
@@ -300,8 +297,7 @@ export const TemplateSelectionStep: React.FC<TemplateSelectionStepProps> = ({
                           '&:hover': {
                             borderColor: 'primary.main',
                             transform: 'translateY(-2px)',
-                            boxShadow: 2 },
-                        }}
+                            boxShadow: 2 }}}
                         onClick={() => handleSelectTemplate(template)}
                       >
                         {/* Template Preview */}
@@ -418,8 +414,7 @@ export const TemplateSelectionStep: React.FC<TemplateSelectionStepProps> = ({
                               '&:hover': {
                                 borderColor: 'primary.main',
                                 transform: 'translateY(-2px)',
-                                boxShadow: 2 },
-                            }}
+                                boxShadow: 2 }}}
                             onClick={() => handleSelectTemplate(template)}
                           >
                             {/* Template Preview */}

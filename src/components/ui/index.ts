@@ -27,16 +27,14 @@ export { EnhancedAssetBrowser } from './AssetBrowser/EnhancedAssetBrowser';
 export {
   NotificationProvider,
   useNotifications,
-  useNotificationHelpers,
-} from './notifications/NotificationSystem';
+  useNotificationHelpers} from './notifications/NotificationSystem';
 export type { Notification } from './notifications/NotificationSystem';
 
 // Error Handling
 export {
   default as ErrorBoundary,
   withErrorBoundary,
-  useErrorHandler,
-} from './ErrorBoundary/ErrorBoundary';
+  useErrorHandler} from './ErrorBoundary/ErrorBoundary';
 
 // Re-export common types
 export type { SelectOption } from './forms/FormSelect';

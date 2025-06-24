@@ -9,15 +9,13 @@ import {
   IconButton,
   Box,
   LinearProgress,
-  Typography,
-} from '@mui/material';
+  Typography} from '@mui/material';
 import {
   Close as CloseIcon,
   CheckCircle as SuccessIcon,
   Error as ErrorIcon,
   Warning as WarningIcon,
-  Info as InfoIcon,
-} from '@mui/icons-material';
+  Info as InfoIcon} from '@mui/icons-material';
 import { TransitionProps } from '@mui/material/transitions';
 import { announceToScreenReader } from '@/utils/accessibility';
 
@@ -69,8 +67,7 @@ interface NotificationProviderProps {
 
 export const NotificationProvider: React.FC<NotificationProviderProps> = ({
   children,
-  maxNotifications = 5,
-}) => {
+  maxNotifications = 5}) => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
 
   const generateId = useCallback(() => {
@@ -167,8 +164,7 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
     showError,
     showWarning,
     showInfo,
-    updateNotification,
-  };
+    updateNotification};
 
   return (
     <NotificationContext.Provider value={contextValue}>
@@ -185,8 +181,7 @@ interface NotificationContainerProps {
 
 const NotificationContainer: React.FC<NotificationContainerProps> = ({
   notifications,
-  onRemove,
-}) => {
+  onRemove}) => {
   if (notifications.length === 0) return null;
 
   return (
@@ -269,9 +264,7 @@ const NotificationItem: React.FC<NotificationItemProps> = ({ notification, onRem
                 sx={{
                   color: 'inherit',
                   '&:hover': {
-                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                  },
-                }}
+                    backgroundColor: 'rgba(255, 255, 255, 0.1)'}}}
               >
                 <Typography variant="button" sx={{ fontSize: '0.75rem' }}>
                   {notification.action.label}
@@ -284,9 +277,7 @@ const NotificationItem: React.FC<NotificationItemProps> = ({ notification, onRem
               sx={{
                 color: 'inherit',
                 '&:hover': {
-                  backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                },
-              }}
+                  backgroundColor: 'rgba(255, 255, 255, 0.1)'}}}
             >
               <CloseIcon fontSize="small" />
             </IconButton>
@@ -297,8 +288,7 @@ const NotificationItem: React.FC<NotificationItemProps> = ({ notification, onRem
           borderRadius: 2,
           boxShadow: 3,
           '& .MuiAlert-message': {
-            width: '100%' },
-        }}
+            width: '100%' }}}
       >
         {notification.title && (
           <AlertTitle sx={{ fontWeight: 600, mb: 0.5 }}>{notification.title}</AlertTitle>
@@ -328,9 +318,7 @@ const NotificationItem: React.FC<NotificationItemProps> = ({ notification, onRem
                 backgroundColor: 'rgba(255, 255, 255, 0.2)',
                 '& .MuiLinearProgress-bar': {
                   borderRadius: 2,
-                  backgroundColor: 'rgba(255, 255, 255, 0.8)',
-                },
-              }}
+                  backgroundColor: 'rgba(255, 255, 255, 0.8)'}}}
             />
           </Box>
         )}
@@ -357,8 +345,7 @@ export const useNotificationHelpers = () => {
     (id: string, progress: number, message?: string) => {
       updateNotification(id, {
         progress,
-        ...(message && { message }),
-      });
+        ...(message && { message })});
     },
     [updateNotification]
   );
@@ -395,6 +382,5 @@ export const useNotificationHelpers = () => {
     showLoadingNotification,
     updateLoadingProgress,
     completeLoadingNotification,
-    failLoadingNotification,
-  };
+    failLoadingNotification};
 };

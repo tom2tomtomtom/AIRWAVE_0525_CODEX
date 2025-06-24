@@ -121,6 +121,8 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse, user: any, a
     // Check if the copy asset ID is referenced in the execution metadata
     const metadata = execution.metadata;
     return (
+    <div>Content</div>
+  );
       metadata.copy_asset_id === assetId ||
       (metadata.copy_assets && metadata.copy_assets.includes(assetId)) ||
       (metadata.field_assignments && Object.values(metadata.field_assignments).some((field: any) => 

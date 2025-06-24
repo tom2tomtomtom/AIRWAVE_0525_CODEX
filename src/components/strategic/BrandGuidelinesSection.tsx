@@ -7,15 +7,13 @@ import {
   Card,
   CardContent,
   Stack,
-  Grid,
-} from '@mui/material';
+  Grid} from '@mui/material';
 import {
   Upload as UploadIcon,
   CheckCircle as CheckCircleIcon,
   Palette as PaletteIcon,
   TextFormat as TextFormatIcon,
-  VoiceOverOff as VoiceOverOffIcon,
-} from '@mui/icons-material';
+  VoiceOverOff as VoiceOverOffIcon} from '@mui/icons-material';
 interface BrandGuidelinesProps {
   brandGuidelines: any;
   brandGuidelinesUploading: boolean;
@@ -34,8 +32,7 @@ const BrandGuidelinesSection: React.FC<BrandGuidelinesProps> = ({
   onDragOver,
   onDragLeave,
   onDrop,
-  onUpload,
-}) => {
+  onUpload}) => {
   if (!brandGuidelines) {
     return (
       <Box

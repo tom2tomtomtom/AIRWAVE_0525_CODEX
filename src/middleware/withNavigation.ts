@@ -12,7 +12,7 @@ export interface NavigationState {
 export function withNavigationProtection(handler: unknown) {
   return async (req: NextApiRequest, res: NextApiResponse) => {
     try {
-      const navigationState: NavigationState = {,
+      const navigationState: NavigationState = {
     currentPath: req.url || '',
         isAuthenticated: !!(req as any).user,
         userRole: (req as any).user?.role,

@@ -19,8 +19,7 @@ if (typeof window === 'undefined') {
   // Client-side fallback for crypto
   crypto = {
     createHash: () => ({
-      update: () => ({ digest: () => Math.random().toString(36) }) }),
-  };
+      update: () => ({ digest: () => Math.random().toString(36) }) })};
 }
 
 interface CacheConfig {
@@ -60,8 +59,7 @@ export class AIResponseCache {
     'parse-brief': {
       ttl: 30 * 24 * 60 * 60, // 30 days
       keyPrefix: 'ai_cache:brief',
-      enableCompression: true },
-  };
+      enableCompression: true }};
 
   static getInstance(): AIResponseCache {
     if (!AIResponseCache.instance) {
@@ -159,8 +157,7 @@ export class AIResponseCache {
         data,
         timestamp: Date.now(),
         version: '1.0',
-        metadata,
-      };
+        metadata};
 
       if (this.useRedis) {
         const success = await redisManager.set(key, cachedResponse, config.ttl);
@@ -324,8 +321,7 @@ export class AIResponseCache {
   updateConfig(operation: string, config: Partial<CacheConfig>): void {
     this.cacheConfigs[operation] = {
       ...this.cacheConfigs[operation],
-      ...config,
-    };
+      ...config};
   }
 
   /**

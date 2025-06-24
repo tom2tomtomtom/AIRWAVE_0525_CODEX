@@ -45,8 +45,7 @@ export function useRealTimeUpdates(options: UseRealTimeUpdatesOptions = {}) {
     enabled = true,
     autoReconnect = true,
     maxReconnectAttempts = 5,
-    reconnectDelay = 5000,
-  } = options;
+    reconnectDelay = 5000} = options;
 
   const [connected, setConnected] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -269,8 +268,7 @@ export function useRealTimeUpdates(options: UseRealTimeUpdatesOptions = {}) {
     onConnected,
 
     // Manual trigger for testing
-    emit,
-  };
+    emit};
 }
 
 // Convenience hooks for specific use cases

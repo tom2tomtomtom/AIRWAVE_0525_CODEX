@@ -105,7 +105,7 @@ async function sendToMonitoringService(report: any) {
   // if (process.env.ERROR_REPORTING_URL) {
   //   await fetch(process.env.ERROR_REPORTING_URL, {
   //     method: 'POST',
-  //     headers: {
+  //     headers: {},
         //       'Content-Type': 'application/json',
   //       'Authorization': `Bearer ${process.env.ERROR_REPORTING_TOKEN
       }`,

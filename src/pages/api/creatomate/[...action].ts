@@ -38,7 +38,7 @@ export default async function handler(
       case 'test':
         // Simple connectivity test
         const testResponse = await axios.get(`${baseUrl}/templates`, {
-          headers: {
+          headers: {},
         'Authorization': `Bearer ${apiKey
       }`},
           params: { limit: 1 }
@@ -58,7 +58,7 @@ export default async function handler(
         // Get templates
         if (req.method === 'GET') {
           const templatesResponse = await axios.get(`${baseUrl}/templates`, {
-            headers: {
+            headers: {},
         'Authorization': `Bearer ${apiKey
       }`},
             params: {},
@@ -82,7 +82,7 @@ export default async function handler(
         if (req.method === 'POST') {
           // Create new render
           const renderResponse = await axios.post(`${baseUrl}/renders`, req.body, {
-            headers: {
+            headers: {},
         'Authorization': `Bearer ${apiKey
       }`,
               'Content-Type': 'application/json'}});
@@ -105,7 +105,7 @@ export default async function handler(
           }
 
           const statusResponse = await axios.get(`${baseUrl}/renders/${renderId}`, {
-            headers: {
+            headers: {},
         'Authorization': `Bearer ${apiKey
       }`}});
 
@@ -122,7 +122,7 @@ export default async function handler(
         // Get account information
         if (req.method === 'GET') {
           const accountResponse = await axios.get(`${baseUrl}/account`, {
-            headers: {
+            headers: {},
         'Authorization': `Bearer ${apiKey
       }`}});
 

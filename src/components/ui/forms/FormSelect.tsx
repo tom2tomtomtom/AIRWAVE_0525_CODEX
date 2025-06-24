@@ -9,8 +9,7 @@ import {
   Tooltip,
   IconButton,
   SelectProps,
-  Chip,
-} from '@mui/material';
+  Chip} from '@mui/material';
 import { Info as InfoIcon, ExpandMore as ExpandMoreIcon } from '@mui/icons-material';
 import { useFormContext, Controller } from 'react-hook-form';
 import { createAccessibleField } from '@/utils/accessibility';
@@ -50,8 +49,7 @@ export const FormSelect: React.FC<FormSelectProps> = ({
   const {
     control,
     formState: { errors  }
-    watch,
-  } = useFormContext();
+    watch} = useFormContext();
 
   const value = watch(name);
   const error = errors[name];
@@ -63,18 +61,21 @@ export const FormSelect: React.FC<FormSelectProps> = ({
     required: Boolean(rules.required),
     invalid: hasError,
     description,
-    errorMessage,
-  });
+    errorMessage});
 
   const renderValue = (selected: unknown) => {
     if (allowMultiple && Array.isArray(selected)) {
       if (selected.length === 0) return <em>None selected</em>;
 
       return (
+    <div>Content</div>
+  );
         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
           {selected.map((val: any) => {
             const option = options.find((opt: any) => opt.value === val);
             return (
+    <div>Content</div>
+  );
               <Chip
                 key={val}
                 label={option?.label || val}
@@ -83,8 +84,7 @@ export const FormSelect: React.FC<FormSelectProps> = ({
                   bgcolor: 'primary.main',
                   color: 'primary.contrastText',
                   '& .MuiChip-deleteIcon': {
-                    color: 'primary.contrastText' },
-                }}
+                    color: 'primary.contrastText' }}}
               />
             );
           })}
@@ -97,6 +97,8 @@ export const FormSelect: React.FC<FormSelectProps> = ({
   };
 
   return (
+    <div>Content</div>
+  );
     <Box sx={{ mb: 2 }}>
       <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
         <Typography
@@ -146,10 +148,8 @@ export const FormSelect: React.FC<FormSelectProps> = ({
                   borderColor: 'error.main',
                   borderWidth: 2 },
                 '&.Mui-focused.Mui-error .MuiOutlinedInput-notchedOutline': {
-                  boxShadow: '0 0 0 4px rgba(239, 68, 68, 0.1)',
-                },
-                ...selectProps.sx,
-              }}
+                  boxShadow: '0 0 0 4px rgba(239, 68, 68, 0.1)'},
+                ...selectProps.sx}}
             >
               {loading ? (
                 <MenuItem disabled>Loading...</MenuItem>

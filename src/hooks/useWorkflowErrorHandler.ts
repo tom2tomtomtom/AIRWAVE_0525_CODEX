@@ -38,8 +38,7 @@ export function useWorkflowErrorHandler() {
         recoverable: true,
         retryable: true,
         context,
-        timestamp,
-      };
+        timestamp};
     }
 
     // AI cost/budget errors
@@ -56,8 +55,7 @@ export function useWorkflowErrorHandler() {
         recoverable: true,
         retryable: false,
         context,
-        timestamp,
-      };
+        timestamp};
     }
 
     // Validation errors
@@ -70,8 +68,7 @@ export function useWorkflowErrorHandler() {
         recoverable: true,
         retryable: false,
         context,
-        timestamp,
-      };
+        timestamp};
     }
 
     // Processing errors
@@ -84,8 +81,7 @@ export function useWorkflowErrorHandler() {
         recoverable: true,
         retryable: true,
         context,
-        timestamp,
-      };
+        timestamp};
     }
 
     // Unknown errors
@@ -97,8 +93,7 @@ export function useWorkflowErrorHandler() {
       recoverable: true,
       retryable: true,
       context,
-      timestamp,
-    };
+      timestamp};
   }, []);
 
   // Handle errors with automatic recovery strategies
@@ -298,6 +293,5 @@ export function useWorkflowErrorHandler() {
     reportError,
     clearError,
     isRecovering,
-    categorizeError,
-  };
+    categorizeError};
 }

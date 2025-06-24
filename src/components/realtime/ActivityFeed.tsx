@@ -18,8 +18,7 @@ import {
   Alert,
   Tooltip,
   Badge,
-  LinearProgress,
-} from '@mui/material';
+  LinearProgress} from '@mui/material';
 import {
   Refresh as RefreshIcon,
   PlayArrow as PlayIcon,
@@ -32,8 +31,7 @@ import {
   VideoLibrary as VideoIcon,
   Timeline as TimelineIcon,
   Visibility as ViewIcon,
-  VisibilityOff as HideIcon,
-} from '@mui/icons-material';
+  VisibilityOff as HideIcon} from '@mui/icons-material';
 import { useRealtime } from '@/hooks/useRealtime';
 import { useClient } from '@/contexts/ClientContext';
 import { formatDistanceToNow } from 'date-fns';
@@ -64,8 +62,7 @@ const ActivityFeed: React.FC<ActivityFeedProps> = ({
   title = 'Live Activity',
   showControls = true,
   maxHeight = 500,
-  compact = false,
-}) => {
+  compact = false}) => {
   const { activeClient } = useClient();
   const [activeTab, setActiveTab] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
@@ -238,8 +235,7 @@ const ActivityFeed: React.FC<ActivityFeedProps> = ({
               variant="dot"
               sx={{
                 '& .MuiBadge-badge': {
-                  animation: connectionStatus === 'connected' ? 'pulse 2s infinite' : 'none' },
-              }}
+                  animation: connectionStatus === 'connected' ? 'pulse 2s infinite' : 'none' }}}
             >
               <TimelineIcon />
             </Badge>

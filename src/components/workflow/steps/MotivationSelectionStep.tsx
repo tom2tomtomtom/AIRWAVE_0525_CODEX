@@ -10,14 +10,12 @@ import {
   LinearProgress,
   Alert,
   Stack,
-  Paper,
-} from '@mui/material';
+  Paper} from '@mui/material';
 import {
   AutoAwesome as AutoAwesomeIcon,
   CheckCircle as CheckCircleIcon,
   ArrowForward as ArrowForwardIcon,
-  ArrowBack as ArrowBackIcon,
-} from '@mui/icons-material';
+  ArrowBack as ArrowBackIcon} from '@mui/icons-material';
 import { useWorkflow } from '../WorkflowProvider';
 import { StepComponentProps } from '@/lib/workflow/workflow-types';
 
@@ -25,8 +23,7 @@ interface MotivationSelectionStepProps extends StepComponentProps {}
 
 export const MotivationSelectionStep: React.FC<MotivationSelectionStepProps> = ({
   onNext,
-  onPrevious,
-}) => {
+  onPrevious}) => {
   const { state, actions } = useWorkflow();
   const { briefData, motivations, processing, lastError } = state;
 
@@ -156,8 +153,7 @@ export const MotivationSelectionStep: React.FC<MotivationSelectionStepProps> = (
                   '&:hover': {
                     borderColor: 'primary.main',
                     transform: 'translateY(-2px)',
-                    boxShadow: 2 },
-                }}
+                    boxShadow: 2 }}}
                 onClick={() => handleSelectMotivation(motivation.id)}
               >
                 <CardContent>

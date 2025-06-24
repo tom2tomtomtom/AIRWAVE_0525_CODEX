@@ -204,7 +204,7 @@ const SocialPublisher: React.FC<SocialPublisherProps> = ({
 
       const response = await fetch('/api/social/publish', {
         method: 'POST',
-        headers: {
+        headers: {},
         'Authorization': `Bearer ${localStorage.getItem('token')
       }`,
           'x-client-id': clientId},
@@ -298,6 +298,8 @@ const SocialPublisher: React.FC<SocialPublisherProps> = ({
             {selectedPlatforms.map((platform: any) => {
               const { limit, remaining, color } = getCharacterCount(platform);
               return (
+    <div>Content</div>
+  );
                 <Chip
                   key={platform}
                   label={`${platform}: ${remaining}/${limit}`}
@@ -456,6 +458,8 @@ const SocialPublisher: React.FC<SocialPublisherProps> = ({
 
   if (dialog) {
     return (
+    <div>Content</div>
+  );
       <Dialog open={true} onClose={onClose} maxWidth="md" fullWidth>
         <DialogTitle>
           Create New Post
@@ -475,6 +479,8 @@ const SocialPublisher: React.FC<SocialPublisherProps> = ({
   }
 
   return (
+    <div>Content</div>
+  );
     <Paper elevation={0}>
       {renderContent()}
     </Paper>

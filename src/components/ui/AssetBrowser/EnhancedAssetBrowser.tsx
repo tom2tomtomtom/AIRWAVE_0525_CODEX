@@ -29,8 +29,7 @@ import {
   Fade,
   Zoom,
   LinearProgress,
-  CircularProgress,
-} from '@mui/material';
+  CircularProgress} from '@mui/material';
 import {
   Search as SearchIcon,
   Clear as ClearIcon,
@@ -50,8 +49,7 @@ import {
   Edit as EditIcon,
   Delete as DeleteIcon,
   CloudUpload as CloudUploadIcon,
-  Close as CloseIcon,
-} from '@mui/icons-material';
+  Close as CloseIcon} from '@mui/icons-material';
 import { LoadingState } from '../feedback/LoadingState';
 import { ErrorState } from '../feedback/ErrorState';
 import { ActionButton } from '../buttons/ActionButton';
@@ -112,8 +110,7 @@ export const EnhancedAssetBrowser: React.FC<EnhancedAssetBrowserProps> = ({
   selectedAssets = [],
   clientId,
   showFilters = true,
-  maxSelections,
-}) => {
+  maxSelections}) => {
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState<FilterType>('all');
@@ -250,8 +247,7 @@ export const EnhancedAssetBrowser: React.FC<EnhancedAssetBrowserProps> = ({
             position: 'relative',
             '&:hover': {
               transform: 'translateY(-4px)',
-              boxShadow: 4 },
-          }}
+              boxShadow: 4 }}}
           onClick={() => handleAssetClick(asset)}
         >
           {hasProgress && (
@@ -328,9 +324,7 @@ export const EnhancedAssetBrowser: React.FC<EnhancedAssetBrowserProps> = ({
                   sx={{
                     backgroundColor: 'rgba(255, 255, 255, 0.9)',
                     '&:hover': {
-                      backgroundColor: 'rgba(255, 255, 255, 1)',
-                    },
-                  }}
+                      backgroundColor: 'rgba(255, 255, 255, 1)'}}}
                 >
                   {asset.isFavorite ? <FavoriteIcon color="error" /> : <FavoriteBorderIcon />}
                 </IconButton>
@@ -340,9 +334,7 @@ export const EnhancedAssetBrowser: React.FC<EnhancedAssetBrowserProps> = ({
                   sx={{
                     backgroundColor: 'rgba(255, 255, 255, 0.9)',
                     '&:hover': {
-                      backgroundColor: 'rgba(255, 255, 255, 1)',
-                    },
-                  }}
+                      backgroundColor: 'rgba(255, 255, 255, 1)'}}}
                 >
                   <MoreVertIcon />
                 </IconButton>
@@ -444,8 +436,7 @@ export const EnhancedAssetBrowser: React.FC<EnhancedAssetBrowserProps> = ({
           borderColor: isSelected ? 'primary.main' : 'transparent',
           transition: 'all 0.2s',
           '&:hover': {
-            backgroundColor: 'action.hover' },
-        }}
+            backgroundColor: 'action.hover' }}}
         onClick={() => handleAssetClick(asset)}
       >
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
@@ -566,8 +557,7 @@ export const EnhancedAssetBrowser: React.FC<EnhancedAssetBrowserProps> = ({
                       <ClearIcon />
                     </IconButton>
                   </InputAdornment>
-                ),
-              }}
+                )}}
               sx={{ minWidth: 200 }}
             />
 

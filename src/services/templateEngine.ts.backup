@@ -13,26 +13,26 @@ export interface CampaignTemplate {
   category: 'social' | 'web' | 'email' | 'print' | 'video' | 'display' | 'outdoor';
   platform: string; // Specific platform (e.g., 'instagram', 'facebook', 'google-ads')
   format: 'story' | 'feed' | 'reel' | 'banner' | 'carousel' | 'video' | 'landing-page' | 'email-newsletter';
-  dimensions: {
+  dimensions: {},
     width: number;
     height: number;
     aspectRatio: string;
   };
   components: TemplateComponent[];
-  designSystem: {
+  designSystem: {},
     colorScheme: 'primary' | 'secondary' | 'accent' | 'neutral' | 'brand';
-    typography: {
+    typography: {},
       primary: string;
       secondary: string;
       hierarchy: string[];
     };
-    spacing: {
+    spacing: {},
       unit: number;
       scale: number[];
     };
     layout: 'grid' | 'flex' | 'absolute' | 'stack';
   };
-  requirements: {
+  requirements: {},
     minAssets: number;
     maxAssets: number;
     requiredAssetTypes: Array<Asset['fileType']>;
@@ -40,7 +40,7 @@ export interface CampaignTemplate {
     minCopyLength: number;
     maxCopyLength: number;
   };
-  metadata: {
+  metadata: {},
     usage: 'hero' | 'supporting' | 'promotional' | 'educational' | 'social-proof';
     difficulty: 'beginner' | 'intermediate' | 'advanced';
     estimatedTime: number; // in minutes
@@ -57,14 +57,14 @@ export interface TemplateComponent {
   type: 'text' | 'image' | 'video' | 'button' | 'icon' | 'background' | 'overlay' | 'divider';
   name: string;
   description: string;
-  position: {
+  position: {},
     x: number; // percentage or pixels
     y: number;
     width: number;
     height: number;
     unit: 'px' | '%' | 'vw' | 'vh';
   };
-  styling: {
+  styling: {},
     backgroundColor?: string;
     borderRadius?: number;
     padding?: number;
@@ -77,7 +77,7 @@ export interface TemplateComponent {
     zIndex?: number;
   };
   content: ComponentContent;
-  constraints: {
+  constraints: {},
     required: boolean;
     editable: boolean;
     resizable: boolean;
@@ -104,60 +104,60 @@ export interface ComponentContent {
 }
 
 export interface ComponentVariation {
-  id: string;
+  id: string;,
   name: string;
-  description: string;
-  changes: {
-    position?: Partial<TemplateComponent['position']>;
+  description: string;,
+  changes: {},
+  position?: Partial<TemplateComponent['position']>;
     styling?: Partial<TemplateComponent['styling']>;
     content?: Partial<ComponentContent>;
   };
 }
 
 export interface PopulatedTemplate {
-  id: string;
+  id: string;,
   templateId: string;
-  briefId: string;
+  briefId: string;,
   name: string;
-  populatedComponents: PopulatedComponent[];
+  populatedComponents: PopulatedComponent[];,
   selectedAssets: Asset[];
-  selectedCopy: CopyVariant[];
+  selectedCopy: CopyVariant[];,
   selectedMotivation: PsychologicalMotivation;
-  customizations: TemplateCustomization[];
-  renderData: {
-    html?: string;
+  customizations: TemplateCustomization[];,
+  renderData: {},
+  html?: string;
     css?: string;
     js?: string;
     svg?: string;
     canvas?: string;
   };
-  preview: {
+  preview: {},
     thumbnailUrl: string;
     fullSizeUrl: string;
     interactiveUrl?: string;
   };
-  status: 'draft' | 'ready' | 'approved' | 'published';
+  status: 'draft' | 'ready' | 'approved' | 'published';,
   createdAt: Date;
-  updatedAt: Date;
+  updatedAt: Date;,
   version: number;
 }
 
 export interface PopulatedComponent {
-  componentId: string;
-  content: {
-    text?: string;
+  componentId: string;,
+  content: {},
+  text?: string;
     assetUrl?: string;
     assetId?: string;
     generatedData?: any;
   };
-  finalStyling: TemplateComponent['styling'];
+  finalStyling: TemplateComponent['styling'];,
   finalPosition: TemplateComponent['position'];
 }
 
 export interface TemplateCustomization {
-  componentId: string;
+  componentId: string;,
   property: string;
-  originalValue: any;
+  originalValue: any;,
   customValue: any;
   appliedAt: Date;
 }
@@ -195,11 +195,11 @@ export class TemplateEngine {
   ): Promise<{
     templates: Array<{
       template: CampaignTemplate;
-      matchScore: number;
-      compatibility: {
-        assets: number;
+      matchScore: number;,
+      compatibility: {},
+  assets: number;,
         copy: number;
-        platform: number;
+        platform: number;,
         overall: number;
       };
       missingRequirements: string[];
@@ -207,10 +207,10 @@ export class TemplateEngine {
     recommendations: string[];
   }> {
     const {
-      preferredPlatforms = [],
-      preferredFormats = [],
-      complexity = 'moderate',
-      urgency = 'medium'
+      preferredPlatforms = [],;
+      preferredFormats = [],;
+      complexity = 'moderate',;
+      urgency = 'medium';
     } = options;
 
     try {
@@ -222,9 +222,9 @@ export class TemplateEngine {
       });
 
       const allTemplates = Array.from(this.templateLibrary.values());
-      const scoredTemplates = await Promise.all(
-        allTemplates.map(async template => {
-          const score = await this.calculateTemplateMatchScore(
+      const scoredTemplates = await Promise.all(;
+        allTemplates.map(async template => {;
+          const score = await this.calculateTemplateMatchScore(;
             template,
             brief,
             motivation,
@@ -233,14 +233,14 @@ export class TemplateEngine {
             options
           );
           
-          const compatibility = this.calculateCompatibility(
+          const compatibility = this.calculateCompatibility(;
             template,
             availableCopy,
             availableAssets,
             brief
           );
           
-          const missingRequirements = this.identifyMissingRequirements(
+          const missingRequirements = this.identifyMissingRequirements(;
             template,
             availableCopy,
             availableAssets
@@ -256,12 +256,12 @@ export class TemplateEngine {
       );
 
       // Sort by match score and filter out very low scores
-      const filteredTemplates = scoredTemplates
+      const filteredTemplates = scoredTemplates;
         .filter((item: any) => item.matchScore > 0.3)
         .sort((a, b) => b.matchScore - a.matchScore);
 
       // Generate recommendations
-      const recommendations = this.generateTemplateRecommendations(
+      const recommendations = this.generateTemplateRecommendations(;
         filteredTemplates,
         brief,
         motivation,
@@ -300,7 +300,7 @@ export class TemplateEngine {
       this.validateTemplateRequirements(template, selectedCopy, selectedAssets);
 
       // Create component mapping
-      const componentMapping = await this.createComponentMapping(
+      const componentMapping = await this.createComponentMapping(;
         template.components,
         selectedCopy,
         selectedAssets,
@@ -308,7 +308,7 @@ export class TemplateEngine {
       );
 
       // Apply customizations
-      const finalComponents = this.applyCustomizations(
+      const finalComponents = this.applyCustomizations(;
         componentMapping,
         customizations
       );
@@ -319,7 +319,7 @@ export class TemplateEngine {
       // Generate previews
       const preview = await this.generatePreviews(renderData, template);
 
-      const populatedTemplate: PopulatedTemplate = {
+      const populatedTemplate: PopulatedTemplate = {;
         id: this.generatePopulatedTemplateId(),
         templateId: template.id,
         briefId: brief.id,
@@ -358,7 +358,7 @@ export class TemplateEngine {
       }
 
       // Apply all customizations
-      const updatedComponents = this.applyCustomizations(
+      const updatedComponents = this.applyCustomizations(;
         populatedTemplate.populatedComponents,
         allCustomizations
       );
@@ -388,14 +388,14 @@ export class TemplateEngine {
   async createCustomTemplate(
     baseTemplate: CampaignTemplate,
     name: string,
-    modifications: {
-      components?: Partial<TemplateComponent>[];
+    modifications: {},
+  components?: Partial<TemplateComponent>[];
       designSystem?: Partial<CampaignTemplate['designSystem']>;
       requirements?: Partial<CampaignTemplate['requirements']>;
     }
   ): Promise<CampaignTemplate> {
     try {
-      const customTemplate: CampaignTemplate = {
+      const customTemplate: CampaignTemplate = {;
         ...baseTemplate,
         id: this.generateTemplateId(),
         name,
@@ -472,7 +472,7 @@ export class TemplateEngine {
     const compatibleTypes = requiredTypes.filter((type: any) => availableTypes.has(type));
     const assetCount = assets.length;
     
-    const typeScore = requiredTypes.length > 0 
+    const typeScore = requiredTypes.length > 0 ;
       ? compatibleTypes.length / requiredTypes.length 
       : 1.0;
     
@@ -506,15 +506,15 @@ export class TemplateEngine {
 
   private calculatePsychologyAlignment(template: CampaignTemplate, motivation: PsychologicalMotivation): number {
     // Simple alignment based on template tags and motivation category
-    const motivationKeywords = [
+    const motivationKeywords = [;
       motivation.psychologyType,
       motivation.motivationCategory,
       ...motivation.emotionalTriggers
     ];
     
     const templateTags = template.metadata.tags;
-    const matches = motivationKeywords.filter((keyword: any) => 
-      templateTags.some(tag => tag.toLowerCase().includes(keyword.toLowerCase()))
+    const matches = motivationKeywords.filter((keyword: any) => ;
+      templateTags.some(tag => tag.toLowerCase().includes(keyword.toLowerCase()));
     );
     
     return motivationKeywords.length > 0 
@@ -553,8 +553,8 @@ export class TemplateEngine {
     
     // Check asset requirements
     const availableAssetTypes = new Set(assets.map((a: any) => a.fileType));
-    const missingAssetTypes = template.requirements.requiredAssetTypes.filter(
-      type => !availableAssetTypes.has(type)
+    const missingAssetTypes = template.requirements.requiredAssetTypes.filter(;
+      type => !availableAssetTypes.has(type);
     );
     
     if (missingAssetTypes.length > 0) {
@@ -567,8 +567,8 @@ export class TemplateEngine {
     
     // Check copy requirements
     const availableCopyTypes = new Set(copy.map((c: any) => c.type));
-    const missingCopyTypes = template.requirements.copyTypes.filter(
-      type => !availableCopyTypes.has(type)
+    const missingCopyTypes = template.requirements.copyTypes.filter(;
+      type => !availableCopyTypes.has(type);
     );
     
     if (missingCopyTypes.length > 0) {
@@ -586,14 +586,14 @@ export class TemplateEngine {
   ): string[] {
     const recommendations: string[] = [];
     
-    if (templates.length === 0) {
+    if (templates.length === 0) {;
       recommendations.push('No matching templates found. Consider uploading more assets or generating additional copy variants.');
     } else if (templates.length < 3) {
       recommendations.push('Limited template options available. Additional assets or copy variants would provide more choices.');
     }
     
     const topTemplate = templates[0]?.template;
-    if (topTemplate && topTemplate.metadata.difficulty === 'advanced') {
+    if (topTemplate && topTemplate.metadata.difficulty === 'advanced') {;
       recommendations.push('The best matching template is advanced. Consider review by an experienced designer.');
     }
     
@@ -619,8 +619,8 @@ export class TemplateEngine {
     }
     
     const availableCopyTypes = new Set(copy.map((c: any) => c.type));
-    const missingCopyTypes = template.requirements.copyTypes.filter(
-      type => !availableCopyTypes.has(type)
+    const missingCopyTypes = template.requirements.copyTypes.filter(;
+      type => !availableCopyTypes.has(type);
     );
     
     if (missingCopyTypes.length > 0) {
@@ -637,29 +637,29 @@ export class TemplateEngine {
     const populated: PopulatedComponent[] = [];
     
     // Create copy lookup by type
-    const copyByType = copy.reduce((acc, c) => {
+    const copyByType = copy.reduce((acc, c) => {;
       if (!acc[c.type]) acc[c.type] = [];
       acc[c.type].push(c);
       return acc;
     }, {} as Record<string, CopyVariant[]>);
     
     // Create asset lookup by type and category
-    const assetsByType = assets.reduce((acc, a) => {
+    const assetsByType = assets.reduce((acc, a) => {;
       if (!acc[a.fileType]) acc[a.fileType] = [];
       acc[a.fileType].push(a);
       return acc;
     }, {} as Record<string, Asset[]>);
     
     for (const component of components) {
-      const populatedComponent: PopulatedComponent = {
+      const populatedComponent: PopulatedComponent = {;
         componentId: component.id,
-        content: Record<string, unknown>$1
-        finalStyling: { ...component.styling },
-        finalPosition: { ...component.position }
+        content: {},
+  finalStyling: { ...component.styling  },
+  finalPosition: { ...component.position }
       };
       
       // Populate based on component content type
-      if (component.content.type === 'copy' && component.content.copyType) {
+      if (component.content.type === 'copy' && component.content.copyType) {;
         const availableCopy = copyByType[component.content.copyType];
         if (availableCopy && availableCopy.length > 0) {
           // Select best copy variant for this component
@@ -668,7 +668,7 @@ export class TemplateEngine {
         } else {
           populatedComponent.content.text = component.content.placeholder || 'Add your copy here';
         }
-      } else if (component.content.type === 'asset' && component.content.assetType) {
+      } else if (component.content.type === 'asset' && component.content.assetType) {;
         const availableAssets = assetsByType[component.content.assetType];
         if (availableAssets && availableAssets.length > 0) {
           // Select best asset for this component
@@ -690,7 +690,7 @@ export class TemplateEngine {
     motivation: PsychologicalMotivation
   ): CopyVariant {
     // Score copy variants for this component
-    const scored = availableCopy.map((copy: any) => ({
+    const scored = availableCopy.map((copy: any) => ({;
       copy,
       score: this.scoreCopyForComponent(copy, component, motivation)
     }));
@@ -731,7 +731,7 @@ export class TemplateEngine {
     component: TemplateComponent
   ): Asset {
     // Score assets for this component
-    const scored = availableAssets.map((asset: any) => ({
+    const scored = availableAssets.map((asset: any) => ({;
       asset,
       score: this.scoreAssetForComponent(asset, component)
     }));
@@ -752,12 +752,12 @@ export class TemplateEngine {
     }
     
     // Category alignment
-    if (component.content.assetCategory && asset.category === component.content.assetCategory) {
+    if (component.content.assetCategory && asset.category === component.content.assetCategory) {;
       score += 0.2;
     }
     
     // Usage alignment
-    if (component.name.toLowerCase().includes('hero') && asset.usage === 'hero') {
+    if (component.name.toLowerCase().includes('hero') && asset.usage === 'hero') {;
       score += 0.3;
     }
     
@@ -821,7 +821,7 @@ export class TemplateEngine {
   }
 
   private generateHTML(template: CampaignTemplate, components: PopulatedComponent[]): string {
-    const componentHtml = components.map((component: any) => {
+    const componentHtml = components.map((component: any) => {;
       const templateComponent = template.components.find((c: any) => c.id === component.componentId);
       if (!templateComponent) return '';
       
@@ -832,8 +832,8 @@ export class TemplateEngine {
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">;
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">;
   <title>${template.name}</title>
 </head>
 <body>
@@ -861,21 +861,21 @@ export class TemplateEngine {
   }
 
   private generateCSS(template: CampaignTemplate, components: PopulatedComponent[]): string {
-    const containerCSS = `
+    const containerCSS = `;
 .campaign-container {
-  position: relative;
+  position: relative;,
   width: ${template.dimensions.width}px;
   height: ${template.dimensions.height}px;
   overflow: hidden;
 }`;
     
-    const componentCSS = components.map((component: any) => {
+    const componentCSS = components.map((component: any) => {;
       const styling = component.finalStyling;
       const position = component.finalPosition;
       
       return `
 .component-${component.componentId} {
-  position: absolute;
+  position: absolute;,
   left: ${position.x}${position.unit};
   top: ${position.y}${position.unit};
   width: ${position.width}${position.unit};
@@ -959,54 +959,52 @@ document.addEventListener('DOMContentLoaded', function() {
         category: 'social',
         platform: 'instagram',
         format: 'story',
-        dimensions: { width: 1080, height: 1920, aspectRatio: '9:16' },
-        components: [
+        dimensions: { width: 1080, height: 1920, aspectRatio: '9:16'  },
+  components: [
           {
             id: 'bg-1',
             type: 'background',
             name: 'Background',
             description: 'Main background',
-            position: { x: 0, y: 0, width: 100, height: 100, unit: '%' },
-            styling: { backgroundColor: '#ffffff' },
-            content: { type: 'asset', assetType: 'image', assetCategory: 'background' },
-            constraints: { required: true, editable: true, resizable: false, moveable: false }
+            position: { x: 0, y: 0, width: 100, height: 100, unit: '%'  },
+  styling: { backgroundColor: '#ffffff'  },
+  content: { type: 'asset', assetType: 'image', assetCategory: 'background'  },
+  constraints: { required: true, editable: true, resizable: false, moveable: false }
           },
           {
             id: 'headline-1',
             type: 'text',
             name: 'Headline',
             description: 'Main headline text',
-            position: { x: 10, y: 20, width: 80, height: 15, unit: '%' },
-            styling: { fontSize: 32, fontWeight: 'bold', color: '#000000', textAlign: 'center' },
-            content: { type: 'copy', copyType: 'headline', placeholder: 'Your headline here' },
-            constraints: { required: true, editable: true, resizable: true, moveable: true, maxLength: 60 }
+            position: { x: 10, y: 20, width: 80, height: 15, unit: '%'  },
+  styling: { fontSize: 32, fontWeight: 'bold', color: '#000000', textAlign: 'center'  },
+  content: { type: 'copy', copyType: 'headline', placeholder: 'Your headline here'  },
+  constraints: { required: true, editable: true, resizable: true, moveable: true, maxLength: 60 }
           },
           {
             id: 'cta-1',
             type: 'button',
             name: 'Call to Action',
             description: 'Action button',
-            position: { x: 25, y: 75, width: 50, height: 8, unit: '%' },
-            styling: { backgroundColor: '#007AFF', color: '#ffffff', borderRadius: 25, fontSize: 18 },
-            content: { type: 'copy', copyType: 'cta', placeholder: 'Get Started' },
-            constraints: { required: true, editable: true, resizable: true, moveable: true, maxLength: 25 }
+            position: { x: 25, y: 75, width: 50, height: 8, unit: '%'  },
+  styling: { backgroundColor: '#007AFF', color: '#ffffff', borderRadius: 25, fontSize: 18  },
+  content: { type: 'copy', copyType: 'cta', placeholder: 'Get Started'  },
+  constraints: { required: true, editable: true, resizable: true, moveable: true, maxLength: 25 }
           }
         ],
-        designSystem: {
+        designSystem: {},
           colorScheme: 'primary',
           typography: { primary: 'Arial', secondary: 'Arial', hierarchy: ['h1', 'h2', 'p'] },
           spacing: { unit: 8, scale: [1, 2, 3, 4, 6, 8, 12] },
-          layout: 'absolute'
-        },
-        requirements: {
+          layout: 'absolute' },
+  requirements: {},
           minAssets: 1,
           maxAssets: 3,
           requiredAssetTypes: ['image'],
           copyTypes: ['headline', 'cta'],
           minCopyLength: 10,
-          maxCopyLength: 100
-        },
-        metadata: {
+          maxCopyLength: 100 },
+  metadata: {},
           usage: 'promotional',
           difficulty: 'beginner',
           estimatedTime: 15,
@@ -1034,7 +1032,7 @@ document.addEventListener('DOMContentLoaded', function() {
 // Singleton instance
 let templateEngineInstance: TemplateEngine | null = null;
 
-export const getTemplateEngine = (): TemplateEngine => {
+export const getTemplateEngine = (): TemplateEngine => {;
   if (!templateEngineInstance) {
     templateEngineInstance = new TemplateEngine();
   }
@@ -1042,7 +1040,7 @@ export const getTemplateEngine = (): TemplateEngine => {
 };
 
 // Convenience functions
-export const findMatchingTemplates = (
+export const findMatchingTemplates = (;
   brief: ParsedBrief,
   motivation: PsychologicalMotivation,
   availableCopy: CopyVariant[],
@@ -1052,7 +1050,7 @@ export const findMatchingTemplates = (
   return getTemplateEngine().findMatchingTemplates(brief, motivation, availableCopy, availableAssets, options);
 };
 
-export const populateTemplate = (
+export const populateTemplate = (;
   template: CampaignTemplate,
   brief: ParsedBrief,
   motivation: PsychologicalMotivation,
@@ -1063,7 +1061,7 @@ export const populateTemplate = (
   return getTemplateEngine().populateTemplate(template, brief, motivation, selectedCopy, selectedAssets, customizations);
 };
 
-export const customizeTemplate = (
+export const customizeTemplate = (;
   populatedTemplate: PopulatedTemplate,
   customizations: TemplateCustomization[]
 ) => {

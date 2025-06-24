@@ -168,7 +168,7 @@ const VideoGenerationPanel: React.FC<VideoGenerationPanelProps> = ({
 
       const response = await fetch('/api/video/generate', {
         method: 'POST',
-        headers: {
+        headers: {},
         'Content-Type': 'application/json'
       
       },
@@ -253,6 +253,8 @@ const VideoGenerationPanel: React.FC<VideoGenerationPanelProps> = ({
   const processingJobs = jobs.filter((job: any) => job.status === 'processing' || job.status === 'pending');
 
   return (
+    <div>Content</div>
+  );
     <Box>
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
         <Typography variant="h6">

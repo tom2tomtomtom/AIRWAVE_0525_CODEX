@@ -10,8 +10,7 @@ import {
   useCopyActions,
   useNavigationActions,
   useAssetActions,
-  useErrorHandling,
-} from '@/hooks/workflow';
+  useErrorHandling} from '@/hooks/workflow';
 
 // Provider component
 interface WorkflowProviderProps {
@@ -39,29 +38,25 @@ export const WorkflowProvider: React.FC<WorkflowProviderProps> = ({ children }) 
     state: { currentStep: state.currentStep },
     dispatch,
     userId,
-    sessionId,
-  });
+    sessionId});
 
   const { uploadBrief, confirmBrief, resetBrief } = useBriefActions({
     state: { originalBriefData: state.originalBriefData },
     dispatch,
     nextStep,
-    withErrorHandling,
-  });
+    withErrorHandling});
 
   const { generateMotivations, selectMotivation } = useMotivationActions({
     state: { briefData: state.briefData },
     dispatch,
     withErrorHandling,
     userId,
-    sessionId,
-  });
+    sessionId});
 
   const { generateCopy, selectCopy, storeCopyVariations } = useCopyActions({
     state: { briefData: state.briefData, motivations: state.motivations },
     dispatch,
-    userId,
-  });
+    userId});
 
   const { selectAsset, removeAsset, selectTemplate } = useAssetActions({ dispatch });
 
@@ -89,8 +84,7 @@ export const WorkflowProvider: React.FC<WorkflowProviderProps> = ({ children }) 
       selectTemplate,
       clearError,
       setError,
-      resetWorkflow,
-    }),
+      resetWorkflow}),
     [
       nextStep,
       previousStep,
@@ -116,8 +110,7 @@ export const WorkflowProvider: React.FC<WorkflowProviderProps> = ({ children }) 
   const contextValue: WorkflowContext = useMemo(
     () => ({
       state,
-      actions,
-    }),
+      actions}),
     [state, actions]
   );
 

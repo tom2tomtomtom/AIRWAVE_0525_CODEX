@@ -17,8 +17,7 @@ const ErrorMessage: React.FC<ErrorMessageProps> = ({
   error,
   onRetry,
   variant = 'inline',
-  showDetails = false,
-}) => {
+  showDetails = false}) => {
   // Handle different error types including Supabase errors
   const getErrorMessage = (err: any): string => {
     if (message) return message;

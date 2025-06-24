@@ -19,7 +19,7 @@ export interface ReviewWorkflow {
   createdAt: Date;
   updatedAt: Date;
   createdBy: string;
-  metadata: {
+  metadata: {},
         totalStages: number;
     completedStages: number;
     averageReviewTime: number;
@@ -207,7 +207,7 @@ export class ReviewSystem {
         createdAt: new Date(),
         updatedAt: new Date(),
         createdBy: options.createdBy,
-        metadata: {
+        metadata: {},
         totalStages: stages.length,
           completedStages: 0,
           averageReviewTime: 0,

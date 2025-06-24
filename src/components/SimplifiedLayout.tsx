@@ -12,8 +12,7 @@ import {
   useTheme,
   useMediaQuery,
   Breadcrumbs,
-  Link,
-} from '@mui/material';
+  Link} from '@mui/material';
 import {
   Menu as MenuIcon,
   AccountCircle,
@@ -21,8 +20,7 @@ import {
   Settings,
   Help,
   Notifications,
-  Search,
-} from '@mui/icons-material';
+  Search} from '@mui/icons-material';
 import { useRouter } from 'next/router';
 import { SimplifiedNavigation } from './SimplifiedNavigation';
 import { GlobalSearch } from './GlobalSearch';
@@ -37,8 +35,7 @@ interface SimplifiedLayoutProps {
 export const SimplifiedLayout: React.FC<SimplifiedLayoutProps> = ({
   children,
   title,
-  breadcrumbs = [],
-}) => {
+  breadcrumbs = []}) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const router = useRouter();

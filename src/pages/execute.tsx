@@ -58,11 +58,11 @@ interface ExecutionQueue {
   failed_items: number;
   estimated_completion: string;
   created_at: string;
-  campaign: {
+  campaign: {},
     id: string;
     name: string;
   };
-  matrix: {
+  matrix: {},
     id: string;
     name: string;
   };
@@ -140,13 +140,12 @@ const ExecutePage: React.FC = () => {
           id: key,
           name: `${execution.matrices?.name || 'Unknown Matrix'} - ${execution.matrices?.campaigns?.name || 'Unknown Campaign'}`,
           executions: [],
-          campaign: {
+          campaign: {},
             id: execution.campaign_id,
             name: execution.matrices?.campaigns?.name || 'Unknown Campaign' },
-          matrix: {
+          matrix: {},
             id: execution.matrix_id,
-            name: execution.matrices?.name || 'Unknown Matrix' },
-        };
+            name: execution.matrices?.name || 'Unknown Matrix' }};
       }
 
       acc[key].executions.push(execution);
@@ -212,7 +211,7 @@ const ExecutePage: React.FC = () => {
     try {
       const response = await fetch(`/api/executions/queue/${queueId}/${action}`, {
         method: 'POST',
-        headers: {
+        headers: {},
         'Content-Type': 'application/json'
       }});
 
@@ -292,6 +291,8 @@ const ExecutePage: React.FC = () => {
   }, [refreshInterval, activeClient]);
 
   return (
+    <div>Content</div>
+  );
     <>
        <Head>
         <title>Campaign Execution | AIRFLOW</title>

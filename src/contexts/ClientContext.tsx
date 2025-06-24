@@ -66,9 +66,8 @@ export const ClientProvider: React.FC<{ children: React.ReactNode }> = ({ childr
           
           // Fetch clients from API
           const response = await fetch("/api/clients", {
-            headers: {
-              Authorization: `Bearer ${user.token}` },
-          });
+            headers: {},
+              Authorization: `Bearer ${user.token}` }});
           
           const data = await response.json();
           
@@ -152,7 +151,7 @@ export const ClientProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       // Call API to create client
       const response = await fetch("/api/clients", {
         method: "POST",
-        headers: {
+        headers: {},
           "Content-Type": "application/json",
           Authorization: `Bearer ${user.token || "mock_token"}`
         },
@@ -233,7 +232,7 @@ export const ClientProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       // Call API to update client
       const response = await fetch(`/api/clients/${id}`, {
         method: "PUT",
-        headers: {
+        headers: {},
           "Content-Type": "application/json",
           Authorization: `Bearer ${user.token || "mock_token"}`
         },
@@ -306,9 +305,8 @@ export const ClientProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       // Call API to delete client
       const response = await fetch(`/api/clients/${id}`, {
         method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${user.token || "mock_token"}` },
-      });
+        headers: {},
+          Authorization: `Bearer ${user.token || "mock_token"}` }});
       
       const data = await response.json();
       
@@ -351,6 +349,8 @@ export const ClientProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   };
 
   return (
+    <div>Content</div>
+  );
     <ClientContext.Provider
       value={{
         clients,
@@ -359,8 +359,7 @@ export const ClientProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         setActiveClient: handleSetActiveClient,
         createClient,
         updateClient,
-        deleteClient,
-      }}
+        deleteClient}}
     >
       {children}
     </ClientContext.Provider>

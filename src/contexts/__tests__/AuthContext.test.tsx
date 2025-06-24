@@ -12,12 +12,12 @@ jest.mock('@/lib/supabase/client', () => ({
       signInWithPassword: jest.fn(),
       signUp: jest.fn(),
       signOut: jest.fn(),
-      onAuthStateChange: jest.fn(() => ({,
+      onAuthStateChange: jest.fn(() => ({
     data: { subscription: { unsubscribe: jest.fn() } })) }));
 
 // Mock useRouter
 jest.mock('next/router', () => ({
-  useRouter: () => ({,
+  useRouter: () => ({
     push: jest.fn(),
     pathname: '/',
     route: '/',

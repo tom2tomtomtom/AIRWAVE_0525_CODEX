@@ -84,7 +84,7 @@ async function handleRenderCompleted(payload: CreatomateWebhookPayload): Promise
     .update({
       status: 'completed',
       output_url: url,
-      metadata: {
+      metadata: {},
         ...metadata,
         render_id,
         completed_at: new Date().toISOString() },
@@ -145,7 +145,7 @@ async function handleRenderFailed(payload: CreatomateWebhookPayload): Promise<vo
     .from('executions')
     .update({
       status: 'failed',
-      metadata: {
+      metadata: {},
         ...metadata,
         render_id,
         error,

@@ -56,7 +56,7 @@ interface SecurityEvent {
     details: Record<string, unknown>;
 }
 
-const DEFAULT_OPTIONS: Required<SessionSecurityOptions> = {,
+const DEFAULT_OPTIONS: Required<SessionSecurityOptions> = {
     enableSessionRotation: true,
   enableFingerprintValidation: true,
   enableLocationTracking: false,
@@ -517,7 +517,7 @@ export function createSecureSession(
     ? generateDeviceId(fingerprint)
     : undefined;
   
-  const session: SessionInfo = {,
+  const session: SessionInfo = {
     id: sessionId,
     userId,
     fingerprint,

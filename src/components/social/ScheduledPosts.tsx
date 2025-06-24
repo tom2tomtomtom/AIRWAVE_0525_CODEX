@@ -296,6 +296,8 @@ const ScheduledPosts: React.FC<ScheduledPostsProps> = ({
 
   if (loading) {
     return (
+    <div>Content</div>
+  );
       <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
         <CircularProgress />
       </Box>
@@ -305,6 +307,8 @@ const ScheduledPosts: React.FC<ScheduledPostsProps> = ({
   const groupedPosts = groupPostsByDate(posts);
 
   return (
+    <div>Content</div>
+  );
     <>
        <Box sx={{ p: 3 }}>
         {/* Header */}

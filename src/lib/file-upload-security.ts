@@ -14,8 +14,7 @@ const ALLOWED_FILE_TYPES = {
   image: ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'bmp', 'tiff', 'ico'],
   video: ['mp4', 'mov', 'avi', 'wmv', 'flv', 'webm', 'mkv', 'm4v'],
   audio: ['mp3', 'wav', 'aac', 'ogg', 'flac', 'm4a'],
-  document: ['pdf', 'doc', 'docx', 'txt', 'rtf', 'md', 'csv'],
-} as const;
+  document: ['pdf', 'doc', 'docx', 'txt', 'rtf', 'md', 'csv']} as const;
 
 const MIME_TYPE_MAP: Record<string, string[]> = {
   'image/jpeg': ['jpg', 'jpeg'],
@@ -44,8 +43,7 @@ const MIME_TYPE_MAP: Record<string, string[]> = {
   'application/vnd.openxmlformats-officedocument.wordprocessingml.document': ['docx'],
   'text/plain': ['txt', 'md'],
   'text/rtf': ['rtf'],
-  'text/csv': ['csv'],
-};
+  'text/csv': ['csv']};
 
 // Malicious pattern detection
 const MALICIOUS_PATTERNS = [
@@ -147,8 +145,7 @@ export class FileUploadSecurity {
       fileType,
       mimeType,
       extension,
-      sanitizedFileName,
-    };
+      sanitizedFileName};
   }
 
   // Scan file for viruses
@@ -185,8 +182,7 @@ export class FileUploadSecurity {
         loggers.storage.warn('Virus detected in uploaded file', {
           filePath,
           threats: threats.join(', '),
-          scanTime,
-        });
+          scanTime});
 
         // Delete infected file
         try {
@@ -199,20 +195,17 @@ export class FileUploadSecurity {
           clean: false,
           infected: true,
           threats,
-          scanTime,
-        };
+          scanTime};
       }
 
       loggers.storage.debug('File scan completed - no threats found', {
         filePath,
-        scanTime,
-      });
+        scanTime});
 
       return {
         clean: true,
         infected: false,
-        scanTime,
-      };
+        scanTime};
     } catch (error: any) {
       loggers.storage.error('Virus scan failed', error, { filePath });
 
@@ -256,8 +249,7 @@ export class FileUploadSecurity {
       jpg: [0xff, 0xd8, 0xff],
       png: [0x89, 0x50, 0x4e, 0x47],
       gif: [0x47, 0x49, 0x46],
-      webp: [0x52, 0x49, 0x46, 0x46],
-    };
+      webp: [0x52, 0x49, 0x46, 0x46]};
 
     let validSignature = false;
 

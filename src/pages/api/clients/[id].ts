@@ -43,8 +43,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseData>):
         },
         set(name: string, value: string, options: any) {
           // We don't need to set cookies in API routes
-        ,
- }
+        }
         remove(name: string, options: any) {
           // We don't need to remove cookies in API routes
         }}}

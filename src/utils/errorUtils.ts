@@ -61,8 +61,7 @@ export function createError(
     message,
     code,
     status,
-    details,
-  };
+    details};
 }
 
 /**

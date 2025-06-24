@@ -195,6 +195,8 @@ export const EnhancedClientSelector: React.FC<EnhancedClientSelectorProps> = ({
     };
 
     return (
+    <div>Content</div>
+  );
       <Button
         {...fieldProps}
         variant="outlined"
@@ -325,6 +327,8 @@ export const EnhancedClientSelector: React.FC<EnhancedClientSelectorProps> = ({
 
   if (clientError) {
     return (
+    <div>Content</div>
+  );
       <ErrorState
         type="error"
         message="Failed to load clients"
@@ -336,6 +340,8 @@ export const EnhancedClientSelector: React.FC<EnhancedClientSelectorProps> = ({
   }
 
   return (
+    <div>Content</div>
+  );
     <Box>
       {renderSelector()}
       

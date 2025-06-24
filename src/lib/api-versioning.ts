@@ -219,7 +219,7 @@ export function addResponseMetadata<T>(
       return {
         success: true,
         data,
-        metadata: {
+        metadata: {},
         timestamp: new Date().toISOString(),
           version: API_VERSIONS[version],
           ...metadata

@@ -6,7 +6,7 @@ import { validateFile, validateBriefData } from '@/lib/validation/workflow-valid
 import { performanceTracker } from '@/lib/performance/performance-tracker';
 
 interface UseBriefActionsProps {
-  state: {
+  state: {},
     originalBriefData: BriefData | null;
   };
   dispatch: (action: any) => void;

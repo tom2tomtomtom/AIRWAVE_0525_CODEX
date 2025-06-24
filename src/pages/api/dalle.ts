@@ -195,7 +195,7 @@ export default async function handler(
         height,
         client_id,
         tags: [...tags, 'ai-generated', 'dalle-3', purpose].filter(Boolean),
-        metadata: {
+        metadata: {},
         ai_model: model,
           original_prompt: prompt,
           enhanced_prompt: finalPrompt,

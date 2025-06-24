@@ -184,8 +184,7 @@ export function validateProfileData(data: any): { isValid: boolean; errors: stri
 
   return {
     isValid: errors.length === 0,
-    errors,
-  };
+    errors};
 }
 
 /**

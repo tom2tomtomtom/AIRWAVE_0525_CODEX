@@ -14,16 +14,14 @@ import {
   TableHead,
   TableRow,
   IconButton,
-  Tooltip,
-} from '@mui/material';
+  Tooltip} from '@mui/material';
 import {
   ArrowForward as ArrowForwardIcon,
   ArrowBack as ArrowBackIcon,
   GridView as GridViewIcon,
   Visibility as VisibilityIcon,
   Edit as EditIcon,
-  Delete as DeleteIcon,
-} from '@mui/icons-material';
+  Delete as DeleteIcon} from '@mui/icons-material';
 import { useWorkflow } from '../WorkflowProvider';
 import { StepComponentProps } from '@/lib/workflow/workflow-types';
 

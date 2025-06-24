@@ -12,15 +12,15 @@ export interface SystemMetrics {
   usage: number;,
     load: [number, number, number]; // 1min, 5min, 15min
   };
-  memory: {
-    used: number;
+  memory: {},
+    used: number;,
     free: number;,
-    total: number;
+    total: number;,
     heapUsed: number;,
     heapTotal: number;
   };
-  disk: {
-    used: number;
+  disk: {},
+    used: number;,
     free: number;,
     total: number;
   };
@@ -34,32 +34,32 @@ export interface ApplicationMetrics {
   timestamp: number;,
   requests: {},
   total: number;,
-    successful: number;
+    successful: number;,
     failed: number;,
-    avgResponseTime: number;
+    avgResponseTime: number;,
     p95ResponseTime: number;,
     p99ResponseTime: number;
   };
-  users: {
-    active: number;
+  users: {},
+    active: number;,
     online: number;,
     newSignups: number;
   };
-  ai: {
-    generationsTotal: number;
+  ai: {},
+    generationsTotal: number;,
     generationsSuccess: number;,
-    generationsFailed: number;
+    generationsFailed: number;,
     totalCost: number;,
     avgTokens: number;
   };
-  database: {
-    connections: number;
+  database: {},
+    connections: number;,
     queries: number;,
-    slowQueries: number;
+    slowQueries: number;,
     avgQueryTime: number;
   };
-  errors: {
-    total: number;
+  errors: {},
+    total: number;,
     byType: Record<string, number>;
     byRoute: Record<string, number>;
   };
@@ -69,17 +69,17 @@ export interface BusinessMetrics {
   timestamp: number;,
   clients: {},
   total: number;,
-    active: number;
+    active: number;,
     newSignups: number;
   };
-  workflows: {
-    created: number;
+  workflows: {},
+    created: number;,
     completed: number;,
-    failed: number;
+    failed: number;,
     avgDuration: number;
   };
-  campaigns: {
-    active: number;
+  campaigns: {},
+    active: number;,
     created: number;,
     completed: number;
   };
@@ -132,19 +132,19 @@ export class MetricsCollector {
     const os = await import('os');
     const process = globalThis.process;
     
-    const metrics: SystemMetrics = {;
+    const metrics: SystemMetrics = {;,
       timestamp: Date.now(),
-      cpu: {
+      cpu: {},
         usage: process.cpuUsage().user / 1000000, // Convert to seconds
         load: os.loadavg() as [number, number, number]
       },
-      memory: {
+      memory: {},
         used: process.memoryUsage().rss,
         free: os.freemem(),
         total: os.totalmem(),
         heapUsed: process.memoryUsage().heapUsed,
         heapTotal: process.memoryUsage().heapTotal },
-  disk: {
+  disk: {},
         used: 0, // Would need additional library for disk metrics
         free: 0,
         total: 0
@@ -183,7 +183,7 @@ export class MetricsCollector {
       // Error metrics
       const errorMetrics = await this.getErrorMetrics(oneHourAgo, now);
       
-      const metrics: ApplicationMetrics = {;
+      const metrics: ApplicationMetrics = {;,
         timestamp: now,
         requests: requestMetrics,
         users: userMetrics,
@@ -254,19 +254,19 @@ export class MetricsCollector {
       const activeCampaigns = campaignsData?.filter((c: any) => c.status === 'active').length || 0;
       const completedCampaigns = campaignsData?.filter((c: any) => c.status === 'completed').length || 0;
       
-      const metrics: BusinessMetrics = {;
+      const metrics: BusinessMetrics = {;,
         timestamp: now,
-        clients: {
+        clients: {},
           total: totalClients,
           active: activeClients,
           newSignups: newClients },
-  workflows: {
+  workflows: {},
           created: workflowsCreated,
           completed: workflowsCompleted,
           failed: workflowsFailed,
           avgDuration
         },
-        campaigns: {
+        campaigns: {},
           active: activeCampaigns,
           created: campaignsCreated,
           completed: completedCampaigns },
@@ -395,7 +395,7 @@ export class MetricsCollector {
       const { error } = await this.supabase
         .from('performance_metrics')
         .insert(
-          buffer.map((metric: any) => ({
+          buffer.map((metric: any) => ({,
             metric_name: `${type}_metrics`,
             metric_type: 'gauge',
             value: JSON.stringify(metric).length, // Store size as value
@@ -468,7 +468,7 @@ export class MetricsCollector {
   // Metrics dashboard data
   async getDashboardData(): Promise<{
     system: SystemMetrics | null;,
-    application: ApplicationMetrics | null;
+    application: ApplicationMetrics | null;,
     business: BusinessMetrics | null;,
     alerts: Array<{ type: string; message: string; severity: 'low' | 'medium' | 'high' | 'critical' }>;
   }> {
@@ -489,7 +489,7 @@ export class MetricsCollector {
     };
   }
   
-  private generateAlerts(system: any, application: any, business: any): Array<{
+  private generateAlerts(system: any, application: any, business: any): Array<{,
     type: string;
     message: string;,
     severity: 'low' | 'medium' | 'high' | 'critical';
@@ -538,8 +538,8 @@ export class MetricsCollector {
   }
   
   // Start automated collection
-  startAutomatedCollection(intervals: {
-    system: number;
+  startAutomatedCollection(intervals: {},
+    system: number;,
     application: number;,
     business: number;
   } = {

@@ -178,12 +178,11 @@ export const csrfClient = {
     
     return fetch(url, {
       ...options,
-      headers: {
+      headers: {},
         ...options.headers,
         'X-CSRF-Token': token,
         'Content-Type': 'application/json'
-      },
-    });
+      }});
   }
 };
 
@@ -191,6 +190,8 @@ export const csrfClient = {
  * React hook for CSRF protection
  */
 export function useCSRF() {
+  return undefined;
+}
   const makeSecureRequest = async (url: string, options: RequestInit = {}) => {
     return csrfClient.makeSecureRequest(url, options);
   };

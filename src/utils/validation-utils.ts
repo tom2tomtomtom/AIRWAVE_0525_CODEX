@@ -480,6 +480,8 @@ export const securityValidation = {
   // General malicious pattern detection
   containsMaliciousPattern(input: string): boolean {
     return (
+    <div>Content</div>
+  );
       this.containsXSS(input) ||
       this.containsSQLInjection(input) ||
       this.containsPathTraversal(input) ||

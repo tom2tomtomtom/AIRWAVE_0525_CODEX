@@ -102,6 +102,8 @@ const ClientSelector: React.FC<ClientSelectorProps> = ({
 
       case 'compact':
         return (
+    <div>Content</div>
+  );
           <Box
             onClick={handleClick}
             sx={{
@@ -136,6 +138,8 @@ const ClientSelector: React.FC<ClientSelectorProps> = ({
 
       default:
         return (
+    <div>Content</div>
+  );
           <Button
             variant="outlined"
             onClick={handleClick}
@@ -163,6 +167,8 @@ const ClientSelector: React.FC<ClientSelectorProps> = ({
   };
 
   return (
+    <div>Content</div>
+  );
     <>
       {renderButton()}
       <Menu
@@ -170,7 +176,7 @@ const ClientSelector: React.FC<ClientSelectorProps> = ({
         open={Boolean(anchorEl)}
         onClose={handleClose}
         PaperProps={{
-          sx: {
+          sx: {},
             maxHeight: 400,
             width: 280
           }

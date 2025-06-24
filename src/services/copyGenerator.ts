@@ -32,7 +32,7 @@ export interface CopySet {
   variants: CopyVariant[];
   generatedAt: Date;
   version: number;
-  metadata: {
+  metadata: {},
         totalVariants: number;
     typeDistribution: Record<string, number>;
     toneDistribution: Record<string, number>;
@@ -486,6 +486,8 @@ Do not include explanations or alternatives - just the final copy.
 
   private calculateOverallQualityScore(variant: CopyVariant): number {
     return (
+    <div>Content</div>
+  );
       variant.confidence * 0.3 +
       variant.emotionalImpact * 0.25 +
       variant.clarity * 0.2 +

@@ -36,8 +36,7 @@ export default async function handler(
   if (!email || !password || !name) {
     return res.status(400).json({
       success: false,
-      error: 'Email, password, and name are required',
-    });
+      error: 'Email, password, and name are required'});
   }
 
   // Basic email validation
@@ -82,11 +81,9 @@ export default async function handler(
     const { data: authData, error: authError } = await supabase.auth.signUp({
       email,
       password,
-      options: {
-        data: {
-          name: name },
-      },
-    });
+      options: {},
+        data: {},
+          name: name }}});
 
     if (authError) {
       console.error('Supabase signup error:', authError);
@@ -163,8 +160,7 @@ export default async function handler(
         email: authData.user.email || email,
         name: name,
         role: 'user',
-        token: authData.session?.access_token || '' },
-    });
+        token: authData.session?.access_token || '' }});
   } catch (error) {
     const message = getErrorMessage(error);
     console.error('Signup error:', error);

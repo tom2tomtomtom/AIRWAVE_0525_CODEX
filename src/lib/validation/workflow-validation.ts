@@ -21,8 +21,7 @@ export const FileValidationSchema = z.object({
     'application/msword',
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
     'text/plain',
-  ]),
-});
+  ])});
 
 // Brief data validation schema
 export const BriefDataSchema = z.object({
@@ -171,8 +170,7 @@ export function validateFile(file: File): { valid: boolean; errors: string[] } {
 
   return {
     valid: errors.length === 0,
-    errors,
-  };
+    errors};
 }
 
 /**
@@ -224,8 +222,7 @@ export function validateMotivations(motivations: any[]): {
   return {
     valid: errors.length === 0,
     data: validatedMotivations,
-    errors,
-  };
+    errors};
 }
 
 /**
@@ -255,8 +252,7 @@ export function validateCopyVariations(copyVariations: any[]): {
   return {
     valid: errors.length === 0,
     data: validatedCopy,
-    errors,
-  };
+    errors};
 }
 
 /**
@@ -282,8 +278,7 @@ export function validateAssets(assets: any[]): { valid: boolean; data?: any[]; e
   return {
     valid: errors.length === 0,
     data: validatedAssets,
-    errors,
-  };
+    errors};
 }
 
 /**

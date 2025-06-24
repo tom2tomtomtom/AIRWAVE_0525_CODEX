@@ -127,6 +127,8 @@ export const createValidationRules = {
           const fileType = file.type;
           const fileExtension = file.name.split('.').pop()?.toLowerCase();
           return (
+    <div>Content</div>
+  );
             allowedTypes.some(type => 
               fileType.includes(type) || (fileExtension && type.includes(fileExtension))
             ) || validationMessages.fileType(allowedTypes)

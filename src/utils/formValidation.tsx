@@ -102,6 +102,8 @@ export const ValidationMessage: React.FC<ValidationMessageProps> = ({
   if (!error || !touched) return null;
 
   return (
+    <div>Content</div>
+  );
     <FormHelperText error sx={{ display: 'flex', alignItems: 'center', mt: 0.5 }}>
       {showIcon && <ErrorIcon sx={{ fontSize: 16, mr: 0.5 }} />}
       {error}
@@ -124,6 +126,8 @@ export const FormValidationSummary: React.FC<FormValidationSummaryProps> = ({
   if (errorMessages.length === 0) return null;
 
   return (
+    <div>Content</div>
+  );
     <Box
       sx={{
         bgcolor: 'error.light',

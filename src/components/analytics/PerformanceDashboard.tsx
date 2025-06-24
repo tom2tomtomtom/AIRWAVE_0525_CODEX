@@ -12,8 +12,7 @@ import {
   Paper,
   Select,
   CircularProgress,
-  Grid,
-} from '@mui/material';
+  Grid} from '@mui/material';
 import {
   TrendingUp as TrendingUpIcon,
   TrendingDown as TrendingDownIcon,
@@ -22,8 +21,7 @@ import {
   Error as ErrorIcon,
   Info as InfoIcon,
   Refresh as RefreshIcon,
-  Download as DownloadIcon,
-} from '@mui/icons-material';
+  Download as DownloadIcon} from '@mui/icons-material';
 
 import { useClient } from '@/contexts/ClientContext';
 import { useNotification } from '@/contexts/NotificationContext';
@@ -95,8 +93,7 @@ const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({ clientId, d
       const params = new URLSearchParams({
         client_id: targetClientId,
         granularity: filters.granularity,
-        metrics: filters.metrics.join(','),
-      });
+        metrics: filters.metrics.join(',')});
       if (dateRange?.start) params.append('date_from', dateRange.start);
       if (dateRange?.end) params.append('date_to', dateRange.end);
       if (filters.platform) params.append('platform', filters.platform);
@@ -125,8 +122,7 @@ const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({ clientId, d
     try {
       const params = new URLSearchParams({
         client_id: targetClientId,
-        insight_types: 'performance,optimization,trends,anomalies,predictions',
-      });
+        insight_types: 'performance,optimization,trends,anomalies,predictions'});
       if (dateRange?.start) params.append('date_from', dateRange.start);
       if (dateRange?.end) params.append('date_to', dateRange.end);
 

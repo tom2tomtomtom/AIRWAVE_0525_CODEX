@@ -45,8 +45,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     'Cache-Control': 'no-cache',
     Connection: 'keep-alive',
     'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': 'Cache-Control',
-  });
+    'Access-Control-Allow-Headers': 'Cache-Control'});
 
   // Send initial connection event
   sendSSEMessage(res, 'connected', {

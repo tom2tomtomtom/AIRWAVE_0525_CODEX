@@ -109,8 +109,7 @@ const envSchema = z.object({
   // Feature flags
   ENABLE_SOCIAL_PUBLISHING: z.enum(['true', 'false']).optional().default('false'),
   ENABLE_VIDEO_GENERATION: z.enum(['true', 'false']).optional().default('false'),
-  ENABLE_AI_FEATURES: z.enum(['true', 'false']).optional().default('false'),
-});
+  ENABLE_AI_FEATURES: z.enum(['true', 'false']).optional().default('false')});
 
 // Parse and validate environment variables
 const parseEnv = () => {
@@ -263,6 +262,4 @@ export const getSecurityHeaders = () => ({
   'Referrer-Policy': 'strict-origin-when-cross-origin',
   'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
   ...(isProduction && {
-    'Strict-Transport-Security': 'max-age=31536000; includeSubDomains; preload',
-  }),
-});
+    'Strict-Transport-Security': 'max-age=31536000; includeSubDomains; preload'})});

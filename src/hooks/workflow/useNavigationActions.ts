@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import { workflowMetrics } from '@/lib/monitoring/workflow-metrics';
 
 interface UseNavigationActionsProps {
-  state: {
+  state: {},
     currentStep: number;
   };
   dispatch: (action: any) => void;

@@ -17,8 +17,7 @@ import {
   Divider,
   Chip,
   InputAdornment,
-  TextField,
-} from '@mui/material';
+  TextField} from '@mui/material';
 import {
   Menu as MenuIcon,
   Dashboard as DashboardIcon,
@@ -37,8 +36,7 @@ import {
   Share as SocialIcon,
   Search as SearchIcon,
   LightMode as LightModeIcon,
-  DarkMode as DarkModeIcon,
-} from '@mui/icons-material';
+  DarkMode as DarkModeIcon} from '@mui/icons-material';
 import { useRouter } from 'next/router';
 import ClientSelector from './ClientSelector';
 import UserMenu from './UserMenu';
@@ -174,14 +172,11 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ title, childre
                     '& .MuiListItemIcon-root': {
                       color: '#FFFFFF' },
                     '&:hover': {
-                      opacity: 0.9 },
-                  },
+                      opacity: 0.9 }},
                   '&.Mui-disabled': {
                     opacity: 0.5,
                     '& .MuiListItemIcon-root': {
-                      color: 'text.disabled' },
-                  },
-                }}
+                      color: 'text.disabled' }}}}
               >
                 <ListItemIcon
                   sx={{
@@ -239,8 +234,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ title, childre
           borderColor: theme =>
             theme.palette.mode === 'light'
               ? 'rgba(124, 58, 237, 0.1)'
-              : 'rgba(167, 139, 250, 0.15)',
-        }}
+              : 'rgba(167, 139, 250, 0.15)'}}
       >
         <Toolbar>
           <IconButton
@@ -352,9 +346,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ title, childre
               borderColor: theme =>
                 theme.palette.mode === 'light'
                   ? 'rgba(255, 255, 255, 0.18)'
-                  : 'rgba(167, 139, 250, 0.2)',
-            },
-          }}
+                  : 'rgba(167, 139, 250, 0.2)'}}}
         >
           {drawer}
         </Drawer>
@@ -375,9 +367,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ title, childre
               borderColor: theme =>
                 theme.palette.mode === 'light'
                   ? 'rgba(255, 255, 255, 0.18)'
-                  : 'rgba(167, 139, 250, 0.2)',
-            },
-          }}
+                  : 'rgba(167, 139, 250, 0.2)'}}}
           open
         >
           {drawer}

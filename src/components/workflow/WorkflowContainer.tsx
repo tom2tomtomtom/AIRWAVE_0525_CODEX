@@ -78,6 +78,8 @@ interface WorkflowContainerProps {
 // Skeleton loading components for each step
 const StepSkeleton: React.FC<{ stepType: string }> = ({ stepType }) => {
   return (
+    <div>Content</div>
+  );
     <Box sx={{ p: 3 }}>
       <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
         <CircularProgress size={24} sx={{ mr: 2 }} />
@@ -147,8 +149,7 @@ const workflowSteps = [
 export const WorkflowContainer: React.FC<WorkflowContainerProps> = ({
   open,
   onClose,
-  onComplete,
-}) => {  const { state, actions } = useWorkflow();
+  onComplete}) => {  const { state, actions } = useWorkflow();
   const { currentStep } = state;
   
   const theme = useTheme();
@@ -268,6 +269,8 @@ export const WorkflowContainer: React.FC<WorkflowContainerProps> = ({
   };
 
   return (
+    <div>Content</div>
+  );
     <Dialog
       open={open}
       onClose={handleClose}
@@ -275,7 +278,7 @@ export const WorkflowContainer: React.FC<WorkflowContainerProps> = ({
       fullWidth
       fullScreen={isMobile}
       PaperProps={{
-        sx: {
+        sx: {},
           height: isMobile ? '100vh' : '90vh',
           maxHeight: isMobile ? '100vh' : '90vh'
         }
@@ -314,18 +317,15 @@ export const WorkflowContainer: React.FC<WorkflowContainerProps> = ({
               sx={{
                 cursor: index <= currentStep + 1 ? 'pointer' : 'default',
                 '& .MuiStepLabel-root': {
-                  cursor: index <= currentStep + 1 ? 'pointer' : 'default' },
-              }}
+                  cursor: index <= currentStep + 1 ? 'pointer' : 'default' }}}
               onClick={() => handleStepClick(index)}
             >
               <StepLabel
                 icon={step.icon}
                 StepIconProps={{
-                  sx: {
+                  sx: {},
                     color: isStepCompleted(index) ? 'success.main' : 
-                           isStepActive(index) ? 'primary.main' : 'grey.400',
-                  },
-                }}
+                           isStepActive(index) ? 'primary.main' : 'grey.400'}}}
               >
                 <Box sx={{ textAlign: isMobile ? 'left' : 'center' }}>
                   <Typography variant="body2" fontWeight="medium">

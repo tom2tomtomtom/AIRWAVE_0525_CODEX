@@ -108,7 +108,7 @@ const VideoExecutionPanel: React.FC<VideoExecutionPanelProps> = ({
     try {
       setLoading(true);
       const response = await fetch(`/api/executions?matrix_id=${matrixId}&content_type=video`, {
-        headers: {
+        headers: {},
         'Authorization': `Bearer ${localStorage.getItem('token')
       }`
         }
@@ -137,7 +137,7 @@ const VideoExecutionPanel: React.FC<VideoExecutionPanelProps> = ({
 
       const statusPromises = activeExecutions.map((exec: any) =>
         fetch(`/api/executions/${exec.id}`, {
-          headers: {
+          headers: {},
         'Authorization': `Bearer ${localStorage.getItem('token')
       }`
           }
@@ -208,7 +208,7 @@ const VideoExecutionPanel: React.FC<VideoExecutionPanelProps> = ({
 
       const response = await fetch(`/api/matrices/${matrixId}/execute`, {
         method: 'POST',
-        headers: {
+        headers: {},
         'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token')
       }`},
@@ -244,7 +244,7 @@ const VideoExecutionPanel: React.FC<VideoExecutionPanelProps> = ({
     try {
       const response = await fetch(`/api/executions/${executionId}/retry`, {
         method: 'POST',
-        headers: {
+        headers: {},
         'Authorization': `Bearer ${localStorage.getItem('token')
       }`
         }
@@ -267,7 +267,7 @@ const VideoExecutionPanel: React.FC<VideoExecutionPanelProps> = ({
     try {
       const response = await fetch(`/api/executions/${executionId}`, {
         method: 'DELETE',
-        headers: {
+        headers: {},
         'Authorization': `Bearer ${localStorage.getItem('token')
       }`
         }
@@ -313,6 +313,8 @@ const VideoExecutionPanel: React.FC<VideoExecutionPanelProps> = ({
   const failedExecutions = executions.filter((exec: any) => exec.status === 'failed');
 
   return (
+    <div>Content</div>
+  );
     <Box>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
         <Typography variant="h6" fontWeight={600}>

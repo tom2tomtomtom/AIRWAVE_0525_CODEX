@@ -58,8 +58,7 @@ export const rateLimiters = {
     redis: redis || (new Map() as any),
     limiter: Ratelimit.slidingWindow(5, '1 h'), // 5 emails per hour
     analytics: true,
-    prefix: 'email' }),
-};
+    prefix: 'email' })};
 
 // Get identifier for rate limiting (user ID or IP)
 function getIdentifier(req: NextApiRequest): string {

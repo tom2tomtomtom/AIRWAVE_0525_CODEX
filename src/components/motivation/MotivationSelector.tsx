@@ -19,8 +19,7 @@ import {
   Star,
   AlertCircle,
   ChevronDown,
-  ChevronUp,
-} from 'lucide-react';
+  ChevronUp} from 'lucide-react';
 import { PsychologicalMotivation, MotivationSet } from '@/services/motivationGenerator';
 
 interface MotivationSelectorProps {
@@ -57,8 +56,7 @@ export function MotivationSelector({
   onRefine,
   onRegenerate,
   isLoading = false,
-  maxSelections = 6,
-}: MotivationSelectorProps) {
+  maxSelections = 6}: MotivationSelectorProps) {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [filterType, setFilterType] = useState<string>('all');
   const [sortBy, setSortBy] = useState<'confidence' | 'intensity' | 'alphabetical'>('confidence');
@@ -116,8 +114,7 @@ export function MotivationSelector({
 
   const MotivationCard = ({
     motivation,
-    isExpanded,
-  }: {
+    isExpanded}: {
     motivation: PsychologicalMotivation;
     isExpanded: boolean;
   }) => {

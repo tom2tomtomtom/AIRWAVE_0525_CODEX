@@ -29,8 +29,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     content_id,
     user_id,
     lock_fields = [],
-    variation_count,
-  } = parseResult.data;
+    variation_count} = parseResult.data;
   // Fetch template, assets, and content
   const { data: template, error: templateError } = await supabase
     .from('templates')

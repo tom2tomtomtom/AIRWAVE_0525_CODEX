@@ -51,8 +51,7 @@ const generateText = async (
         {
           role: 'system',
           content:
-            'You are a senior creative copywriter and content strategist. Create compelling, varied content that connects with target audiences. Generate 3 distinct variations for each request.',
-        },
+            'You are a senior creative copywriter and content strategist. Create compelling, varied content that connects with target audiences. Generate 3 distinct variations for each request.'},
         {
           role: 'user',
           content: `Create content variations for: "${prompt}". ${parameters?.tone ? `Tone: ${parameters.tone}. ` : ''}${parameters?.style ? `Style: ${parameters.style}. ` : ''}${parameters?.purpose ? `Purpose: ${parameters.purpose}. ` : ''}Provide 3 distinct variations.` },
@@ -127,8 +126,7 @@ const enhanceImagePrompt = async (
         {
           role: 'system',
           content:
-            'You are an expert DALL-E prompt engineer. Enhance prompts to be more specific, visually descriptive, and likely to produce high-quality images. Keep the core concept but add technical and artistic details.',
-        },
+            'You are an expert DALL-E prompt engineer. Enhance prompts to be more specific, visually descriptive, and likely to produce high-quality images. Keep the core concept but add technical and artistic details.'},
         {
           role: 'user',
           content: `Enhance this image prompt for DALL-E 3: "${prompt}". ${parameters?.purpose ? `Purpose: ${parameters.purpose}. ` : ''}${parameters?.style ? `Artistic style: ${parameters.style}. ` : ''}Make it more specific and visually descriptive while keeping the original intent.` },
@@ -198,16 +196,14 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseData>):
     if (!prompt || !type || !clientId) {
       return res.status(400).json({
         success: false,
-        message: 'Prompt, type, and client ID are required',
-      });
+        message: 'Prompt, type, and client ID are required'});
     }
 
     // Validate generation type
     if (!['text', 'image', 'video', 'voice'].includes(type)) {
       return res.status(400).json({
         success: false,
-        message: 'Type must be one of: text, image, video, voice',
-      });
+        message: 'Type must be one of: text, image, video, voice'});
     }
 
     // Generate content based on type
@@ -237,14 +233,12 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseData>):
       prompt,
       dateCreated: new Date().toISOString(),
       clientId,
-      userId,
-    };
+      userId};
 
     // Return the result
     return res.status(200).json({
       success: true,
-      result,
-    });
+      result});
   } catch (error: any) {
     const message = getErrorMessage(error);
     console.error('Error generating content:', error);

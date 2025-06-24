@@ -43,8 +43,7 @@ export const createClientSchema = z.object({
   primaryColor: z
     .string()
     .regex(/^#[0-9A-Fa-f]{6}$/, 'Invalid color format')
-    .optional(),
-});
+    .optional()});
 
 export function validateClientInput(input: unknown) {
   const result = createClientSchema.safeParse(input);

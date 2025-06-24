@@ -6,7 +6,7 @@ import { withAuth } from '@/middleware/withAuth';
 import { withSecurityHeaders } from '@/middleware/withSecurityHeaders';
 import { z } from 'zod';
 
-const CampaignUpdateSchema = z.object({
+const CampaignUpdateSchema = z.object({;
   name: z.string().min(1).optional(),
   description: z.string().optional(),
   objective: z.string().min(1).optional(),
@@ -58,7 +58,7 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse, user: any, c
     // For now, return mock campaign data since campaigns table doesn't exist yet
   // TODO: Implement actual database queries when campaigns table is ready
   
-  const mockCampaign = {
+  const mockCampaign = {;
     id: campaignId,
     name: campaignId.includes('test') ? 'Test Campaign' : 'Execute at the speed of AI',
     slug: 'mock-campaign',
@@ -70,17 +70,17 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse, user: any, c
     client_id: '75d19828-19c3-4aff-932a-b9049d564889', // Default client ID
     start_date: new Date().toISOString(),
     end_date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(), // 30 days from now
-    budget: {
+    budget: {},
       total: 5000,
       spent: 1250 },
   spent: 1250,
     platforms: ['facebook', 'instagram', 'twitter'],
-    targeting: {
+    targeting: {},
       platforms: ['facebook', 'instagram', 'twitter'],
       audience: 'Marketing professionals',
       frequency: 'daily',
       estimatedPosts: '10' },
-  schedule: {
+  schedule: {},
       startDate: new Date().toISOString(),
       endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() },
   kpis: ['impressions', 'clicks', 'conversions'],
@@ -93,12 +93,12 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse, user: any, c
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
     // Add mock client data
-    clients: {
+    clients: {},
       name: 'Redbaez',
       slug: 'redbaez',
       primary_color: '#1976d2',
       secondary_color: '#dc004e',
-      brand_guidelines: {
+      brand_guidelines: {},
         voiceTone: 'Friendly',
         targetAudience: 'Marketers',
         keyMessages: ['creative at the speed of ai']
@@ -107,9 +107,9 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse, user: any, c
     // Add mock matrices and executions without database queries
     matrices: [],
     executions: [],
-    analytics: {
+    analytics: {},
       has_data: false,
-      summary: {
+      summary: {},
         impressions: 0,
         clicks: 0,
         conversions: 0,
@@ -119,7 +119,7 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse, user: any, c
         roas: 0
       }
     },
-    health_score: {
+    health_score: {},
       score: 75,
       grade: 'B',
       issues: ['Missing campaign description'],
@@ -178,7 +178,7 @@ async function handlePut(req: NextApiRequest, res: NextApiResponse, user: any, c
 
   // Handle approval status changes
   if (updateData.approval_status && updateData.approval_status !== existingCampaign.approval_status) {
-    if (updateData.approval_status === 'approved') {
+    if (updateData.approval_status === 'approved') {;
       (updateData as any).approved_by = user.id;
       (updateData as any).approval_date = new Date().toISOString();
     }
@@ -232,7 +232,7 @@ async function handleDelete(req: NextApiRequest, res: NextApiResponse, user: any
   }
 
   // Check if campaign can be deleted
-  if (existingCampaign.status === 'active') {
+  if (existingCampaign.status === 'active') {;
     return res.status(409).json({ 
       error: 'Cannot delete active campaign',
       details: 'Please pause or complete the campaign before deleting'
@@ -301,7 +301,7 @@ async function getCampaignAnalytics(campaignId: string, period: string): Promise
       return {
         has_data: false,
         period,
-        summary: {
+        summary: {},
           impressions: 0,
           clicks: 0,
           conversions: 0,
@@ -339,7 +339,7 @@ async function getCampaignAnalytics(campaignId: string, period: string): Promise
     }, {} as Record<string, any>);
 
     // Daily performance
-    const dailyPerformance = analytics.map((record: any) => ({;
+    const dailyPerformance = analytics.map((record: any) => ({;,
       date: record.date,
       impressions: record.impressions || 0,
       clicks: record.clicks || 0,
@@ -357,7 +357,7 @@ async function getCampaignAnalytics(campaignId: string, period: string): Promise
         roas: Math.round(roas * 100) / 100 },
   platform_breakdown: platformBreakdown,
       daily_performance: dailyPerformance,
-      date_range: {
+      date_range: {},
         start: startDate.toISOString().split('T')[0],
         end: endDate.toISOString().split('T')[0]}
     };
@@ -395,13 +395,13 @@ function calculateCampaignHealth(campaign: any): any {
     recommendations.push('Set campaign budget');
   }
 
-  if (!campaign.platforms || campaign.platforms.length === 0) {
+  if (!campaign.platforms || campaign.platforms.length === 0) {;
     healthScore -= 10;
     issues.push('No platforms selected');
     recommendations.push('Select target platforms');
   }
 
-  if (!campaign.kpis || campaign.kpis.length === 0) {
+  if (!campaign.kpis || campaign.kpis.length === 0) {;
     healthScore -= 5;
     issues.push('No KPIs defined');
     recommendations.push('Define campaign KPIs');
@@ -411,20 +411,20 @@ function calculateCampaignHealth(campaign: any): any {
   const matricesCount = campaign.matrices?.length || 0;
   const executionsCount = campaign.executions?.length || 0;
 
-  if (matricesCount === 0) {
+  if (matricesCount === 0) {;
     healthScore -= 20;
     issues.push('No campaign matrices created');
     recommendations.push('Create campaign matrices');
   }
 
-  if (executionsCount === 0 && matricesCount > 0) {
+  if (executionsCount === 0 && matricesCount > 0) {;
     healthScore -= 15;
     issues.push('Matrices created but no executions');
     recommendations.push('Execute campaign matrices');
   }
 
   // Check approval status
-  if (campaign.approval_status === 'rejected') {
+  if (campaign.approval_status === 'rejected') {;
     healthScore -= 25;
     issues.push('Campaign rejected');
     recommendations.push('Address rejection feedback and resubmit');

@@ -441,7 +441,7 @@ export async function createExecutionNotification(
     // Create notification
     const response = await fetch('/api/notifications', {
       method: 'POST',
-      headers: {
+      headers: {},
         'Content-Type': 'application/json' 
       },
       body: JSON.stringify({
@@ -489,7 +489,7 @@ export async function createApprovalNotification(
 
     const response = await fetch('/api/notifications', {
       method: 'POST',
-      headers: {
+      headers: {},
         'Content-Type': 'application/json' 
       },
       body: JSON.stringify({

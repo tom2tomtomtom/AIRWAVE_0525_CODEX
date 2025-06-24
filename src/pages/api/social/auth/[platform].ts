@@ -22,8 +22,7 @@ function getOAuthConfig(platform: string): OAuthConfig | null {
         scope:
           'pages_manage_posts,pages_read_engagement,pages_show_list,instagram_basic,instagram_content_publish',
         responseType: 'code',
-        redirectUri,
-      };
+        redirectUri};
 
     case 'instagram':
       // Instagram uses Facebook's API
@@ -32,8 +31,7 @@ function getOAuthConfig(platform: string): OAuthConfig | null {
         clientId: process.env.FACEBOOK_CLIENT_ID!,
         scope: 'instagram_basic,instagram_content_publish,pages_show_list',
         responseType: 'code',
-        redirectUri,
-      };
+        redirectUri};
 
     case 'twitter':
       return {
@@ -41,8 +39,7 @@ function getOAuthConfig(platform: string): OAuthConfig | null {
         clientId: process.env.TWITTER_CLIENT_ID!,
         scope: 'tweet.read tweet.write users.read offline.access',
         responseType: 'code',
-        redirectUri,
-      };
+        redirectUri};
 
     case 'linkedin':
       return {
@@ -50,8 +47,7 @@ function getOAuthConfig(platform: string): OAuthConfig | null {
         clientId: process.env.LINKEDIN_CLIENT_ID!,
         scope: 'w_member_social',
         responseType: 'code',
-        redirectUri,
-      };
+        redirectUri};
 
     default:
       return null;
@@ -100,8 +96,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void>
       return res.status(200).json({
         success: true,
         authUrl: authUrl.toString(),
-        state,
-      });
+        state});
     }
 
     res.setHeader('Allow', ['GET']);

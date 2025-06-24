@@ -13,8 +13,7 @@ import {
   Divider,
   IconButton,
   Chip,
-  Tooltip,
-} from '@mui/material';
+  Tooltip} from '@mui/material';
 import {
   Dashboard,
   PlayArrow,
@@ -29,8 +28,7 @@ import {
   Group,
   Campaign,
   Approval,
-  Close,
-} from '@mui/icons-material';
+  Close} from '@mui/icons-material';
 
 interface NavItem {
   id: string;
@@ -83,10 +81,8 @@ const navigationItems: NavItem[] = [
         label: 'Assets',
         icon: <Image />,
         href: '/assets',
-        description: 'Manage images, videos, and files',
-      },
-    ],
-  },
+        description: 'Manage images, videos, and files'},
+    ]},
   {
     id: 'manage',
     label: 'Manage',
@@ -110,8 +106,7 @@ const navigationItems: NavItem[] = [
         icon: <GridView />,
         href: '/matrix',
         description: 'Content planning and organization' },
-    ],
-  },
+    ]},
   {
     id: 'execute',
     label: 'Execute',
@@ -130,8 +125,7 @@ const navigationItems: NavItem[] = [
         icon: <PlayArrow />,
         href: '/execute',
         description: 'Launch and monitor campaigns' },
-    ],
-  },
+    ]},
   {
     id: 'analytics',
     label: 'Analytics',
@@ -155,15 +149,13 @@ const navigationItems: NavItem[] = [
         icon: <Campaign />,
         href: '/social-publishing',
         description: 'Social media management' },
-    ],
-  },
+    ]},
 ];
 
 export const SimplifiedNavigation: React.FC<SimplifiedNavigationProps> = ({
   open,
   onClose,
-  variant = 'temporary',
-}) => {
+  variant = 'temporary'}) => {
   const router = useRouter();
   const [expandedItems, setExpandedItems] = useState<string[]>(['create']);
 
@@ -206,8 +198,7 @@ export const SimplifiedNavigation: React.FC<SimplifiedNavigationProps> = ({
                 backgroundColor: active ? 'primary.main' : 'transparent',
                 color: active ? 'primary.contrastText' : 'inherit',
                 '&:hover': {
-                  backgroundColor: active ? 'primary.dark' : 'action.hover' },
-              }}
+                  backgroundColor: active ? 'primary.dark' : 'action.hover' }}}
             >
               <ListItemIcon
                 sx={{
@@ -303,8 +294,7 @@ export const SimplifiedNavigation: React.FC<SimplifiedNavigationProps> = ({
           boxSizing: 'border-box',
           width: 280,
           border: 'none',
-          boxShadow: variant === 'permanent' ? 'none' : 3 },
-      }}
+          boxShadow: variant === 'permanent' ? 'none' : 3 }}}
     >
       {drawerContent}
     </Drawer>

@@ -164,7 +164,7 @@ async function checkCreatomate(): Promise<ServiceCheck> {
   try {
     const response = await fetch('https://api.creatomate.com/v1/templates', {
       method: 'GET',
-      headers: {
+      headers: {},
         Authorization: `Bearer ${process.env.CREATOMATE_API_KEY
       }`},
       signal: AbortSignal.timeout(5000), // 5 second timeout

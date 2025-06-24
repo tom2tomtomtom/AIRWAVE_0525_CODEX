@@ -254,7 +254,7 @@ export const validateEnvironment = () => {
     loggers.general.info('Environment validation successful', {
       environment: config.NODE_ENV,
       version: config.NEXT_PUBLIC_APP_VERSION,
-      features: {
+      features: {},
         ai: config.ENABLE_AI_FEATURES,
         social: config.ENABLE_SOCIAL_PUBLISHING,
         video: config.ENABLE_VIDEO_GENERATION,
@@ -319,7 +319,7 @@ export const getSecurityConfig = () => {
     encryptionKey: config.ENCRYPTION_KEY,
     cookieSecret: config.COOKIE_SECRET,
     csrfSecret: config.CSRF_SECRET,
-    cookieOptions: {
+    cookieOptions: {},
       secure: config.COOKIE_SECURE,
       sameSite: config.COOKIE_SAME_SITE,
       httpOnly: config.COOKIE_HTTP_ONLY,
@@ -335,7 +335,7 @@ export const getDatabaseConfig = () => {
     supabaseUrl: config.NEXT_PUBLIC_SUPABASE_URL,
     supabaseAnonKey: config.NEXT_PUBLIC_SUPABASE_ANON_KEY,
     supabaseServiceKey: config.SUPABASE_SERVICE_ROLE_KEY,
-    poolConfig: {
+    poolConfig: {},
       min: config.DB_POOL_MIN,
       max: config.DB_POOL_MAX,
       idleTimeout: config.DB_POOL_IDLE_TIMEOUT,
@@ -359,17 +359,17 @@ export const getRedisConfig = () => {
 export const getRateLimitConfig = () => {
   const config = getConfig();
   return {
-    general: {
+    general: {},
       max: config.RATE_LIMIT_MAX,
       window: config.RATE_LIMIT_WINDOW,
       skipSuccessfulRequests: config.RATE_LIMIT_SKIP_SUCCESSFUL_REQUESTS,
       skipFailedRequests: config.RATE_LIMIT_SKIP_FAILED_REQUESTS
     },
-    api: {
+    api: {},
       max: config.API_RATE_LIMIT_MAX,
       window: config.API_RATE_LIMIT_WINDOW
     },
-    ai: {
+    ai: {},
       max: config.AI_RATE_LIMIT_MAX,
       window: config.AI_RATE_LIMIT_WINDOW
     }

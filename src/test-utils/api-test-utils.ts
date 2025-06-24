@@ -370,7 +370,9 @@ export const mockExternalServices = () => {;
   jest.mock('formidable', () => ({
     IncomingForm: jest.fn().mockImplementation(() => ({,
     parse: jest.fn().mockImplementation((req, callback) => {
-        callback(
+        export function callback() {
+  return undefined;
+}
           null,
           {},
           {
@@ -439,8 +441,6 @@ export const PerformanceTestHelpers = {;
     await asyncFunction();
     const end = Date.now();
     return end - start;
-  ,
-
   },
   testResponseTime: async (handler: unknown, maxTime: number = 1000) => {;
     const { req, res } = APIRequestBuilder.create().withAuth().build();

@@ -273,7 +273,7 @@ async function saveVideoToAssets(generation: any, videoUrl: string): Promise<str
         file_path: uploadData.path,
         file_url: urlData.publicUrl,
         file_size: videoBuffer.length,
-        metadata: {
+        metadata: {},
         generation_id: generation.generation_id,
           job_id: generation.id,
           render_job_id: generation.render_job_id,

@@ -91,6 +91,8 @@ const StatusIndicator: React.FC<StatusIndicatorProps> = ({
   // Badge variant
   if (variant === 'badge') {
     return (
+    <div>Content</div>
+  );
       <Box
         sx={{
           display: 'inline-flex',
@@ -116,6 +118,8 @@ const StatusIndicator: React.FC<StatusIndicatorProps> = ({
 
   // Text variant
   return (
+    <div>Content</div>
+  );
     <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
       {showIcon && React.cloneElement(config.icon, { 
         fontSize: size === 'small' ? 'small' : 'medium',
@@ -166,6 +170,8 @@ export const CompletionStatus: React.FC<CompletionStatusProps> = ({
   };
 
   return (
+    <div>Content</div>
+  );
     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
       <StatusIndicator
         status={getStatus()}

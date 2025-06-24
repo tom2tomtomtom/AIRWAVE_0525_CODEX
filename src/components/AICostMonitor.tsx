@@ -71,7 +71,7 @@ export const AICostMonitor: React.FC<CostMonitorProps> = ({
     try {
       const response = await fetch('/api/ai/usage-report', {
         method: 'POST',
-        headers: {
+        headers: {},
         'Content-Type': 'application/json' 
       },
         body: JSON.stringify({ userId })
@@ -126,6 +126,8 @@ export const AICostMonitor: React.FC<CostMonitorProps> = ({
 
   if (loading) {
     return (
+    <div>Content</div>
+  );
       <Card>
         <CardContent>
           <Box display="flex" alignItems="center" gap={2}>
@@ -140,6 +142,8 @@ export const AICostMonitor: React.FC<CostMonitorProps> = ({
 
   if (error) {
     return (
+    <div>Content</div>
+  );
       <Alert severity="error" action={
         <IconButton color="inherit" size="small" onClick={fetchUsageStats}>
           <Speed />
@@ -155,6 +159,8 @@ export const AICostMonitor: React.FC<CostMonitorProps> = ({
   const totalBudget = getTotalBudget();
 
   return (
+    <div>Content</div>
+  );
     <Card>
       <CardContent>
         {/* Header */}

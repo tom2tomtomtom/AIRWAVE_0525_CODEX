@@ -9,7 +9,7 @@ export interface AuthState {
 
 export class AuthStateManager {
   private static instance: AuthStateManager;
-  private state: AuthState = {,
+  private state: AuthState = {
     isAuthenticated: false,
     loading: true,
     lastCheck: 0,
@@ -74,10 +74,9 @@ export class AuthStateManager {
       const response = await fetch('/api/auth/me', {
         method: 'GET',
         credentials: 'include',
-        headers: {
+        headers: {},
         'Content-Type': 'application/json' 
-      },
-      });
+      }});
 
       if (response.ok) {
         const userData = await response.json();

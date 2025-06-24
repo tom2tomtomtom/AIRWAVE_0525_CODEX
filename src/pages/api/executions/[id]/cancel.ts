@@ -108,7 +108,7 @@ async function handleCancel(req: NextApiRequest, res: NextApiResponse, user: any
     .from('executions')
     .update({
       status: 'cancelled',
-      metadata: {
+      metadata: {},
         ...execution.metadata,
         cancelled_at: new Date().toISOString(),
         cancelled_by: user.id,
@@ -336,7 +336,7 @@ async function handleRelatedExecutions(execution: any, force: boolean): Promise<
             .from('executions')
             .update({
               status: 'cancelled',
-              metadata: {
+              metadata: {},
         ...related.metadata,
                 cancelled_due_to_dependency: execution.id,
                 cancelled_at: new Date().toISOString()

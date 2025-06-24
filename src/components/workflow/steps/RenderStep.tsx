@@ -13,8 +13,7 @@ import {
   ListItemIcon,
   ListItemText,
   IconButton,
-  Tooltip,
-} from '@mui/material';
+  Tooltip} from '@mui/material';
 import {
   ArrowBack as ArrowBackIcon,
   PlayArrow as PlayArrowIcon,
@@ -23,8 +22,7 @@ import {
   CheckCircle as CheckCircleIcon,
   Error as ErrorIcon,
   Pending as PendingIcon,
-  Refresh as RefreshIcon,
-} from '@mui/icons-material';
+  Refresh as RefreshIcon} from '@mui/icons-material';
 import { useWorkflow } from '../WorkflowProvider';
 import { StepComponentProps } from '@/lib/workflow/workflow-types';
 
@@ -340,8 +338,7 @@ export const RenderStep: React.FC<RenderStepProps> = ({ onPrevious, onComplete }
                       ? 'success.50'
                       : job.status === 'failed'
                         ? 'error.50'
-                        : 'inherit',
-                }}
+                        : 'inherit'}}
               >
                 <ListItemIcon>{getStatusIcon(job.status)}</ListItemIcon>
 

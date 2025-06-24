@@ -52,8 +52,8 @@ interface Activity {
     isOnline?: boolean;
   };
   timestamp: Date;
-  data: {},
-  entityId?: string;
+  data: {
+    entityId?: string;
     entityName?: string;
     message?: string;
     metadata?: any;
@@ -315,6 +315,8 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({
 
   if (!activeClient) {
     return (
+    <div>Content</div>
+  );
       <Paper sx={{ p: 3, textAlign: 'center' }}>
         <Typography color="text.secondary">
           Select a client to view activity
@@ -324,6 +326,8 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({
   }
 
   return (
+    <div>Content</div>
+  );
     <Paper sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
       {showHeader && (
         <>
@@ -488,6 +492,8 @@ export const NotificationBadge: React.FC = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   return (
+    <div>Content</div>
+  );
     <>
        <IconButton
         color="inherit"

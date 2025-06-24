@@ -61,7 +61,7 @@ export const AssetUploadModal: React.FC<AssetUploadModalProps> = ({
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
-    accept: {
+    accept: {},
       'image/*': ['.png', '.jpg', '.jpeg', '.gif', '.webp'],
       'video/*': ['.mp4', '.mov', '.avi', '.webm'],
       'audio/*': ['.mp3', '.wav', '.m4a', '.ogg']
@@ -135,6 +135,8 @@ export const AssetUploadModal: React.FC<AssetUploadModalProps> = ({
   };
 
   return (
+    <div>Content</div>
+  );
     <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth data-testid="upload-modal">
       <DialogTitle>
         Upload Assets

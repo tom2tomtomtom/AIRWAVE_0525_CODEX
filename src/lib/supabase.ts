@@ -18,8 +18,7 @@ export {
   createServerSupabaseClient,
   getAdminSupabaseClient,
   validateSupabaseConfig,
-  hasServiceRoleAccess,
-} from './supabase';
+  hasServiceRoleAccess} from './supabase';
 
 // Legacy function - Get service role client (server-side only)
 export const getServiceSupabase = () => {
@@ -158,5 +157,4 @@ export type {
   UserClient,
   Tables,
   Inserts,
-  Updates,
-} from '@/types/database';
+  Updates} from '@/types/database';

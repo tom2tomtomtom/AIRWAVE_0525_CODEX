@@ -1,57 +1,57 @@
 {
-  "timestamp": "2025-06-23T09:58:21.070Z",
+  "timestamp": "2025-06-24T03:56:53.960Z",
   "totalFilesProcessed": 10,
-  "totalFixesApplied": 446,
+  "totalFixesApplied": 127,
   "fixResults": [
     {
       "file": "src/services/templateEngine.ts",
-      "fixesApplied": 94,
+      "fixesApplied": 34,
       "status": "fixed"
     },
     {
       "file": "src/lib/monitoring/metrics.ts",
-      "fixesApplied": 58,
+      "fixesApplied": 22,
       "status": "fixed"
     },
     {
       "file": "src/lib/monitoring/workflow-metrics.ts",
-      "fixesApplied": 26,
+      "fixesApplied": 21,
       "status": "fixed"
     },
     {
       "file": "src/pages/api/campaigns/[id].ts",
-      "fixesApplied": 30,
+      "fixesApplied": 10,
       "status": "fixed"
     },
     {
       "file": "src/pages/api/v2/handlers/assets.ts",
-      "fixesApplied": 32,
+      "fixesApplied": 7,
       "status": "fixed"
     },
     {
       "file": "src/utils/dynamicImports.ts",
-      "fixesApplied": 24,
-      "status": "fixed"
+      "fixesApplied": 0,
+      "status": "no_fixes_available"
     },
     {
       "file": "src/test-utils/api-test-utils.ts",
-      "fixesApplied": 29,
+      "fixesApplied": 9,
       "status": "fixed"
     },
     {
       "file": "src/test-utils/index.tsx",
-      "fixesApplied": 4,
+      "fixesApplied": 3,
       "status": "fixed"
     },
     {
       "file": "src/pages/clients.tsx",
-      "fixesApplied": 135,
+      "fixesApplied": 21,
       "status": "fixed"
     },
     {
       "file": "src/pages/api/campaigns/index.ts",
-      "fixesApplied": 14,
-      "status": "fixed"
+      "fixesApplied": 0,
+      "status": "no_fixes_available"
     }
   ]
 }

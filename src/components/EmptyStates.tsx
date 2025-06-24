@@ -12,8 +12,7 @@ import {
   AutoAwesome,
   Lightbulb,
   TrendingUp,
-  Search,
-} from '@mui/icons-material';
+  Search} from '@mui/icons-material';
 
 interface EmptyStateProps {
   title: string;
@@ -39,8 +38,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
   primaryAction,
   secondaryAction,
   suggestions = [],
-  illustration,
-}) => (
+  illustration}) => (
   <Box
     display="flex"
     flexDirection="column"
@@ -108,8 +106,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
 // Predefined empty states for common scenarios
 export const EmptyBriefs: React.FC<{ onCreateBrief: () => void; onStartWorkflow: () => void }> = ({
   onCreateBrief,
-  onStartWorkflow,
-}) => (
+  onStartWorkflow}) => (
   <EmptyState
     icon={<CloudUpload sx={{ fontSize: 40 }} />}
     title="No briefs yet"
@@ -165,8 +162,7 @@ export const EmptyTemplates: React.FC<{
 );
 
 export const EmptyCampaigns: React.FC<{ onCreateCampaign: () => void }> = ({
-  onCreateCampaign,
-}) => (
+  onCreateCampaign}) => (
   <EmptyState
     icon={<Campaign sx={{ fontSize: 40 }} />}
     title="No campaigns created"
@@ -204,8 +200,7 @@ export const EmptyClients: React.FC<{ onAddClient: () => void }> = ({ onAddClien
 
 export const EmptySearch: React.FC<{ query: string; onClearSearch: () => void }> = ({
   query,
-  onClearSearch,
-}) => (
+  onClearSearch}) => (
   <EmptyState
     icon={<Search sx={{ fontSize: 40 }} />}
     title={`No results for "${query}"`}
@@ -235,8 +230,7 @@ export const LoadingState: React.FC<{ message?: string }> = ({ message = 'Loadin
           '0%': { transform: 'scale(1)', opacity: 1  }
           '50%': { transform: 'scale(1.1)', opacity: 0.7  }
           '100%': { transform: 'scale(1)', opacity: 1  }
-        },
-      }}
+        }}}
     >
       <AutoAwesome sx={{ color: 'white', fontSize: 30 }} />
     </Box>
@@ -279,8 +273,7 @@ export const SuccessState: React.FC<{
           '0%, 20%, 60%, 100%': { transform: 'translateY(0)'  }
           '40%': { transform: 'translateY(-10px)'  }
           '80%': { transform: 'translateY(-5px)'  }
-        },
-      }}
+        }}}
     >
       <TrendingUp sx={{ color: 'white', fontSize: 40 }} />
     </Box>

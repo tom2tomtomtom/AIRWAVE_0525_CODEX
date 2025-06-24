@@ -17,8 +17,7 @@ import {
   MenuItem,
   LinearProgress,
   Stack,
-  Grid,
-} from '@mui/material';
+  Grid} from '@mui/material';
 import {
   Add as AddIcon,
   Search as SearchIcon,
@@ -31,8 +30,7 @@ import {
   TrendingUp as TrendingIcon,
   PlayArrow as PlayIcon,
   Pause as PauseIcon,
-  Archive as ArchiveIcon,
-} from '@mui/icons-material';
+  Archive as ArchiveIcon} from '@mui/icons-material';
 import DashboardLayout from '@/components/DashboardLayout';
 import ErrorMessage from '@/components/ErrorMessage';
 import { CardSkeleton } from '@/components/SkeletonLoaders';
@@ -142,8 +140,7 @@ const CampaignsPage: React.FC = () => {
                 <InputAdornment position="start">
                   <SearchIcon />
                 </InputAdornment>
-              ),
-            }}
+              )}}
           />
         </Box>
 
@@ -206,8 +203,7 @@ const CampaignsPage: React.FC = () => {
                     transition: 'transform 0.2s, box-shadow 0.2s',
                     '&:hover': {
                       transform: 'translateY(-4px)',
-                      boxShadow: 3 },
-                  }}
+                      boxShadow: 3 }}}
                   onClick={() => handleViewCampaign(campaign.id)}
                 >
                   <CardContent sx={{ flexGrow: 1 }}>

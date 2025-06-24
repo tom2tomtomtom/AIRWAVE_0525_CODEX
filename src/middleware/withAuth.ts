@@ -40,8 +40,7 @@ async function validateUserToken(req: NextApiRequest): Promise<any> {
           },
           set(name: string, value: string, options: unknown) {
             // We don't need to set cookies in API routes
-          ,
- }
+          }
           remove(name: string, options: unknown) {
             // We don't need to remove cookies in API routes }
     );
@@ -298,7 +297,7 @@ export function withClientAccess(clientIdParam: string = 'clientId') {
       }
 
       // Get client ID from request
-      const clientId =
+      const clientId = undefined;
         (req.query[clientIdParam] as string) ||
         (req.body[clientIdParam] as string) ||
         (req.headers['x-client-id'] as string);

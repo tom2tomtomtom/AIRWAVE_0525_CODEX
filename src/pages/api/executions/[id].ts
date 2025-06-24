@@ -244,7 +244,7 @@ async function handleDelete(req: NextApiRequest, res: NextApiResponse, user: any
     .from('executions')
     .update({
       status: 'cancelled',
-      metadata: {
+      metadata: {},
         ...(existingExecution as any).metadata,
         deleted_at: new Date().toISOString(),
         deleted_by: user.id },

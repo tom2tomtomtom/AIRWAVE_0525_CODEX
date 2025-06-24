@@ -7,64 +7,64 @@ import { Asset } from './assetManager';
 const logger = getLogger('template-engine');
 
 export interface CampaignTemplate {
-  id: string;
+  id: string;,
   name: string;
-  description: string;
+  description: string;,
   category: 'social' | 'web' | 'email' | 'print' | 'video' | 'display' | 'outdoor';
   platform: string; // Specific platform (e.g., 'instagram', 'facebook', 'google-ads')
-  format: 'story' | 'feed' | 'reel' | 'banner' | 'carousel' | 'video' | 'landing-page' | 'email-newsletter';
-  dimensions: {
-    width: number;
+  format: 'story' | 'feed' | 'reel' | 'banner' | 'carousel' | 'video' | 'landing-page' | 'email-newsletter';,
+  dimensions: {},
+    width: number;,
     height: number;
     aspectRatio: string;
   };
-  components: TemplateComponent[];
-  designSystem: {
-    colorScheme: 'primary' | 'secondary' | 'accent' | 'neutral' | 'brand';
-    typography: {
-      primary: string;
+  components: TemplateComponent[];,
+  designSystem: {},
+    colorScheme: 'primary' | 'secondary' | 'accent' | 'neutral' | 'brand';,
+    typography: {},
+      primary: string;,
       secondary: string;
       hierarchy: string[];
     };
-    spacing: {
-      unit: number;
+    spacing: {},
+      unit: number;,
       scale: number[];
     };
     layout: 'grid' | 'flex' | 'absolute' | 'stack';
   };
-  requirements: {
-    minAssets: number;
+  requirements: {},
+    minAssets: number;,
     maxAssets: number;
-    requiredAssetTypes: Array<Asset['fileType']>;
+    requiredAssetTypes: Array<Asset['fileType']>;,
     copyTypes: Array<CopyVariant['type']>;
-    minCopyLength: number;
+    minCopyLength: number;,
     maxCopyLength: number;
   };
-  metadata: {
-    usage: 'hero' | 'supporting' | 'promotional' | 'educational' | 'social-proof';
+  metadata: {},
+    usage: 'hero' | 'supporting' | 'promotional' | 'educational' | 'social-proof';,
     difficulty: 'beginner' | 'intermediate' | 'advanced';
-    estimatedTime: number; // in minutes
+    estimatedTime: number; // in minutes,
     popularityScore: number;
     tags: string[];
   };
-  createdAt: Date;
+  createdAt: Date;,
   updatedAt: Date;
   version: string;
 }
 
 export interface TemplateComponent {
-  id: string;
+  id: string;,
   type: 'text' | 'image' | 'video' | 'button' | 'icon' | 'background' | 'overlay' | 'divider';
-  name: string;
+  name: string;,
   description: string;
-  position: {
-    x: number; // percentage or pixels
+  position: {},
+    x: number; // percentage or pixels,
     y: number;
-    width: number;
+    width: number;,
     height: number;
     unit: 'px' | '%' | 'vw' | 'vh';
   };
-  styling: {
+  styling: {},
     backgroundColor?: string;
     borderRadius?: number;
     padding?: number;
@@ -76,11 +76,11 @@ export interface TemplateComponent {
     opacity?: number;
     zIndex?: number;
   };
-  content: ComponentContent;
-  constraints: {
-    required: boolean;
+  content: ComponentContent;,
+  constraints: {},
+    required: boolean;,
     editable: boolean;
-    resizable: boolean;
+    resizable: boolean;,
     moveable: boolean;
     maxLength?: number;
     minLength?: number;
@@ -105,7 +105,7 @@ export interface ComponentContent {
 
 export interface ComponentVariation {
   id: string;,
-  name: string;
+  name: string;,
   description: string;,
   changes: {},
   position?: Partial<TemplateComponent['position']>;
@@ -116,13 +116,13 @@ export interface ComponentVariation {
 
 export interface PopulatedTemplate {
   id: string;,
-  templateId: string;
+  templateId: string;,
   briefId: string;,
-  name: string;
+  name: string;,
   populatedComponents: PopulatedComponent[];,
-  selectedAssets: Asset[];
+  selectedAssets: Asset[];,
   selectedCopy: CopyVariant[];,
-  selectedMotivation: PsychologicalMotivation;
+  selectedMotivation: PsychologicalMotivation;,
   customizations: TemplateCustomization[];,
   renderData: {},
   html?: string;
@@ -131,13 +131,13 @@ export interface PopulatedTemplate {
     svg?: string;
     canvas?: string;
   };
-  preview: {
-    thumbnailUrl: string;
+  preview: {},
+    thumbnailUrl: string;,
     fullSizeUrl: string;
     interactiveUrl?: string;
   };
   status: 'draft' | 'ready' | 'approved' | 'published';,
-  createdAt: Date;
+  createdAt: Date;,
   updatedAt: Date;,
   version: number;
 }
@@ -156,9 +156,9 @@ export interface PopulatedComponent {
 
 export interface TemplateCustomization {
   componentId: string;,
-  property: string;
+  property: string;,
   originalValue: any;,
-  customValue: any;
+  customValue: any;,
   appliedAt: Date;
 }
 
@@ -193,12 +193,12 @@ export class TemplateEngine {
     availableAssets: Asset[],
     options: TemplateMatchingOptions = {}
   ): Promise<{
-    templates: Array<{
+    templates: Array<{,
       template: CampaignTemplate;
       matchScore: number;,
       compatibility: {},
   assets: number;,
-        copy: number;
+        copy: number;,
         platform: number;,
         overall: number;
       };
@@ -319,7 +319,7 @@ export class TemplateEngine {
       // Generate previews
       const preview = await this.generatePreviews(renderData, template);
 
-      const populatedTemplate: PopulatedTemplate = {;
+      const populatedTemplate: PopulatedTemplate = {;,
         id: this.generatePopulatedTemplateId(),
         templateId: template.id,
         briefId: brief.id,
@@ -651,7 +651,7 @@ export class TemplateEngine {
     }, {} as Record<string, Asset[]>);
     
     for (const component of components) {
-      const populatedComponent: PopulatedComponent = {;
+      const populatedComponent: PopulatedComponent = {;,
         componentId: component.id,
         content: {},
   finalStyling: { ...component.styling  },
@@ -992,19 +992,19 @@ document.addEventListener('DOMContentLoaded', function() {
   constraints: { required: true, editable: true, resizable: true, moveable: true, maxLength: 25 }
           }
         ],
-        designSystem: {
+        designSystem: {},
           colorScheme: 'primary',
           typography: { primary: 'Arial', secondary: 'Arial', hierarchy: ['h1', 'h2', 'p'] },
           spacing: { unit: 8, scale: [1, 2, 3, 4, 6, 8, 12] },
           layout: 'absolute' },
-  requirements: {
+  requirements: {},
           minAssets: 1,
           maxAssets: 3,
           requiredAssetTypes: ['image'],
           copyTypes: ['headline', 'cta'],
           minCopyLength: 10,
           maxCopyLength: 100 },
-  metadata: {
+  metadata: {},
           usage: 'promotional',
           difficulty: 'beginner',
           estimatedTime: 15,

@@ -17,7 +17,7 @@ export function createServerSupabaseClient(
       config.url,
       config.anonKey,
       {
-        cookies: {
+        cookies: {},
           get(name: string) {
             return req?.cookies[name];
           },

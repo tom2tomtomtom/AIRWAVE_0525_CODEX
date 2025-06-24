@@ -16,8 +16,7 @@ import {
   MenuItem,
   Box,
   IconButton,
-  Grid,
-} from '@mui/material';
+  Grid} from '@mui/material';
 import { Add as AddIcon, Delete as DeleteIcon } from '@mui/icons-material';
 interface Brief {
   id: string;
@@ -54,8 +53,7 @@ const BriefDialog: React.FC<BriefDialogProps> = ({
   activeStep,
   setActiveStep,
   campaigns,
-  onSubmit,
-}) => {
+  onSubmit}) => {
   const steps = [
     'Basic Information',
     'Objectives & Audience',

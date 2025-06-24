@@ -19,8 +19,7 @@ const TemplateList: React.FC<TemplateListProps> = ({
   onDuplicate,
   onCreateMatrix,
   onAddTemplate,
-  emptyMessage,
-}) => (
+  emptyMessage}) => (
   <Grid container spacing={3}>
     {' '}
     {templates.length > 0 ? (

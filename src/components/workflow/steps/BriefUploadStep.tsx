@@ -42,12 +42,11 @@ const BriefUploadStepComponent: React.FC<BriefUploadStepProps> = ({
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
-    accept: {
+    accept: {},
       'application/pdf': ['.pdf'],
       'application/msword': ['.doc'],
       'application/vnd.openxmlformats-officedocument.wordprocessingml.document': ['.docx'],
-      'text/plain': ['.txt'],
-    },
+      'text/plain': ['.txt']},
     multiple: false,
     maxSize: 10 * 1024 * 1024, // 10MB
   });
@@ -121,6 +120,8 @@ const BriefUploadStepComponent: React.FC<BriefUploadStepProps> = ({
     if (!briefData) return null;
 
     return (
+    <div>Content</div>
+  );
       <Paper sx={{ p: 3 }}>
         <Typography variant="h6" gutterBottom>
           Review & Edit Parsed Brief
@@ -232,6 +233,8 @@ const BriefUploadStepComponent: React.FC<BriefUploadStepProps> = ({
   };
 
   return (
+    <div>Content</div>
+  );
     <Box sx={{ maxWidth: 800, mx: 'auto', p: 3 }}>
       <Typography variant="h4" gutterBottom>
         Upload Your Brief

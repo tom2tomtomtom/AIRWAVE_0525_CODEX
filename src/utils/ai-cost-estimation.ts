@@ -131,17 +131,20 @@ export function estimateCost(
   tokens: number
 ): number {
   const costPerK: Record<string, Record<string, number>> = {
-    openai: { }
+    openai: {
       'gpt-4': 0.06,
       'gpt-4o-mini': 0.002,
       'gpt-3.5-turbo': 0.002,
-      'dall-e-3': 0.04},
-    anthropic: { }
+      'dall-e-3': 0.04
+    },
+    anthropic: {
       'claude-3-opus': 0.06,
       'claude-3-sonnet': 0.012,
-      'claude-3-haiku': 0.0008},
-    elevenlabs: { }
-      'eleven_monolingual_v1': 0.30}
+      'claude-3-haiku': 0.0008
+    },
+    elevenlabs: {
+      'eleven_monolingual_v1': 0.30
+    }
   };
 
   const rate = costPerK[service]?.[model] || 0.01; // Default fallback

@@ -26,8 +26,7 @@ import {
   InputAdornment,
   Alert,
   CardMedia,
-  Stack,
-} from '@mui/material';
+  Stack} from '@mui/material';
 import {
   Add as AddIcon,
   Save as SaveIcon,
@@ -38,8 +37,7 @@ import {
   ColorLens as ColorLensIcon,
   Link as LinkIcon,
   Search as SearchIcon,
-  ViewModule as MatrixIcon,
-} from '@mui/icons-material';
+  ViewModule as MatrixIcon} from '@mui/icons-material';
 import { useAuth } from '@/contexts/AuthContext';
 import { useClient } from '@/contexts/ClientContext';
 import DashboardLayout from '@/components/DashboardLayout';
@@ -177,8 +175,7 @@ const MatrixPage: React.FC = () => {
         ...prev[fieldId],
         value,
         assetId,
-        status: value || assetId ? 'completed' : 'empty' },
-    }));
+        status: value || assetId ? 'completed' : 'empty' }}));
   };
 
   const handleSaveMatrix = async () => {
@@ -300,8 +297,7 @@ const MatrixPage: React.FC = () => {
                     <InputAdornment position="start">
                       <SearchIcon />
                     </InputAdornment>
-                  ),
-                }}
+                  )}}
                 sx={{ mb: 2 }}
               />
 
@@ -321,8 +317,7 @@ const MatrixPage: React.FC = () => {
                       transition: 'all 0.3s',
                       '&:hover': {
                         transform: 'translateY(-2px)',
-                        boxShadow: 3 },
-                    }}
+                        boxShadow: 3 }}}
                     onClick={() => handleTemplateSelect(template)}
                   >
                     {template.thumbnail_url && (

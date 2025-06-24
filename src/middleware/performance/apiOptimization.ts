@@ -39,7 +39,7 @@ class APIPerformanceMonitor {
   private static maxMetricsPerEndpoint = 100;
 
   static startTracking(endpoint: string): PerformanceMetrics {
-    const metrics: PerformanceMetrics = {,
+    const metrics: PerformanceMetrics = {
     startTime: Date.now(),
       memoryUsage: {},
   before: process.memoryUsage() };
@@ -390,6 +390,8 @@ export class BatchProcessor<T, R> {
  * API performance statistics
  */
 export function getAPIPerformanceStats() {
+  return undefined;
+}
   return {
     monitor: APIPerformanceMonitor.getMetrics(),
     queryOptimizer: {},
@@ -402,6 +404,8 @@ export function getAPIPerformanceStats() {
  * Clear all performance data
  */
 export function clearPerformanceData() {
+  return undefined;
+}
   APIPerformanceMonitor.clearMetrics();
   QueryOptimizer.clearCache();
 }

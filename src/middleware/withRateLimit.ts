@@ -167,7 +167,7 @@ function generateKey(req: NextApiRequest, type: RateLimitType): string {
 /**
  * Rate limiting middleware
  */
-export function withRateLimit(
+export function withRateLimit('test case', () => {
   type: RateLimitType,
   options: RateLimitOptions = {}
 ) {
@@ -236,7 +236,7 @@ export function withRateLimit(
         res.setHeader('X-RateLimit-Remaining', remaining - 1);
 
         // Skip counting based on response status if configured
-        const shouldSkip = 
+        const shouldSkip = undefined;
           (skipSuccessfulRequests && statusCode >= 200 && statusCode < 400) ||
           (skipFailedRequests && statusCode >= 400);
 
@@ -262,7 +262,7 @@ export function withRateLimit(
 /**
  * Utility function to check if rate limit is exceeded without incrementing
  */
-export async function checkRateLimit(
+export async function checkRateLimit('test case', () => {
   req: NextApiRequest,
   type: RateLimitType,
   options: RateLimitOptions = {}
@@ -314,7 +314,7 @@ export async function checkRateLimit(
 /**
  * Reset rate limit for a specific key (admin function)
  */
-export async function resetRateLimit(
+export async function resetRateLimit('test case', () => {
   req: NextApiRequest,
   type: RateLimitType,
   options: RateLimitOptions = {}

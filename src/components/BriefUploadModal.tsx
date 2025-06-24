@@ -181,6 +181,8 @@ export const BriefUploadModal: React.FC<BriefUploadModalProps> = ({
   };
 
   return (
+    <div>Content</div>
+  );
     <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
       <DialogTitle>
         <Box display="flex" alignItems="center" gap={1}>

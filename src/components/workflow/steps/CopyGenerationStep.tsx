@@ -11,15 +11,13 @@ import {
   Alert,
   Stack,
   Paper,
-  Divider,
-} from '@mui/material';
+  Divider} from '@mui/material';
 import {
   AutoAwesome as AutoAwesomeIcon,
   CheckCircle as CheckCircleIcon,
   ArrowForward as ArrowForwardIcon,
   ArrowBack as ArrowBackIcon,
-  ContentCopy as ContentCopyIcon,
-} from '@mui/icons-material';
+  ContentCopy as ContentCopyIcon} from '@mui/icons-material';
 import { useWorkflow } from '../WorkflowProvider';
 import { StepComponentProps } from '@/lib/workflow/workflow-types';
 
@@ -187,8 +185,7 @@ export const CopyGenerationStep: React.FC<CopyGenerationStepProps> = ({ onNext, 
                         '&:hover': {
                           borderColor: 'primary.main',
                           transform: 'translateY(-2px)',
-                          boxShadow: 2 },
-                      }}
+                          boxShadow: 2 }}}
                       onClick={() => handleSelectCopy(copy.id)}
                     >
                       <CardContent

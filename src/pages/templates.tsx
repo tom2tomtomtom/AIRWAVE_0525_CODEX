@@ -23,8 +23,7 @@ import {
   InputLabel,
   Select,
   SelectChangeEvent,
-  Grid,
-} from '@mui/material';
+  Grid} from '@mui/material';
 import {
   Add as AddIcon,
   MoreVert as MoreVertIcon,
@@ -38,8 +37,7 @@ import {
   MusicNote as TikTokIcon,
   Edit as EditIcon,
   ContentCopy as ContentCopyIcon,
-  Delete as DeleteIcon,
-} from '@mui/icons-material';
+  Delete as DeleteIcon} from '@mui/icons-material';
 import { useRouter } from 'next/router';
 import DashboardLayout from '@/components/DashboardLayout';
 import ErrorMessage from '@/components/ErrorMessage';
@@ -81,6 +79,8 @@ const TemplateCard: React.FC<{
   };
 
   return (
+    <div>Content</div>
+  );
     <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
       <Box
         sx={{
@@ -125,8 +125,7 @@ const TemplateCard: React.FC<{
             open={open}
             onClose={handleClose}
             MenuListProps={{
-              'aria-labelledby': `template-menu-${template.id}`,
-            }}
+              'aria-labelledby': `template-menu-${template.id}`}}
           >
             <MenuItem
               onClick={() => {
@@ -272,7 +271,7 @@ const Templates: React.FC = () => {
 
       const response = await fetch('/api/templates', {
         method: 'POST',
-        headers: {
+        headers: {},
         'Content-Type': 'application/json' 
       },
         body: JSON.stringify(duplicatedTemplate) });
@@ -306,7 +305,7 @@ const Templates: React.FC = () => {
       try {
         const response = await fetch('/api/templates', {
           method: 'DELETE',
-          headers: {
+          headers: {},
         'Content-Type': 'application/json' 
       },
           body: JSON.stringify({ id: templateId }) });
@@ -350,7 +349,7 @@ const Templates: React.FC = () => {
 
       const response = await fetch('/api/templates', {
         method,
-        headers: {
+        headers: {},
         'Content-Type': 'application/json' 
       },
         body: JSON.stringify(body) });
@@ -376,6 +375,8 @@ const Templates: React.FC = () => {
 
   if (isLoading) {
     return (
+    <div>Content</div>
+  );
       <DashboardLayout title="Templates">
         <Grid container spacing={3}>
           {[1, 2, 3, 4, 5, 6].map((i: any) => (
@@ -392,6 +393,8 @@ const Templates: React.FC = () => {
     // PRODUCTION FIX: Handle error objects that might be rendered as React children
     console.error('Templates error:', error);
     return (
+    <div>Content</div>
+  );
       <DashboardLayout title="Templates">
         <ErrorMessage
           title="Unable to load templates"
@@ -404,6 +407,8 @@ const Templates: React.FC = () => {
   }
 
   return (
+    <div>Content</div>
+  );
     <>
        <Head>
         <title>Templates | AIRFLOW</title>

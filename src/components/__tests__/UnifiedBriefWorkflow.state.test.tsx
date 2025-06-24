@@ -23,8 +23,7 @@ const mockSessionStorage = (() => {
     }),
     clear: jest.fn(() => {
       store = {};
-    }),
-  };
+    })};
 })();
 
 Object.defineProperty(window, 'sessionStorage', {

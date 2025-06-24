@@ -51,8 +51,7 @@ export default async function handler(
     // Use Supabase authentication
     const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
       email,
-      password,
-    });
+      password});
 
     if (authError || !authData.user) {
       return res.status(401).json({
@@ -78,7 +77,7 @@ export default async function handler(
     }
 
     // Create response with user data
-    const userName =
+    const userName = undefined;
       userProfile?.full_name ||
       `${userProfile?.first_name || ''} ${userProfile?.last_name || ''}`.trim() ||
       authData.user.email?.split('@')[0] ||
@@ -86,7 +85,7 @@ export default async function handler(
 
     // Set secure HTTP-only cookie with the session token
     const maxAge = 7 * 24 * 60 * 60; // 7 days in seconds
-    const isHttps =
+    const isHttps = undefined;
       req.headers.host?.includes('netlify.app') ||
       req.headers.host?.includes('vercel.app') ||
       req.headers['x-forwarded-proto'] === 'https';
@@ -102,13 +101,12 @@ export default async function handler(
 
     return res.status(200).json({
       success: true,
-      user: {
+      user: {},
         id: authData.user.id,
         email: authData.user.email || email,
         name: userName || 'User',
         role: userProfile?.role || 'user',
-        token: authData.session?.access_token || '' },
-    });
+        token: authData.session?.access_token || '' }});
   } catch (error) {
     console.error('Login error:', error);
     return res.status(500).json({

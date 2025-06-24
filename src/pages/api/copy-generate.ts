@@ -161,7 +161,7 @@ Make each variation unique while staying within the ${platformSpec.maxLength} ch
             body_text: variation.body,
             call_to_action: variation.call_to_action,
             hashtags: variation.hashtags || [],
-            metadata: {
+            metadata: {},
         tone,
               style,
               emotional_hook: variation.emotional_hook,

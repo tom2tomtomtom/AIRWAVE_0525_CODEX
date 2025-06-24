@@ -12,14 +12,12 @@ import {
   TableBody,
   TextField,
   Button,
-  IconButton,
-} from '@mui/material';
+  IconButton} from '@mui/material';
 import {
   Check as CheckIcon,
   Close as CloseIcon,
   Edit as EditIcon,
-  Refresh as RefreshIcon,
-} from '@mui/icons-material';
+  Refresh as RefreshIcon} from '@mui/icons-material';
 import { Template, Asset } from '@/types/models';
 
 export interface MatrixProject {
@@ -59,8 +57,7 @@ const MatrixEditor: React.FC<MatrixEditorProps> = ({
   project,
   getAssetById,
   handleTextFieldChange,
-  handleOpenAssetDialog,
-}) => (
+  handleOpenAssetDialog}) => (
   <Paper sx={{ p: 3, mb: 4 }}>
     <Typography variant="h6" gutterBottom>
       Template Fields Matrix

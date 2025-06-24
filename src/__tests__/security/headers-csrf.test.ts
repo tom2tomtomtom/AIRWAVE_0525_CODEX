@@ -277,7 +277,7 @@ describe('Security Headers & CSRF Protection Tests', () => {
       // Now make the POST request with the token in both cookie and header
       const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
         method: 'POST',
-        headers: {
+        headers: {},
         'x-csrf-token': csrfToken,
           'origin': 'https://airwave.com',
           'cookie': `_csrf=${csrfToken
@@ -294,7 +294,7 @@ describe('Security Headers & CSRF Protection Tests', () => {
 
       const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
         method: 'POST',
-        headers: {
+        headers: {},
         'x-csrf-token': 'valid-csrf-token',
           'origin': 'https://malicious-site.com'
       }});
@@ -331,7 +331,7 @@ describe('Security Headers & CSRF Protection Tests', () => {
       // Now make the POST request with the token and referer header
       const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
         method: 'POST',
-        headers: {
+        headers: {},
         'x-csrf-token': csrfToken,
           'referer': 'https://airwave.com/dashboard',
           'cookie': `_csrf=${csrfToken

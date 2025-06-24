@@ -226,7 +226,7 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse, user: any, 
     character_count: versionData.content.length,
     word_count: versionData.content.split(/\s+/).length,
     updated_at: new Date().toISOString(),
-    metadata: {
+    metadata: {},
         version_notes: versionData.notes,
       is_major_update: versionData.is_major,
       previous_version: nextVersionNumber

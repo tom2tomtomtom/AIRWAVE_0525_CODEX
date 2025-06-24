@@ -23,8 +23,7 @@ import {
   TableRow,
   Paper,
   IconButton,
-  Tooltip,
-} from '@mui/material';
+  Tooltip} from '@mui/material';
 import {
   TrendingUp,
   TrendingDown,
@@ -38,8 +37,7 @@ import {
   Timeline,
   PieChart,
   BarChart,
-  ShowChart,
-} from '@mui/icons-material';
+  ShowChart} from '@mui/icons-material';
 
 interface AnalyticsMetric {
   id: string;
@@ -68,6 +66,8 @@ interface TabPanelProps {
 function TabPanel(props: TabPanelProps) {
   const { children, value, index, ...other } = props;
   return (
+    <div>Content</div>
+  );
     <div role="tabpanel" hidden={value !== index} id={`analytics-tabpanel-${index}`} {...other}>
       {value === index && <Box sx={{ py: 3 }}>{children}</Box>}
     </div>
@@ -168,6 +168,8 @@ export const AdvancedAnalytics: React.FC = () => {
   };
 
   return (
+    <div>Content</div>
+  );
     <Box>
       {/* Header */}
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>

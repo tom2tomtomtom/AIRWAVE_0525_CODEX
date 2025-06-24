@@ -55,16 +55,14 @@ export class AICostController {
     try {
       const response = await fetch('/api/ai/cost-check', {
         method: 'POST',
-        headers: {
+        headers: {},
         'Content-Type': 'application/json' 
       },
         body: JSON.stringify({
           service,
           model,
           estimatedTokens,
-          userId,
-        }),
-      });
+          userId})});
 
       if (!response.ok) {
         return {
@@ -91,7 +89,7 @@ export class AICostController {
     try {
       const response = await fetch('/api/ai/track-usage', {
         method: 'POST',
-        headers: {
+        headers: {},
         'Content-Type': 'application/json' 
       },
         body: JSON.stringify({
@@ -99,9 +97,7 @@ export class AICostController {
           model,
           tokens,
           cost,
-          userId,
-        }),
-      });
+          userId})});
 
       if (!response.ok) {
         return {
@@ -122,10 +118,9 @@ export class AICostController {
     try {
       const response = await fetch(`/api/ai/usage-stats?userId=${userId}`, {
         method: 'GET',
-        headers: {
+        headers: {},
         'Content-Type': 'application/json' 
-      },
-      });
+      }});
 
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}`);
@@ -144,14 +139,12 @@ export class AICostController {
     try {
       const response = await fetch('/api/ai/emergency-shutdown', {
         method: 'POST',
-        headers: {
+        headers: {},
         'Content-Type': 'application/json' 
       },
         body: JSON.stringify({
           userId,
-          reason,
-        }),
-      });
+          reason})});
 
       if (!response.ok) {
         return {

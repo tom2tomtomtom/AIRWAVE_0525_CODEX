@@ -10,8 +10,7 @@ const verifyMFASchema = z.object({
   token: z
     .string()
     .length(6, 'Verification code must be 6 digits')
-    .regex(/^\d+$/, 'Verification code must contain only numbers'),
-});
+    .regex(/^\d+$/, 'Verification code must contain only numbers')});
 
 interface MFAVerifyResponse {
   success: boolean;

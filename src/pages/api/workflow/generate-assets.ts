@@ -190,7 +190,7 @@ async function generateWorkflowAssets(
           tags: ['ai-generated', prompt.purpose || 'general', 'workflow'],
           client_id: clientId || workflow.client_id,
           created_by: userId,
-          metadata: {
+          metadata: {},
         ai_generated: true,
             original_prompt: prompt.text,
             enhanced_prompt: enhancedPrompt,
@@ -251,7 +251,7 @@ async function generateWorkflowAssets(
           id: asset.id,
           type: 'image',
           url: asset.file_url,
-          metadata: {
+          metadata: {},
         ...asset.metadata,
             name: asset.name,
             description: asset.description,

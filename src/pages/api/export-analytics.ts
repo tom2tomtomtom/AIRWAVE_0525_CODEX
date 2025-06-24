@@ -6,8 +6,7 @@ import { z } from 'zod';
 const ExportAnalyticsSchema = z.object({
   campaign_id: z.string().uuid(),
   user_id: z.string().uuid(),
-  export_type: z.enum(['bundle', 'analytics', 'comparisons', 'insights']),
-});
+  export_type: z.enum(['bundle', 'analytics', 'comparisons', 'insights'])});
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
   if (req.method !== 'POST') {

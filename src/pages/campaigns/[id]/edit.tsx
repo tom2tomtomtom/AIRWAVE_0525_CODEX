@@ -15,8 +15,7 @@ import {
   DialogActions,
   CircularProgress,
   Tabs,
-  Tab,
-} from '@mui/material';
+  Tab} from '@mui/material';
 import { ArrowBack, Save, Delete, RestartAlt, Warning } from '@mui/icons-material';
 import DashboardLayout from '../../../components/DashboardLayout';
 import LoadingSpinner from '../../../components/LoadingSpinner';

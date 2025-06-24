@@ -9,7 +9,7 @@ interface Request {
   connection?: {
     remoteAddress?: string;
   };
-  headers: {
+  headers: {},
     [key: string]: string | string[] | undefined;
   };
 }

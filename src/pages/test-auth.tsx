@@ -17,8 +17,7 @@ const TestAuthPage: React.FC = () => {
       const supabase = createSupabaseBrowserClient();
       const {
         data: { session  }
-        error,
-      } = await supabase.auth.getSession();
+        error} = await supabase.auth.getSession();
       setBrowserCheck({ session, error });
     };
 
@@ -26,6 +25,8 @@ const TestAuthPage: React.FC = () => {
   }, [user]);
 
   return (
+    <div>Content</div>
+  );
     <Box sx={{ p: 4 }}>
       <Typography variant="h4" gutterBottom>
         Auth Debug Page

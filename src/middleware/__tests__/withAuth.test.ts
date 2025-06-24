@@ -22,10 +22,13 @@ const mockSingle = jest.fn();
 const mockInsert = jest.fn();
 
 jest.mock('@supabase/ssr', () => ({
-  createServerClient: jest.fn(() => ({,
-    auth: {},
-  getUser: mockGetUser },
-  from: mockFrom}))}));
+  createServerClient: jest.fn(() => ({
+    auth: {
+      getUser: mockGetUser
+    },
+    from: mockFrom
+  }))
+}));
 
 // Mock error utils
 jest.mock('@/utils/errorUtils', () => ({
@@ -240,7 +243,7 @@ describe('withAuth middleware', () => {
       // Profile not found and creation fails
       mockSingle.mockResolvedValue({ data: null, error: { code: 'PGRST116' } });
       mockInsert.mockReturnValue({
-        select: () => ({,
+        select: () => ({
     single: () => Promise.resolve({ data: null, error: new Error('Creation failed') })
         })
       });
@@ -634,7 +637,7 @@ describe('withAuth middleware', () => {
     it('should check client ID from custom header', async () => {
       const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
         method: 'GET',
-        headers: {
+        headers: {},
         'x-client-id': 'client-456' 
       },
         cookies: { 'sb-access-token': 'user-token' });

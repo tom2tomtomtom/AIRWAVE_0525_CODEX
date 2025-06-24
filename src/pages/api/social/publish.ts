@@ -54,7 +54,7 @@ async function publishToTwitter(accessToken: string, content: any): Promise<{ su
   try {
     const response = await fetch('https://api.twitter.com/2/tweets', {
       method: 'POST',
-      headers: {
+      headers: {},
         'Authorization': `Bearer ${accessToken
       }`,
         'Content-Type': 'application/json'},
@@ -144,7 +144,7 @@ async function publishToLinkedIn(accessToken: string, profileId: string, content
       'https://api.linkedin.com/v2/ugcPosts',
       postData,
       {
-        headers: {
+        headers: {},
         'Authorization': `Bearer ${accessToken
       }`,
           'Content-Type': 'application/json',

@@ -8,8 +8,7 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  Grid,
-} from '@mui/material';
+  Grid} from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
@@ -24,8 +23,7 @@ const CampaignSchedule: React.FC<CampaignScheduleProps> = ({
   campaignData,
   setCampaignData,
   onNext,
-  onBack,
-}) => {
+  onBack}) => {
   const handleDateChange = (field: string) => (date: Date | null) => {
     setCampaignData({ ...campaignData, [field]: date });
   };

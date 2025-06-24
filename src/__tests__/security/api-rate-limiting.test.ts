@@ -56,7 +56,7 @@ describe('API Security & Rate Limiting Tests', () => {
 
       const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
         method: 'POST',
-        headers: {
+        headers: {},
         'x-forwarded-for': '127.0.0.1'
       }});
 
@@ -91,7 +91,7 @@ describe('API Security & Rate Limiting Tests', () => {
 
       const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
         method: 'POST',
-        headers: {
+        headers: {},
         'x-forwarded-for': '127.0.0.1'
       }});
 
@@ -149,7 +149,7 @@ describe('API Security & Rate Limiting Tests', () => {
 
       const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
         method: 'GET',
-        headers: {
+        headers: {},
         'x-forwarded-for': '192.168.1.100'
       }});
 
@@ -185,7 +185,7 @@ describe('API Security & Rate Limiting Tests', () => {
 
       const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
         method: 'GET',
-        headers: {
+        headers: {},
         'x-forwarded-for': '192.168.1.100'
       }});
 
@@ -331,7 +331,7 @@ describe('API Security & Rate Limiting Tests', () => {
 
       const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
         method: 'POST',
-        headers: {
+        headers: {},
         'content-type': 'text/plain'
       }});
 
@@ -357,7 +357,7 @@ describe('API Security & Rate Limiting Tests', () => {
 
       const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
         method: 'POST',
-        headers: {
+        headers: {},
         'content-length': '20971520', // 20MB
           'content-type': 'application/json'
       }});
@@ -381,7 +381,7 @@ describe('API Security & Rate Limiting Tests', () => {
 
       const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
         method: 'POST',
-        headers: {
+        headers: {},
         'content-type': 'application/json'
       }});
 

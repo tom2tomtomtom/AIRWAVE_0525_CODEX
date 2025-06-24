@@ -154,7 +154,6 @@ const ipUtils = {
   isPrivateIp,
   getRegionFromIp,
   hashIp,
-  isTrustedProxy,
-};
+  isTrustedProxy};
 
 export default ipUtils;

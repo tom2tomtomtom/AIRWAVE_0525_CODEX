@@ -99,8 +99,7 @@ const envSchema = z.object({
   ENABLE_ANALYTICS: z
     .string()
     .transform(val => val === 'true')
-    .default('true'),
-});
+    .default('true')});
 
 export type Env = z.infer<typeof envSchema>;
 
@@ -195,8 +194,7 @@ export function checkProductionReadiness(): {
   return {
     isReady: missingVars.length === 0,
     missingVars,
-    warnings,
-  };
+    warnings};
 }
 
 // Export validated environment variables (only when needed)

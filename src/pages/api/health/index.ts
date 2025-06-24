@@ -17,7 +17,7 @@ interface HealthResponse {
   version: string;
   environment: string;
   checks: HealthCheck[];
-  summary: {
+  summary: {},
     total: number;
     healthy: number;
     unhealthy: number;
@@ -41,10 +41,9 @@ const checkDatabase = async (): Promise<HealthCheck> => {
       service: 'database',
       status: 'healthy',
       responseTime: Date.now() - start,
-      details: {
+      details: {},
         connection: 'active',
-        queryExecuted: true },
-    };
+        queryExecuted: true }};
   } catch (error) {
     return {
       service: 'database',
@@ -65,9 +64,8 @@ const checkRedis = async (): Promise<HealthCheck> => {
         service: 'redis',
         status: 'degraded',
         responseTime: Date.now() - start,
-        details: {
-          message: 'Redis not configured or using default local instance' },
-      };
+        details: {},
+          message: 'Redis not configured or using default local instance' }};
     }
 
     // Skip Redis for now to avoid import issues
@@ -75,9 +73,8 @@ const checkRedis = async (): Promise<HealthCheck> => {
       service: 'redis',
       status: 'degraded',
       responseTime: Date.now() - start,
-      details: {
-        message: 'Redis check disabled for deployment' },
-    };
+      details: {},
+        message: 'Redis check disabled for deployment' }};
   } catch (error) {
     return {
       service: 'redis',
@@ -96,10 +93,9 @@ const checkExternalAPIs = async (): Promise<HealthCheck[]> => {
     const start = Date.now();
     try {
       const response = await fetch('https://api.openai.com/v1/models', {
-        headers: {
+        headers: {},
           Authorization: `Bearer ${config.OPENAI_API_KEY}`,
-          'Content-Type': 'application/json',
-        },
+          'Content-Type': 'application/json'},
         signal: AbortSignal.timeout(5000), // 5 second timeout
       });
 
@@ -107,10 +103,9 @@ const checkExternalAPIs = async (): Promise<HealthCheck[]> => {
         service: 'openai',
         status: response.ok ? 'healthy' : 'degraded',
         responseTime: Date.now() - start,
-        details: {
+        details: {},
           statusCode: response.status,
-          available: response.ok },
-      });
+          available: response.ok }});
     } catch (error) {
       checks.push({
         service: 'openai',
@@ -130,10 +125,9 @@ const checkExternalAPIs = async (): Promise<HealthCheck[]> => {
       service: 'supabase',
       status: response.ok ? 'healthy' : 'degraded',
       responseTime: Date.now() - start,
-      details: {
+      details: {},
         statusCode: response.status,
-        available: response.ok },
-    });
+        available: response.ok }});
   } catch (error) {
     checks.push({
       service: 'supabase',
@@ -167,17 +161,15 @@ const checkSystemResources = (): HealthCheck => {
     return {
       service: 'system',
       status,
-      details: {
+      details: {},
         memory: memoryInMB,
         heapUsagePercent: Math.round(heapUsagePercent),
         uptime: process.uptime(),
         nodeVersion: process.version,
         platform: process.platform,
-        cpu: {
+        cpu: {},
           user: cpuUsage.user,
-          system: cpuUsage.system },
-      },
-    };
+          system: cpuUsage.system }}};
   } catch (error) {
     return {
       service: 'system',
@@ -236,15 +228,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       version: config.NEXT_PUBLIC_APP_VERSION,
       environment: config.NODE_ENV,
       checks: allChecks,
-      summary,
-    };
+      summary};
 
     // Log health check results
     loggers.general.info('Health check completed', {
       status: overallStatus,
       duration: Date.now() - startTime,
-      summary,
-    });
+      summary});
 
     // Set appropriate HTTP status code
     const statusCode = overallStatus === 'healthy' ? 200 : overallStatus === 'degraded' ? 200 : 503;

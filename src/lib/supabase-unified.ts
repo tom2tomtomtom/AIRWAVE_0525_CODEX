@@ -31,7 +31,7 @@ export const getSupabaseClient = () => {
           storageKey: 'airwave-auth-token', // Use specific storage key to avoid conflicts
         },
         global: {},
-  headers: {
+  headers: {},
         'x-application-name': 'airwave'
           
       }

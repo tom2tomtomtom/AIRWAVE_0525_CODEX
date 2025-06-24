@@ -26,8 +26,7 @@ const PostUpdateSchema = z.object({
     .optional(),
   platforms: z.array(z.string()).optional(),
   scheduledAt: z.string().optional(),
-  status: z.enum(['scheduled', 'published', 'paused', 'cancelled']).optional(),
-});
+  status: z.enum(['scheduled', 'published', 'paused', 'cancelled']).optional()});
 
 async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
   const { method } = req;
@@ -167,8 +166,7 @@ async function handleCreate(req: NextApiRequest, res: NextApiResponse, user: any
 
     if (missingPlatforms.length > 0) {
       return res.status(400).json({
-        error: `Platforms not connected or inactive: ${missingPlatforms.join(', ')}`,
-      });
+        error: `Platforms not connected or inactive: ${missingPlatforms.join(', ')}`});
     }
 
     // Determine if this is a scheduled post
@@ -196,8 +194,7 @@ async function handleCreate(req: NextApiRequest, res: NextApiResponse, user: any
     const platformPromises = postData.platforms.map((platform: any) =>
       supabase.from('social_post_platforms').insert({
         post_id: post.id,
-        platform,
-      })
+        platform})
     );
 
     await Promise.all(platformPromises);
@@ -230,8 +227,7 @@ async function handleCreate(req: NextApiRequest, res: NextApiResponse, user: any
         publishResults,
         message: allSuccessful
           ? 'Post published successfully'
-          : 'Post published with some failures',
-      });
+          : 'Post published with some failures'});
     } else {
       // Return scheduled post
       return res.status(201).json({
@@ -314,8 +310,7 @@ async function handleUpdate(req: NextApiRequest, res: NextApiResponse, user: any
       const platformPromises = updateData.platforms.map((platform: any) =>
         supabase.from('social_post_platforms').insert({
           post_id: post_id,
-          platform,
-        })
+          platform})
       );
 
       await Promise.all(platformPromises);
@@ -416,8 +411,7 @@ async function publishToMPlatforms(
         results.push({
           platform,
           success: true,
-          postId: `${platform}_${Math.random().toString(36).substr(2, 9)}`,
-        });
+          postId: `${platform}_${Math.random().toString(36).substr(2, 9)}`});
       } else {
         results.push({
           platform,

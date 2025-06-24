@@ -19,8 +19,7 @@ import {
   Stack,
   Tooltip,
   Alert,
-  CircularProgress,
-} from '@mui/material';
+  CircularProgress} from '@mui/material';
 import {
   Notifications as NotificationIcon,
   NotificationsActive as NotificationActiveIcon,
@@ -34,8 +33,7 @@ import {
   Person as UserIcon,
   MarkEmailRead as MarkReadIcon,
   Delete as DeleteIcon,
-  Refresh as RefreshIcon,
-} from '@mui/icons-material';
+  Refresh as RefreshIcon} from '@mui/icons-material';
 import { formatDistanceToNow } from 'date-fns';
 import { useNotifications } from '@/hooks/useRealtime';
 import { useRouter } from 'next/router';
@@ -47,8 +45,7 @@ interface NotificationCenterProps {
 
 const NotificationCenter: React.FC<NotificationCenterProps> = ({
   maxNotifications = 10,
-  showHeader = true,
-}) => {
+  showHeader = true}) => {
   const router = useRouter();
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const { notifications, unreadNotifications, markAsRead, dismiss, loading, error, refresh } =
@@ -227,8 +224,7 @@ const NotificationCenter: React.FC<NotificationCenterProps> = ({
                       sx={{
                         backgroundColor: notification.read ? 'transparent' : 'action.hover',
                         '&:hover': {
-                          backgroundColor: 'action.selected' },
-                      }}
+                          backgroundColor: 'action.selected' }}}
                     >
                       <ListItemIcon>
                         <Avatar

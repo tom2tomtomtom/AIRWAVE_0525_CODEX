@@ -309,6 +309,8 @@ export const CampaignMatrix: React.FC<CampaignMatrixProps> = ({
 
     if (field.type === 'text') {
       return (
+    <div>Content</div>
+  );
         <Box display="flex" alignItems="center" gap={1}>
           <Typography 
             variant="body2" 
@@ -341,6 +343,8 @@ export const CampaignMatrix: React.FC<CampaignMatrixProps> = ({
 
     if (field.type === 'color') {
       return (
+    <div>Content</div>
+  );
         <Box display="flex" alignItems="center" gap={1}>
           <Box
             sx={{
@@ -376,6 +380,8 @@ export const CampaignMatrix: React.FC<CampaignMatrixProps> = ({
     const asset = assets.find((a: any) => a.id === cell?.assetId);
     
     return (
+    <div>Content</div>
+  );
       <Box display="flex" alignItems="center" gap={1}>
         {asset ? (
           <>
@@ -412,6 +418,8 @@ export const CampaignMatrix: React.FC<CampaignMatrixProps> = ({
   };
 
   return (
+    <div>Content</div>
+  );
     <Box>
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
         <Typography variant="h5">

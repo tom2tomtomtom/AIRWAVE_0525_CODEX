@@ -128,7 +128,7 @@ export function getErrorMessage(error: any): string {
 // Enhanced error handler for Supabase operations
 export async function handleSupabaseError(
   error: any,
-  context: {
+  context: {},
     operation: string;
     table?: string;
     userId?: string;
@@ -145,13 +145,12 @@ export async function handleSupabaseError(
   // Log the error with context
   loggers.supabase.error('Supabase operation failed', {
     ...context,
-    error: {
+    error: {},
       message: error.message,
       code: error.code,
       details: error.details,
       hint: error.hint,
-      status: error.status },
-  });
+      status: error.status }});
   
   // Add specific handling for common scenarios
   if (isDuplicateError(error) && context.table) {

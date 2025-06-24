@@ -305,7 +305,7 @@ async function handleLogs(
         message: 'API v2 request processed',
         requestId: context.requestId,
         userId: context.user?.id || 'anonymous',
-        metadata: {
+        metadata: {},
         route: Array.isArray(context.route) ? context.route.join('/') : 'unknown',
           method: context.method,
           responseTime: Date.now() - (context.startTime || Date.now())
@@ -318,7 +318,7 @@ async function handleLogs(
         level: 'error',
         message: 'Database connection timeout',
         requestId: 'req-123',
-        metadata: {
+        metadata: {},
         error: 'Connection timeout after 5000ms',
           database: 'primary'
         
@@ -418,7 +418,7 @@ async function getAlerts(req: NextApiRequest, res: NextApiResponse, context: Rou
       severity: 'warning',
       status: 'active',
       createdAt: new Date().toISOString(),
-      metadata: {
+      metadata: {},
         currentValue: 87,
         threshold: 85,
         metric: 'memory_usage'
@@ -480,7 +480,7 @@ async function updateAlert(req: NextApiRequest, res: NextApiResponse, context: R
     acknowledgedAt: acknowledged ? new Date().toISOString() : undefined,
     acknowledgedBy: acknowledged ? context.user.id : undefined,
     createdAt: new Date(Date.now() - 3600000).toISOString(), // 1 hour ago
-    metadata: {
+    metadata: {},
         currentValue: 87,
       threshold: 85,
       metric: 'memory_usage'

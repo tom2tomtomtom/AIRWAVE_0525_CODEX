@@ -289,7 +289,7 @@ async function executeImmediate(executionPlan: any): Promise<any> {
           content_type: execution.content_type,
           platform: execution.platform,
           status: 'pending',
-          metadata: {
+          metadata: {},
         combination_name: execution.combination_name,
             template_data: execution.template_data,
             field_data: execution.field_data,
@@ -317,7 +317,7 @@ async function executeImmediate(executionPlan: any): Promise<any> {
         .update({
           status: renderResult.success ? 'processing' : 'failed',
           render_url: renderResult.render_url,
-          metadata: {
+          metadata: {},
         ...executionRecord.metadata,
             render_job_id: renderResult.job_id,
             render_started_at: new Date().toISOString()
@@ -369,7 +369,7 @@ async function scheduleExecution(executionPlan: any, scheduledFor?: string): Pro
       content_type: exec.content_type,
       platform: exec.platform,
       status: 'scheduled',
-      metadata: {
+      metadata: {},
         combination_name: exec.combination_name,
         template_data: exec.template_data,
         field_data: exec.field_data,

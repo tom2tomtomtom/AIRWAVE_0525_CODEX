@@ -55,6 +55,8 @@ function DefaultErrorFallback({ error, errorInfo, resetError, eventId }: ErrorFa
   };
 
   return (
+    <div>Content</div>
+  );
     <Box
       sx={{
         display: 'flex',
@@ -222,7 +224,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
         // Example: Custom API reporting
         fetch('/api/errors', {
           method: 'POST',
-          headers: {
+          headers: {},
         'Content-Type': 'application/json' 
       },
           body: JSON.stringify({
@@ -256,6 +258,8 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
       const FallbackComponent = this.props.fallback || DefaultErrorFallback;
       
       return (
+    <div>Content</div>
+  );
         <FallbackComponent
           error={this.state.error}
           errorInfo={this.state.errorInfo}
@@ -291,6 +295,8 @@ export function withErrorBoundary<P extends object>(
  * Hook for handling errors in functional components
  */
 export function useErrorHandler() {
+  return undefined;
+}
   return (error: Error, errorInfo?: ErrorInfo) => {
     // Throw error to be caught by nearest error boundary
     throw error;
@@ -307,7 +313,7 @@ export function FeatureErrorBoundary({ children, feature }: { children: ReactNod
     // Report feature-specific error
     fetch('/api/errors', {
       method: 'POST',
-      headers: {
+      headers: {},
         'Content-Type': 'application/json' 
       },
       body: JSON.stringify({
@@ -340,6 +346,8 @@ export function FeatureErrorBoundary({ children, feature }: { children: ReactNod
   );
 
   return (
+    <div>Content</div>
+  );
     <ErrorBoundary onError={handleError} fallback={CustomFallback}>
       {children}
     </ErrorBoundary>

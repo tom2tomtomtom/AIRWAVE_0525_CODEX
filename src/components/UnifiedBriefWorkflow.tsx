@@ -13,8 +13,7 @@ interface UnifiedBriefWorkflowProps {
 export const UnifiedBriefWorkflow: React.FC<UnifiedBriefWorkflowProps> = ({
   open,
   onClose,
-  onComplete,
-}) => {
+  onComplete}) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 

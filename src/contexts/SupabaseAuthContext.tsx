@@ -191,12 +191,10 @@ export const SupabaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({ 
       const { data, error } = await supabaseClient.auth.signUp({
         email,
         password,
-        options: {
-          data: {
+        options: {},
+          data: {},
             name,
-            role: 'authenticated' },
-        },
-      });
+            role: 'authenticated' }}});
       if (error) throw error;
 
       return { success: true, user: data.user || undefined };
@@ -235,14 +233,15 @@ export const SupabaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({ 
   };
 
   return (
+    <div>Content</div>
+  );
     <SupabaseAuthContext.Provider
       value={{
         ...authState,
         login,
         signup,
         logout,
-        refreshSession,
-      }}
+        refreshSession}}
     >
       {children}
     </SupabaseAuthContext.Provider>

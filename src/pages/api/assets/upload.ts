@@ -137,7 +137,7 @@ async function handler(
           file_size: file.size,
           client_id: clientId || null,
           created_by: userId,
-          metadata: {
+          metadata: {},
         original_filename: file.originalFilename,
             uploaded_at: new Date().toISOString(),
             storage_path: storagePath,

@@ -165,7 +165,7 @@ describe('Workflow Security Validation', () => {
             {
               title: '<script>alert("XSS")</script>Motivation',
               description: 'Description<img src="x" onerror="alert(1)">',
-              metadata: {
+              metadata: {},
         source: 'javascript:alert("hack")',
                 tags: ['<script>malicious()</script>', 'clean-tag']
               

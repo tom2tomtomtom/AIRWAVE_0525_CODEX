@@ -108,7 +108,7 @@ export const MFASetup: React.FC = () => {
     try {
       const response = await fetch('/api/auth/mfa/verify', {
         method: 'POST',
-        headers: {
+        headers: {},
         'Content-Type': 'application/json'
       
       },
@@ -148,6 +148,8 @@ export const MFASetup: React.FC = () => {
 
   if (loading && !status) {
     return (
+    <div>Content</div>
+  );
       <Box display="flex" justifyContent="center" alignItems="center" minHeight={200}>
         <CircularProgress />
       </Box>
@@ -155,6 +157,8 @@ export const MFASetup: React.FC = () => {
   }
 
   return (
+    <div>Content</div>
+  );
     <Box>
       <Typography variant="h5" gutterBottom>
         <SecurityIcon sx={{ mr: 1, verticalAlign: 'middle' }} />

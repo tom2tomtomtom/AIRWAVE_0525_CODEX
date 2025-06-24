@@ -84,7 +84,7 @@ async function handlePut(req: NextApiRequest, res: NextApiResponse, userId: stri
     url,
     events,
     active,
-    metadata: {
+    metadata: {},
         ...metadata,
       updated_by: userId,
       updated_at: new Date().toISOString()

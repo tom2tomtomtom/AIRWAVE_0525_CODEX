@@ -168,7 +168,7 @@ async function getWorkflowAssets(
       type: asset.type === 'voice' ? 'copy' : asset.type, // Map voice to copy for workflow
       url: asset.file_url,
       content: asset.type === 'text' ? asset.description : undefined,
-      metadata: {
+      metadata: {},
         ...asset.metadata,
         name: asset.name,
         description: asset.description,

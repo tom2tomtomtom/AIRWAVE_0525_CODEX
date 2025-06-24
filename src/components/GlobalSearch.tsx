@@ -182,13 +182,15 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({ open, onClose }) => 
   const showRecentSearches = !query.trim() && recentSearches.length > 0;
 
   return (
+    <div>Content</div>
+  );
     <Dialog
       open={open}
       onClose={onClose}
       maxWidth="md"
       fullWidth
       PaperProps={{
-        sx: {
+        sx: {},
           borderRadius: 3,
           overflow: 'hidden',
           mt: 8

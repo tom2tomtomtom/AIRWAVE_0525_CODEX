@@ -177,6 +177,8 @@ export const ActionButton: React.FC<ActionButtonProps> = ({
 
   if (tooltip) {
     return (
+    <div>Content</div>
+  );
       <Tooltip title={tooltip} placement="top">
         <span>{buttonContent}</span>
       </Tooltip>

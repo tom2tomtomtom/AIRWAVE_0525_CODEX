@@ -127,7 +127,7 @@ class WebhookBackend implements MetricsBackend {
     try {
       await fetch(this.webhookUrl, {
         method: 'POST',
-        headers: {
+        headers: {},
         'Content-Type': 'application/json' 
       },
         body: JSON.stringify({
@@ -143,7 +143,7 @@ class WebhookBackend implements MetricsBackend {
     try {
       await fetch(this.webhookUrl, {
         method: 'POST',
-        headers: {
+        headers: {},
         'Content-Type': 'application/json' 
       },
         body: JSON.stringify({

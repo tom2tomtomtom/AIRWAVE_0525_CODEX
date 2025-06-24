@@ -271,7 +271,7 @@ async function testWebhookUrl(url: string, timeoutMs: number = 10000): Promise<{
 
     const response = await fetch(url, {
       method: 'POST',
-      headers: {
+      headers: {},
         'Content-Type': 'application/json',
         'User-Agent': 'AIrFLOW-Webhook-Test/1.0',
         'X-AIrFLOW-Test': 'true'

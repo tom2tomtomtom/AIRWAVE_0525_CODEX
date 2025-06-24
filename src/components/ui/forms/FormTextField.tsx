@@ -6,8 +6,7 @@ import {
   Box,
   Typography,
   Tooltip,
-  IconButton,
-} from '@mui/material';
+  IconButton} from '@mui/material';
 import { Info as InfoIcon } from '@mui/icons-material';
 import { useFormContext, Controller } from 'react-hook-form';
 import { createAccessibleField } from '@/utils/accessibility';
@@ -35,8 +34,7 @@ export const FormTextField: React.FC<FormTextFieldProps> = ({
   const {
     control,
     formState: { errors  }
-    watch,
-  } = useFormContext();
+    watch} = useFormContext();
 
   const value = watch(name) || '';
   const error = errors[name];
@@ -48,10 +46,11 @@ export const FormTextField: React.FC<FormTextFieldProps> = ({
     required: Boolean(rules.required),
     invalid: hasError,
     description,
-    errorMessage,
-  });
+    errorMessage});
 
   return (
+    <div>Content</div>
+  );
     <Box sx={{ mb: 2 }}>
       <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
         <Typography
@@ -96,8 +95,7 @@ export const FormTextField: React.FC<FormTextFieldProps> = ({
             inputProps={{
               ...textFieldProps.inputProps,
               maxLength,
-              'aria-describedby': fieldProps['aria-describedby'],
-            }}
+              'aria-describedby': fieldProps['aria-describedby']}}
             sx={{
               '& .MuiOutlinedInput-root': {
                 backgroundColor: 'background.paper',
@@ -105,11 +103,8 @@ export const FormTextField: React.FC<FormTextFieldProps> = ({
                   borderColor: 'error.main',
                   borderWidth: 2 },
                 '&.Mui-focused.Mui-error .MuiOutlinedInput-notchedOutline': {
-                  boxShadow: '0 0 0 4px rgba(239, 68, 68, 0.1)',
-                },
-              },
-              ...textFieldProps.sx,
-            }}
+                  boxShadow: '0 0 0 4px rgba(239, 68, 68, 0.1)'}},
+              ...textFieldProps.sx}}
           />
         )}
       />

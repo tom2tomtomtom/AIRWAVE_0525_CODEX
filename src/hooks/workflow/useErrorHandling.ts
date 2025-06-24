@@ -68,6 +68,5 @@ export const useErrorHandling = ({ dispatch }: UseErrorHandlingProps) => {
   return {
     withErrorHandling,
     clearError,
-    setError,
-  };
+    setError};
 };

@@ -83,8 +83,7 @@ export class SessionManager {
       lastActivity: now,
       ipAddress,
       userAgent,
-      deviceId,
-    };
+      deviceId};
 
     const refreshTokenData: RefreshTokenData = {
       userId,
@@ -106,8 +105,7 @@ export class SessionManager {
         role,
         permissions,
         sessionId,
-        deviceId,
-      },
+        deviceId},
       this.config.jwtExpiry
     );
 
@@ -253,8 +251,7 @@ export class SessionManager {
         userId: session.userId,
         sessionId,
         oldTokenFamily: tokenFamily,
-        newTokenFamily,
-      });
+        newTokenFamily});
 
       return {
         accessToken: newAccessToken,
@@ -280,8 +277,7 @@ export class SessionManager {
 
       loggers.general.info('Session revoked', {
         userId: session.userId,
-        sessionId,
-      });
+        sessionId});
     }
   }
 
@@ -306,8 +302,7 @@ export class SessionManager {
 
     loggers.general.info('All user sessions revoked', {
       userId,
-      revokedCount,
-    });
+      revokedCount});
   }
 
   // Get all active sessions for a user

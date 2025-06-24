@@ -12,15 +12,13 @@ import {
   Alert,
   CircularProgress,
   InputAdornment,
-  IconButton,
-} from '@mui/material';
+  IconButton} from '@mui/material';
 import {
   Visibility,
   VisibilityOff,
   Email as EmailIcon,
   Lock as LockIcon,
-  Person as PersonIcon,
-} from '@mui/icons-material';
+  Person as PersonIcon} from '@mui/icons-material';
 
 const SignupPage: React.FC = () => {
   const router = useRouter();
@@ -134,8 +132,7 @@ const SignupPage: React.FC = () => {
                   <InputAdornment position="start">
                     <PersonIcon color="action" />
                   </InputAdornment>
-                ),
-              }}
+                )}}
             />
 
             <TextField
@@ -152,8 +149,7 @@ const SignupPage: React.FC = () => {
                   <InputAdornment position="start">
                     <EmailIcon color="action" />
                   </InputAdornment>
-                ),
-              }}
+                )}}
             />
 
             <TextField
@@ -182,8 +178,7 @@ const SignupPage: React.FC = () => {
                       {showPassword ? <VisibilityOff /> : <Visibility />}
                     </IconButton>
                   </InputAdornment>
-                ),
-              }}
+                )}}
             />
 
             <TextField
@@ -213,8 +208,7 @@ const SignupPage: React.FC = () => {
                       {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
                     </IconButton>
                   </InputAdornment>
-                ),
-              }}
+                )}}
             />
 
             <Button
@@ -231,9 +225,7 @@ const SignupPage: React.FC = () => {
                 color: '#000000',
                 '&:hover': {
                   backgroundColor: '#F59E0B',
-                  boxShadow: '0 0 0 2px rgba(251, 191, 36, 0.3)',
-                },
-              }}
+                  boxShadow: '0 0 0 2px rgba(251, 191, 36, 0.3)'}}}
             >
               {loading ? <CircularProgress size={24} color="inherit" /> : 'Create Account'}
             </Button>
@@ -254,8 +246,7 @@ const SignupPage: React.FC = () => {
               p: 2,
               bgcolor: '#111827',
               borderRadius: 2,
-              border: '1px solid rgba(251, 191, 36, 0.2)',
-            }}
+              border: '1px solid rgba(251, 191, 36, 0.2)'}}
           >
             <Typography variant="caption" color="text.secondary" align="center" display="block">
               <strong>Note:</strong> By creating an account, you agree to our Terms of Service and

@@ -17,8 +17,7 @@ import {
   Button,
   Stack,
   Paper,
-  Popover,
-} from '@mui/material';
+  Popover} from '@mui/material';
 import {
   Circle as OnlineIcon,
   Edit as EditingIcon,
@@ -26,8 +25,7 @@ import {
   Message as MessageIcon,
   ExpandMore as ExpandIcon,
   People as PeopleIcon,
-  Schedule as ScheduleIcon,
-} from '@mui/icons-material';
+  Schedule as ScheduleIcon} from '@mui/icons-material';
 import { useAuth } from '@/contexts/AuthContext';
 import { useClient } from '@/contexts/ClientContext';
 import { formatDistanceToNow } from 'date-fns';
@@ -54,8 +52,7 @@ const LiveCollaboration: React.FC<LiveCollaborationProps> = ({
   context = 'global',
   contextId,
   showDetails = true,
-  compact = false,
-}) => {
+  compact = false}) => {
   const { user } = useAuth();
   const { activeClient } = useClient();
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);

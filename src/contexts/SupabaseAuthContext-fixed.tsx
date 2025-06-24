@@ -235,6 +235,8 @@ export const SupabaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({ 
   };
 
   return (
+    <div>Content</div>
+  );
     <SupabaseAuthContext.Provider
       value={{
         ...authState,

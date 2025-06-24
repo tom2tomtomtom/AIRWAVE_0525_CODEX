@@ -11,8 +11,7 @@ import {
   LinkedIn,
   CheckCircle,
   Warning,
-  Error,
-} from '@mui/icons-material';
+  Error} from '@mui/icons-material';
 import DashboardLayout from '../../components/DashboardLayout';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import ErrorMessage from '../../components/ErrorMessage';

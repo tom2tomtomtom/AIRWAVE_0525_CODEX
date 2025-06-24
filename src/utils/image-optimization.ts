@@ -3,8 +3,7 @@ export const imageOptimizationConfig = {
   formats: ['image/webp', 'image/avif'],
   quality: 80,
   sizes: [16, 32, 48, 64, 96, 128, 256, 384],
-  domains: ['localhost', process.env.NEXT_PUBLIC_DOMAIN],
-};
+  domains: ['localhost', process.env.NEXT_PUBLIC_DOMAIN]};
 
 // Optimize image component
 import Image from 'next/image';

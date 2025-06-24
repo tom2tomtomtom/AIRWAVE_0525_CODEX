@@ -7,9 +7,9 @@ import { redisManager } from '@/lib/redis/redis-config';
 import { performanceTracker } from '@/lib/performance/performance-tracker';
 
 interface WorkflowMetric {
-  userId: string;
+  userId: string;,
   sessionId: string;
-  workflowStep: string;
+  workflowStep: string;,
   action: string;
   timestamp: number;
   duration?: number;
@@ -19,24 +19,24 @@ interface WorkflowMetric {
 }
 
 interface WorkflowStepMetrics {
-  stepName: string;
+  stepName: string;,
   totalAttempts: number;
-  successfulCompletions: number;
+  successfulCompletions: number;,
   averageDuration: number;
-  errorRate: number;
+  errorRate: number;,
   abandonmentRate: number;
   commonErrors: Record<string, number>;
 }
 
 interface WorkflowAnalytics {
-  totalSessions: number;
+  totalSessions: number;,
   completedWorkflows: number;
-  completionRate: number;
+  completionRate: number;,
   averageSessionDuration: number;
   stepMetrics: Record<string, WorkflowStepMetrics>;
-  userJourney: Array<{
+  userJourney: Array<{,
     step: string;
-    dropOffRate: number;
+    dropOffRate: number;,
     averageTimeSpent: number;
   }>;
 }
@@ -48,7 +48,7 @@ export class WorkflowMetricsCollector {
   private maxLocalMetrics = 10000;
 
   // Workflow step definitions
-  private workflowSteps = [
+  private workflowSteps = [;
     'brief-upload',
     'brief-review',
     'motivation-generation',
@@ -95,7 +95,7 @@ export class WorkflowMetricsCollector {
     stepName: string,
     metadata?: Record<string, any>
   ): Promise<void> {
-    const metric: WorkflowMetric = {
+    const metric: WorkflowMetric = {;
       userId,
       sessionId,
       workflowStep: stepName,
@@ -126,7 +126,7 @@ export class WorkflowMetricsCollector {
     // End performance tracking
     const duration = await performanceTracker.end(`workflow_step_${stepName}`, userId);
 
-    const metric: WorkflowMetric = {
+    const metric: WorkflowMetric = {;
       userId,
       sessionId,
       workflowStep: stepName,
@@ -151,7 +151,7 @@ export class WorkflowMetricsCollector {
     lastStep: string,
     reason?: string
   ): Promise<void> {
-    const metric: WorkflowMetric = {
+    const metric: WorkflowMetric = {;
       userId,
       sessionId,
       workflowStep: lastStep,
@@ -175,7 +175,7 @@ export class WorkflowMetricsCollector {
     totalDuration: number,
     metadata?: Record<string, any>
   ): Promise<void> {
-    const metric: WorkflowMetric = {
+    const metric: WorkflowMetric = {;
       userId,
       sessionId,
       workflowStep: 'workflow_complete',
@@ -205,7 +205,7 @@ export class WorkflowMetricsCollector {
     success: boolean,
     errorMessage?: string
   ): Promise<void> {
-    const metric: WorkflowMetric = {
+    const metric: WorkflowMetric = {;
       userId,
       sessionId,
       workflowStep: operation,
@@ -214,13 +214,12 @@ export class WorkflowMetricsCollector {
       duration,
       success,
       errorMessage,
-      metadata: {
+      metadata: {},
         service,
         model,
         tokensUsed,
         cost,
-        costPerToken: cost / tokensUsed },
-    };
+        costPerToken: cost / tokensUsed }};
 
     await this.recordMetric(metric);
     
@@ -334,9 +333,9 @@ export class WorkflowMetricsCollector {
    */
   private calculateAnalytics(metrics: WorkflowMetric[]): WorkflowAnalytics {
     const sessions = new Set(metrics.map((m: any) => m.sessionId));
-    const completedSessions = new Set(
+    const completedSessions = new Set(;
       metrics
-        .filter((m: any) => m.action === 'workflow_completion')
+        .filter((m: any) => m.action === 'workflow_completion');
         .map((m: any) => m.sessionId)
     );
 
@@ -412,7 +411,7 @@ export class WorkflowMetricsCollector {
       }
     }
 
-    const averageSessionDuration = sessionDurations.length > 0
+    const averageSessionDuration = sessionDurations.length > 0;
       ? sessionDurations.reduce((a, b) => a + b, 0) / sessionDurations.length 
       : 0;
 
@@ -429,7 +428,7 @@ export class WorkflowMetricsCollector {
    * Get real-time workflow status
    */
   async getRealTimeStatus(): Promise<{
-    activeSessions: number;
+    activeSessions: number;,
     currentStepDistribution: Record<string, number>;
     recentErrors: Array<{ step: string; error: string; timestamp: number }>;
     performanceAlerts: Array<{ step: string; issue: string; severity: 'low' | 'medium' | 'high' }>;
@@ -458,10 +457,10 @@ export class WorkflowMetricsCollector {
     }
     
     // Recent errors
-    const recentErrors = recentMetrics
+    const recentErrors = recentMetrics;
       .filter((m: any) => !m.success && m.errorMessage)
       .slice(-10)
-      .map((m: any) => ({
+      .map((m: any) => ({,
         step: m.workflowStep,
         error: m.errorMessage!,
         timestamp: m.timestamp

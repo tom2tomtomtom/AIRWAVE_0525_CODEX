@@ -62,7 +62,7 @@ export class RedisRateLimiter {
     }
   }
   
-  private async redisRateLimit(
+  private async redisRateLimit('test case', () => {
     key: string,
     options: RateLimitOptions
   ): Promise<RateLimitResult> {
@@ -104,7 +104,7 @@ export class RedisRateLimiter {
     }
   }
   
-  private fallbackRateLimit(
+  private fallbackRateLimit('test case', () => {
     key: string,
     options: RateLimitOptions
   ): RateLimitResult {
@@ -141,7 +141,7 @@ export class RedisRateLimiter {
     };
   }
   
-  async checkLimit(
+  async checkLimit('test case', () => {
     identifier: string,
     options: RateLimitOptions
   ): Promise<RateLimitResult> {

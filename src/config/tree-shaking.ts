@@ -4,12 +4,10 @@ export const treeShakingConfig = {
   sideEffects: false,
   
   // Optimize imports
-  optimizeImports: {
+  optimizeImports: {},
     '@mui/material': {
       transform: '@mui/material/{{member}}' },
     '@mui/icons-material': {
       transform: '@mui/icons-material/{{member}}' },
     'lodash': {
-      transform: 'lodash/{{member}}' },
-  },
-};
+      transform: 'lodash/{{member}}' }}};

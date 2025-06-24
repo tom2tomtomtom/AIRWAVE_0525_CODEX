@@ -12,8 +12,7 @@ import {
   ListItemIcon,
   ListItemText,
   Collapse,
-  IconButton,
-} from '@mui/material';
+  IconButton} from '@mui/material';
 import {
   CheckCircle,
   AutoAwesome,
@@ -25,8 +24,7 @@ import {
   Image,
   VideoLibrary,
   GridView,
-  Send,
-} from '@mui/icons-material';
+  Send} from '@mui/icons-material';
 
 interface ProgressStep {
   id: string;
@@ -50,8 +48,7 @@ export const SmartProgressIndicator: React.FC<SmartProgressIndicatorProps> = ({
   currentStep,
   onStepComplete,
   showDetails = false,
-  variant = 'detailed',
-}) => {
+  variant = 'detailed'}) => {
   const [progress, setProgress] = useState(0);
   const [timeRemaining, setTimeRemaining] = useState(0);
   const [showSteps, setShowSteps] = useState(showDetails);
@@ -95,8 +92,7 @@ export const SmartProgressIndicator: React.FC<SmartProgressIndicatorProps> = ({
           }
           return {
             ...prev,
-            [currentStepObj.id]: Math.min(current + 100 / currentStepObj.estimatedTime, 100),
-          };
+            [currentStepObj.id]: Math.min(current + 100 / currentStepObj.estimatedTime, 100)};
         });
       }, 1000);
 
@@ -143,8 +139,7 @@ export const SmartProgressIndicator: React.FC<SmartProgressIndicatorProps> = ({
             height: 8,
             borderRadius: 1,
             '& .MuiLinearProgress-bar': {
-              borderRadius: 1 },
-          }}
+              borderRadius: 1 }}}
         />
         <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5, display: 'block' }}>
           {Math.round(progress)}% complete
@@ -179,8 +174,7 @@ export const SmartProgressIndicator: React.FC<SmartProgressIndicatorProps> = ({
               height: 12,
               borderRadius: 2,
               '& .MuiLinearProgress-bar': {
-                borderRadius: 2 },
-            }}
+                borderRadius: 2 }}}
           />
         </Box>
 

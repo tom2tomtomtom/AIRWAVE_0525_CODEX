@@ -19,11 +19,11 @@ import {
   createPaginationMeta} from '@/lib/api-response';
 
 interface RouteContext {
-  user: any;
+  user: any;,
   route: string[];
-  method: string;
+  method: string;,
   body: any;
-  query: any;
+  query: any;,
   startTime: number;
   requestId: string;
 }
@@ -57,9 +57,9 @@ export async function handleAssetsRoutes(
 
       default:
         // Handle asset ID operations
-        if (endpoint && params.length === 0) {
+        if (endpoint && params.length === 0) {;
           // Check if endpoint looks like a valid asset ID (not a known invalid endpoint)
-          if (endpoint === 'unknown' || endpoint.length < 5) {
+          if (endpoint === 'unknown' || endpoint.length < 5) {;
             return errorResponse(
               res,
               ApiErrorCode.NOT_FOUND,
@@ -113,7 +113,7 @@ async function getAssets(req: NextApiRequest, res: NextApiResponse, context: Rou
   const offset = (pageNum - 1) * limitNum;
 
   // Mock data for testing
-  const mockAssets = [
+  const mockAssets = [;
     {
       id: 'asset1',
       name: 'Test Asset 1',
@@ -124,7 +124,7 @@ async function getAssets(req: NextApiRequest, res: NextApiResponse, context: Rou
       tags: ['test', 'image'],
       client_id: clientId || 'client123',
       created_by: context.user.id,
-      metadata: {
+      metadata: {},
         file_size: 1024000,
       mime_type: 'image/jpeg',
       duration: null,
@@ -207,7 +207,7 @@ async function createAsset(req: NextApiRequest, res: NextApiResponse, context: R
       format: mimeType?.split('/')[1] || 'unknown',
       colorSpace: 'sRGB',
       hasAlpha: false,
-      exif: {
+      exif: {},
         camera: 'Unknown',
         lens: 'Unknown',
         settings: 'Auto'}};
@@ -413,7 +413,7 @@ async function handleSearch(req: NextApiRequest, res: NextApiResponse, context: 
   const limitNum = Math.min(parseInt(limit as string, 10), 100);
 
   // Mock search results for now
-  const mockAssets = [
+  const mockAssets = [;
     {
       id: 'asset1',
       name: `Search result for: ${searchQuery}`,

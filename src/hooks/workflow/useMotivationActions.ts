@@ -25,7 +25,7 @@ if (typeof window === 'undefined') {
 }
 
 interface UseMotivationActionsProps {
-  state: {
+  state: {},
     briefData: BriefData | null;
   };
   dispatch: (action: any) => void;

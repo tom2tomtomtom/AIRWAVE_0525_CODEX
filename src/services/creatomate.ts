@@ -49,7 +49,7 @@ export class CreatomateService {
 
     try {
       const response = await fetch(`${this.baseUrl}/templates/${id}`, {
-        headers: {
+        headers: {},
         'Authorization': `Bearer ${this.apiKey
       }`,
           'Content-Type': 'application/json'}});
@@ -69,7 +69,7 @@ export class CreatomateService {
   async getTemplates(limit: number = 20): Promise<CreatomateTemplate[]> {
     try {
       const response = await fetch(`${this.baseUrl}/templates?limit=${limit}`, {
-        headers: {
+        headers: {},
         'Authorization': `Bearer ${this.apiKey
       }`,
           'Content-Type': 'application/json'}});
@@ -97,7 +97,7 @@ export class CreatomateService {
     try {
       const response = await fetch(`${this.baseUrl}/renders`, {
         method: 'POST',
-        headers: {
+        headers: {},
         'Authorization': `Bearer ${this.apiKey
       }`,
           'Content-Type': 'application/json'},
@@ -128,7 +128,7 @@ export class CreatomateService {
   async getRenderStatus(renderId: string): Promise<CreatomateRenderResponse> {
     try {
       const response = await fetch(`${this.baseUrl}/renders/${renderId}`, {
-        headers: {
+        headers: {},
         'Authorization': `Bearer ${this.apiKey
       }`,
           'Content-Type': 'application/json'}});

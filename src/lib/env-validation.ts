@@ -165,8 +165,6 @@ const validators = {
   jwt: (value: string): boolean => {
     const jwtPattern = /^[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+$/;
     return jwtPattern.test(value) && value.length > 50;
-  ,
-
   }
 };
 
@@ -262,8 +260,7 @@ export class EnvironmentConfig {
       loggers.general.error('Environment validation failed', undefined, { errors });
       throw new AppError(errorMessage, ErrorCode.SYSTEM_CONFIGURATION_ERROR, 500, {
         errors,
-        warnings,
-      });
+        warnings});
     }
 
     this.validated = true;
@@ -399,8 +396,7 @@ export const generateEnvDocumentation = (): string => {
     Storage: ['AWS_ACCESS_KEY_ID', 'AWS_SECRET_ACCESS_KEY', 'AWS_REGION', 'S3_BUCKET_NAME'],
     Monitoring: ['LOG_LEVEL', 'SENTRY_DSN'],
     Infrastructure: ['REDIS_URL'],
-    'Feature Flags': ['ENABLE_AI_CONTENT_GENERATION', 'ENABLE_FILE_UPLOADS'],
-  };
+    'Feature Flags': ['ENABLE_AI_CONTENT_GENERATION', 'ENABLE_FILE_UPLOADS']};
 
   for (const [category, keys] of Object.entries(categories)) {
     doc += `## ${category}\n\n`;
@@ -427,5 +423,4 @@ export const generateEnvDocumentation = (): string => {
 export const __testing__ = {
   ENV_DEFINITIONS,
   validators,
-  convertValue,
-};
+  convertValue};

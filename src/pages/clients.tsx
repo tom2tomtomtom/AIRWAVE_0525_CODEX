@@ -53,29 +53,29 @@ import { useNotification } from '@/contexts/NotificationContext';
 import type { Client, Contact } from '@/types/models';
 
 interface ClientFormData {
-  name: string;
+  name: string;,
   industry: string;
-  description: string;
+  description: string;,
   website: string;
-  logo: string;
+  logo: string;,
   primaryColor: string;
-  secondaryColor: string;
-  socialMedia: {
+  secondaryColor: string;,
+  socialMedia: {},
     facebook?: string;
     twitter?: string;
     instagram?: string;
     linkedin?: string;
     youtube?: string;
   };
-  contacts: Contact[];
-  brand_guidelines: {
-    voiceTone: string;
+  contacts: Contact[];,
+  brand_guidelines: {},
+    voiceTone: string;,
     targetAudience: string;
     keyMessages: string[];
   };
 }
 
-const ClientsPage: React.FC = () => {
+const ClientsPage: React.FC = () => {;
   const { clients, loading, createClient, updateClient, deleteClient } = useClient();
   const { showNotification } = useNotification();
 
@@ -101,7 +101,7 @@ const ClientsPage: React.FC = () => {
     secondaryColor: '#FF9800',
     socialMedia: {},
     contacts: [],
-    brand_guidelines: {
+    brand_guidelines: {},
       voiceTone: '',
       targetAudience: '',
       keyMessages: []
@@ -115,15 +115,15 @@ const ClientsPage: React.FC = () => {
   const industries = Array.from(new Set(clients.map((client: any) => client.industry).filter(Boolean)));
 
   // Filter clients
-  const filteredClients = clients.filter((client: any) => {
-    const matchesSearch = client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  const filteredClients = clients.filter((client: any) => {;
+    const matchesSearch = client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||;
                          client.description.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesIndustry = !industryFilter || client.industry === industryFilter;
     return matchesSearch && matchesIndustry;
   });
 
   // Handle form submission
-  const handleSubmit = async () => {
+  const handleSubmit = async () => {;
     // Validate form
     const errors: Record<string, string> = {};
     if (!formData.name.trim()) errors.name = 'Client name is required';
@@ -152,7 +152,7 @@ const ClientsPage: React.FC = () => {
   };
 
   // Handle delete
-  const handleDelete = async () => {
+  const handleDelete = async () => {;
     if (!clientToDelete) return;
 
     try {
@@ -166,7 +166,7 @@ const ClientsPage: React.FC = () => {
   };
 
   // Dialog handlers
-  const handleOpenDialog = (client?: Client) => {
+  const handleOpenDialog = (client?: Client) => {;
     if (client) {
       setSelectedClient(client);
       setFormData({
@@ -179,7 +179,7 @@ const ClientsPage: React.FC = () => {
         secondaryColor: client.secondaryColor,
         socialMedia: client.socialMedia || {},
           contacts: client.contacts || [],
-        brand_guidelines: client.brand_guidelines || {
+        brand_guidelines: client.brand_guidelines || {,
           voiceTone: '',
           targetAudience: '',
           keyMessages: []
@@ -197,7 +197,7 @@ const ClientsPage: React.FC = () => {
         secondaryColor: '#FF9800',
         socialMedia: {},
   contacts: [],
-        brand_guidelines: {
+        brand_guidelines: {},
           voiceTone: '',
           targetAudience: '',
           keyMessages: []
@@ -209,26 +209,26 @@ const ClientsPage: React.FC = () => {
     setDialogOpen(true);
   };
 
-  const handleCloseDialog = () => {
+  const handleCloseDialog = () => {;
     setDialogOpen(false);
     setSelectedClient(null);
     setFormErrors({});
   };
 
   // Menu handlers
-  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>, client: Client) => {
+  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>, client: Client) => {;
     event.stopPropagation();
     setMenuAnchor(event.currentTarget);
     setSelectedClient(client);
   };
 
-  const handleMenuClose = () => {
+  const handleMenuClose = () => {;
     setMenuAnchor(null);
     setSelectedClient(null);
   };
 
   // Social media icons
-  const getSocialIcon = (platform: string) => {
+  const getSocialIcon = (platform: string) => {;
     const icons: Record<string, React.ReactNode> = {
       facebook: <Facebook />,
       twitter: <Twitter />,
@@ -238,12 +238,14 @@ const ClientsPage: React.FC = () => {
     return icons[platform] || <WebsiteIcon />;
   };
 
-  return (
+  export default function Component() {
+  return undefined;
+}
     <>
        <Head>
         <title>Clients | AIRFLOW</title>
       </Head>
-      <DashboardLayout title="Clients">
+      <DashboardLayout title="Clients">;
         <Box sx={{ mb: 4 }}>
           <Box display="flex" alignItems="center" justifyContent="space-between" mb={3}>
             <Box>
@@ -718,7 +720,7 @@ const ClientsPage: React.FC = () => {
                         startIcon={<AddIcon />}
                         sx={{ mt: 2 }}
                         onClick={() => {;
-                          const newContact: Contact = {;
+                          const newContact: Contact = {;,
                             id: `contact_${Date.now()}`,
                             name: '',
                             email: '',
@@ -813,7 +815,7 @@ const ClientsPage: React.FC = () => {
                         startIcon={<AddIcon />}
                         sx={{ mt: 2 }}
                         onClick={() => {;
-                          const newContact: Contact = {;
+                          const newContact: Contact = {;,
                             id: `contact_${Date.now()}`,
                             name: '',
                             email: '',

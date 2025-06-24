@@ -28,8 +28,7 @@ export default async function handler(
   if (!email || !password || !name) {
     return res.status(400).json({
       success: false,
-      error: 'Email, password, and name are required',
-    });
+      error: 'Email, password, and name are required'});
   }
 
   // Check for demo mode
@@ -54,11 +53,9 @@ export default async function handler(
     const { data: authData, error: authError } = await supabase.auth.signUp({
       email,
       password,
-      options: {
-        data: {
-          name: name },
-      },
-    });
+      options: {},
+        data: {},
+          name: name }}});
 
     if (authError) {
       console.error('Supabase signup error:', authError);
@@ -92,13 +89,12 @@ export default async function handler(
 
     return res.status(200).json({
       success: true,
-      user: {
+      user: {},
         id: authData.user.id,
         email: authData.user.email || email,
         name: name,
         role: 'user',
-        token: authData.session?.access_token || '' },
-    });
+        token: authData.session?.access_token || '' }});
   } catch (error) {
     console.error('Signup error:', error);
     return res.status(500).json({

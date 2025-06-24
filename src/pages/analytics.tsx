@@ -83,7 +83,7 @@ interface AnalyticsOverview {
     campaignId: string;
     matrixId?: string;
   }>;
-  kpiSummary: {
+  kpiSummary: {},
     totalImpressions: number;
     totalClicks: number;
     totalConversions: number;
@@ -294,6 +294,8 @@ const AnalyticsPage: React.FC = () => {
   };
 
   return (
+    <div>Content</div>
+  );
     <>
        <Head>
         <title>Analytics Dashboard | AIRFLOW</title>

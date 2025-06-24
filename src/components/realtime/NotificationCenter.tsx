@@ -20,8 +20,7 @@ import {
   Tab,
   Tooltip,
   Switch,
-  FormControlLabel,
-} from '@mui/material';
+  FormControlLabel} from '@mui/material';
 import {
   Notifications as NotificationsIcon,
   Close as CloseIcon,
@@ -33,8 +32,7 @@ import {
   MarkEmailRead as MarkReadIcon,
   Settings as SettingsIcon,
   Clear as ClearAllIcon,
-  Refresh as RefreshIcon,
-} from '@mui/icons-material';
+  Refresh as RefreshIcon} from '@mui/icons-material';
 import { useRealtime } from '@/hooks/useRealtime';
 import { useNotification } from '@/contexts/NotificationContext';
 import { formatDistanceToNow } from 'date-fns';
@@ -69,8 +67,7 @@ const NotificationCenter: React.FC = () => {
     error,
     markNotificationAsRead,
     dismissNotification,
-    refresh,
-  } = useRealtime({
+    refresh} = useRealtime({
     enableNotifications: true,
     pollInterval: 5000 });
 

@@ -9,8 +9,7 @@ interface CampaignBasicInfoProps {
 const CampaignBasicInfo: React.FC<CampaignBasicInfoProps> = ({
   campaignData,
   setCampaignData,
-  onNext,
-}) => {
+  onNext}) => {
   const handleChange = (field: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
     setCampaignData({ ...campaignData, [field]: event.target.value });
   };

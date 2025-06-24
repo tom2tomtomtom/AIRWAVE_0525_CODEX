@@ -33,8 +33,7 @@ export class BriefAnalysisCache {
       analysis,
       {
         ttl: CACHE_TTL.BRIEF_ANALYSIS,
-        tags,
-      },
+        tags},
       AI_NAMESPACES.BRIEF_ANALYSIS
     );
 
@@ -73,8 +72,7 @@ export class CopyGenerationCache {
       generatedCopy,
       {
         ttl: CACHE_TTL.COPY_GENERATION,
-        tags,
-      },
+        tags},
       AI_NAMESPACES.COPY_GENERATION
     );
 
@@ -119,8 +117,7 @@ export class ImageGenerationCache {
       generatedImages,
       {
         ttl: CACHE_TTL.IMAGE_GENERATION,
-        tags,
-      },
+        tags},
       AI_NAMESPACES.IMAGE_GENERATION
     );
 
@@ -160,8 +157,7 @@ export class VideoGenerationCache {
       generatedVideos,
       {
         ttl: CACHE_TTL.VIDEO_GENERATION,
-        tags,
-      },
+        tags},
       AI_NAMESPACES.VIDEO_GENERATION
     );
 
@@ -193,8 +189,7 @@ export class MotivationsCache {
       motivations,
       {
         ttl: CACHE_TTL.BRIEF_ANALYSIS, // Same TTL as brief analysis
-        tags,
-      },
+        tags},
       AI_NAMESPACES.MOTIVATIONS
     );
 
@@ -233,8 +228,7 @@ export class ContentOptimizationCache {
       optimization,
       {
         ttl: CACHE_TTL.COPY_GENERATION, // Same TTL as copy generation
-        tags,
-      },
+        tags},
       AI_NAMESPACES.CONTENT_OPTIMIZATION
     );
 
@@ -301,5 +295,4 @@ export default {
   VideoGenerationCache,
   MotivationsCache,
   ContentOptimizationCache,
-  AICacheUtils,
-};
+  AICacheUtils};

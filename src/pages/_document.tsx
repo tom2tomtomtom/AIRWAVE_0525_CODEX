@@ -5,8 +5,7 @@ import Document, {
   Main,
   NextScript,
   DocumentContext,
-  DocumentInitialProps,
-} from 'next/document';
+  DocumentInitialProps} from 'next/document';
 import createEmotionServer from '@emotion/server/create-instance';
 import { AppType } from 'next/app';
 import { lightTheme } from '@/styles/theme';
@@ -56,8 +55,7 @@ export default class MyDocument extends Document<MyDocumentProps> {
                   document.documentElement.setAttribute('data-mui-color-scheme', theme);
                   document.documentElement.style.colorScheme = theme;
                 })();
-              `,
-            }}
+              `}}
           />
           <Main />
           <NextScript />
@@ -82,8 +80,7 @@ MyDocument.getInitialProps = async (ctx: DocumentContext): Promise<MyDocumentPro
       enhanceApp: (App: React.ComponentType<React.ComponentProps<AppType> & MyAppProps>) =>
         function EnhanceApp(props: any) {
           return <App emotionCache={cache} {...props} />;
-        },
-    });
+        }});
 
   const initialProps = await Document.getInitialProps(ctx);
   // This is important. It prevents Emotion to render invalid HTML.
@@ -100,6 +97,5 @@ MyDocument.getInitialProps = async (ctx: DocumentContext): Promise<MyDocumentPro
 
   return {
     ...initialProps,
-    emotionStyleTags,
-  };
+    emotionStyleTags};
 };

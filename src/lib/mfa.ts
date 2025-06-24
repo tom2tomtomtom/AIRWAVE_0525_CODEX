@@ -78,8 +78,7 @@ export async function setupMFA(userId: string, userEmail: string): Promise<MFASe
   return {
     secret,
     qrCodeUrl,
-    backupCodes,
-  };
+    backupCodes};
 }
 
 /**

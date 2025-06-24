@@ -7,15 +7,13 @@ import { getErrorMessage } from '@/utils/errorUtils';
 import {
   getSupabaseBrowserClient,
   createServerSupabaseClient,
-  getAdminSupabaseClient,
-} from '@/lib/supabase';
+  getAdminSupabaseClient} from '@/lib/supabase';
 import { handleSupabaseError, getErrorMessage, isAuthError } from '@/lib/supabase/errors';
 import {
   withRetry,
   queryWithCache,
   paginatedQuery,
-  upsertWithConflict,
-} from '@/lib/supabase/helpers';
+  upsertWithConflict} from '@/lib/supabase/helpers';
 
 // ============================================
 // Client Component Example
@@ -79,8 +77,7 @@ export async function APIRouteExample(userId: string) {
       await handleSupabaseError(profileError, {
         operation: 'fetchProfile',
         table: 'profiles',
-        userId,
-      });
+        userId});
     }
 
     // Batch operation with conflict handling
@@ -147,8 +144,7 @@ export async function AuthenticationExample(email: string, password: string) {
     // Sign in
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
-      password,
-    });
+      password});
 
     if (error) {
       if (isAuthError(error)) {
@@ -211,12 +207,10 @@ export async function FileUploadExample(file: File, bucket: string) {
   } catch (error: any) {
     await handleSupabaseError(error, {
       operation: 'fileUpload',
-      metadata: {
+      metadata: {},
         fileName: file.name,
         fileSize: file.size,
-        bucket,
-      },
-    });
+        bucket}});
   }
 }
 

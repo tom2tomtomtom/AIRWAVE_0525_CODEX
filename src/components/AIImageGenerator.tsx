@@ -36,12 +36,12 @@ interface GeneratedImageResponse {
   success: boolean;
   message?: string;
   asset: Asset;
-  generation_details: {
+  generation_details: {},
     original_prompt: string;
     enhanced_prompt?: string;
     revised_prompt?: string;
     model: string;
-    settings: {
+    settings: {},
       size: string;
       quality: string;
       style: string;
@@ -120,18 +120,18 @@ export const AIImageGenerator: React.FC<AIImageGeneratorProps> = ({
         const demoImage = demoAssets[Math.floor(Math.random() * 3)]; // Random AI generated asset
         const response: GeneratedImageResponse = {
           success: true,
-          asset: {
+          asset: {},
             ...demoImage,
             name: `AI Generated - ${prompt.substring(0, 50)}...`,
             ai_prompt: prompt,
             created_at: new Date().toISOString(),
             updated_at: new Date().toISOString()
           } as unknown as Asset,
-          generation_details: {
+          generation_details: {},
             original_prompt: prompt,
             enhanced_prompt: isDemoMode ? `[DEMO MODE] Enhanced: ${prompt}` : undefined,
             model: 'dall-e-3',
-            settings: {
+            settings: {},
               size: options.size,
               quality: options.quality,
               style: options.style
@@ -219,6 +219,8 @@ export const AIImageGenerator: React.FC<AIImageGeneratorProps> = ({
   };
 
   return (
+    <div>Content</div>
+  );
     <Card>
       <CardContent>
         <Box display="flex" alignItems="center" mb={3}>

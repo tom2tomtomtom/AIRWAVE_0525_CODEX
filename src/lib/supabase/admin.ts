@@ -34,18 +34,15 @@ export function createAdminSupabaseClient(): SupabaseClient<Database> {
       config.url,
       config.serviceRoleKey,
       {
-        auth: {
+        auth: {},
           autoRefreshToken: false,
           persistSession: false },
-        global: {
-          headers: {
+        global: {},
+          headers: {},
             'x-application-name': 'airwave-admin',
-            'x-client-info': 'airwave-server',
-          },
-        },
-        db: {
-          schema: 'public' },
-      }
+            'x-client-info': 'airwave-server'}},
+        db: {},
+          schema: 'public' }}
     );
 
     loggers.supabase.info('Admin Supabase client initialized');

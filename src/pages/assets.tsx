@@ -12,8 +12,7 @@ import {
   SpeedDialAction,
   SpeedDialIcon,
   Card,
-  CardContent,
-} from '@mui/material';
+  CardContent} from '@mui/material';
 import { Upload, AutoAwesome, Add as AddIcon } from '@mui/icons-material';
 import DashboardLayout from '@/components/DashboardLayout';
 import AssetUploadModal from '@/components/AssetUploadModal';

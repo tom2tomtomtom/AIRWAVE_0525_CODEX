@@ -39,7 +39,7 @@ export interface RenderOutput {
     height: number;
   };
   quality: number; // 0-100
-  metadata: {
+  metadata: {},
         colorSpace?: 'sRGB' | 'CMYK' | 'RGB';
     compression?: string;
     layers?: string[];
@@ -172,7 +172,7 @@ export class CampaignRenderer {
         description: `Rendered campaign from ${populatedTemplate.name}`,
         renderFormat: format,
         outputFiles: [],
-        metadata: {
+        metadata: {},
         renderEngine: this.selectRenderEngine(format),
           totalElements: populatedTemplate.populatedComponents.length,
           renderLayers: this.calculateRenderLayers(populatedTemplate),
@@ -633,7 +633,7 @@ export class CampaignRenderer {
         fileSize: converted.length,
         dimensions: campaign.dimensions,
         quality: campaign.metadata.optimization.quality,
-        metadata: {
+        metadata: {},
         colorSpace: 'sRGB',
           compression: format === 'jpg' ? 'jpeg' : 'lossless'
         

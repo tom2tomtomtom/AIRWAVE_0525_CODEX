@@ -275,8 +275,7 @@ export class ProductionPerformanceTracker {
       duration: value,
       timestamp: Date.now(),
       userId,
-      metadata,
-    };
+      metadata};
 
     // eslint-disable-next-line no-console
     console.log(`[Performance] ${operationName}: ${value}ms`);

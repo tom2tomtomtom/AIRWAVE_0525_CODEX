@@ -9,15 +9,13 @@ import {
   Stack,
   Paper,
   LinearProgress,
-  Grid,
-} from '@mui/material';
+  Grid} from '@mui/material';
 import {
   TrendingUp as TrendingUpIcon,
   Speed as SpeedIcon,
   People as PeopleIcon,
   Notifications as NotificationsIcon,
-  Timeline as TimelineIcon,
-} from '@mui/icons-material';
+  Timeline as TimelineIcon} from '@mui/icons-material';
 import ActivityFeed from './ActivityFeed';
 import LiveCollaboration from './LiveCollaboration';
 import { useRealtime } from '@/hooks/useRealtime';
@@ -216,8 +214,7 @@ const RealTimeDashboard: React.FC = () => {
                               : notification.priority === 'high'
                                 ? 'warning.main'
                                 : 'info.main'
-                          }`,
-                        }}
+                          }`}}
                       >
                         <Typography variant="body2" fontWeight="bold">
                           {notification.title}

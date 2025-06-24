@@ -124,7 +124,7 @@ export interface CampaignsListResponse extends BaseApiResponse {
 // Analytics API Responses
 export interface AnalyticsResponse extends BaseApiResponse {
   data?: {
-    metrics: Array<{,
+    metrics: Array<{
     id: string;,
     label: string;,
     value: string | number;,
