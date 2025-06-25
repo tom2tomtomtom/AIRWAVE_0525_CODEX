@@ -144,10 +144,13 @@ describe('Validation Utils', () => {
 
     it('should recursively sanitize nested objects', () => {
       const nestedObject = {
-        user: Record<string, unknown>$1
-  name: 'test',
-          profile: Record<string, unknown>$1
-  age: 25}}};
+        user: {
+          name: 'test',
+          profile: {
+            age: 25
+          }
+        }
+      };
       
       // Add dangerous properties to nested objects
       (nestedObject.user as Record<string, unknown>)['__proto__'] = { isAdmin: true };
@@ -463,11 +466,15 @@ describe('Validation Utils', () => {
 
     it('should handle complex nested sanitization', () => {
       const complexObject = {
-        level1: Record<string, unknown>$1
-  level2: Record<string, unknown>$1
-  level3: Record<string, unknown>$1
-  safe: 'value'}}},
-        normalField: 'normal'};
+        level1: {
+          level2: {
+            level3: {
+              safe: 'value'
+            }
+          }
+        },
+        normalField: 'normal'
+      };
       
       // Add dangerous properties to test sanitization
       (complexObject.level1.level2.level3 as Record<string, unknown>)['__proto__'] = { dangerous: true };
@@ -488,8 +495,10 @@ describe('Validation Utils', () => {
     it('should handle arrays in object sanitization', () => {
       const objectWithArrays = {
         tags: ['tag1', 'tag2'],
-        nested: Record<string, unknown>$1
-  items: [{ name: 'item1' }, { name: 'item2' }]}};
+        nested: {
+          items: [{ name: 'item1' }, { name: 'item2' }]
+        }
+      };
       
       // Add dangerous property to test sanitization
       (objectWithArrays.nested as Record<string, unknown>)['__proto__'] = { evil: true };
