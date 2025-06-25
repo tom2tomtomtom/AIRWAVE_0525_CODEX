@@ -51,6 +51,11 @@ export const SupabaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({ 
 
   // Get the unified Supabase client
   const supabaseClient = getSupabaseClient();
+  
+  // Ensure we have a valid client
+  if (!supabaseClient) {
+    throw new Error('Failed to initialize Supabase client');
+  }
 
   useEffect(() => {
     // Check active session

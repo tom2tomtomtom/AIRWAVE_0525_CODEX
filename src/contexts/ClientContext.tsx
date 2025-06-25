@@ -198,7 +198,8 @@ export const ClientProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         brand_guidelines: clientData.brand_guidelines || {
           voiceTone: '',
           targetAudience: '',
-          keyMessages: [] },
+          keyMessages: []
+        },
         tenantId: 'tenant-1',
         isActive: true,
         dateCreated: new Date().toISOString(),

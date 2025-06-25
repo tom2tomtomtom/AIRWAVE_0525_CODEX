@@ -517,9 +517,9 @@ describe('Validation Utils', () => {
     it('should validate complex file scenarios', () => {
       const edgeCaseFiles = [
         // File with no extension
-        { type: 'image/jpeg', size: 1024, name: 'noextension'  }
+        { type: 'image/jpeg', size: 1024, name: 'noextension'  },
         // File with multiple dots
-        { type: 'image/png', size: 1024, name: 'file.backup.png'  }
+        { type: 'image/png', size: 1024, name: 'file.backup.png'  },
         // File with uppercase extension
         { type: 'image/jpeg', size: 1024, name: 'IMAGE.JPG'  }
       ];

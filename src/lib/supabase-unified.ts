@@ -48,8 +48,8 @@ export const getSupabaseClient = () => {
   return supabaseInstance;
 };
 
-// Default export for convenience
-export const supabase = getSupabaseClient();
+// Default export for convenience - use function to avoid SSR issues
+export const supabase = () => getSupabaseClient();
 
 // Cookie helpers for browser environment
 function getCookie(name: string): string | undefined {
