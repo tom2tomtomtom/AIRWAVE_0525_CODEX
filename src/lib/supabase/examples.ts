@@ -1,4 +1,4 @@
-import { getErrorMessage } from '@/utils/errorUtils';
+// import { getErrorMessage } from '@/utils/errorUtils'; // Using getErrorMessage from supabase/errors instead
 /**
  * Example usage patterns for the new Supabase integration
  * These examples demonstrate best practices for different scenarios
