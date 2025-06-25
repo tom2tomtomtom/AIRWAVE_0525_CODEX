@@ -6,9 +6,9 @@
 
 import { NextApiRequest, NextApiResponse } from 'next';
 import { withMetrics } from './withMetrics';
-import { metrics } from '@/lib/monitoring/metrics-collector';
-import { alerting } from '@/lib/monitoring/alerting-system';
-import { performanceDashboard } from '@/lib/monitoring/performance-dashboard';
+import { metrics } from '../lib/monitoring/metrics-collector';
+import { alerting } from '../lib/monitoring/alerting-system';
+import { performanceDashboard } from '../lib/monitoring/performance-dashboard';
 
 // Monitoring configuration
 interface MonitoringConfig {
@@ -204,8 +204,8 @@ function trackError(
   const tags = {
     endpoint: sanitizeEndpoint(endpoint),
     method,
-    error_type: error.constructor.name,
-    error_code: error.code || 'unknown',
+    error_type: error instanceof Error ? error.constructor.name : 'unknown',
+    error_code: (error as any)?.code || 'unknown',
     ...customTags,
   };
 
@@ -214,10 +214,13 @@ function trackError(
   alerting.updateMetric('api.errors.total', 1);
 
   // Track specific error types
-  metrics.counter('api.errors.by_type', 1, { ...tags, type: error.constructor.name });
+  metrics.counter('api.errors.by_type', 1, {
+    ...tags,
+    type: error instanceof Error ? error.constructor.name : 'unknown',
+  });
 
   // Track error patterns
-  if (error.message) {
+  if (error instanceof Error && error.message) {
     const errorPattern = categorizeError(error.message);
     metrics.counter('api.errors.by_pattern', 1, { ...tags, pattern: errorPattern });
   }
@@ -393,18 +396,18 @@ function categorizeError(errorMessage: string): string {
  */
 function determineErrorSeverity(error: unknown): string {
   // Critical errors that require immediate attention
-  if (error.name === 'DatabaseConnectionError') return 'critical';
-  if (error.name === 'SecurityError') return 'critical';
-  if (error.message?.includes('out of memory')) return 'critical';
+  if (error instanceof Error && error.name === 'DatabaseConnectionError') return 'critical';
+  if (error instanceof Error && error.name === 'SecurityError') return 'critical';
+  if (error instanceof Error && error.message?.includes('out of memory')) return 'critical';
 
   // High priority errors
-  if (error.name === 'AuthenticationError') return 'high';
-  if (error.name === 'PaymentError') return 'high';
-  if (error.status >= 500) return 'high';
+  if (error instanceof Error && error.name === 'AuthenticationError') return 'high';
+  if (error instanceof Error && error.name === 'PaymentError') return 'high';
+  if ((error as any)?.status >= 500) return 'high';
 
   // Medium priority errors
-  if (error.name === 'ValidationError') return 'medium';
-  if (error.status >= 400 && error.status < 500) return 'medium';
+  if (error instanceof Error && error.name === 'ValidationError') return 'medium';
+  if ((error as any)?.status >= 400 && (error as any)?.status < 500) return 'medium';
 
   // Low priority errors
   return 'low';

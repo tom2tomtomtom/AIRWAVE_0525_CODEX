@@ -6,8 +6,8 @@
 
 import { NextApiRequest, NextApiResponse } from 'next';
 import { performance } from 'perf_hooks';
-import { metrics } from '@/lib/monitoring/metrics-collector';
-import { getClientIp } from '@/lib/utils/ip';
+import { metrics } from '../lib/monitoring/metrics-collector';
+import { getClientIp } from '../lib/utils/ip';
 
 // Middleware configuration
 interface MetricsConfig {
@@ -245,21 +245,23 @@ function trackError(
   const tags = {
     method: context.method,
     endpoint: context.endpoint,
-    error_type: error.constructor.name,
-    error_message: error.message?.substring(0, 100) || 'unknown',
+    error_type: error instanceof Error ? error.constructor.name : 'unknown',
+    error_message:
+      error instanceof Error ? error.message?.substring(0, 100) || 'unknown' : 'unknown',
     ...customTags,
   };
 
   metrics.counter('api.errors.total', 1, tags);
 
   // Track specific error types
-  if (error.name === 'ValidationError') {
+  const errorName = error instanceof Error ? error.name : 'unknown';
+  if (errorName === 'ValidationError') {
     metrics.counter('api.errors.validation', 1, tags);
-  } else if (error.name === 'AuthenticationError') {
+  } else if (errorName === 'AuthenticationError') {
     metrics.counter('api.errors.authentication', 1, tags);
-  } else if (error.name === 'DatabaseError') {
+  } else if (errorName === 'DatabaseError') {
     metrics.counter('api.errors.database', 1, tags);
-  } else if (error.name === 'ExternalServiceError') {
+  } else if (errorName === 'ExternalServiceError') {
     metrics.counter('api.errors.external_service', 1, tags);
   } else {
     metrics.counter('api.errors.unknown', 1, tags);
