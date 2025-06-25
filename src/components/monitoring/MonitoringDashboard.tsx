@@ -42,7 +42,8 @@ import {
   TrendingUp as TrendingUpIcon,
   TrendingDown as TrendingDownIcon,
   TrendingFlat as TrendingFlatIcon} from '@mui/icons-material';
-import { Line, Bar, Doughnut } from 'react-chartjs-2';
+// import { Line, Bar, Doughnut } from 'react-chartjs-2';
+/*
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -67,6 +68,7 @@ ChartJS.register(
   Legend,
   ArcElement
 );
+*/
 
 // Types
 interface DashboardMetric {
@@ -303,11 +305,11 @@ const MonitoringDashboard: React.FC = () => {
 
     switch (chart.type) {
       case 'line':
-        return <Line data={chartData} options={options} />;
+        return <div>Chart placeholder (react-chartjs-2 not installed)</div>;
       case 'bar':
-        return <Bar data={chartData} options={options} />;
+        return <div>Chart placeholder (react-chartjs-2 not installed)</div>;
       default:
-        return <Line data={chartData} options={options} />;
+        return <div>Chart placeholder (react-chartjs-2 not installed)</div>;
     }
   };
 
