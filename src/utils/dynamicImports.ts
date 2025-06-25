@@ -36,8 +36,9 @@ export function createLazyComponent<T = Record<string, never>>(
 }
 
 /**
- * Lazy load heavy dashboard components
+ * Lazy load heavy dashboard components - temporarily disabled (components don't exist)
  */
+/*
 export const LazyDashboard = createLazyComponent(() => import('@/components/Dashboard/Dashboard'), {
   ssr: false,
 });
@@ -56,9 +57,6 @@ export const LazyWorkflowCanvas = createLazyComponent(
   { ssr: false }
 );
 
-/**
- * Lazy load heavy form components
- */
 export const LazyBriefUpload = createLazyComponent(() => import('@/components/Forms/BriefUpload'), {
   ssr: false,
 });
@@ -67,10 +65,20 @@ export const LazyAssetManager = createLazyComponent(
   () => import('@/components/Assets/AssetManager'),
   { ssr: false }
 );
+*/
+
+// Placeholder exports to maintain module structure
+export const LazyDashboard = null;
+export const LazyVideoEditor = null;
+export const LazyAnalytics = null;
+export const LazyWorkflowCanvas = null;
+export const LazyBriefUpload = null;
+export const LazyAssetManager = null;
 
 /**
- * Lazy load admin components
+ * Lazy load admin components - temporarily disabled (components don't exist)
  */
+/*
 export const LazyAdminPanel = createLazyComponent(() => import('@/components/Admin/AdminPanel'), {
   ssr: false,
 });
@@ -79,6 +87,11 @@ export const LazyUserManagement = createLazyComponent(
   () => import('@/components/Admin/UserManagement'),
   { ssr: false }
 );
+*/
+
+// Placeholder exports to maintain module structure
+export const LazyAdminPanel = null;
+export const LazyUserManagement = null;
 
 /**
  * Code splitting utility for feature modules
@@ -126,8 +139,9 @@ export class FeatureLazyLoader {
 }
 
 /**
- * Lazy load AI processing modules
+ * Lazy load AI processing modules - temporarily disabled (modules don't exist)
  */
+/*
 export const loadAIProcessor = () =>
   FeatureLazyLoader.loadFeature('ai-processor', () => import('@/lib/ai/processor'));
 
@@ -136,10 +150,18 @@ export const loadVideoGenerator = () =>
 
 export const loadAnalyticsEngine = () =>
   FeatureLazyLoader.loadFeature('analytics-engine', () => import('@/lib/analytics/engine'));
+*/
+
+// Placeholder functions to maintain module structure  
+export const loadAIProcessor = () => Promise.resolve(null);
+export const loadVideoGenerator = () => Promise.resolve(null);
+export const loadAnalyticsEngine = () => Promise.resolve(null);
 
 /**
  * Route-based code splitting utilities
  */
+// Route-based components temporarily disabled (pages don't exist)
+/*
 export const routeBasedComponents = {
   // Dashboard routes
   dashboard: () => import('@/pages/dashboard'),
@@ -158,6 +180,21 @@ export const routeBasedComponents = {
   // User management
   profile: () => import('@/pages/profile'),
   team: () => import('@/pages/team'),
+};
+*/
+
+// Placeholder object to maintain module structure
+export const routeBasedComponents = {
+  dashboard: () => Promise.resolve(null),
+  campaigns: () => Promise.resolve(null),
+  analytics: () => Promise.resolve(null),
+  briefUpload: () => Promise.resolve(null),
+  videoCreator: () => Promise.resolve(null),
+  assetLibrary: () => Promise.resolve(null),
+  admin: () => Promise.resolve(null),
+  settings: () => Promise.resolve(null),
+  profile: () => Promise.resolve(null),
+  team: () => Promise.resolve(null),
 };
 
 /**

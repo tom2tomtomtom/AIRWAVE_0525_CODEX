@@ -1,7 +1,8 @@
 // Dynamic imports for code splitting
 import dynamic from 'next/dynamic';
 
-// Lazy load heavy components
+// Lazy load heavy components - temporarily disabled (components don't exist)
+/*
 const LazyDashboard = dynamic(() => import('./Dashboard'), {
   loading: () => null,
   ssr: false
@@ -21,5 +22,10 @@ const ConditionalComponent = dynamic(
   () => import('./ConditionalComponent'),
   { ssr: false }
 );
+*/
 
-export { LazyDashboard, LazyChart, LazyClientPage, ConditionalComponent };
+// Placeholder exports to maintain module structure
+export const LazyDashboard = null;
+export const LazyChart = null; 
+export const LazyClientPage = null;
+export const ConditionalComponent = null;

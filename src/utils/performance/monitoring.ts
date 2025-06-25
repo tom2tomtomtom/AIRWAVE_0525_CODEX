@@ -1,8 +1,13 @@
 // Performance monitoring setup
-import { getCLS, getFID, getFCP, getLCP, getTTFB } from 'web-vitals';
+// import { getCLS, getFID, getFCP, getLCP, getTTFB } from 'web-vitals'; // Package not installed
 
 // Track Core Web Vitals
 export const setupPerformanceMonitoring = () => {
+  // Placeholder function - web-vitals package not installed
+  if (process.env.NODE_ENV === 'development') {
+    console.log('Performance monitoring disabled - web-vitals package not installed');
+  }
+  /*
   getCLS((metric) => {
     // Log CLS metric
     if (process.env.NODE_ENV === 'development') {
@@ -33,6 +38,7 @@ export const setupPerformanceMonitoring = () => {
       console.log('TTFB:', metric);
     }
   });
+  */
 };
 
 // Performance observer for custom metrics
