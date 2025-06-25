@@ -1,4 +1,3 @@
-import { NextApiRequest, NextApiResponse } from 'next';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
 

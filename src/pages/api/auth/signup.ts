@@ -1,6 +1,5 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-import { getErrorMessage } from '@/utils/errorUtils';
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { getErrorMessage } from '@/utils/errorUtils';
 import { supabase } from '@/lib/supabase';
 
 interface SignupRequest {
