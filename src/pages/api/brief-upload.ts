@@ -1,6 +1,5 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-import { getErrorMessage } from '@/utils/errorUtils';
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { getErrorMessage } from '@/utils/errorUtils';
 import formidable, { File } from 'formidable';
 import { supabase } from '@/lib/supabase';
 import { env } from '@/lib/env';

@@ -1,6 +1,5 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-import { getErrorMessage } from '@/utils/errorUtils';
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { getErrorMessage } from '@/utils/errorUtils';
 import { supabase } from '@/lib/supabase';
 import { hasCreatomate } from '@/lib/env';
 import { creatomateService } from '@/services/creatomate';

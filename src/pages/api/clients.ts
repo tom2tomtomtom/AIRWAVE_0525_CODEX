@@ -1,4 +1,4 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+// Duplicate import removed - using type import on line 209
 /**
  * @swagger
  * /api/clients:
