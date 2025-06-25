@@ -1,19 +1,15 @@
 
 import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { Badge } from '@/components/ui/badge';
 
-describe('badge', () => {
+describe('Badge', () => {
   it('renders correctly', () => {
-    render(<badge />);
-    expect(screen.getByRole('button')).toBeInTheDocument();
+    render(<Badge>Test Badge</Badge>);
+    expect(screen.getByText('Test Badge')).toBeInTheDocument();
   });
 
-  it('handles user interaction', async () => {
-    const user = userEvent.setup();
-    render(<badge />);
-    
-    await user.click(screen.getByRole('button'));
-    
-    expect(screen.getByText('Expected Result')).toBeInTheDocument();
+  it('renders with different variants', () => {
+    render(<Badge variant="secondary">Secondary Badge</Badge>);
+    expect(screen.getByText('Secondary Badge')).toBeInTheDocument();
   });
 });

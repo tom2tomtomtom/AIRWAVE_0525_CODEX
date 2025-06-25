@@ -1,0 +1,23 @@
+// Mock for @supabase/realtime-js
+module.exports = {
+  RealtimeClient: jest.fn(() => ({
+    connect: jest.fn(),
+    disconnect: jest.fn(),
+    channel: jest.fn(() => ({
+      subscribe: jest.fn(),
+      unsubscribe: jest.fn(),
+      on: jest.fn(),
+      off: jest.fn()
+    }))
+  })),
+  default: jest.fn(() => ({
+    connect: jest.fn(),
+    disconnect: jest.fn(),
+    channel: jest.fn(() => ({
+      subscribe: jest.fn(),
+      unsubscribe: jest.fn(),
+      on: jest.fn(),
+      off: jest.fn()
+    }))
+  }))
+};

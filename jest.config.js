@@ -5,7 +5,9 @@ module.exports = {
     '<rootDir>/src/test/setup.ts'
   ],
   moduleNameMapper: {
-    '^@/(.*)$': '<rootDir>/src/$1'
+    '^@/(.*)$': '<rootDir>/src/$1',
+    '^@supabase/realtime-js$': '<rootDir>/src/test/mocks/supabase-realtime.js',
+    '^@supabase/ssr$': '<rootDir>/src/test/mocks/supabase-ssr.js'
   },
   transform: {
     '^.+\\.(ts|tsx)$': ['ts-jest', {
@@ -16,7 +18,7 @@ module.exports = {
     '^.+\\.(js|jsx)$': 'babel-jest'
   },
   transformIgnorePatterns: [
-    'node_modules/(?!(.*\\.mjs$))'
+    'node_modules/(?!(@supabase|.*\\.mjs$))'
   ],
   collectCoverageFrom: [
     'src/**/*.{ts,tsx}',

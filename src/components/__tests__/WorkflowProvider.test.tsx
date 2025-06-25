@@ -28,14 +28,16 @@ jest.mock('@/lib/caching/ai-response-cache', () => ({
     set: jest.fn().mockResolvedValue(true)}}));
 
 jest.mock('@/lib/circuit-breaker/ai-circuit-breaker', () => ({
-  aiCircuitBreaker: Record<string, unknown>$1
-  execute: jest.fn()}}));
+  aiCircuitBreaker: {
+    execute: jest.fn()
+  }));
 
 jest.mock('@/lib/monitoring/workflow-metrics', () => ({
-  workflowMetrics: Record<string, unknown>$1
-  trackStepCompletion: jest.fn(),
+  workflowMetrics: {
+    trackStepCompletion: jest.fn(),
     trackStepStart: jest.fn(),
-    trackAIOperation: jest.fn()}}));
+    trackAIOperation: jest.fn()
+  }));
 
 jest.mock('@/utils/ai-cost-estimation', () => ({
   estimateTokensForMotivations: jest.fn().mockReturnValue(1000),
