@@ -5,22 +5,20 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import {
-  CheckCircle2,
-  Circle,
-  RefreshCw,
-  Settings,
-  TrendingUp,
-  Users,
-  Zap,
-  Heart,
-  Brain,
-  Target,
-  Star,
-  AlertCircle,
-  ChevronDown,
-  ChevronUp,
-} from 'lucide-react';
+import { CheckCircle2 } from 'lucide-react/dist/esm/icons/check-circle-2';
+import { Circle } from 'lucide-react/dist/esm/icons/circle';
+import { RefreshCw } from 'lucide-react/dist/esm/icons/refresh-cw';
+import { Settings } from 'lucide-react/dist/esm/icons/settings';
+import { TrendingUp } from 'lucide-react/dist/esm/icons/trending-up';
+import { Users } from 'lucide-react/dist/esm/icons/users';
+import { Zap } from 'lucide-react/dist/esm/icons/zap';
+import { Heart } from 'lucide-react/dist/esm/icons/heart';
+import { Brain } from 'lucide-react/dist/esm/icons/brain';
+import { Target } from 'lucide-react/dist/esm/icons/target';
+import { Star } from 'lucide-react/dist/esm/icons/star';
+import { AlertCircle } from 'lucide-react/dist/esm/icons/alert-circle';
+import { ChevronDown } from 'lucide-react/dist/esm/icons/chevron-down';
+import { ChevronUp } from 'lucide-react/dist/esm/icons/chevron-up';
 import { PsychologicalMotivation, MotivationSet } from '@/services/motivationGenerator';
 
 interface MotivationSelectorProps {
