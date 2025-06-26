@@ -69,7 +69,8 @@ export async function setupMFA(userId: string, userEmail: string): Promise<MFASe
     backup_codes_encrypted: await encryptBackupCodes(backupCodes),
     is_enabled: false, // User needs to verify first
     created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString() });
+    updated_at: new Date().toISOString(),
+  });
 
   if (error) {
     throw new Error(`Failed to setup MFA: ${error.message}`);
@@ -119,7 +120,8 @@ export async function verifyAndEnableMFA(
       .update({
         is_enabled: true,
         verified_at: new Date().toISOString(),
-        updated_at: new Date().toISOString() })
+        updated_at: new Date().toISOString(),
+      })
       .eq('user_id', userId);
 
     if (updateError) {
@@ -170,7 +172,8 @@ export async function validateMFAToken(
         .update({
           used_backup_codes: updatedUsedCodes,
           last_used_at: new Date().toISOString(),
-          updated_at: new Date().toISOString() })
+          updated_at: new Date().toISOString(),
+        })
         .eq('user_id', userId);
 
       if (updateError) {
@@ -192,7 +195,8 @@ export async function validateMFAToken(
         .from('user_mfa')
         .update({
           last_used_at: new Date().toISOString(),
-          updated_at: new Date().toISOString() })
+          updated_at: new Date().toISOString(),
+        })
         .eq('user_id', userId);
 
       if (updateError) {
@@ -251,7 +255,8 @@ export async function disableMFA(
       .update({
         is_enabled: false,
         disabled_at: new Date().toISOString(),
-        updated_at: new Date().toISOString() })
+        updated_at: new Date().toISOString(),
+      })
       .eq('user_id', userId);
 
     if (error) {
@@ -288,7 +293,8 @@ export async function regenerateBackupCodes(
       .update({
         backup_codes_encrypted: await encryptBackupCodes(newBackupCodes),
         used_backup_codes: [], // Reset used codes
-        updated_at: new Date().toISOString() })
+        updated_at: new Date().toISOString(),
+      })
       .eq('user_id', userId);
 
     if (error) {
@@ -303,24 +309,23 @@ export async function regenerateBackupCodes(
   }
 }
 
-// Encryption utilities (implement with proper key management)
+// Encryption utilities using proper AES-256-GCM encryption
 async function encryptSecret(secret: string): Promise<string> {
-  // In production, use proper encryption with HSM or secure key management
-  // For now, using base64 encoding (NOT SECURE - replace in production)
-  return Buffer.from(secret).toString('base64');
+  const { encryptData } = await import('@/utils/encryption');
+  return encryptData(secret);
 }
 
 async function decryptSecret(encryptedSecret: string): Promise<string> {
-  // In production, use proper decryption
-  return Buffer.from(encryptedSecret, 'base64').toString();
+  const { decryptData } = await import('@/utils/encryption');
+  return decryptData(encryptedSecret);
 }
 
 async function encryptBackupCodes(codes: string[]): Promise<string> {
-  // In production, use proper encryption
-  return Buffer.from(JSON.stringify(codes)).toString('base64');
+  const { encryptData } = await import('@/utils/encryption');
+  return encryptData(JSON.stringify(codes));
 }
 
 async function decryptBackupCodes(encryptedCodes: string): Promise<string[]> {
-  // In production, use proper decryption
-  return JSON.parse(Buffer.from(encryptedCodes, 'base64').toString());
+  const { decryptData } = await import('@/utils/encryption');
+  return JSON.parse(decryptData(encryptedCodes));
 }
