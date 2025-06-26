@@ -4,6 +4,7 @@ import { errorResponse, ErrorCode } from '@/utils/api';
 import { UserRole } from '@/types/auth';
 import { createServerClient } from '@supabase/ssr';
 import { loggers } from '@/lib/logger';
+import { SecurityEvents } from '@/lib/security/security-logger';
 
 
 // Extended request with user information
@@ -219,6 +220,8 @@ export function withAuth(handler: AuthenticatedHandler) {
       const { user, supabase } = await validateUserToken(req);
 
       if (!user || !supabase) {
+        // Log authentication failure
+        SecurityEvents.authFailure(req, 'unknown', 'No valid token provided');
         return errorResponse(res, ErrorCode.UNAUTHORIZED, 'Authentication required', 401);
       }
 
@@ -237,6 +240,9 @@ export function withAuth(handler: AuthenticatedHandler) {
         clientIds,
         tenantId: profile?.tenant_id || '',
       };
+
+      // Log successful authentication
+      SecurityEvents.authSuccess(req, user.id);
 
       loggers.general.error(`✅ Request authenticated for user: ${user.email} (${profile?.role})`);
 
@@ -268,6 +274,8 @@ export function withRoles(roles: UserRole | UserRole[]) {
       const allowedRoles = Array.isArray(roles) ? roles : [roles];
 
       if (!allowedRoles.includes(userRole)) {
+        // Log authorization failure
+        SecurityEvents.authFailure(req, req.user?.email || 'unknown', `Role ${userRole} not in allowed roles: ${allowedRoles.join(', ')}`);
         return errorResponse(res, ErrorCode.FORBIDDEN, 'Insufficient permissions', 403);
       }
 
