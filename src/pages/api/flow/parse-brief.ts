@@ -7,7 +7,7 @@ import fs from 'fs';
 import path from 'path';
 import OpenAI from 'openai';
 import mammoth from 'mammoth';
-import pdfParse from 'pdf-parse';
+import { processPDF } from '@/lib/pdf-processor';
 
 // Configure to handle file uploads
 export const config = {
@@ -438,8 +438,8 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       } else if (fileExtension === '.pdf') {
         // Use pdf-parse to extract text from PDF files
                 const buffer = fs.readFileSync(uploadedFile.filepath);
-        const pdfData = await pdfParse(buffer);
-        fileContent = pdfData.text;
+        const pdfData = await processPDF(buffer, { extractText: true });
+        fileContent = pdfData.text || '';
               } else {
         // Try to read as text for unknown formats
                 fileContent = fs.readFileSync(uploadedFile.filepath, 'utf8');
