@@ -5,6 +5,8 @@ import { env, hasOpenAI } from '@/lib/env';
 import OpenAI from 'openai';
 import { z } from 'zod';
 import axios from 'axios';
+import { loggers } from '@/lib/logger';
+
 
 // Initialize OpenAI only if we have a key
 const openai = hasOpenAI
@@ -140,7 +142,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     finalPrompt = `${safetyPrefix} ${finalPrompt}`;
 
     if (process.env.NODE_ENV === 'development') {
-      console.log('Starting DALL-E image generation with prompt:', prompt);
+      loggers.general.error('Starting DALL-E image generation with prompt:', prompt);
     }
 
     // Generate image with DALL-E

@@ -1,5 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import axios from 'axios';
+import { loggers } from '@/lib/logger';
+
 
 interface CreatomateTestResponse {
   success: boolean;
@@ -31,7 +33,7 @@ export default async function handler(
 
     // Log action processing in development only
     if (process.env.NODE_ENV === 'development') {
-      console.log('Processing Creatomate action:', actionPath);
+      loggers.general.error('Processing Creatomate action:', actionPath);
     }
     switch (actionPath) {
       case 'test':

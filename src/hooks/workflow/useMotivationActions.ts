@@ -4,6 +4,8 @@ import { useCSRF } from '@/hooks/useCSRF';
 import { BriefData } from '@/lib/workflow/workflow-types';
 import { validateMotivations } from '@/lib/validation/workflow-validation';
 import { estimateTokensForMotivations } from '@/utils/ai-cost-estimation';
+import { loggers } from '@/lib/logger';
+
 
 // Conditional imports for server-side only
 let aiRateLimiter: any = { checkLimit: () => Promise.resolve({ allowed: true, remaining: 100, resetTime: 0, totalRequests: 1 }) };
@@ -77,7 +79,7 @@ export const useMotivationActions = ({
         const cachedMotivations = await aiResponseCache.get('generate-motivations', cacheKey);
 
         if (cachedMotivations) {
-          console.log('🎯 Using cached motivations');
+          loggers.general.error('🎯 Using cached motivations');
           return cachedMotivations;
         }
 
@@ -103,7 +105,7 @@ export const useMotivationActions = ({
 
         if (fallbackModel) {
           showNotification(`Using ${fallbackModel} to stay within budget ($${budgetRemaining?.toFixed(2)} remaining)`, 'info');
-          console.log(`🔄 Using fallback model: ${fallbackModel}`);
+          loggers.general.error(`🔄 Using fallback model: ${fallbackModel}`);
         }
 
         // Execute with circuit breaker protection
@@ -122,7 +124,7 @@ export const useMotivationActions = ({
           },
           async () => {
             // Fallback: provide generic motivations
-            console.log('🔄 Using fallback motivations due to service unavailability');
+            loggers.general.error('🔄 Using fallback motivations due to service unavailability');
             return new Response(JSON.stringify({
               success: true,
               data: [
@@ -180,7 +182,7 @@ export const useMotivationActions = ({
             true
           );
 
-          console.log(`✅ Generated ${result.data.length} motivations`);
+          loggers.general.error(`✅ Generated ${result.data.length} motivations`);
           return result.data;
         } else {
           throw new Error(result.message || 'Failed to generate motivations');
@@ -190,7 +192,7 @@ export const useMotivationActions = ({
       const fallback = () => {
         // Provide manual motivation entry option
         showNotification('You can manually enter motivations or try again later', 'info');
-        console.log('⚠️ Motivation generation fallback triggered');
+        loggers.general.error('⚠️ Motivation generation fallback triggered');
       };
 
       const result = await withErrorHandling(motivationOperation, 'Motivation Generation', fallback)();

@@ -8,6 +8,8 @@ import path from 'path';
 import OpenAI from 'openai';
 import mammoth from 'mammoth';
 import { processPDF } from '@/lib/pdf-processor';
+import { loggers } from '@/lib/logger';
+
 
 // Configure to handle file uploads
 export const config = {
@@ -51,7 +53,7 @@ function chunkDocument(content: string, maxChunkSize: number = 6000): string[] {
     return [content];
   }
   
-  console.log(`Document too large (${estimatedTokens} tokens), chunking into smaller parts...`);
+  loggers.general.error(`Document too large (${estimatedTokens} tokens), chunking into smaller parts...`);
   
   // Split by paragraphs first, then by sentences if needed
   const paragraphs = content.split(/\n\s*\n/);
@@ -402,7 +404,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     });
 
         const [fields, files] = await form.parse(req);
-    console.log('File upload parsing completed. Files:', Object.keys(files));
+    loggers.general.error('File upload parsing completed. Files:', Object.keys(files));
     const uploadedFile = Array.isArray(files.file) ? files.file[0] : files.file;
 
     if (!uploadedFile) {

@@ -7,6 +7,8 @@ import path from 'path';
 import { withAuth } from '@/middleware/withAuth';
 import { withSecurityHeaders } from '@/middleware/withSecurityHeaders';
 import { withUploadRateLimit } from '@/lib/rate-limiter';
+import { loggers } from '@/lib/logger';
+
 
 export const config = {
   api: {
@@ -103,7 +105,7 @@ async function handler(
           assetType = 'voice';
         }
 
-        console.log(`🏷️ Asset type determined: ${assetType} (${mimeType})`);
+        loggers.general.error(`🏷️ Asset type determined: ${assetType} (${mimeType})`);
 
         // Upload to Supabase Storage
         const { data: uploadData, error: uploadError } = await supabase.storage

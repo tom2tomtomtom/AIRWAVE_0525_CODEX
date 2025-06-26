@@ -5,6 +5,8 @@ const supabase = createClient();
 import { withAuth } from '@/middleware/withAuth';
 import { withSecurityHeaders } from '@/middleware/withSecurityHeaders';
 import { z } from 'zod';
+import { loggers } from '@/lib/logger';
+
 
 const CampaignCreateSchema = z.object({
   name: z.string().min(1, 'Name is required'),
@@ -57,7 +59,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void>
 }
 
 async function handleGet(req: NextApiRequest, res: NextApiResponse, user: any): Promise<void> {
-  console.log('Campaigns GET request - returning empty data (campaigns table not implemented)');
+  loggers.general.error('Campaigns GET request - returning empty data (campaigns table not implemented)');
 
   // Return empty campaigns data since the campaigns table doesn't exist yet
   // TODO: Implement actual database queries when campaigns table is ready

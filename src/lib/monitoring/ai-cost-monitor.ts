@@ -5,6 +5,8 @@
 
 import { redisManager } from '@/lib/redis/redis-config';
 import { ProductionAICostController } from '@/lib/ai/production-cost-controller';
+import { loggers } from '@/lib/logger';
+
 
 interface CostAlert {
   id: string;
@@ -74,9 +76,9 @@ export class AICostMonitor {
     try {
       this.useRedis = await redisManager.isAvailable();
       if (this.useRedis) {
-        console.log('✅ AI Cost Monitor using Redis for persistence');
+        loggers.general.error('✅ AI Cost Monitor using Redis for persistence');
       } else {
-        console.log('⚠️ AI Cost Monitor using local storage (Redis unavailable)');
+        loggers.general.error('⚠️ AI Cost Monitor using local storage (Redis unavailable)');
       }
     } catch (error: any) {
       console.warn('AI Cost Monitor Redis initialization failed:', error);
@@ -125,7 +127,7 @@ export class AICostMonitor {
     // Update real-time metrics
     await this.updateRealTimeMetrics(userId, service, cost);
 
-    console.log(`💰 Tracked AI cost: ${service}/${model} - $${cost.toFixed(4)} for user ${userId}`);
+    loggers.general.error(`💰 Tracked AI cost: ${service}/${model} - $${cost.toFixed(4)} for user ${userId}`);
   }
 
   /**
@@ -289,7 +291,7 @@ export class AICostMonitor {
    */
   private async sendAlert(alert: CostAlert): Promise<void> {
     // TODO: Integrate with actual notification system (email, Slack, etc.)
-    console.log(`📧 Alert sent: ${alert.message}`);
+    loggers.general.error(`📧 Alert sent: ${alert.message}`);
 
     // For now, just log to console
     if (alert.severity === 'critical') {
@@ -460,7 +462,7 @@ export class AICostMonitor {
     const alert = this.localAlerts.find((a: any) => a.id === alertId);
     if (alert) {
       alert.acknowledged = true;
-      console.log(`✅ Alert acknowledged: ${alertId}`);
+      loggers.general.error(`✅ Alert acknowledged: ${alertId}`);
       return true;
     }
 
@@ -471,7 +473,7 @@ export class AICostMonitor {
    * Generate daily summary
    */
   private async generateDailySummary(): Promise<void> {
-    console.log('📊 Generating daily AI cost summary...');
+    loggers.general.error('📊 Generating daily AI cost summary...');
 
     // This would generate and send daily cost summaries
     // TODO: Implement actual daily summary generation

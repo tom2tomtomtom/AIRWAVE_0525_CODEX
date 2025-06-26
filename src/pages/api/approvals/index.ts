@@ -5,6 +5,8 @@ const supabase = createClient();
 import { withAuth } from '@/middleware/withAuth';
 import { withSecurityHeaders } from '@/middleware/withSecurityHeaders';
 import { z } from 'zod';
+import { loggers } from '@/lib/logger';
+
 
 const ApprovalCreateSchema = z.object({
   item_type: z.enum(['motivation', 'content_variation', 'execution', 'campaign']),
@@ -454,7 +456,7 @@ async function triggerApprovalNotification(approval: any, action: string): Promi
     // In a full implementation, this would trigger real-time notifications
     // via WebSocket, email, or push notifications
     process.env.NODE_ENV === 'development' &&
-      console.log(`Triggering approval notification for action: ${action}`);
+      loggers.general.error(`Triggering approval notification for action: ${action}`);
   } catch (error: any) {
     const message = getErrorMessage(error);
     console.error('Error triggering approval notification:', error);

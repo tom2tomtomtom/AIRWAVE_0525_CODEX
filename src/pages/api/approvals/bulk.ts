@@ -5,6 +5,8 @@ const supabase = createClient();
 import { withAuth } from '@/middleware/withAuth';
 import { withSecurityHeaders } from '@/middleware/withSecurityHeaders';
 import { z } from 'zod';
+import { loggers } from '@/lib/logger';
+
 
 const BulkApprovalDecisionSchema = z.object({
   approval_ids: z.array(z.string().uuid()).min(1).max(50),
@@ -539,7 +541,7 @@ async function triggerPostDecisionWorkflow(approval: any, decision: any): Promis
     if (decision.action === 'approve') {
       if (approval.item_type === 'execution') {
         process.env.NODE_ENV === 'development' &&
-          console.log('Triggering execution pipeline for bulk approval:', approval.item_id);
+          loggers.general.error('Triggering execution pipeline for bulk approval:', approval.item_id);
       }
 
       if (approval.item_type === 'campaign') {

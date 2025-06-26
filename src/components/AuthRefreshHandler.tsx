@@ -1,5 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useSupabaseAuth } from '@/contexts/SupabaseAuthContext';
+import { loggers } from '@/lib/logger';
+
 
 /**
  * Component to handle automatic token refresh
@@ -36,14 +38,14 @@ export function AuthRefreshHandler(): null {
 
     // Schedule refresh
     process.env.NODE_ENV === 'development' &&
-      console.log(`Scheduling token refresh in ${Math.round(refreshTime / 1000 / 60)} minutes`);
+      loggers.general.error(`Scheduling token refresh in ${Math.round(refreshTime / 1000 / 60)} minutes`);
 
     refreshTimerRef.current = setTimeout(async () => {
-      process.env.NODE_ENV === 'development' && console.log('Refreshing session...');
+      process.env.NODE_ENV === 'development' && loggers.general.error('Refreshing session...');
       const result = await refreshSession();
 
       if (result.success) {
-        process.env.NODE_ENV === 'development' && console.log('Session refreshed successfully');
+        process.env.NODE_ENV === 'development' && loggers.general.error('Session refreshed successfully');
       } else {
         console.error('Failed to refresh token:', result.error);
       }

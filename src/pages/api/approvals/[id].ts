@@ -6,6 +6,8 @@ import { withAuth } from '@/middleware/withAuth';
 import { withSecurityHeaders } from '@/middleware/withSecurityHeaders';
 import { triggerWebhookEvent, WEBHOOK_EVENTS } from '../webhooks/index';
 import { z } from 'zod';
+import { loggers } from '@/lib/logger';
+
 
 const ApprovalDecisionSchema = z.object({
   action: z.enum(['approve', 'reject', 'request_changes']),
@@ -604,7 +606,7 @@ async function triggerPostDecisionWorkflow(approval: any, decision: any): Promis
       if (approval.item_type === 'execution') {
         // This would integrate with the execution pipeline
         process.env.NODE_ENV === 'development' &&
-          console.log('Triggering execution pipeline for:', approval.item_id);
+          loggers.general.error('Triggering execution pipeline for:', approval.item_id);
       }
 
       // For campaigns, activate them
@@ -633,7 +635,7 @@ async function logApprovalDecision(
   try {
     // In a full implementation, this would log to an approval_events table
     process.env.NODE_ENV === 'development' &&
-      console.log('Logging approval decision:', action, 'for approval:', approvalId);
+      loggers.general.error('Logging approval decision:', action, 'for approval:', approvalId);
   } catch (error: any) {
     const message = getErrorMessage(error);
     console.error('Error logging approval decision:', error);
@@ -648,7 +650,7 @@ async function logApprovalUpdate(
   try {
     // In a full implementation, this would log to an approval_events table
     process.env.NODE_ENV === 'development' &&
-      console.log('Logging approval update for:', approvalId);
+      loggers.general.error('Logging approval update for:', approvalId);
   } catch (error: any) {
     const message = getErrorMessage(error);
     console.error('Error logging approval update:', error);
@@ -659,7 +661,7 @@ async function triggerApprovalNotification(approval: any, action: string): Promi
   try {
     // In a full implementation, this would trigger real-time notifications
     process.env.NODE_ENV === 'development' &&
-      console.log('Triggering approval notification for:', approval.id);
+      loggers.general.error('Triggering approval notification for:', approval.id);
   } catch (error: any) {
     const message = getErrorMessage(error);
     console.error('Error triggering approval notification:', error);

@@ -6,6 +6,8 @@
 
 import { NextApiRequest, NextApiResponse } from 'next';
 import crypto from 'crypto';
+import { loggers } from '@/lib/logger';
+
 
 export interface CsrfOptions {
   tokenLength?: number;
@@ -255,7 +257,7 @@ export function withCsrfProtection(
 
       // Log successful CSRF validation in development
       if (process.env.NODE_ENV === 'development') {
-        console.log(`[CSRF] Token validated for ${method} ${path}`);
+        loggers.general.error(`[CSRF] Token validated for ${method} ${path}`);
       }
     } catch (error) {
       console.error('CSRF middleware error:', error);

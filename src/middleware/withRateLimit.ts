@@ -6,6 +6,8 @@
 
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getClientIp } from '@/lib/utils/ip';
+import { loggers } from '@/lib/logger';
+
 
 // Rate limit configuration for different endpoint types
 export const RATE_LIMITS = {
@@ -250,7 +252,7 @@ export function withRateLimit(type: RateLimitType, options: RateLimitOptions = {
           // Note: This is a simplified approach. In production, you might want
           // a more sophisticated mechanism to handle this.
           // eslint-disable-next-line no-console
-          console.log('Skipping rate limit count for request:', { statusCode, type });
+          loggers.general.error('Skipping rate limit count for request:', { statusCode, type });
         }
       } catch (error) {
         // eslint-disable-next-line no-console

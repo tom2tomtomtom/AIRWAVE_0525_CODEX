@@ -5,6 +5,8 @@ import { useClient } from '@/contexts/ClientContext';
 import { BriefData, Motivation, CopyVariation } from '@/lib/workflow/workflow-types';
 import { validateCopyVariations } from '@/lib/validation/workflow-validation';
 import { estimateTokensForCopy } from '@/utils/ai-cost-estimation';
+import { loggers } from '@/lib/logger';
+
 
 // Conditional imports for server-side only
 let aiRateLimiter: any = { checkLimit: () => Promise.resolve({ allowed: true, remaining: 100, resetTime: 0, totalRequests: 1 }) };
@@ -73,7 +75,7 @@ export const useCopyActions = ({
       const cachedCopy = await aiResponseCache.get('generate-copy', cacheKey);
 
       if (cachedCopy && Array.isArray(cachedCopy)) {
-        console.log('🎯 Using cached copy variations');
+        loggers.general.error('🎯 Using cached copy variations');
         const copyWithSelection = cachedCopy.map((copy: any) => ({
           ...copy,
           selected: false
@@ -136,7 +138,7 @@ export const useCopyActions = ({
         },
         async () => {
           // Fallback: provide generic copy variations
-          console.log('🔄 Using fallback copy due to service unavailability');
+          loggers.general.error('🔄 Using fallback copy due to service unavailability');
           return new Response(JSON.stringify({
             success: true,
             data: [

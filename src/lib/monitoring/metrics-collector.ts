@@ -5,6 +5,8 @@
  */
 
 import { performance } from 'perf_hooks';
+import { loggers } from '@/lib/logger';
+
 
 // Metric types
 export interface Metric {
@@ -111,7 +113,7 @@ class ConsoleBackend implements MetricsBackend {
 
   async sendBatch(metrics: Metric[]): Promise<void> {
     if (process.env.NODE_ENV === 'development') {
-      console.log(`[METRICS BATCH] ${metrics.length} metrics:`, metrics);
+      loggers.general.error(`[METRICS BATCH] ${metrics.length} metrics:`, metrics);
     }
   }
 

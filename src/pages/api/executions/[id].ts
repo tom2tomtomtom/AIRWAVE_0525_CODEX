@@ -5,6 +5,8 @@ const supabase = createClient();
 import { withAuth } from '@/middleware/withAuth';
 import { withSecurityHeaders } from '@/middleware/withSecurityHeaders';
 import { z } from 'zod';
+import { loggers } from '@/lib/logger';
+
 
 const ExecutionUpdateSchema = z.object({
   status: z.enum(['pending', 'processing', 'completed', 'failed', 'cancelled', 'scheduled']).optional(),
@@ -455,7 +457,7 @@ function validateStatusTransition(currentStatus: string, newStatus: string): { v
 async function logExecutionEvent(executionId: string, eventType: string, details: any): Promise<void> {
   try {
     // In a full implementation, this would log to an execution_events table
-    process.env.NODE_ENV === 'development' && console.log('Logging execution event:', event);
+    process.env.NODE_ENV === 'development' && loggers.general.error('Logging execution event:', event);
   } catch (error: any) {
     const message = getErrorMessage(error);
     console.error('Error logging execution event:', error);
@@ -466,7 +468,7 @@ async function triggerExecutionNotification(execution: any, status: string): Pro
   try {
     // In a full implementation, this would trigger real-time notifications
     // via WebSocket or Server-Sent Events
-    process.env.NODE_ENV === 'development' && console.log('Triggering execution notification for:', execution.id);
+    process.env.NODE_ENV === 'development' && loggers.general.error('Triggering execution notification for:', execution.id);
   } catch (error: any) {
     const message = getErrorMessage(error);
     console.error('Error triggering execution notification:', error);

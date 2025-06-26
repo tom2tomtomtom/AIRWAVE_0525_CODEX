@@ -1,5 +1,4 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { getConfig } from '@/lib/config';
 import { loggers } from '@/lib/logger';
 
 interface HealthCheck {
@@ -57,10 +56,10 @@ const checkDatabase = async (): Promise<HealthCheck> => {
 const checkRedis = async (): Promise<HealthCheck> => {
   const start = Date.now();
   try {
-    const config = getConfig();
+    const redisUrl = process.env.REDIS_URL || process.env.UPSTASH_REDIS_URL;
 
     // Skip Redis check if not configured
-    if (!config.REDIS_URL || config.REDIS_URL === 'redis://localhost:6379') {
+    if (!redisUrl || redisUrl === 'redis://localhost:6379') {
       return {
         service: 'redis',
         status: 'degraded',
@@ -88,16 +87,16 @@ const checkRedis = async (): Promise<HealthCheck> => {
 };
 
 const checkExternalAPIs = async (): Promise<HealthCheck[]> => {
-  const config = getConfig();
   const checks: HealthCheck[] = [];
 
   // Check OpenAI API if configured
-  if (config.OPENAI_API_KEY) {
+  const openaiKey = process.env.OPENAI_API_KEY;
+  if (openaiKey) {
     const start = Date.now();
     try {
       const response = await fetch('https://api.openai.com/v1/models', {
         headers: {
-          Authorization: `Bearer ${config.OPENAI_API_KEY}`,
+          Authorization: `Bearer ${openaiKey}`,
           'Content-Type': 'application/json',
         },
         signal: AbortSignal.timeout(5000), // 5 second timeout
@@ -121,25 +120,28 @@ const checkExternalAPIs = async (): Promise<HealthCheck[]> => {
   }
 
   // Check Supabase API
-  const start = Date.now();
-  try {
-    const response = await fetch(`${config.NEXT_PUBLIC_SUPABASE_URL}/health`, {
-      signal: AbortSignal.timeout(5000) });
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  if (supabaseUrl) {
+    const start = Date.now();
+    try {
+      const response = await fetch(`${supabaseUrl}/health`, {
+        signal: AbortSignal.timeout(5000) });
 
-    checks.push({
-      service: 'supabase',
-      status: response.ok ? 'healthy' : 'degraded',
-      responseTime: Date.now() - start,
-      details: {
-        statusCode: response.status,
-        available: response.ok },
-    });
-  } catch (error) {
-    checks.push({
-      service: 'supabase',
-      status: 'unhealthy',
-      responseTime: Date.now() - start,
-      error: error instanceof Error ? error.message : 'Supabase health check failed' });
+      checks.push({
+        service: 'supabase',
+        status: response.ok ? 'healthy' : 'degraded',
+        responseTime: Date.now() - start,
+        details: {
+          statusCode: response.status,
+          available: response.ok },
+      });
+    } catch (error) {
+      checks.push({
+        service: 'supabase',
+        status: 'unhealthy',
+        responseTime: Date.now() - start,
+        error: error instanceof Error ? error.message : 'Supabase health check failed' });
+    }
   }
 
   return checks;
@@ -200,7 +202,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     });
   }
 
-  const config = getConfig();
   const startTime = Date.now();
 
   try {
@@ -233,8 +234,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       status: overallStatus,
       timestamp: new Date().toISOString(),
       uptime: process.uptime(),
-      version: config.NEXT_PUBLIC_APP_VERSION,
-      environment: config.NODE_ENV,
+      version: process.env.NEXT_PUBLIC_APP_VERSION || '1.0.0',
+      environment: process.env.NODE_ENV || 'development',
       checks: allChecks,
       summary,
     };
@@ -257,8 +258,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       status: 'unhealthy',
       timestamp: new Date().toISOString(),
       uptime: process.uptime(),
-      version: config.NEXT_PUBLIC_APP_VERSION,
-      environment: config.NODE_ENV,
+      version: process.env.NEXT_PUBLIC_APP_VERSION || '1.0.0',
+      environment: process.env.NODE_ENV || 'development',
       checks: [
         {
           service: 'health-check',

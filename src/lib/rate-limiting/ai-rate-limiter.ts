@@ -1,3 +1,5 @@
+import { loggers } from '@/lib/logger';
+
 /**
  * Distributed Rate Limiting for AI Operations
  * Uses Redis for distributed rate limiting across multiple server instances
@@ -71,9 +73,9 @@ export class AIRateLimiter {
     try {
       this.useRedis = await redisManager.isAvailable();
       if (this.useRedis) {
-        console.log('✅ AI Rate Limiter using Redis for distributed limiting');
+        loggers.general.error('✅ AI Rate Limiter using Redis for distributed limiting');
       } else {
-        console.log('⚠️ AI Rate Limiter using in-memory fallback (Redis unavailable)');
+        loggers.general.error('⚠️ AI Rate Limiter using in-memory fallback (Redis unavailable)');
       }
     } catch (error: any) {
       console.warn('AI Rate Limiter Redis initialization failed:', error);

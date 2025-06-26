@@ -5,6 +5,8 @@
 
 import { supabase } from '@/lib/supabase';
 import { estimateCost } from '@/utils/ai-cost-estimation';
+import { loggers } from '@/lib/logger';
+
 
 interface BudgetConfig {
   openai: number;

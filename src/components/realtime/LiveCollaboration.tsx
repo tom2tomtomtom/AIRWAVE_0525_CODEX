@@ -31,6 +31,8 @@ import {
 import { useAuth } from '@/contexts/AuthContext';
 import { useClient } from '@/contexts/ClientContext';
 import { formatDistanceToNow } from 'date-fns';
+import { loggers } from '@/lib/logger';
+
 
 interface UserPresence {
   id: string;
@@ -337,7 +339,7 @@ const LiveCollaboration: React.FC<LiveCollaborationProps> = ({
               startIcon={<MessageIcon />}
               onClick={() => {
                 // Implement team chat or collaboration features
-                process.env.NODE_ENV === 'development' && console.log('Team chat clicked');
+                process.env.NODE_ENV === 'development' && loggers.general.error('Team chat clicked');
               }}
             >
               Team Chat

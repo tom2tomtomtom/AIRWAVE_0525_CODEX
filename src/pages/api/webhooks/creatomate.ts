@@ -4,6 +4,8 @@ import { createClient } from '@supabase/supabase-js';
 import { WebhookManager } from '../../../../lib/webhooks/webhookManager';
 import { withErrorHandler } from '@/lib/errors/errorHandler';
 import { sendRenderCompleteEmail } from '@/lib/email/resend';
+import { loggers } from '@/lib/logger';
+
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -47,7 +49,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void>
   const payload: CreatomateWebhookPayload = req.body;
 
   process.env.NODE_ENV === 'development' &&
-    console.log('Received Creatomate webhook:', payload.event);
+    loggers.general.error('Received Creatomate webhook:', payload.event);
   try {
     // Handle different event types
     switch (payload.event) {
@@ -61,7 +63,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void>
 
       default:
         process.env.NODE_ENV === 'development' &&
-          console.log('Unknown webhook event:', payload.event);
+          loggers.general.error('Unknown webhook event:', payload.event);
     }
 
     res.status(200).json({ success: true });

@@ -1,3 +1,5 @@
+import { loggers } from '@/lib/logger';
+
 /**
  * AI Response Caching System
  * Caches expensive AI operations to reduce costs and improve performance
@@ -78,9 +80,9 @@ export class AIResponseCache {
     try {
       this.useRedis = await redisManager.isAvailable();
       if (this.useRedis) {
-        console.log('✅ AI Response Cache using Redis for persistence');
+        loggers.general.error('✅ AI Response Cache using Redis for persistence');
       } else {
-        console.log('⚠️ AI Response Cache using in-memory storage (Redis unavailable)');
+        loggers.general.error('⚠️ AI Response Cache using in-memory storage (Redis unavailable)');
       }
     } catch (error: any) {
       console.warn('AI Response Cache Redis initialization failed:', error);
@@ -134,7 +136,7 @@ export class AIResponseCache {
         return null;
       }
 
-      console.log(`🎯 Cache hit for ${operation} (age: ${Math.round(ageInSeconds)}s)`);
+      loggers.general.error(`🎯 Cache hit for ${operation} (age: ${Math.round(ageInSeconds)}s)`);
       return cachedResponse.data;
     } catch (error: any) {
       console.error('Error getting cached response:', error);
@@ -165,7 +167,7 @@ export class AIResponseCache {
       if (this.useRedis) {
         const success = await redisManager.set(key, cachedResponse, config.ttl);
         if (success) {
-          console.log(`💾 Cached ${operation} response for ${config.ttl}s`);
+          loggers.general.error(`💾 Cached ${operation} response for ${config.ttl}s`);
         }
         return success;
       } else {
@@ -179,7 +181,7 @@ export class AIResponseCache {
         }
 
         this.memoryCache.set(key, cachedResponse);
-        console.log(`💾 Cached ${operation} response in memory`);
+        loggers.general.error(`💾 Cached ${operation} response in memory`);
         return true;
       }
     } catch (error: any) {
@@ -260,7 +262,7 @@ export class AIResponseCache {
       cleared = keysToDelete.length;
     }
 
-    console.log(`🗑️ Cleared ${cleared} cached responses for ${operation}`);
+    loggers.general.error(`🗑️ Cleared ${cleared} cached responses for ${operation}`);
     return cleared;
   }
 
@@ -354,7 +356,7 @@ export class AIResponseCache {
       }
     }
 
-    console.log(`🔥 Warmed up ${warmedUp} cache entries`);
+    loggers.general.error(`🔥 Warmed up ${warmedUp} cache entries`);
     return warmedUp;
   }
 }

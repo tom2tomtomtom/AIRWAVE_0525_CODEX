@@ -1,3 +1,5 @@
+import { loggers } from '@/lib/logger';
+
 /**
  * GDPR Data Export functionality
  */
@@ -38,5 +40,5 @@ export async function exportUserData(request: DataExportRequest): Promise<Export
  */
 export async function deleteUserData(userId: string): Promise<void> {
   // Placeholder implementation for GDPR data deletion
-  console.log(`GDPR data deletion initiated for user: ${userId}`);
+  loggers.api.debug(`GDPR data deletion initiated for user: ${userId}`);
 }

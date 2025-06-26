@@ -68,6 +68,8 @@ jest.mock('@supabase/supabase-js', () => ({
 
 // Import after mocking
 import { supabase } from '@/lib/supabase';
+import { loggers } from '@/lib/logger';
+
 
 describe('Database Layer Testing', () => {
   beforeEach(() => {
@@ -666,7 +668,7 @@ describe('Database Layer Testing', () => {
         .channel('table-changes')
         .on('postgres_changes',
           { event: '*', schema: 'public', table: 'clients'  }
-          (payload) => console.log('Change received!', payload)
+          (payload) => loggers.general.error('Change received!', payload)
         )
         .subscribe();
 

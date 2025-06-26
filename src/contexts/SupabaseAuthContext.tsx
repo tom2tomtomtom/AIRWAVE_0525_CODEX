@@ -2,6 +2,8 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { User, Session } from '@supabase/supabase-js';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
+import { loggers } from '@/lib/logger';
+
 
 interface AuthState {
   user: User | null;
@@ -120,7 +122,7 @@ export const SupabaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({ 
     // Listen for auth state changes
     const { data: { subscription } } = supabaseClient.auth.onAuthStateChange(
       async (_event, session) => {
-        process.env.NODE_ENV === 'development' && console.log('Auth state changed:', event);
+        process.env.NODE_ENV === 'development' && loggers.general.error('Auth state changed:', event);
         if (session) {
           setAuthState({
             user: session.user,
@@ -155,9 +157,9 @@ export const SupabaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({ 
         if (event === 'SIGNED_OUT') {
           router.push('/login');
         } else if (event === 'TOKEN_REFRESHED') {
-          process.env.NODE_ENV === 'development' && console.log('Token refreshed');
+          process.env.NODE_ENV === 'development' && loggers.general.error('Token refreshed');
         } else if (event === 'USER_UPDATED') {
-          process.env.NODE_ENV === 'development' && console.log('User updated');
+          process.env.NODE_ENV === 'development' && loggers.general.error('User updated');
         }
       }
     );

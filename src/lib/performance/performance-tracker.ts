@@ -1,3 +1,5 @@
+import { loggers } from '@/lib/logger';
+
 /**
  * Production Performance Tracker
  * Provides performance monitoring with Redis persistence for production use
@@ -49,10 +51,10 @@ export class ProductionPerformanceTracker {
       this.useRedis = await redisManager.isAvailable();
       if (this.useRedis) {
         // eslint-disable-next-line no-console
-        console.log('✅ Performance tracker using Redis for persistence');
+        loggers.general.error('✅ Performance tracker using Redis for persistence');
       } else {
         // eslint-disable-next-line no-console
-        console.log('⚠️ Performance tracker using in-memory storage (Redis unavailable)');
+        loggers.general.error('⚠️ Performance tracker using in-memory storage (Redis unavailable)');
       }
     } catch (error: any) {
       // eslint-disable-next-line no-console
@@ -112,7 +114,7 @@ export class ProductionPerformanceTracker {
 
     // Log the result
     // eslint-disable-next-line no-console
-    console.log(`[Performance] ${operationName}: ${duration}ms`);
+    loggers.general.error(`[Performance] ${operationName}: ${duration}ms`);
 
     // Persist to Redis if available
     if (this.useRedis) {
@@ -279,7 +281,7 @@ export class ProductionPerformanceTracker {
     };
 
     // eslint-disable-next-line no-console
-    console.log(`[Performance] ${operationName}: ${value}ms`);
+    loggers.general.error(`[Performance] ${operationName}: ${value}ms`);
 
     if (this.useRedis) {
       await this.persistMetric(metric);

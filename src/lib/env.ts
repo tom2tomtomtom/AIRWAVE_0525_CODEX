@@ -1,5 +1,7 @@
 import { getErrorMessage } from '@/utils/errorUtils';
 import { z } from 'zod';
+import { loggers } from '@/lib/logger';
+
 
 // Helper to check if we're in build context or client-side
 const isBuildContext =
@@ -131,7 +133,7 @@ const parseEnv = () => {
   if (isEdgeBuild || isBuildTime || isBuildContext || isClientSide) {
     if (!isClientSide) {
       if (process.env.NODE_ENV === 'development') {
-        console.log('Using fallback env config');
+        loggers.general.error('Using fallback env config');
       }
     }
     return {

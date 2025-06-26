@@ -5,6 +5,8 @@ const supabase = createClient();
 import { withAuth } from '@/middleware/withAuth';
 import { withSecurityHeaders } from '@/middleware/withSecurityHeaders';
 import { z } from 'zod';
+import { loggers } from '@/lib/logger';
+
 
 const CancelRequestSchema = z.object({
   reason: z.string().optional(),
@@ -278,7 +280,7 @@ async function cancelCreatomateJob(jobId: string): Promise<{ success: boolean; e
   try {
     // In a real implementation, this would call Creatomate API
     // For now, simulate the cancellation
-    process.env.NODE_ENV === 'development' && console.log('Cancelling Creatomate render:', jobId);
+    process.env.NODE_ENV === 'development' && loggers.general.error('Cancelling Creatomate render:', jobId);
     // Mock API call delay
     await new Promise(resolve => setTimeout(resolve, 100));
 
@@ -301,7 +303,7 @@ async function cancelPendingWebhooks(
   for (const webhookId of webhookIds) {
     try {
       // Simulate webhook cancellation
-      process.env.NODE_ENV === 'development' && console.log('Cleaning up webhook:', webhookId);
+      process.env.NODE_ENV === 'development' && loggers.general.error('Cleaning up webhook:', webhookId);
       cleaned.push({
         type: 'webhook',
         resource_id: webhookId,
@@ -326,7 +328,7 @@ async function cleanupTempFiles(
   try {
     // Simulate file cleanup
     process.env.NODE_ENV === 'development' &&
-      console.log('Cleaning up temp files:', tempFiles.length);
+      loggers.general.error('Cleaning up temp files:', tempFiles.length);
     return { success: true, files_cleaned: tempFiles.length };
   } catch (error: any) {
     const message = getErrorMessage(error);
@@ -425,7 +427,7 @@ async function triggerCancellationNotification(execution: any, user: any): Promi
     // In a full implementation, this would trigger real-time notifications
     // via WebSocket or Server-Sent Events to relevant stakeholders
     process.env.NODE_ENV === 'development' &&
-      console.log('Triggering cancellation notification for execution:', execution.id);
+      loggers.general.error('Triggering cancellation notification for execution:', execution.id);
   } catch (error: any) {
     const message = getErrorMessage(error);
     console.error('Error triggering cancellation notification:', error);

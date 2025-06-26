@@ -4,6 +4,8 @@ import { getErrorMessage } from '@/utils/errorUtils';
 
 import { EventEmitter } from 'events';
 import React from 'react';
+import { loggers } from '@/lib/logger';
+
 
 export interface WebSocketMessage {
   type:
@@ -84,7 +86,7 @@ class WebSocketService extends EventEmitter {
 
       ws.onopen = () => {
         if (process.env.NODE_ENV === 'development') {
-          console.log('WebSocket connected');
+          loggers.general.error('WebSocket connected');
         }
         this.emit('connected');
         this.startHeartbeat(ws);
@@ -104,7 +106,7 @@ class WebSocketService extends EventEmitter {
 
       ws.onclose = (event: any) => {
         if (process.env.NODE_ENV === 'development') {
-          console.log('WebSocket disconnected:', event.code);
+          loggers.general.error('WebSocket disconnected:', event.code);
         }
         this.emit('disconnected');
 

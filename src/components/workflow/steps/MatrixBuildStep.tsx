@@ -26,6 +26,8 @@ import {
 } from '@mui/icons-material';
 import { useWorkflow } from '../WorkflowProvider';
 import { StepComponentProps } from '@/lib/workflow/workflow-types';
+import { loggers } from '@/lib/logger';
+
 
 interface MatrixBuildStepProps extends StepComponentProps {}
 
@@ -110,12 +112,12 @@ export const MatrixBuildStep: React.FC<MatrixBuildStepProps> = ({ onNext, onPrev
   // Handle matrix item actions
   const handlePreviewItem = useCallback((item: MatrixItem) => {
     // In real implementation, this would open a preview modal
-    console.log('Preview item:', item);
+    loggers.general.error('Preview item:', item);
   }, []);
 
   const handleEditItem = useCallback((item: MatrixItem) => {
     // In real implementation, this would open an edit modal
-    console.log('Edit item:', item);
+    loggers.general.error('Edit item:', item);
   }, []);
 
   const handleDeleteItem = useCallback((itemId: string) => {

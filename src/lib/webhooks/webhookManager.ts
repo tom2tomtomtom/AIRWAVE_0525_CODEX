@@ -1,3 +1,5 @@
+import { loggers } from '@/lib/logger';
+
 /**
  * Webhook management utilities
  */
@@ -71,7 +73,7 @@ export async function processIncomingWebhook(
   headers: Record<string, string>
 ): Promise<{ success: boolean; message: string }> {
   // Placeholder implementation for processing incoming webhooks
-  console.log('Processing incoming webhook:', { payload, headers });
+  loggers.general.error('Processing incoming webhook:', { payload, headers });
   
   return {
     success: true,

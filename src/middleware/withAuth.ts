@@ -3,6 +3,8 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { errorResponse, ErrorCode } from '@/utils/api';
 import { UserRole } from '@/types/auth';
 import { createServerClient } from '@supabase/ssr';
+import { loggers } from '@/lib/logger';
+
 
 // Extended request with user information
 export interface AuthenticatedRequest extends NextApiRequest {
@@ -236,7 +238,7 @@ export function withAuth(handler: AuthenticatedHandler) {
         tenantId: profile?.tenant_id || '',
       };
 
-      console.log(`✅ Request authenticated for user: ${user.email} (${profile?.role})`);
+      loggers.general.error(`✅ Request authenticated for user: ${user.email} (${profile?.role})`);
 
       // Call the handler
       return await handler(req as AuthenticatedRequest, res);

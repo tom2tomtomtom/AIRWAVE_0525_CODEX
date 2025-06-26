@@ -41,6 +41,8 @@ import ClientSelector from '@/components/ClientSelector';
 import { useCampaigns } from '@/hooks/useData';
 import { useClient } from '@/contexts/ClientContext';
 import { format } from 'date-fns';
+import { loggers } from '@/lib/logger';
+
 
 const CampaignsPage: React.FC = () => {
   const router = useRouter();
@@ -304,7 +306,7 @@ const CampaignsPage: React.FC = () => {
           </MenuItem>
           <MenuItem
             onClick={() => {
-              console.log('Archive campaign:', selectedCampaign);
+              loggers.general.error('Archive campaign:', selectedCampaign);
               handleMenuClose();
             }}
           >
@@ -313,7 +315,7 @@ const CampaignsPage: React.FC = () => {
           </MenuItem>
           <MenuItem
             onClick={() => {
-              console.log('Delete campaign:', selectedCampaign);
+              loggers.general.error('Delete campaign:', selectedCampaign);
               handleMenuClose();
             }}
             sx={{ color: 'error.main' }}

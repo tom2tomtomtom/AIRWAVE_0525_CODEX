@@ -5,6 +5,8 @@
  */
 
 import { NextApiRequest, NextApiResponse } from 'next';
+import { loggers } from '@/lib/logger';
+
 
 export interface SecurityHeadersOptions {
   enableCSP?: boolean;
@@ -235,7 +237,7 @@ export function withSecurityHeaders(
 
       // Log security header application in development
       if (process.env.NODE_ENV === 'development') {
-        console.log(`[Security] Applied security headers to ${req.method} ${req.url}`);
+        loggers.general.error(`[Security] Applied security headers to ${req.method} ${req.url}`);
       }
     } catch (error) {
       console.error('Error applying security headers:', error);

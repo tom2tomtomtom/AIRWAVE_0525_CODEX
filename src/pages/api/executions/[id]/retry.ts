@@ -6,6 +6,8 @@ import { withAuth } from '@/middleware/withAuth';
 import { withSecurityHeaders } from '@/middleware/withSecurityHeaders';
 import { triggerWebhookEvent, WEBHOOK_EVENTS } from '../../webhooks/index';
 import { z } from 'zod';
+import { loggers } from '@/lib/logger';
+
 
 const RetryRequestSchema = z.object({
   force: z.boolean().default(false), // Force retry even if not in retryable state
@@ -423,7 +425,7 @@ async function logRetryEvent(
 ): Promise<void> {
   try {
     // In a full implementation, this would log to an execution_events table
-    process.env.NODE_ENV === 'development' && console.log('Logging retry event:', event);
+    process.env.NODE_ENV === 'development' && loggers.general.error('Logging retry event:', event);
   } catch (error: any) {
     const message = getErrorMessage(error);
     console.error('Error logging retry event:', error);

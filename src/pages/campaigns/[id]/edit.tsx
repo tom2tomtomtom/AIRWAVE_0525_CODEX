@@ -23,6 +23,8 @@ import LoadingSpinner from '../../../components/LoadingSpinner';
 import ErrorMessage from '../../../components/ErrorMessage';
 import { useNotification } from '../../../contexts/NotificationContext';
 import { useCampaigns } from '../../../hooks/useData';
+import { loggers } from '@/lib/logger';
+
 
 // Lazy load heavy components for better performance
 const CampaignBasicInfo = dynamic(() => import('@/components/campaigns/CampaignBasicInfo'), {
@@ -58,12 +60,12 @@ const EditCampaign: React.FC = () => {
   // Mock functions for now - these would need to be implemented
   const updateCampaign = async (id: string, updates: any) => {
     // TODO: Implement campaign update API call
-    console.log('Update campaign:', id, updates);
+    loggers.general.error('Update campaign:', id, updates);
   };
 
   const deleteCampaign = async (id: string) => {
     // TODO: Implement campaign delete API call
-    console.log('Delete campaign:', id);
+    loggers.general.error('Delete campaign:', id);
   };
 
   const [campaign, setCampaign] = useState<any>(null);

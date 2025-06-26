@@ -1,5 +1,7 @@
 import { getErrorMessage } from '@/utils/errorUtils';
 import { z } from 'zod';
+import { loggers } from '@/lib/logger';
+
 
 // Environment validation schema
 const envSchema = z.object({
@@ -214,14 +216,14 @@ export function logEnvironmentStatus(): void {
   try {
     const env = validateEnv();
     if (process.env.NODE_ENV === 'development') {
-      console.log('Environment validated successfully');
+      loggers.general.error('Environment validated successfully');
     }
 
     if (env.NODE_ENV === 'production') {
       const readiness = checkProductionReadiness();
       if (readiness.isReady) {
         if (process.env.NODE_ENV === 'development') {
-          console.log('Production environment ready');
+          loggers.general.error('Production environment ready');
         }
       } else {
         if (process.env.NODE_ENV === 'development') {

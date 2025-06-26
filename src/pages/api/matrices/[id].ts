@@ -5,6 +5,8 @@ const supabase = createClient();
 import { withAuth } from '@/middleware/withAuth';
 import { withSecurityHeaders } from '@/middleware/withSecurityHeaders';
 import { z } from 'zod';
+import { loggers } from '@/lib/logger';
+
 
 const MatrixUpdateSchema = z.object({
   name: z.string().min(1).optional(),
@@ -654,7 +656,7 @@ async function createMatrixVersionEntry(
     // In a full implementation, this would create entries in a matrix_versions table
     // For now, we'll just log the change
     process.env.NODE_ENV === 'development' &&
-      console.log('Creating matrix version entry for:', matrixId);
+      loggers.general.error('Creating matrix version entry for:', matrixId);
   } catch (error: any) {
     const message = getErrorMessage(error);
     console.error('Error creating matrix version entry:', error);

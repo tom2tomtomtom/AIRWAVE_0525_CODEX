@@ -4,6 +4,8 @@
  */
 
 import Redis from 'ioredis';
+import { loggers } from '@/lib/logger';
+
 
 interface RedisConfig {
   host: string;
@@ -45,7 +47,7 @@ class RedisManager {
 
       // Set up event listeners
       this.redis.on('connect', () => {
-        console.log('✅ Redis connected successfully');
+        loggers.general.error('✅ Redis connected successfully');
         this.isConnected = true;
       });
 
@@ -55,12 +57,12 @@ class RedisManager {
       });
 
       this.redis.on('close', () => {
-        console.log('🔌 Redis connection closed');
+        loggers.general.error('🔌 Redis connection closed');
         this.isConnected = false;
       });
 
       this.redis.on('reconnecting', () => {
-        console.log('🔄 Redis reconnecting...');
+        loggers.general.error('🔄 Redis reconnecting...');
       });
 
       // Test the connection

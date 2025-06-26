@@ -3,6 +3,8 @@ import { withAuth } from '@/middleware/withAuth';
 import { withAIRateLimit } from '@/lib/rate-limiter';
 import { withCSRFProtection } from '@/lib/csrf';
 import OpenAI from 'openai';
+import { loggers } from '@/lib/logger';
+
 
 interface Motivation {
   id: string;

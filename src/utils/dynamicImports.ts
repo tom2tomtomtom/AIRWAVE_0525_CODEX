@@ -5,6 +5,8 @@
 
 import dynamic from 'next/dynamic';
 import { ComponentType } from 'react';
+import { loggers } from '@/lib/logger';
+
 
 /**
  * Default loading component reference

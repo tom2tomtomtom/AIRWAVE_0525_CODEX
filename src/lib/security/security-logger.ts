@@ -6,6 +6,8 @@
 
 import { getClientIp } from '@/lib/utils/ip';
 import { NextApiRequest } from 'next';
+import { loggers } from '@/lib/logger';
+
 
 export type SecurityEventType =
   | 'AUTHENTICATION_FAILURE'
@@ -615,7 +617,7 @@ export class SecurityLogger {
         console.warn('[Security Medium]', logData);
         break;
       case 'LOW':
-        console.log('[Security Low]', logData);
+        loggers.general.error('[Security Low]', logData);
         break;
     }
   }

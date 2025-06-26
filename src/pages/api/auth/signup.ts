@@ -1,6 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getErrorMessage } from '@/utils/errorUtils';
 import { supabase } from '@/lib/supabase';
+import { loggers } from '@/lib/logger';
+
 
 interface SignupRequest {
   email: string;
@@ -58,7 +60,7 @@ export default async function handler(
   try {
     // Debug logging
     if (process.env.NODE_ENV === 'development') {
-      console.log('Starting signup process for email:', email);
+      loggers.general.error('Starting signup process for email:', email);
     }
 
     // Check if Supabase is properly configured
@@ -81,7 +83,7 @@ export default async function handler(
 
     // Use Supabase authentication
     if (process.env.NODE_ENV === 'development') {
-      console.log('Creating user with Supabase auth...');
+      loggers.general.error('Creating user with Supabase auth...');
     }
     const { data: authData, error: authError } = await supabase.auth.signUp({
       email,
@@ -124,9 +126,9 @@ export default async function handler(
 
     // Check if email confirmation is required
     process.env.NODE_ENV === 'development' &&
-      console.log('User created, checking confirmation requirement...');
+      loggers.general.error('User created, checking confirmation requirement...');
     if (!authData.session) {
-      process.env.NODE_ENV === 'development' && console.log('Email confirmation required');
+      process.env.NODE_ENV === 'development' && loggers.general.error('Email confirmation required');
       return res.status(200).json({
         success: true,
         message: 'Please check your email for a confirmation link before logging in.',
@@ -135,7 +137,7 @@ export default async function handler(
 
     // If no email confirmation required, create user profile
     process.env.NODE_ENV === 'development' &&
-      console.log('No email confirmation required, creating profile...');
+      loggers.general.error('No email confirmation required, creating profile...');
     // First check if profiles table exists by attempting to query it
     const { data: existingProfile, error: profileCheckError } = await supabase
       .from('profiles')

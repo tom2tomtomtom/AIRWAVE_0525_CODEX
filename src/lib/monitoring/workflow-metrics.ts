@@ -5,6 +5,8 @@
 
 import { redisManager } from '@/lib/redis/redis-config';
 import { performanceTracker } from '@/lib/performance/performance-tracker';
+import { loggers } from '@/lib/logger';
+
 
 interface WorkflowMetric {
   userId: string;
@@ -76,9 +78,9 @@ export class WorkflowMetricsCollector {
     try {
       this.useRedis = await redisManager.isAvailable();
       if (this.useRedis) {
-        console.log('✅ Workflow Metrics using Redis for persistence');
+        loggers.general.error('✅ Workflow Metrics using Redis for persistence');
       } else {
-        console.log('⚠️ Workflow Metrics using local storage (Redis unavailable)');
+        loggers.general.error('⚠️ Workflow Metrics using local storage (Redis unavailable)');
       }
     } catch (error: any) {
       console.warn('Workflow Metrics Redis initialization failed:', error);
@@ -109,7 +111,7 @@ export class WorkflowMetricsCollector {
     // Start performance tracking
     performanceTracker.start(`workflow_step_${stepName}`, userId, metadata);
     
-    console.log(`📊 Workflow step started: ${stepName} for user ${userId}`);
+    loggers.general.error(`📊 Workflow step started: ${stepName} for user ${userId}`);
   }
 
   /**
@@ -139,7 +141,7 @@ export class WorkflowMetricsCollector {
 
     await this.recordMetric(metric);
     
-    console.log(`📊 Workflow step ${success ? 'completed' : 'failed'}: ${stepName} (${duration}ms)`);
+    loggers.general.error(`📊 Workflow step ${success ? 'completed' : 'failed'}: ${stepName} (${duration}ms)`);
   }
 
   /**
@@ -163,7 +165,7 @@ export class WorkflowMetricsCollector {
 
     await this.recordMetric(metric);
     
-    console.log(`📊 Workflow abandoned at step: ${lastStep} for user ${userId}`);
+    loggers.general.error(`📊 Workflow abandoned at step: ${lastStep} for user ${userId}`);
   }
 
   /**
@@ -187,7 +189,7 @@ export class WorkflowMetricsCollector {
 
     await this.recordMetric(metric);
     
-    console.log(`🎉 Workflow completed for user ${userId} in ${totalDuration}ms`);
+    loggers.general.error(`🎉 Workflow completed for user ${userId} in ${totalDuration}ms`);
   }
 
   /**
@@ -224,7 +226,7 @@ export class WorkflowMetricsCollector {
 
     await this.recordMetric(metric);
     
-    console.log(`🤖 AI operation ${operation}: ${success ? 'success' : 'failed'} (${duration}ms, $${cost.toFixed(4)})`);
+    loggers.general.error(`🤖 AI operation ${operation}: ${success ? 'success' : 'failed'} (${duration}ms, $${cost.toFixed(4)})`);
   }
 
   /**

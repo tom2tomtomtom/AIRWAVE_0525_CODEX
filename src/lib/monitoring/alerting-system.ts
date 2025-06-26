@@ -5,6 +5,8 @@
  */
 
 import { metrics } from './metrics-collector';
+import { loggers } from '@/lib/logger';
+
 
 // Alert severity levels
 export enum AlertSeverity {
@@ -98,7 +100,7 @@ class EmailNotificationChannel extends NotificationChannel {
       const emailContent = this.formatEmailContent(alert);
 
       // Mock implementation - replace with actual email service
-      console.log(`[EMAIL] Sending alert to ${config.target}:`, emailContent);
+      loggers.general.error(`[EMAIL] Sending alert to ${config.target}:`, emailContent);
 
       return true;
     } catch (error) {

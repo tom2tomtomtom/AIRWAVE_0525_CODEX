@@ -3,6 +3,8 @@ import { getErrorMessage } from '@/utils/errorUtils';
 // Provides real-time communication for render progress and notifications
 
 import { useEffect, useRef, useState, useCallback } from 'react';
+import { loggers } from '@/lib/logger';
+
 
 export interface RealTimeEvent {
   type: string;
@@ -112,7 +114,7 @@ export function useRealTimeUpdates(options: UseRealTimeUpdatesOptions = {}) {
           lastConnected: new Date(),
         }));
         if (process.env.NODE_ENV === 'development') {
-          console.log('Real-time connection established');
+          loggers.general.error('Real-time connection established');
         }
       };
 

@@ -2,6 +2,8 @@ import { Ratelimit } from '@upstash/ratelimit';
 import { Redis } from '@upstash/redis';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { env } from './env';
+import { loggers } from '@/lib/logger';
+
 
 // Initialize Redis client for production or fallback to memory
 const redis =
@@ -13,7 +15,7 @@ const redis =
 
 // Log Redis status
 if (process.env.NODE_ENV === 'development') {
-  console.log('Rate limiter Redis status:', redis ? 'Connected' : 'Using memory fallback');
+  loggers.general.error('Rate limiter Redis status:', redis ? 'Connected' : 'Using memory fallback');
 }
 
 // Rate limiter configurations using Upstash

@@ -5,6 +5,8 @@
 
 import { supabase } from '@/lib/supabase';
 import { Profile } from '@/types/database';
+import { loggers } from '@/lib/logger';
+
 
 export interface CreateProfileData {
   id: string;
@@ -222,7 +224,7 @@ export async function migrateLegacyProfile(userId: string): Promise<boolean> {
       }
 
       process.env.NODE_ENV === 'development' &&
-        console.log(`Migrated legacy profile for user ${userId}`);
+        loggers.general.error(`Migrated legacy profile for user ${userId}`);
     }
 
     return true;

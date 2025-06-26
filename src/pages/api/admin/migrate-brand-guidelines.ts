@@ -1,5 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { supabase } from '@/lib/supabase';
+import { loggers } from '@/lib/logger';
+
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
@@ -8,7 +10,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   try {
     // Add the brand_guidelines column if it doesn't exist
-    process.env.NODE_ENV === 'development' && console.log('Adding brand_guidelines column...');
+    process.env.NODE_ENV === 'development' && loggers.general.error('Adding brand_guidelines column...');
     const { error: columnError } = await supabase.rpc('exec_sql', {
       sql: `
         DO $$ 
@@ -54,7 +56,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         details: verifyError.message });
     }
 
-    process.env.NODE_ENV === 'development' && console.log('Migration completed successfully');
+    process.env.NODE_ENV === 'development' && loggers.general.error('Migration completed successfully');
     return res.json({
       success: true,
       message: 'brand_guidelines column added successfully',

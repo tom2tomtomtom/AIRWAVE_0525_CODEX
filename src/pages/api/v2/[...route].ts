@@ -67,7 +67,7 @@ class AICostController {
     metadata: any
   ): Promise<void> {
     // Stub implementation
-    console.log(`Tracked usage: ${service}/${model} - ${tokens} tokens, $${cost}`, metadata);
+    loggers.general.error(`Tracked usage: ${service}/${model} - ${tokens} tokens, $${cost}`, metadata);
   }
 }
 
@@ -98,6 +98,8 @@ import { handleWorkflowRoutes } from './handlers/workflow';
 import { handleAIRoutes } from './handlers/ai';
 import { handleAssetsRoutes } from './handlers/assets';
 import { handleMonitoringRoutes } from './handlers/monitoring';
+import { loggers } from '@/lib/logger';
+
 
 interface RouteContext {
   user: any;

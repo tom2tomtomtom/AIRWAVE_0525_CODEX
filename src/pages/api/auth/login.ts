@@ -2,6 +2,8 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { getErrorMessage } from '@/utils/errorUtils';
 import { withAuthRateLimit } from '@/lib/rate-limiter';
 import { supabase } from '@/lib/supabase';
+import { loggers } from '@/lib/logger';
+
 
 interface LoginRequest {
   email: string;
@@ -87,7 +89,7 @@ async function handler(
     // If profile doesn't exist, create it with the current schema
     if (profileError && profileError.code === 'PGRST116') {
       if (process.env.NODE_ENV === 'development') {
-        console.log('Creating new user profile...');
+        loggers.general.error('Creating new user profile...');
       }
       
       // Determine the correct schema to use based on existing table structure

@@ -1,3 +1,5 @@
+import { loggers } from '@/lib/logger';
+
 /**
  * Email service using Resend
  */
@@ -15,7 +17,7 @@ export interface EmailOptions {
  */
 export async function sendEmail(options: EmailOptions): Promise<{ success: boolean; id?: string }> {
   // Placeholder implementation
-  console.log('Email would be sent:', options);
+  loggers.db.debug('Email would be sent:', options);
 
   return {
     success: true,

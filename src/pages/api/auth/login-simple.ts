@@ -1,5 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { createClient } from '@supabase/supabase-js';
+import { loggers } from '@/lib/logger';
+
 
 interface LoginResponse {
   success: boolean;
@@ -74,7 +76,7 @@ export default async function handler(
       }
     } catch (profileErr) {
       // Profile fetch failed, continue without it
-      console.log('Could not fetch user profile:', profileErr);
+      loggers.general.error('Could not fetch user profile:', profileErr);
     }
 
     // Create response with user data

@@ -3,6 +3,8 @@ import { getErrorMessage } from '@/utils/errorUtils';
 import OpenAI from 'openai';
 import { env, hasOpenAI, hasElevenLabs, hasRunway } from '@/lib/env';
 import { withAIRateLimit } from '@/lib/rate-limiter';
+import { loggers } from '@/lib/logger';
+
 
 export interface GenerationPrompt {
   prompt: string;
@@ -152,7 +154,7 @@ const generateVideo = async (prompt: string, parameters?: Record<string, any>): 
 
   try {
     // Implement Runway ML video generation
-    process.env.NODE_ENV === 'development' && console.log('Runway ML video generation requested');
+    process.env.NODE_ENV === 'development' && loggers.general.error('Runway ML video generation requested');
     throw new Error('Runway ML integration not yet implemented');
   } catch (error: any) {
     console.error('Runway video generation error:', error);
@@ -172,7 +174,7 @@ const generateVoice = async (prompt: string, parameters?: Record<string, any>): 
     const voice = parameters?.voice || 'alloy';
     const language = parameters?.language || 'en';
 
-    process.env.NODE_ENV === 'development' && console.log('ElevenLabs voice generation requested');
+    process.env.NODE_ENV === 'development' && loggers.general.error('ElevenLabs voice generation requested');
     throw new Error('ElevenLabs integration not yet implemented');
   } catch (error: any) {
     console.error('ElevenLabs voice generation error:', error);

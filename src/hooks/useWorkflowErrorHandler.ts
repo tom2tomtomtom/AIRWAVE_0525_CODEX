@@ -1,5 +1,7 @@
 import { useCallback, useState } from 'react';
 import { useWorkflow } from '@/components/workflow/WorkflowProvider';
+import { loggers } from '@/lib/logger';
+
 
 export interface WorkflowError {
   id: string;
@@ -192,7 +194,7 @@ export function useWorkflowErrorHandler() {
     async (error: WorkflowError, options?: ErrorRecoveryOptions) => {
       // For validation errors, we typically need user intervention
       // Just keep the error message visible for user to fix
-      console.log('Validation error requires user intervention:', error.details);
+      loggers.general.error('Validation error requires user intervention:', error.details);
     },
     []
   );
@@ -211,7 +213,7 @@ export function useWorkflowErrorHandler() {
             actions.clearError();
             return;
           } catch (retryError: any) {
-            console.log(`Retry failed, waiting ${delay}ms before next attempt`);
+            loggers.general.error(`Retry failed, waiting ${delay}ms before next attempt`);
           }
         }
 

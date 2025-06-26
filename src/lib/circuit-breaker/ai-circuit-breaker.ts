@@ -4,6 +4,8 @@
  */
 
 import { redisManager } from '@/lib/redis/redis-config';
+import { loggers } from '@/lib/logger';
+
 
 interface CircuitBreakerConfig {
   failureThreshold: number;
@@ -73,9 +75,9 @@ export class AICircuitBreaker {
     try {
       this.useRedis = await redisManager.isAvailable();
       if (this.useRedis) {
-        console.log('✅ AI Circuit Breaker using Redis for distributed state');
+        loggers.general.error('✅ AI Circuit Breaker using Redis for distributed state');
       } else {
-        console.log('⚠️ AI Circuit Breaker using local state (Redis unavailable)');
+        loggers.general.error('⚠️ AI Circuit Breaker using local state (Redis unavailable)');
       }
     } catch (error: any) {
       console.warn('AI Circuit Breaker Redis initialization failed:', error);
@@ -108,7 +110,7 @@ export class AICircuitBreaker {
         console.warn(`🚫 Circuit breaker OPEN for ${circuitKey} - rejecting call`);
 
         if (fallback) {
-          console.log(`🔄 Using fallback for ${circuitKey}`);
+          loggers.general.error(`🔄 Using fallback for ${circuitKey}`);
           return await fallback();
         }
 
@@ -131,7 +133,7 @@ export class AICircuitBreaker {
         }
 
         await this.incrementHalfOpenCalls(circuitKey);
-        console.log(`🔍 Circuit breaker HALF_OPEN for ${circuitKey} - testing service recovery`);
+        loggers.general.error(`🔍 Circuit breaker HALF_OPEN for ${circuitKey} - testing service recovery`);
         break;
 
       case CircuitState.CLOSED:
@@ -251,7 +253,7 @@ export class AICircuitBreaker {
       if (stats.successCount >= config.halfOpenMaxCalls) {
         stats.state = CircuitState.CLOSED;
         stats.failureCount = 0; // Reset failure count
-        console.log(`✅ Circuit breaker CLOSED for ${circuitKey} - service recovered`);
+        loggers.general.error(`✅ Circuit breaker CLOSED for ${circuitKey} - service recovered`);
       }
     }
 
@@ -400,7 +402,7 @@ export class AICircuitBreaker {
       }
     }
 
-    console.log(`🔄 Circuit breaker reset for ${circuitKey}`);
+    loggers.general.error(`🔄 Circuit breaker reset for ${circuitKey}`);
   }
 
   /**

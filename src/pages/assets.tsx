@@ -18,6 +18,8 @@ import { Upload, AutoAwesome, Add as AddIcon } from '@mui/icons-material';
 import DashboardLayout from '@/components/DashboardLayout';
 import AssetUploadModal from '@/components/AssetUploadModal';
 import { useAuth } from '@/contexts/AuthContext';
+import { loggers } from '@/lib/logger';
+
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -72,7 +74,7 @@ const AssetsPage = () => {
     {
       icon: <AutoAwesome />,
       name: 'AI Generate',
-      action: () => console.log('AI Generate clicked') },
+      action: () => loggers.auth.info('AI Generate clicked') },
   ];
 
   // Mock assets data for testing
@@ -83,7 +85,7 @@ const AssetsPage = () => {
   ];
 
   const handleUploadComplete = () => {
-    console.log('Upload completed');
+    loggers.auth.info('Upload completed');
     // In a real app, this would refresh the assets list
   };
 
