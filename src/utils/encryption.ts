@@ -15,7 +15,10 @@ function getEncryptionKey(): Buffer {
   }
 
   if (process.env.NODE_ENV === 'development') {
-    return crypto.scryptSync('dev-mfa-key-airwave', 'salt', KEY_LENGTH);
+    // Use a more secure development key derivation
+    const devSeed = process.env.DEV_ENCRYPTION_SEED || 'dev-airwave-seed-2025';
+    const dynamicSalt = crypto.createHash('sha256').update(devSeed).digest('hex').slice(0, 16);
+    return crypto.scryptSync(devSeed, dynamicSalt, KEY_LENGTH);
   }
 
   throw new Error('MFA_ENCRYPTION_KEY environment variable is required for production');
