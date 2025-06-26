@@ -3,7 +3,6 @@ import { getErrorMessage } from '@/utils/errorUtils';
 import { supabase } from '@/lib/supabase';
 import { loggers } from '@/lib/logger';
 
-
 interface SignupRequest {
   email: string;
   password: string;
@@ -31,29 +30,44 @@ export default async function handler(
     return res.status(405).json({ success: false, error: 'Method not allowed' });
   }
 
-  // Simple validation
-  const { email, password, name } = req.body;
+  // Input validation and sanitization
+  const { email: rawEmail, password, name: rawName } = req.body;
 
-  if (!email || !password || !name) {
+  if (!rawEmail || !password || !rawName) {
     return res.status(400).json({
       success: false,
       error: 'Email, password, and name are required',
     });
   }
 
-  // Basic email validation
-  if (!email.includes('@')) {
+  // Sanitize inputs
+  const { sanitizeEmail, sanitizeInput } = await import('@/utils/sanitization');
+  const email = sanitizeEmail(rawEmail);
+  const name = sanitizeInput(rawName, req);
+
+  // Validate email format
+  const emailRegex =
+    /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+  if (!emailRegex.test(email)) {
     return res.status(400).json({
       success: false,
       error: 'Invalid email format',
     });
   }
 
-  // Basic password validation
+  // Validate password strength
   if (password.length < 8) {
     return res.status(400).json({
       success: false,
-      error: 'Password must be at least 8 characters',
+      error: 'Password must be at least 8 characters long',
+    });
+  }
+
+  // Validate name
+  if (name.length < 2 || name.length > 100) {
+    return res.status(400).json({
+      success: false,
+      error: 'Name must be between 2 and 100 characters',
     });
   }
 
@@ -128,7 +142,8 @@ export default async function handler(
     process.env.NODE_ENV === 'development' &&
       loggers.general.error('User created, checking confirmation requirement...');
     if (!authData.session) {
-      process.env.NODE_ENV === 'development' && loggers.general.error('Email confirmation required');
+      process.env.NODE_ENV === 'development' &&
+        loggers.general.error('Email confirmation required');
       return res.status(200).json({
         success: true,
         message: 'Please check your email for a confirmation link before logging in.',
