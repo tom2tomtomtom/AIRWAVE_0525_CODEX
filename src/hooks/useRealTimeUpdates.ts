@@ -53,7 +53,8 @@ export function useRealTimeUpdates(options: UseRealTimeUpdatesOptions = {}) {
   const [lastEvent, setLastEvent] = useState<RealTimeEvent | null>(null);
   const [connectionStats, setConnectionStats] = useState({
     attempts: 0,
-    lastConnected: null as Date | null });
+    lastConnected: null as Date | null,
+  });
 
   const eventSourceRef = useRef<EventSource | null>(null);
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -108,7 +109,8 @@ export function useRealTimeUpdates(options: UseRealTimeUpdatesOptions = {}) {
         attemptCountRef.current = 0;
         setConnectionStats(prev => ({
           ...prev,
-          lastConnected: new Date() }));
+          lastConnected: new Date(),
+        }));
         if (process.env.NODE_ENV === 'development') {
           console.log('Real-time connection established');
         }
@@ -128,7 +130,8 @@ export function useRealTimeUpdates(options: UseRealTimeUpdatesOptions = {}) {
           attemptCountRef.current++;
           setConnectionStats(prev => ({
             attempts: attemptCountRef.current,
-            lastConnected: prev.lastConnected }));
+            lastConnected: prev.lastConnected,
+          }));
 
           reconnectTimeoutRef.current = setTimeout(() => {
             process.env.NODE_ENV === 'development' && disconnect();
@@ -144,7 +147,8 @@ export function useRealTimeUpdates(options: UseRealTimeUpdatesOptions = {}) {
           const realTimeEvent: RealTimeEvent = {
             type: event.type || 'message',
             data,
-            timestamp: Date.now() };
+            timestamp: Date.now(),
+          };
 
           setLastEvent(realTimeEvent);
           emit('message', realTimeEvent);
@@ -155,17 +159,17 @@ export function useRealTimeUpdates(options: UseRealTimeUpdatesOptions = {}) {
       };
 
       // Specific event handlers
-      eventSource.addEventListener('connected', _event => {
+      eventSource.addEventListener('connected', event => {
         const data = JSON.parse(event.data);
         emit('connected', data);
       });
 
-      eventSource.addEventListener('heartbeat', _event => {
+      eventSource.addEventListener('heartbeat', event => {
         const data = JSON.parse(event.data);
         emit('heartbeat', data);
       });
 
-      eventSource.addEventListener('render_progress', _event => {
+      eventSource.addEventListener('render_progress', event => {
         const data: RenderProgressEvent = JSON.parse(event.data);
         emit('render_progress', data);
         setLastEvent({ type: 'render_progress', data, timestamp: Date.now() });
@@ -291,7 +295,8 @@ export function useRenderProgress(renderId?: string) {
   return {
     progress,
     connected: realTime.connected,
-    error: realTime.error };
+    error: realTime.error,
+  };
 }
 
 export function useNotifications() {
@@ -319,5 +324,6 @@ export function useNotifications() {
     clearNotifications,
     removeNotification,
     connected: realTime.connected,
-    error: realTime.error };
+    error: realTime.error,
+  };
 }
