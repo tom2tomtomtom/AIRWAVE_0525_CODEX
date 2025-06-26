@@ -1,5 +1,36 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 
+/**
+ * @swagger
+ * /api/health/live:
+ *   get:
+ *     summary: Liveness probe
+ *     description: Basic liveness check for container orchestration (Kubernetes, Docker). This endpoint confirms the application process is running and responsive.
+ *     tags: [System]
+ *     responses:
+ *       200:
+ *         description: Service is alive
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 alive:
+ *                   type: boolean
+ *                   example: true
+ *                 timestamp:
+ *                   type: string
+ *                   format: date-time
+ *                 uptime:
+ *                   type: number
+ *                   description: Process uptime in seconds
+ *                 pid:
+ *                   type: number
+ *                   description: Process ID
+ *       405:
+ *         description: Method not allowed
+ */
+
 interface LivenessResponse {
   alive: boolean;
   timestamp: string;

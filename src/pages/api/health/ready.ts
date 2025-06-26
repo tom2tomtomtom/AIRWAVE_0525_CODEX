@@ -1,6 +1,43 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { getConfig } from '@/lib/config';
 import { loggers } from '@/lib/logger';
+
+/**
+ * @swagger
+ * /api/health/ready:
+ *   get:
+ *     summary: Readiness probe
+ *     description: Readiness check for container orchestration. Verifies the application is ready to serve traffic by checking critical dependencies.
+ *     tags: [System]
+ *     responses:
+ *       200:
+ *         description: Service is ready
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 ready:
+ *                   type: boolean
+ *                   example: true
+ *                 timestamp:
+ *                   type: string
+ *                   format: date-time
+ *                 checks:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       service:
+ *                         type: string
+ *                       ready:
+ *                         type: boolean
+ *                       error:
+ *                         type: string
+ *       503:
+ *         description: Service not ready
+ *       405:
+ *         description: Method not allowed
+ */
 
 interface ReadinessCheck {
   service: string;
@@ -29,12 +66,12 @@ export default async function handler(
   const checks: ReadinessCheck[] = [];
 
   try {
-    const config = getConfig();
-
-    // Check environment configuration
+    // Check basic environment variables
+    const hasBasicConfig = !!(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NODE_ENV);
     checks.push({
       service: 'configuration',
-      ready: true });
+      ready: hasBasicConfig,
+      error: hasBasicConfig ? undefined : 'Basic environment configuration missing' });
 
     // Check database connectivity
     try {
@@ -55,19 +92,21 @@ export default async function handler(
     }
 
     // Check if required secrets are available
-    const requiredSecrets = ['JWT_SECRET', 'NEXTAUTH_SECRET'];
-    const secretsReady = requiredSecrets.every(secret => config[secret as keyof typeof config]);
+    const jwtSecret = process.env.JWT_SECRET;
+    const nextAuthSecret = process.env.NEXTAUTH_SECRET;
+    const secretsReady = !!(jwtSecret && nextAuthSecret);
 
     checks.push({
       service: 'secrets',
       ready: secretsReady,
-      error: secretsReady ? undefined : 'Required secrets missing' });
+      error: secretsReady ? undefined : 'Required authentication secrets missing' });
 
     // Check if in maintenance mode
+    const maintenanceMode = process.env.MAINTENANCE_MODE === 'true';
     checks.push({
       service: 'maintenance',
-      ready: !config.MAINTENANCE_MODE,
-      error: config.MAINTENANCE_MODE ? 'Application in maintenance mode' : undefined });
+      ready: !maintenanceMode,
+      error: maintenanceMode ? 'Application in maintenance mode' : undefined });
 
     const allReady = checks.every(check => check.ready);
 
