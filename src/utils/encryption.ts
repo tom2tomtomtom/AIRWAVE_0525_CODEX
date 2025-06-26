@@ -15,7 +15,6 @@ function getEncryptionKey(): Buffer {
   }
 
   if (process.env.NODE_ENV === 'development') {
-    
     return crypto.scryptSync('dev-mfa-key-airwave', 'salt', KEY_LENGTH);
   }
 
@@ -28,7 +27,7 @@ export function encryptData(plaintext: string): string {
     const key = getEncryptionKey();
     const iv = crypto.randomBytes(IV_LENGTH);
 
-    const cipher = crypto.createCipher(ALGORITHM, key);
+    const cipher = crypto.createCipherGCM(ALGORITHM, key, iv);
     cipher.setAAD(Buffer.from('mfa-secret'));
 
     let encrypted = cipher.update(plaintext, 'utf8', 'hex');
@@ -39,7 +38,6 @@ export function encryptData(plaintext: string): string {
     const result = iv.toString('hex') + tag.toString('hex') + encrypted;
     return result;
   } catch (error: unknown) {
-    
     throw new Error('Failed to encrypt data');
   }
 }
@@ -56,7 +54,7 @@ export function decryptData(encryptedData: string): string {
     );
     const encrypted = encryptedData.slice((IV_LENGTH + TAG_LENGTH) * 2);
 
-    const decipher = crypto.createDecipher(ALGORITHM, key);
+    const decipher = crypto.createDecipherGCM(ALGORITHM, key, iv);
     decipher.setAAD(Buffer.from('mfa-secret'));
     decipher.setAuthTag(tag);
 
@@ -65,7 +63,6 @@ export function decryptData(encryptedData: string): string {
 
     return decrypted;
   } catch (error: unknown) {
-    
     throw new Error('Failed to decrypt data');
   }
 }
