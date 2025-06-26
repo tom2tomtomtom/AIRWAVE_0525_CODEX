@@ -6,7 +6,7 @@ import { withAuth } from '@/middleware/withAuth';
 import { withCSRFProtection } from '@/lib/csrf';
 import { ProductionAICostController } from '@/lib/ai/production-cost-controller';
 
-const aiCostController = ProductionAICostController.getInstance();
+import { loggers } from '@/lib/logger';
 import {
   estimateTokensForMotivations,
   estimateTokensForCopy,
@@ -14,6 +14,8 @@ import {
   estimateTokensForBriefParsing,
   getRecommendedModel,
 } from '@/utils/ai-cost-estimation';
+
+const aiCostController = ProductionAICostController.getInstance();
 
 interface CostCheckRequest {
   service: 'openai' | 'anthropic' | 'elevenlabs';

@@ -10,6 +10,7 @@ import {
   getAdminSupabaseClient,
 } from '@/lib/supabase';
 import { handleSupabaseError, getErrorMessage, isAuthError } from '@/lib/supabase/errors';
+import { loggers } from '@/lib/logger';
 import {
   withRetry,
   queryWithCache,
@@ -243,7 +244,7 @@ export function RealtimeSubscriptionExample(campaignId: string, onUpdate: (paylo
         filter: `campaign_id=eq.${campaignId}`
       },
       payload => {
-        console.log('Execution update:', payload);
+        loggers.general.error('Execution update:', payload);
         onUpdate(payload);
       }
     )

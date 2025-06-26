@@ -49,6 +49,7 @@ import { createClient } from '@/lib/supabase/server';
 const supabase = createClient();
 import { withAuth } from '@/middleware/withAuth';
 import { withAPIRateLimit } from '@/lib/rate-limiter';
+import { loggers } from '@/lib/logger';
 import {
   successResponse,
   errorResponse,
@@ -75,7 +76,7 @@ class AICostController {
     userId: string,
     metadata: any
   ): Promise<void> {
-    console.log(`Tracked usage: ${service}/${model} - ${tokens} tokens, $${cost}`, metadata);
+    loggers.general.error(`Tracked usage: ${service}/${model} - ${tokens} tokens, $${cost}`, metadata);
   }
 }
 
