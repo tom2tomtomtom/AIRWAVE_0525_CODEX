@@ -2,9 +2,11 @@
 const nextConfig = {
   reactStrictMode: true,
   typescript: {
+    // TODO: Re-enable once remaining ~150 TypeScript errors are fixed
     ignoreBuildErrors: true,
   },
   eslint: {
+    // TODO: Re-enable once TypeScript errors are resolved
     ignoreDuringBuilds: true,
   },
   webpack: (config, { isServer }) => {
