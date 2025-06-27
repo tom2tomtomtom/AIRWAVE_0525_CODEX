@@ -53,7 +53,7 @@ export const MobileOptimizedWorkflow: React.FC<MobileOptimizedWorkflowProps> = (
   const [activeStep, setActiveStep] = useState(0);
   const [workflowData, setWorkflowData] = useState<any>({});
   const [showGestures, setShowGestures] = useState(true);
-  const containerRef = useRef<HTMLDivElement>(null);
+  // const containerRef = useRef<HTMLDivElement>(null); // TODO: Use for scroll/swipe gestures
 
   const steps: MobileWorkflowStep[] = [
     {
@@ -378,7 +378,7 @@ const MobileMotivationsStep: React.FC<{ onSelect: (data: any) => void }> = ({ on
   );
 };
 
-const MobileCopyStep: React.FC<{ onSelect: (data: any) => void }> = ({ onSelect }) => (
+const MobileCopyStep: React.FC<{ onSelect: (data: any) => void }> = ({ onSelect: _onSelect }) => (
   <Box>
     <Typography variant="body2" color="text.secondary" textAlign="center" mb={3}>
       Swipe left/right to browse copy variations
@@ -395,7 +395,7 @@ const MobileCopyStep: React.FC<{ onSelect: (data: any) => void }> = ({ onSelect 
   </Box>
 );
 
-const MobileAssetsStep: React.FC<{ onSelect: (data: any) => void }> = ({ onSelect }) => (
+const MobileAssetsStep: React.FC<{ onSelect: (data: any) => void }> = ({ onSelect: _onSelect }) => (
   <Box textAlign="center">
     <Typography variant="body2" color="text.secondary" mb={3}>
       Choose existing assets or generate new ones

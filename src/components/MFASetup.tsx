@@ -48,7 +48,7 @@ export const MFASetup: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [showSetupDialog, setShowSetupDialog] = useState(false);
-  const [showBackupCodes, setShowBackupCodes] = useState(false);
+  const [_showBackupCodes, setShowBackupCodes] = useState(false);
   const [setupStep, setSetupStep] = useState<'qr' | 'verify' | 'backup'>('qr');
 
   // Load MFA status on component mount
