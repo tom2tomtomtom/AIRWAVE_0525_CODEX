@@ -43,29 +43,30 @@ interface TabPanelProps {
   value: number;
 }
 
-function TabPanel(props: TabPanelProps) {
-  const { children, value, index, ...other } = props;
-  return (
-    <div hidden={value !== index} {...other}>
-      {value === index && <Box sx={{ pt: 3 }}>{children}</Box>}
-    </div>
-  );
-}
+// function TabPanel(props: TabPanelProps) {
+//   const { children, value, index, ...other } = props;
+//   return (
+//     <div hidden={value !== index} {...other}>
+//       {value === index && <Box sx={{ pt: 3 }}>{children}</Box>}
+//     </div>
+//   );
+// }
 
 const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({ clientId, dateRange }) => {
   const { activeClient } = useClient();
   const { showNotification } = useNotification();
 
   // State
-  const [activeTab, setActiveTab] = useState(0);
-  const [performanceData, setPerformanceData] = useState<any>(null);
-  const [insights, setInsights] = useState<any>(null);
+  // const [activeTab, setActiveTab] = useState(0);
+  // const [performanceData, setPerformanceData] = useState<any>(null);
+  // const [insights, setInsights] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState({
     granularity: 'day',
     metrics: ['impressions', 'clicks', 'conversions', 'spend'],
     platform: '',
-    campaignId: '' });
+    campaignId: '',
+  });
 
   const targetClientId = clientId || activeClient?.id;
 
@@ -103,7 +104,8 @@ const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({ clientId, d
       if (filters.campaignId) params.append('campaign_id', filters.campaignId);
 
       const response = await fetch(`/api/analytics/performance?${params}`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } });
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+      });
 
       if (response.ok) {
         const data = await response.json();
@@ -131,7 +133,8 @@ const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({ clientId, d
       if (dateRange?.end) params.append('date_to', dateRange.end);
 
       const response = await fetch(`/api/analytics/insights?${params}`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } });
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+      });
 
       if (response.ok) {
         const data = await response.json();
