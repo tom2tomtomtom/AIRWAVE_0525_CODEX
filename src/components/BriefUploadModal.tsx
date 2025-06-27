@@ -46,7 +46,7 @@ interface FilePreview {
   size: string;
 }
 
-const steps = ['Upload Brief Document', 'AI Processing', 'Review & Confirm'];
+// const steps = ['Upload Brief Document', 'AI Processing', 'Review & Confirm']; // TODO: Add stepper component
 
 export const BriefUploadModal: React.FC<BriefUploadModalProps> = ({
   open,

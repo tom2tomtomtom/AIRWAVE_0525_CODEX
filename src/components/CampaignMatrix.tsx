@@ -115,7 +115,7 @@ const defaultFields: MatrixField[] = [
   },
 ];
 
-export const CampaignMatrix: React.FC<CampaignMatrixProps> = ({ campaignId, onRender }) => {
+export const CampaignMatrix: React.FC<CampaignMatrixProps> = ({ campaignId: _campaignId, onRender }) => {
   const { activeClient } = useClient();
   const { showNotification } = useNotification();
 

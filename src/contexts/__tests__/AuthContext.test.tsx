@@ -51,7 +51,8 @@ describe('AuthContext', () => {
     const mockUser = {
       id: '123',
       email: 'test@example.com',
-      user_metadata: { full_name: 'Test User' };
+      user_metadata: { full_name: 'Test User' }
+    };
 
     const { supabase } = await import('@/lib/supabase/client');
 

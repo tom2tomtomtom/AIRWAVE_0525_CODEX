@@ -132,8 +132,8 @@ const ApprovalWorkflow: React.FC<ApprovalWorkflowProps> = ({
         setApprovals(data.data || []);
       }
     } catch (error: any) {
-    const message = getErrorMessage(error);
-      console.error('Error fetching approvals:', error);
+      const message = getErrorMessage(error);
+      console.error('Error fetching approvals:', message);
     } finally {
       setLoading(false);
     }
@@ -162,8 +162,8 @@ const ApprovalWorkflow: React.FC<ApprovalWorkflowProps> = ({
         showNotification(error.error || 'Failed to process approval', 'error');
       }
     } catch (error: any) {
-    const message = getErrorMessage(error);
-      showNotification('Error processing approval', 'error');
+      const message = getErrorMessage(error);
+      showNotification(`Error processing approval: ${message}`, 'error');
     }
   };
 
@@ -194,8 +194,8 @@ const ApprovalWorkflow: React.FC<ApprovalWorkflowProps> = ({
         showNotification(error.error || 'Failed to process bulk approvals', 'error');
       }
     } catch (error: any) {
-    const message = getErrorMessage(error);
-      showNotification('Error processing bulk approvals', 'error');
+      const message = getErrorMessage(error);
+      showNotification(`Error processing bulk approvals: ${message}`, 'error');
     }
   };
 
