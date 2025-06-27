@@ -276,7 +276,7 @@ export const CampaignMatrix: React.FC<CampaignMatrixProps> = ({ campaignId: _cam
     try {
       // Calculate all possible combinations
       const unlockedRows = rows.filter((row: any) => !row.locked);
-      const lockedRows = rows.filter((row: any) => row.locked);
+      // const lockedRows = rows.filter((row: any) => row.locked); // TODO: Use for combination logic
 
       // Generate combinations logic here
       const newCombinations = [];

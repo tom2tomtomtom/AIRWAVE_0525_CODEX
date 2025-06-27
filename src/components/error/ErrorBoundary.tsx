@@ -292,7 +292,7 @@ export function withErrorBoundary<P extends object>(
  * Hook for handling errors in functional components
  */
 export function useErrorHandler() {
-  return (error: Error, errorInfo?: ErrorInfo) => {
+  return (error: Error, _errorInfo?: ErrorInfo) => {
     // Throw error to be caught by nearest error boundary
     throw error;
   };

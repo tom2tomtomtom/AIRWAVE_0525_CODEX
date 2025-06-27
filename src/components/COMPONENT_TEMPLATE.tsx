@@ -88,7 +88,7 @@ export const ComponentName: React.FC<ComponentNameProps> = ({
   ...rest
 }) => {
   // Document complex state with comments
-  const [state, setState] = React.useState<ComponentState>({
+  const [state, _setState] = React.useState<ComponentState>({
     isLoading: false,
     error: null,
     data: []
@@ -170,7 +170,7 @@ export const ComponentName: React.FC<ComponentNameProps> = ({
  * @param event - Mouse event from user interaction
  * @returns Processed string value
  */
-function processUserInput(event: React.MouseEvent): string {
+function processUserInput(_event: React.MouseEvent): string {
   // Implementation details
   return 'processed-value';
 }
