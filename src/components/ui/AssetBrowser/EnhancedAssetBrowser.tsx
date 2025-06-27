@@ -103,7 +103,7 @@ export const EnhancedAssetBrowser: React.FC<EnhancedAssetBrowserProps> = ({
   error,
   onAssetSelect,
   onAssetUpload,
-  onAssetDelete,
+  onAssetDelete: _onAssetDelete,
   onAssetFavorite,
   onRefresh,
   allowMultiSelect = false,
@@ -121,7 +121,7 @@ export const EnhancedAssetBrowser: React.FC<EnhancedAssetBrowserProps> = ({
   const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
   const [previewAsset, setPreviewAsset] = useState<Asset | null>(null);
   const [menuAnchor, setMenuAnchor] = useState<{ asset: Asset; element: HTMLElement } | null>(null);
-  const [uploadProgress, setUploadProgress] = useState<Record<string, number>>({});
+  const [uploadProgress, _setUploadProgress] = useState<Record<string, number>>({});
 
   // Filter and sort assets
   const filteredAssets = useMemo(() => {

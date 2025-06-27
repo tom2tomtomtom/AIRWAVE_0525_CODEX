@@ -1,5 +1,5 @@
 import * as Sentry from '@sentry/nextjs';
-// import { StatsD } from 'node-statsd';
+import { StatsD } from 'node-statsd';
 import { getMonitoringConfig } from '@/lib/config';
 import { getLogger } from '@/lib/logger';
 

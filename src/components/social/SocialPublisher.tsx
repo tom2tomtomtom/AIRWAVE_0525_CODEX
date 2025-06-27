@@ -89,7 +89,7 @@ const SocialPublisher: React.FC<SocialPublisherProps> = ({
   const [scheduledAt, setScheduledAt] = useState<Date | null>(null);
   const [isScheduled, setIsScheduled] = useState(false);
   const [publishing, setPublishing] = useState(false);
-  const [showPreview, setShowPreview] = useState(false);
+  const [_showPreview, setShowPreview] = useState(false);
   const [linkPreview, setLinkPreview] = useState<any>(null);
 
   const characterLimits: Record<string, number> = {
@@ -137,11 +137,11 @@ const SocialPublisher: React.FC<SocialPublisherProps> = ({
     }
   };
 
-  const handleRemoveImage = (index: number) => {
-    setContent(prev => ({
-      ...prev,
-      images: prev.images.filter((_, i) => i !== index)}));
-  };
+  // const handleRemoveImage = (index: number) => {
+  //   setContent(prev => ({
+  //     ...prev,
+  //     images: prev.images.filter((_, i) => i !== index)}));
+  // }; // TODO: Add remove image functionality to UI
 
   const handlePlatformToggle = (platform: string) => {
     setSelectedPlatforms(prev =>

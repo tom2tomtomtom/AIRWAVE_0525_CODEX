@@ -56,12 +56,12 @@ const BriefDialog: React.FC<BriefDialogProps> = ({
   campaigns,
   onSubmit,
 }) => {
-  const steps = [
-    'Basic Information',
-    'Objectives & Audience',
-    'Messages & Deliverables',
-    'Timeline & Budget',
-  ];
+  // const steps = [
+  //   'Basic Information',
+  //   'Objectives & Audience', 
+  //   'Messages & Deliverables',
+  //   'Timeline & Budget',
+  // ]; // TODO: Add step indicator UI
   const handleNext = () => {
     setActiveStep(activeStep + 1);
   };

@@ -273,12 +273,13 @@ export async function checkRateLimit(
   type: RateLimitType,
   options: RateLimitOptions = {}
 ): Promise<{ exceeded: boolean; remaining: number; resetTime: Date }> {
+  const {
+    windowMs = 60000,
+    maxRequests = RATE_LIMITS[type],
+    keyGenerator = req => generateKey(req, type),
+  } = options;
+
   try {
-    const {
-      windowMs = 60000,
-      maxRequests = RATE_LIMITS[type],
-      keyGenerator = req => generateKey(req, type),
-    } = options;
 
     const key = keyGenerator(req);
 
