@@ -37,7 +37,6 @@ import {
   CheckCircle as CheckCircleIcon,
   Info as InfoIcon,
   Notifications as NotificationsIcon,
-  Settings as SettingsIcon,
   TrendingUp as TrendingUpIcon,
   TrendingDown as TrendingDownIcon,
   TrendingFlat as TrendingFlatIcon} from '@mui/icons-material';
@@ -263,44 +262,45 @@ const MonitoringDashboard: React.FC = () => {
 
   // Render chart
   const renderChart = (chart: any) => {
-    const chartData = {
-      labels: chart.data.map((d: any) => 
-        d.timestamp ? new Date(d.timestamp).toLocaleTimeString() : d.label || ''
-      ),
-      datasets: [
-        {
-          label: chart.title,
-          data: chart.data.map((d: any) => d.value),
-          borderColor: chart.config.colors?.[0] || theme.palette.primary.main,
-          backgroundColor: `${chart.config.colors?.[0] || theme.palette.primary.main}20`,
-          tension: 0.4 }
-      ]};
+    // TODO: Uncomment when react-chartjs-2 is installed
+    // const chartData = {
+    //   labels: chart.data.map((d: any) => 
+    //     d.timestamp ? new Date(d.timestamp).toLocaleTimeString() : d.label || ''
+    //   ),
+    //   datasets: [
+    //     {
+    //       label: chart.title,
+    //       data: chart.data.map((d: any) => d.value),
+    //       borderColor: chart.config.colors?.[0] || theme.palette.primary.main,
+    //       backgroundColor: `${chart.config.colors?.[0] || theme.palette.primary.main}20`,
+    //       tension: 0.4 }
+    //   ]};
 
-    const options = {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          display: false
-        },
-        title: {
-          display: false
-        }
-      },
-      scales: {
-        y: {
-          beginAtZero: true,
-          grid: {
-            color: theme.palette.divider
-          }
-        },
-        x: {
-          grid: {
-            color: theme.palette.divider
-          }
-        }
-      }
-    };
+    // const options = {
+    //   responsive: true,
+    //   maintainAspectRatio: false,
+    //   plugins: {
+    //     legend: {
+    //       display: false
+    //     },
+    //     title: {
+    //       display: false
+    //     }
+    //   },
+    //   scales: {
+    //     y: {
+    //       beginAtZero: true,
+    //       grid: {
+    //         color: theme.palette.divider
+    //       }
+    //     },
+    //     x: {
+    //       grid: {
+    //         color: theme.palette.divider
+    //       }
+    //     }
+    //   }
+    // };
 
     switch (chart.type) {
       case 'line':

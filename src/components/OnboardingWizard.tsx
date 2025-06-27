@@ -49,7 +49,7 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
   open,
   onClose,
   onComplete,
-  userType = 'new'
+  userType: _userType = 'new'
 }) => {
   const [activeStep, setActiveStep] = useState(0);
   const [completed, setCompleted] = useState<Set<number>>(new Set());
