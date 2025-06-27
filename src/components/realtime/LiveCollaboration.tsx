@@ -53,13 +53,13 @@ interface LiveCollaborationProps {
 }
 
 const LiveCollaboration: React.FC<LiveCollaborationProps> = ({
-  context = 'global',
-  contextId,
+  context: _context = 'global',
+  contextId: _contextId,
   showDetails = true,
   compact = false,
 }) => {
   const { user } = useAuth();
-  const { activeClient } = useClient();
+  const { activeClient: _activeClient } = useClient();
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [showAllUsers, setShowAllUsers] = useState(false);
   const [presenceData, setPresenceData] = useState<UserPresence[]>([]);

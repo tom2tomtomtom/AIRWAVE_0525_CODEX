@@ -52,8 +52,8 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
   userType: _userType = 'new'
 }) => {
   const [activeStep, setActiveStep] = useState(0);
-  const [completed, setCompleted] = useState<Set<number>>(new Set());
-  const [showDemo, setShowDemo] = useState(false);
+  const [_completed, setCompleted] = useState<Set<number>>(new Set());
+  const [_showDemo, setShowDemo] = useState(false);
 
   const steps: OnboardingStep[] = [
     {
