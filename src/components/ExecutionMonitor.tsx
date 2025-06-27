@@ -97,7 +97,7 @@ const ExecutionMonitor: React.FC<ExecutionMonitorProps> = ({
   const { executionEvents: _executionEvents, connectionStatus } = useExecutionEvents();
   const [executions, setExecutions] = useState<Execution[]>([]);
   const [loading, setLoading] = useState(true);
-  const [filters, setFilters] = useState<ExecutionFilters>({});
+  const [filters, _setFilters] = useState<ExecutionFilters>({});
   const [selectedExecution, setSelectedExecution] = useState<Execution | null>(null);
   const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
   const [retryDialogOpen, setRetryDialogOpen] = useState(false);
@@ -133,8 +133,8 @@ const ExecutionMonitor: React.FC<ExecutionMonitorProps> = ({
         setExecutions(data.data || []);
       }
     } catch (error: any) {
-    const message = getErrorMessage(error);
-      console.error('Error fetching executions:', error);
+      const message = getErrorMessage(error);
+      console.error('Error fetching executions:', message);
     } finally {
       setLoading(false);
     }
@@ -154,7 +154,7 @@ const ExecutionMonitor: React.FC<ExecutionMonitorProps> = ({
         body: JSON.stringify(retryOptions)});
 
       if (response.ok) {
-        const data = await response.json();
+        // const data = await response.json(); // Response not needed for success notification
         showNotification('Execution retry initiated successfully', 'success');
         setRetryDialogOpen(false);
         fetchExecutions();
@@ -163,8 +163,8 @@ const ExecutionMonitor: React.FC<ExecutionMonitorProps> = ({
         showNotification(error.error || 'Failed to retry execution', 'error');
       }
     } catch (error: any) {
-    const message = getErrorMessage(error);
-      showNotification('Error retrying execution', 'error');
+      const message = getErrorMessage(error);
+      showNotification(`Error retrying execution: ${message}`, 'error');
     }
   };
 
@@ -192,8 +192,8 @@ const ExecutionMonitor: React.FC<ExecutionMonitorProps> = ({
         showNotification(error.error || 'Failed to cancel execution', 'error');
       }
     } catch (error: any) {
-    const message = getErrorMessage(error);
-      showNotification('Error cancelling execution', 'error');
+      const message = getErrorMessage(error);
+      showNotification(`Error cancelling execution: ${message}`, 'error');
     }
   };
 
