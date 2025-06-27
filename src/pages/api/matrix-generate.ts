@@ -3,6 +3,7 @@ import { supabase } from '@/lib/supabase';
 import { env } from '@/lib/env';
 import { z } from 'zod';
 import OpenAI from 'openai';
+import { withAuth } from '@/middleware/withAuth';
 
 const MatrixGenerateSchema = z.object({
   template_id: z.string().uuid(),
@@ -10,10 +11,10 @@ const MatrixGenerateSchema = z.object({
   content_id: z.string().uuid(),
   user_id: z.string().uuid(),
   lock_fields: z.array(z.string()).optional(),
-  variation_count: z.number().min(1).max(20).default(6)
+  variation_count: z.number().min(1).max(20).default(6),
 });
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
+async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
   if (req.method !== 'POST') {
     return res.status(405).json({ success: false, message: 'Method not allowed' });
   }
@@ -60,17 +61,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const prompt = `Given the following template, assets, and campaign content, generate ${variation_count} unique campaign variations.\n\nTemplate:\n${JSON.stringify(template)}\n\nAssets:\n${JSON.stringify(assets)}\n\nContent:\n${JSON.stringify(content.content)}\n\nLock these fields: ${lock_fields.join(', ')}\n\nReturn an array of objects, each describing a variation (asset assignments, content, and any locked fields).`;
     // Initialize OpenAI client
     const openai = new OpenAI({
-      apiKey: env.OPENAI_API_KEY
+      apiKey: env.OPENAI_API_KEY,
     });
 
     const completion = await openai.chat.completions.create({
       model: 'gpt-4o',
       messages: [
         { role: 'system', content: 'You are a creative campaign matrix generator.' },
-        { role: 'user', content: prompt }
+        { role: 'user', content: prompt },
       ],
       temperature: 0.5,
-      max_tokens: 1500
+      max_tokens: 1500,
     });
 
     const variations = completion.choices[0]?.message?.content;
@@ -85,7 +86,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         lock_fields,
         variation_count,
         variations,
-        created_at: new Date().toISOString()
+        created_at: new Date().toISOString(),
       })
       .select()
       .single();
@@ -99,3 +100,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(500).json({ success: false, message: err.message });
   }
 }
+
+export default withAuth(handler);
