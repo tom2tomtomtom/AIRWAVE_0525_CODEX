@@ -204,7 +204,7 @@ export const SupabaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({ 
     }
   };
 
-  const signup = async (email: string, password: string, name: string) => {
+  const signup = async (email: string, password: string, name: string): Promise<{ success: boolean; error?: string; user?: User }> => {
     try {
       const { data, error } = await supabaseClient.auth.signUp({
         email,
@@ -225,7 +225,7 @@ export const SupabaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({ 
       return { success: true, user: data.user || undefined };
     } catch (error: unknown) {
       console.error('💥 Signup error:', error);
-      return { success: false, error: error instanceof Error ? error.message : 'Signup failed', user: undefined };
+      return { success: false, error: error instanceof Error ? error.message : 'Signup failed' };
     }
   };
 

@@ -52,7 +52,7 @@ export class BriefAnalysisCache {
 
 // Copy Generation Caching
 export class CopyGenerationCache {
-  static async get(prompt: string, motivations: string[], userId: string): Promise<void> {
+  static async get(prompt: string, motivations: string[], userId: string): Promise<any> {
     const content = { prompt, motivations: motivations.sort() };
     const key = `${userId}:${generateContentHash(content)}`;
     return await cacheManager.get(key, AI_NAMESPACES.COPY_GENERATION);
@@ -63,7 +63,7 @@ export class CopyGenerationCache {
     motivations: string[],
     userId: string,
     generatedCopy: any
-  ): Promise<void> {
+  ): Promise<boolean> {
     const content = { prompt, motivations: motivations.sort() };
     const key = `${userId}:${generateContentHash(content)}`;
     const tags = [`user:${userId}`, 'copy-generation'];
@@ -85,7 +85,7 @@ export class CopyGenerationCache {
     return success;
   }
 
-  static async invalidateUser(userId: string): Promise<void> {
+  static async invalidateUser(userId: string): Promise<number> {
     return await cacheManager.invalidateByTag(`user:${userId}`);
   }
 }
@@ -97,7 +97,7 @@ export class ImageGenerationCache {
     style: string,
     aspectRatio: string,
     userId: string
-  ): Promise<void> {
+  ): Promise<any> {
     const content = { prompt, style, aspectRatio };
     const key = `${userId}:${generateContentHash(content)}`;
     return await cacheManager.get(key, AI_NAMESPACES.IMAGE_GENERATION);
@@ -109,7 +109,7 @@ export class ImageGenerationCache {
     aspectRatio: string,
     userId: string,
     generatedImages: any
-  ): Promise<void> {
+  ): Promise<boolean> {
     const content = { prompt, style, aspectRatio };
     const key = `${userId}:${generateContentHash(content)}`;
     const tags = [`user:${userId}`, 'image-generation'];
@@ -131,14 +131,14 @@ export class ImageGenerationCache {
     return success;
   }
 
-  static async invalidateUser(userId: string): Promise<void> {
+  static async invalidateUser(userId: string): Promise<number> {
     return await cacheManager.invalidateByTag(`user:${userId}`);
   }
 }
 
 // Video Generation Caching
 export class VideoGenerationCache {
-  static async get(prompt: string, style: string, duration: number, userId: string): Promise<void> {
+  static async get(prompt: string, style: string, duration: number, userId: string): Promise<any> {
     const content = { prompt, style, duration };
     const key = `${userId}:${generateContentHash(content)}`;
     return await cacheManager.get(key, AI_NAMESPACES.VIDEO_GENERATION);
