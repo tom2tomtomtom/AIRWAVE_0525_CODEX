@@ -6,24 +6,29 @@ import React from 'react';
 
 // Mock the Supabase client
 jest.mock('@/lib/supabase/client', () => ({
-  supabase: Record<string, unknown>$1
-  auth: Record<string, unknown>$1
-  getSession: jest.fn(),
+  supabase: {
+    auth: {
+      getSession: jest.fn(),
       signInWithPassword: jest.fn(),
       signUp: jest.fn(),
       signOut: jest.fn(),
-      onAuthStateChange: jest.fn(() => ({,
-    data: { subscription: { unsubscribe: jest.fn() } })) }));
+      onAuthStateChange: jest.fn(() => ({
+        data: { subscription: { unsubscribe: jest.fn() } }
+      }))
+    }
+  }
+}));
 
 // Mock useRouter
 jest.mock('next/router', () => ({
-  useRouter: () => ({,
+  useRouter: () => ({
     push: jest.fn(),
     pathname: '/',
     route: '/',
     asPath: '/',
     query: {}
-  })}));
+  })
+}));
 
 describe('AuthContext', () => {
   beforeEach(() => {
@@ -131,16 +136,20 @@ describe('AuthContext', () => {
     const mockUser = {
       id: '789',
       email: 'existing@example.com',
-      user_metadata: { full_name: 'Existing User' };
+      user_metadata: { full_name: 'Existing User' }
+    };
 
     const { supabase } = await import('@/lib/supabase/client');
 
     jest.mocked(supabase.auth.getSession).mockResolvedValueOnce({
-      data: Record<string, unknown>$1
-  session: Record<string, unknown>$1
-  access_token: 'token',
-          user: mockUser  },
-  error: null});
+      data: {
+        session: {
+          access_token: 'token',
+          user: mockUser
+        }
+      },
+      error: null
+    });
 
     const { result } = renderHook(() => useAuth(), { wrapper });
 

@@ -48,10 +48,10 @@ const slideInUp = keyframes`
   to { transform: translateY(0); opacity: 1; }
 `;
 
-const fadeInScale = keyframes`
-  from { transform: scale(0.8); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
-`;
+// const fadeInScale = keyframes`
+//   from { transform: scale(0.8); opacity: 0; }
+//   to { transform: scale(1); opacity: 1; }
+// `;
 
 const shimmer = keyframes`
   0% { background-position: -200px 0; }
@@ -72,10 +72,10 @@ const AnimatedCard = styled(Card)(({ theme }) => ({
     transform: 'translateY(-4px)' },
 }));
 
-const PulseButton = styled(Button)({
-  '&.pulse': {
-    animation: `${pulse} 2s infinite` },
-});
+// const PulseButton = styled(Button)({
+//   '&.pulse': {
+//     animation: `${pulse} 2s infinite` },
+// });
 
 const BounceIcon = styled(Box)({
   '&.bounce': {
@@ -339,7 +339,7 @@ export const AnimatedFAB: React.FC<{
   icon: React.ReactNode;
   onClick: () => void;
   tooltip?: string;
-}> = ({ icon, onClick, tooltip }) => {
+}> = ({ icon, onClick }) => {
   const [hovered, setHovered] = useState(false);
 
   return (

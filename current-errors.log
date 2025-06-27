@@ -1,0 +1,17 @@
+
+> airwave@1.0.0 type-check
+> tsc --noEmit
+
+lib/webhooks/webhookManager.ts(113,11): error TS6133: 'message' is declared but its value is never read.
+lib/webhooks/webhookManager.ts(113,21): error TS2304: Cannot find name 'getErrorMessage'.
+lib/webhooks/webhookManager.ts(292,11): error TS6133: 'message' is declared but its value is never read.
+lib/webhooks/webhookManager.ts(292,21): error TS2304: Cannot find name 'getErrorMessage'.
+src/components/AdvancedAnalytics.tsx(165,40): error TS6133: 'change' is declared but its value is never read.
+src/components/AdvancedAnalytics.tsx(274,45): error TS6133: 'e' is declared but its value is never read.
+src/components/AIImageGenerator.tsx(130,11): error TS2375: Type '{ original_prompt: string; enhanced_prompt: string | undefined; model: string; settings: { size: string; quality: string; style: string; }; }' is not assignable to type '{ original_prompt: string; enhanced_prompt?: string; revised_prompt?: string; model: string; settings: { size: string; quality: string; style: string; }; }' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'enhanced_prompt' are incompatible.
+    Type 'string | undefined' is not assignable to type 'string'.
+      Type 'undefined' is not assignable to type 'string'.
+src/components/analytics/PerformanceDashboard.tsx(46,10): error TS6133: 'TabPanel' is declared but its value is never read.
+src/components/analytics/PerformanceDashboard.tsx(60,10): error TS6133: 'activeTab' is declared but its value is never read.
+src/components/analytics/PerformanceDashboard.tsx(60,21): error TS6133: 'setActiveTab' is declared but its value is never read.

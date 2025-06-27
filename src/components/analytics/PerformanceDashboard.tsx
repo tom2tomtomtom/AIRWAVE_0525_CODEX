@@ -28,11 +28,11 @@ interface PerformanceDashboardProps {
   };
 }
 
-interface TabPanelProps {
-  children?: React.ReactNode;
-  index: number;
-  value: number;
-}
+// interface TabPanelProps {
+//   children?: React.ReactNode;
+//   index: number;
+//   value: number;
+// }
 
 // function TabPanel(props: TabPanelProps) {
 //   const { children, value, index, ...other } = props;
@@ -99,7 +99,7 @@ const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({ clientId, d
       });
 
       if (response.ok) {
-        const data = await response.json();
+        // const data = await response.json();
         // setPerformanceData(data.data); // TODO: Uncomment when state is implemented
       } else {
         throw new Error('Failed to load performance data');
@@ -128,7 +128,7 @@ const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({ clientId, d
       });
 
       if (response.ok) {
-        const data = await response.json();
+        // const data = await response.json();
         // setInsights(data.data); // TODO: Uncomment when state is implemented
       }
     } catch (error: any) {

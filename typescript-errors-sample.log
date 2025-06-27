@@ -1,0 +1,50 @@
+
+> airwave@1.0.0 type-check
+> tsc --noEmit
+
+lib/webhooks/webhookManager.ts(113,11): error TS6133: 'message' is declared but its value is never read.
+lib/webhooks/webhookManager.ts(113,21): error TS2304: Cannot find name 'getErrorMessage'.
+lib/webhooks/webhookManager.ts(292,11): error TS6133: 'message' is declared but its value is never read.
+lib/webhooks/webhookManager.ts(292,21): error TS2304: Cannot find name 'getErrorMessage'.
+src/components/AdvancedAnalytics.tsx(165,40): error TS6133: 'change' is declared but its value is never read.
+src/components/AdvancedAnalytics.tsx(274,45): error TS6133: 'e' is declared but its value is never read.
+src/components/AIImageGenerator.tsx(130,11): error TS2375: Type '{ original_prompt: string; enhanced_prompt: string | undefined; model: string; settings: { size: string; quality: string; style: string; }; }' is not assignable to type '{ original_prompt: string; enhanced_prompt?: string; revised_prompt?: string; model: string; settings: { size: string; quality: string; style: string; }; }' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+  Types of property 'enhanced_prompt' are incompatible.
+    Type 'string | undefined' is not assignable to type 'string'.
+      Type 'undefined' is not assignable to type 'string'.
+src/components/analytics/PerformanceDashboard.tsx(46,10): error TS6133: 'TabPanel' is declared but its value is never read.
+src/components/analytics/PerformanceDashboard.tsx(60,10): error TS6133: 'activeTab' is declared but its value is never read.
+src/components/analytics/PerformanceDashboard.tsx(60,21): error TS6133: 'setActiveTab' is declared but its value is never read.
+src/components/analytics/PerformanceDashboard.tsx(61,10): error TS6133: 'performanceData' is declared but its value is never read.
+src/components/analytics/PerformanceDashboard.tsx(62,10): error TS6133: 'insights' is declared but its value is never read.
+src/components/analytics/PerformanceDashboard.tsx(115,13): error TS6133: 'message' is declared but its value is never read.
+src/components/analytics/PerformanceDashboard.tsx(150,9): error TS6133: 'getChangeColor' is declared but its value is never read.
+src/components/analytics/PerformanceDashboard.tsx(156,9): error TS6133: 'getChangeIcon' is declared but its value is never read.
+src/components/analytics/PerformanceDashboard.tsx(162,9): error TS6133: 'getInsightIcon' is declared but its value is never read.
+src/components/analytics/PerformanceDashboard.tsx(177,9): error TS6133: 'getPriorityColor' is declared but its value is never read.
+src/components/AnimatedComponents.tsx(51,7): error TS6133: 'fadeInScale' is declared but its value is never read.
+src/components/AnimatedComponents.tsx(75,7): error TS6133: 'PulseButton' is declared but its value is never read.
+src/components/AnimatedComponents.tsx(112,6): error TS2769: No overload matches this call.
+  Overload 1 of 3, '(props: { href: string; } & ButtonOwnProps & Omit<ButtonBaseOwnProps, "classes"> & CommonProps & Omit<Omit<DetailedHTMLProps<AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>, "ref"> & { ...; }, "children" | ... 27 more ... | "startIcon">): Element', gave the following error.
+    Property 'href' is missing in type '{ children: string | number | boolean | Iterable<ReactNode> | PromiseLikeOfReactNode | Element | null | undefined; variant: "contained"; onClick: () => void; disabled: boolean | undefined; sx: { ...; }; }' but required in type '{ href: string; }'.
+  Overload 2 of 3, '(props: { component: ElementType<any>; } & ButtonOwnProps & Omit<ButtonBaseOwnProps, "classes"> & CommonProps & Omit<...>): Element | null', gave the following error.
+    Property 'component' is missing in type '{ children: string | number | boolean | Iterable<ReactNode> | PromiseLikeOfReactNode | Element | null | undefined; variant: "contained"; onClick: () => void; disabled: boolean | undefined; sx: { ...; }; }' but required in type '{ component: ElementType<any>; }'.
+  Overload 3 of 3, '(props: DefaultComponentProps<ExtendButtonBaseTypeMap<ButtonTypeMap<{}, "button">>>): Element | null', gave the following error.
+    Type '{ children: string | number | boolean | Iterable<ReactNode> | PromiseLikeOfReactNode | Element | null | undefined; variant: "contained"; onClick: () => void; disabled: boolean | undefined; sx: { ...; }; }' is not assignable to type 'ButtonOwnProps' with 'exactOptionalPropertyTypes: true'. Consider adding 'undefined' to the types of the target's properties.
+      Types of property 'disabled' are incompatible.
+        Type 'boolean | undefined' is not assignable to type 'boolean'.
+          Type 'undefined' is not assignable to type 'boolean'.
+src/components/AnimatedComponents.tsx(342,24): error TS6133: 'tooltip' is declared but its value is never read.
+src/components/ApprovalWorkflow.tsx(135,11): error TS6133: 'message' is declared but its value is never read.
+src/components/ApprovalWorkflow.tsx(165,11): error TS6133: 'message' is declared but its value is never read.
+src/components/ApprovalWorkflow.tsx(197,11): error TS6133: 'message' is declared but its value is never read.
+src/components/BriefUploadModal.tsx(49,7): error TS6133: 'steps' is declared but its value is never read.
+src/components/BriefUploadModal.tsx(112,31): error TS2532: Object is possibly 'undefined'.
+src/components/CampaignMatrix.tsx(118,65): error TS6133: 'campaignId' is declared but its value is never read.
+src/components/CampaignMatrix.tsx(279,13): error TS6133: 'lockedRows' is declared but its value is never read.
+src/components/CampaignMatrix.tsx(295,42): error TS18048: 'sourceRow' is possibly 'undefined'.
+src/components/COMPONENT_TEMPLATE.tsx(91,17): error TS6133: 'setState' is declared but its value is never read.
+src/components/COMPONENT_TEMPLATE.tsx(173,27): error TS6133: 'event' is declared but its value is never read.
+src/components/DashboardLayout.tsx(147,15): error TS2769: No overload matches this call.
+  Overload 1 of 3, '(props: { href: string; } & ListItemButtonOwnProps & Omit<ButtonBaseOwnProps, "classes"> & CommonProps & Omit<Omit<...> & { ...; }, "children" | ... 21 more ... | "divider">): Element', gave the following error.
+    Property 'href' is missing in type '{ children: (false | Element | undefined)[]; selected: boolean; disabled: boolean | undefined; onClick: (e: MouseEvent<HTMLAnchorElement, MouseEvent>) => void; className: string; sx: { ...; }; }' but required in type '{ href: string; }'.
