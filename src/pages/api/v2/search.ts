@@ -39,11 +39,16 @@ async function searchClients(
   userId: string,
   limit: number
 ): Promise<SearchResult[]> {
+  // Sanitize the search query to prevent SQL injection
+  const { sanitizeInput } = await import('@/utils/sanitization');
+  const sanitizedQuery = sanitizeInput(query);
+
+  // Use parameterized search for security
   const { data, error } = await supabase
     .from('clients')
     .select('id, name, description, created_at, brand_colors')
     .eq('user_id', userId)
-    .or(`name.ilike.%${query}%,description.ilike.%${query}%`)
+    .or(`name.ilike.%${sanitizedQuery}%,description.ilike.%${sanitizedQuery}%`)
     .limit(limit);
 
   if (error) {
@@ -72,6 +77,10 @@ async function searchCampaigns(
   userId: string,
   limit: number
 ): Promise<SearchResult[]> {
+  // Sanitize the search query to prevent SQL injection
+  const { sanitizeInput } = await import('@/utils/sanitization');
+  const sanitizedQuery = sanitizeInput(query);
+
   const { data, error } = await supabase
     .from('campaigns')
     .select(
@@ -81,7 +90,7 @@ async function searchCampaigns(
     `
     )
     .eq('clients.user_id', userId)
-    .or(`name.ilike.%${query}%,description.ilike.%${query}%`)
+    .or(`name.ilike.%${sanitizedQuery}%,description.ilike.%${sanitizedQuery}%`)
     .limit(limit);
 
   if (error) {
@@ -107,11 +116,15 @@ async function searchCampaigns(
  * Search across assets
  */
 async function searchAssets(query: string, userId: string, limit: number): Promise<SearchResult[]> {
+  // Sanitize the search query to prevent SQL injection
+  const { sanitizeInput } = await import('@/utils/sanitization');
+  const sanitizedQuery = sanitizeInput(query);
+
   const { data, error } = await supabase
     .from('assets')
     .select('id, name, description, type, created_at, url')
     .eq('user_id', userId)
-    .or(`name.ilike.%${query}%,description.ilike.%${query}%`)
+    .or(`name.ilike.%${sanitizedQuery}%,description.ilike.%${sanitizedQuery}%`)
     .limit(limit);
 
   if (error) {
