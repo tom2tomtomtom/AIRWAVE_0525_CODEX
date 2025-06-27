@@ -37,7 +37,7 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse): Promise<voi
     // Get subscriptions for a specific event
     const webhookManager = WebhookManager.getInstance();
     const subscriptions = await webhookManager.getSubscriptionsForEvent(
-      _event,
+      event,
       client_id as string
     );
 

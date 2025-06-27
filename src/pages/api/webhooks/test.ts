@@ -27,7 +27,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void>
   
   // Validate event type
   const validEvents = Object.values(WebhookManager.EVENTS);
-  if (!validEvents.includes(_event)) {
+  if (!validEvents.includes(event)) {
     throw new ValidationError(`Invalid event type. Valid events: ${validEvents.join(', ')}`);
   }
   
