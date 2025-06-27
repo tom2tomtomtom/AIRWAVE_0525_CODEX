@@ -162,7 +162,7 @@ export const AdvancedAnalytics: React.FC = () => {
     setTimeout(() => setLoading(false), 1500);
   };
 
-  const getTrendIcon = (trend: string, change: number) => {
+  const getTrendIcon = (trend: string) => {
     if (trend === 'up') return <TrendingUp sx={{ fontSize: 16, color: 'success.main' }} />;
     if (trend === 'down') return <TrendingDown sx={{ fontSize: 16, color: 'error.main' }} />;
     return null;
@@ -244,7 +244,7 @@ export const AdvancedAnalytics: React.FC = () => {
                 </Typography>
 
                 <Box display="flex" alignItems="center" gap={0.5}>
-                  {getTrendIcon(metric.trend, metric.change)}
+                  {getTrendIcon(metric.trend)}
                   <Typography
                     variant="caption"
                     color={
@@ -271,7 +271,7 @@ export const AdvancedAnalytics: React.FC = () => {
       {/* Detailed Analytics Tabs */}
       <Card>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-          <Tabs value={tabValue} onChange={(e, newValue) => setTabValue(newValue)}>
+          <Tabs value={tabValue} onChange={(_, newValue) => setTabValue(newValue)}>
             <Tab icon={<ShowChart />} label="Performance Trends" />
             <Tab icon={<BarChart />} label="Content Analysis" />
             <Tab icon={<PieChart />} label="Audience Insights" />
