@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { getErrorMessage } from '@/utils/errorUtils';
 import {
   Box,
   Typography,
@@ -14,20 +15,10 @@ import {
   CircularProgress,
   Grid,
 } from '@mui/material';
-import {
-  TrendingUp as TrendingUpIcon,
-  TrendingDown as TrendingDownIcon,
-  Warning as WarningIcon,
-  CheckCircle as CheckCircleIcon,
-  Error as ErrorIcon,
-  Info as InfoIcon,
-  Refresh as RefreshIcon,
-  Download as DownloadIcon,
-} from '@mui/icons-material';
+import { Refresh as RefreshIcon, Download as DownloadIcon } from '@mui/icons-material';
 
 import { useClient } from '@/contexts/ClientContext';
 import { useNotification } from '@/contexts/NotificationContext';
-import { getErrorMessage } from '@/utils/errorUtils';
 
 interface PerformanceDashboardProps {
   clientId?: string;
@@ -109,14 +100,14 @@ const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({ clientId, d
 
       if (response.ok) {
         const data = await response.json();
-        setPerformanceData(data.data);
+        // setPerformanceData(data.data); // TODO: Uncomment when state is implemented
       } else {
         throw new Error('Failed to load performance data');
       }
     } catch (error: any) {
       const message = getErrorMessage(error);
-      console.error('Error loading performance data:', error);
-      showNotification('Failed to load performance data', 'error');
+      console.error('Error loading performance data:', message);
+      showNotification(`Failed to load performance data: ${message}`, 'error');
     } finally {
       setLoading(false);
     }
@@ -138,7 +129,7 @@ const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({ clientId, d
 
       if (response.ok) {
         const data = await response.json();
-        setInsights(data.data);
+        // setInsights(data.data); // TODO: Uncomment when state is implemented
       }
     } catch (error: any) {
       console.error('Error loading insights:', error);
@@ -150,45 +141,45 @@ const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({ clientId, d
     loadInsights();
   };
 
-  const getChangeColor = (change: number) => {
-    if (change > 0) return 'success';
-    if (change < 0) return 'error';
-    return 'default';
-  };
+  // const getChangeColor = (change: number) => {
+  //   if (change > 0) return 'success';
+  //   if (change < 0) return 'error';
+  //   return 'default';
+  // };
 
-  const getChangeIcon = (change: number) => {
-    if (change > 0) return <TrendingUpIcon fontSize="small" />;
-    if (change < 0) return <TrendingDownIcon fontSize="small" />;
-    return null;
-  };
+  // const getChangeIcon = (change: number) => {
+  //   if (change > 0) return <TrendingUpIcon fontSize="small" />;
+  //   if (change < 0) return <TrendingDownIcon fontSize="small" />;
+  //   return null;
+  // };
 
-  const getInsightIcon = (type: string) => {
-    switch (type) {
-      case 'success':
-        return <CheckCircleIcon color="success" />;
-      case 'warning':
-        return <WarningIcon color="warning" />;
-      case 'error':
-        return <ErrorIcon color="error" />;
-      case 'info':
-        return <InfoIcon color="info" />;
-      default:
-        return <InfoIcon />;
-    }
-  };
+  // const getInsightIcon = (type: string) => {
+  //   switch (type) {
+  //     case 'success':
+  //       return <CheckCircleIcon color="success" />;
+  //     case 'warning':
+  //       return <WarningIcon color="warning" />;
+  //     case 'error':
+  //       return <ErrorIcon color="error" />;
+  //     case 'info':
+  //       return <InfoIcon color="info" />;
+  //     default:
+  //       return <InfoIcon />;
+  //   }
+  // };
 
-  const getPriorityColor = (priority: string) => {
-    switch (priority) {
-      case 'high':
-        return 'error';
-      case 'medium':
-        return 'warning';
-      case 'low':
-        return 'info';
-      default:
-        return 'default';
-    }
-  };
+  // const getPriorityColor = (priority: string) => {
+  //   switch (priority) {
+  //     case 'high':
+  //       return 'error';
+  //     case 'medium':
+  //       return 'warning';
+  //     case 'low':
+  //       return 'info';
+  //     default:
+  //       return 'default';
+  //   }
+  // };
 
   if (!targetClientId) {
     return <Alert severity="info">Please select a client to view performance dashboard</Alert>;
