@@ -116,10 +116,10 @@ interface AnalyticsData {
 
 const PublishingAnalytics: React.FC<PublishingAnalyticsProps> = ({
   clientId,
-  platforms }) => {
+  platforms: _platforms }) => {
   const { showNotification } = useNotification();
   const [timeRange, setTimeRange] = useState('30d');
-  const [selectedMetric, setSelectedMetric] = useState('engagement');
+  // const [selectedMetric, setSelectedMetric] = useState('engagement'); // TODO: Implement metric selection
   const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(null);
   const [loading, setLoading] = useState(true);
 

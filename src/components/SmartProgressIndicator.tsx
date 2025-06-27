@@ -214,7 +214,7 @@ export const SmartProgressIndicator: React.FC<SmartProgressIndicatorProps> = ({
         {/* Detailed Steps */}
         <Collapse in={showSteps}>
           <List dense>
-            {steps.map((step, index) => (
+            {steps.map((step, _index) => (
               <ListItem key={step.id}>
                 <ListItemIcon>
                   {step.status === 'completed' ? (

@@ -32,7 +32,7 @@ interface RealTimeMetric {
 }
 
 const RealTimeDashboard: React.FC = () => {
-  const { activeClient } = useClient();
+  const { activeClient: _activeClient } = useClient();
   const { events, notifications, unreadNotifications, connectionStatus } = useRealtime({
     enableNotifications: true,
     pollInterval: 5000 });

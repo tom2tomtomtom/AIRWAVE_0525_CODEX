@@ -63,7 +63,7 @@ const LiveCollaboration: React.FC<LiveCollaborationProps> = ({
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [showAllUsers, setShowAllUsers] = useState(false);
   const [presenceData, setPresenceData] = useState<UserPresence[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [_loading, setLoading] = useState(true);
 
   // Simulate real-time presence data
   useEffect(() => {
