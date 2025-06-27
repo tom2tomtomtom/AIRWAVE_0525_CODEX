@@ -1,4 +1,4 @@
-// import { Pool, PoolClient, PoolConfig } from 'pg';
+import { Pool, PoolClient, PoolConfig } from 'pg';
 import { getDatabaseConfig } from '@/lib/config';
 import { loggers } from '@/lib/logger';
 
