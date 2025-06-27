@@ -19,12 +19,12 @@ function generateContentHash(content: string | object): string {
 
 // Brief Analysis Caching
 export class BriefAnalysisCache {
-  static async get(briefContent: string, userId: string): Promise<void> {
+  static async get(briefContent: string, userId: string): Promise<any> {
     const key = `${userId}:${generateContentHash(briefContent)}`;
     return await cacheManager.get(key, AI_NAMESPACES.BRIEF_ANALYSIS);
   }
 
-  static async set(briefContent: string, userId: string, analysis: any): Promise<void> {
+  static async set(briefContent: string, userId: string, analysis: any): Promise<boolean> {
     const key = `${userId}:${generateContentHash(briefContent)}`;
     const tags = [`user:${userId}`, 'brief-analysis'];
 
@@ -45,7 +45,7 @@ export class BriefAnalysisCache {
     return success;
   }
 
-  static async invalidateUser(userId: string): Promise<void> {
+  static async invalidateUser(userId: string): Promise<number> {
     return await cacheManager.invalidateByTag(`user:${userId}`);
   }
 }
