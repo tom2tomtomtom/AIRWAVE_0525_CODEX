@@ -59,7 +59,8 @@ export const useNotifications = () => {
 };
 
 const SlideTransition = (props: TransitionProps & { children: React.ReactElement }) => {
-  return <Slide {...props} direction="left" />;
+  const { appear, ...slideProps } = props;
+  return <Slide {...slideProps} direction="left" />;
 };
 
 interface NotificationProviderProps {
@@ -380,7 +381,6 @@ export const useNotificationHelpers = () => {
       updateNotification(id, {
         type: 'error',
         message: errorMessage,
-        progress: undefined,
         persistent: false,
         duration: 8000 });
     },

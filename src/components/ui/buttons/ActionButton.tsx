@@ -177,7 +177,7 @@ export const ActionButton: React.FC<ActionButtonProps> = ({
         sizeStyles,
         variantStyles.sx,
         props.sx
-      ].filter(Boolean)}
+      ]}
     >
       <Box
         sx={{

@@ -137,8 +137,7 @@ export const FormSelect: React.FC<FormSelectProps> = ({
               {...selectProps}
               {...fieldProps}
               multiple={allowMultiple}
-              loading={loading}
-              renderValue={allowMultiple ? renderValue : undefined}
+              {...(allowMultiple && { renderValue })}
               IconComponent={ExpandMoreIcon}
               sx={{
                 backgroundColor: 'background.paper',

@@ -72,8 +72,8 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
       {isLoading && (
         <Skeleton
           variant="rectangular"
-          width={fill ? '100%' : width}
-          height={fill ? '100%' : height}
+          width={fill ? '100%' : width || 200}
+          height={fill ? '100%' : height || 200}
           sx={{
             position: fill ? 'absolute' : 'static',
             top: 0,
