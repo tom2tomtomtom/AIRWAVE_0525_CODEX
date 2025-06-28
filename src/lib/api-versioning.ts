@@ -36,7 +36,7 @@ export function getApiVersion(req: NextApiRequest): ApiVersion {
 
   // Check URL path
   const pathMatch = req.url?.match(/\/api\/(v\d+)\//);
-  if (pathMatch && isValidVersion(pathMatch[1])) {
+  if (pathMatch && pathMatch[1] && isValidVersion(pathMatch[1])) {
     return pathMatch[1] as ApiVersion;
   }
 

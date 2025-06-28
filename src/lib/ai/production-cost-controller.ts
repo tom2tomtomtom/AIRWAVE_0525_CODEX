@@ -5,8 +5,7 @@
 
 import { supabase } from '@/lib/supabase';
 import { estimateCost } from '@/utils/ai-cost-estimation';
-import { loggers } from '@/lib/logger';
-
+// import { loggers } from '@/lib/logger';
 
 interface BudgetConfig {
   openai: number;
@@ -14,17 +13,17 @@ interface BudgetConfig {
   elevenlabs: number;
 }
 
-interface UsageRecord {
-  id: string;
-  user_id: string;
-  service: 'openai' | 'anthropic' | 'elevenlabs';
-  model: string;
-  operation: string;
-  tokens_used: number;
-  cost: number;
-  created_at: string;
-  metadata?: Record<string, any>;
-}
+// interface UsageRecord {
+//   id: string;
+//   user_id: string;
+//   service: 'openai' | 'anthropic' | 'elevenlabs';
+//   model: string;
+//   operation: string;
+//   tokens_used: number;
+//   cost: number;
+//   created_at: string;
+//   metadata?: Record<string, any>;
+// }
 
 interface MonthlyUsage {
   totalCost: number;
@@ -133,6 +132,9 @@ export class ProductionAICostController {
       startOfMonth.setDate(1);
       startOfMonth.setHours(0, 0, 0, 0);
 
+      if (!supabase) {
+        throw new Error('Supabase client not available');
+      }
       const { data, error } = await supabase
         .from('ai_usage_tracking')
         .select('tokens_used, cost')
@@ -169,6 +171,9 @@ export class ProductionAICostController {
     metadata?: Record<string, any>
   ): Promise<boolean> {
     try {
+      if (!supabase) {
+        throw new Error('Supabase client not available');
+      }
       const { error } = await supabase.from('ai_usage_tracking').insert({
         user_id: userId,
         service,
@@ -198,7 +203,7 @@ export class ProductionAICostController {
   /**
    * Get full budget report for user
    */
-  async getFullReport(userId: string): Promise<void> {
+  async getFullReport(userId: string): Promise<any> {
     const services = ['openai', 'anthropic', 'elevenlabs'] as const;
     const report: any = { services: {} };
 

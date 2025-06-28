@@ -123,7 +123,9 @@ export async function signOut(): Promise<void> {
 
     // Sign out from Supabase client
     try {
-      await supabase.auth.signOut();
+      if (supabase) {
+        await supabase.auth.signOut();
+      }
     } catch (error: any) {
       loggers.auth.error('Supabase signout error', error);
     }
@@ -173,6 +175,9 @@ export async function refreshToken(): Promise<boolean> {
 // Request password reset
 export async function requestPasswordReset(email: string): Promise<void> {
   try {
+    if (!supabase) {
+      throw new Error('Supabase client not available');
+    }
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: `${window.location.origin}/reset-password`,
     });
@@ -190,6 +195,9 @@ export async function requestPasswordReset(email: string): Promise<void> {
 // Reset password with token
 export async function resetPassword(_token: string, newPassword: string): Promise<void> {
   try {
+    if (!supabase) {
+      throw new Error('Supabase client not available');
+    }
     const { error } = await supabase.auth.updateUser({
       password: newPassword,
     });

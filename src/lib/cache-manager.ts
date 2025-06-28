@@ -3,7 +3,7 @@ import { env } from './env';
 import { loggers } from './logger';
 
 // Cache configuration
-const CACHE_PREFIX = 'cache:';
+// const CACHE_PREFIX = 'cache:';
 const DEFAULT_TTL = 60 * 60; // 1 hour in seconds
 
 // Cache TTL configurations for different data types
@@ -155,11 +155,14 @@ class CacheManager {
 
     try {
       if (this.useMemoryFallback) {
-        this.memoryCache.set(cacheKey, {
+        const cacheItem: any = {
           data: value,
           expires: Date.now() + ttl * 1000,
-          tags: options.tags,
-        });
+        };
+        if (options.tags) {
+          cacheItem.tags = options.tags;
+        }
+        this.memoryCache.set(cacheKey, cacheItem);
         this.stats.sets++;
         return true;
       }
