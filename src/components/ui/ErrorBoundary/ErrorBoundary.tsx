@@ -355,7 +355,7 @@ export const withErrorBoundary = <P extends object>(
 
 // Hook for manual error handling
 export const useErrorHandler = () => {
-  return (error: Error, errorInfo?: { componentStack?: string }) => {
+  return (error: Error, _errorInfo?: { componentStack?: string }) => {
     throw error;
   };
 };

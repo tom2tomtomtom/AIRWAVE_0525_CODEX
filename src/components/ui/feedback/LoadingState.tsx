@@ -117,7 +117,7 @@ export const LoadingState: React.FC<LoadingStateProps> = ({
       <Box sx={{ width: '100%', maxWidth: 300 }}>
         <LinearProgress
           variant={progress !== undefined ? 'determinate' : 'indeterminate'}
-          value={progress}
+          {...(progress !== undefined && { value: progress })}
           sx={{
             height: 8,
             borderRadius: 4,

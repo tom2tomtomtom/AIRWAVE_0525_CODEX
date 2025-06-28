@@ -246,7 +246,7 @@ export const EnhancedClientSelector: React.FC<EnhancedClientSelectorProps> = ({
         )
       }
       onClick={handleClick}
-      onDelete={activeClient ? handleClearSelection : undefined}
+      {...(activeClient && { onDelete: handleClearSelection })}
       disabled={disabled}
       color={error ? 'error' : 'default'}
       sx={{

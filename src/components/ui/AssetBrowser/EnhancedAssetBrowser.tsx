@@ -519,7 +519,7 @@ export const EnhancedAssetBrowser: React.FC<EnhancedAssetBrowserProps> = ({
   }
 
   if (error) {
-    return <ErrorState type="error" message={error} showRetry={true} onRetry={onRefresh} variant="card" />;
+    return <ErrorState type="error" message={error} showRetry={true} {...(onRefresh && { onRetry: onRefresh })} variant="card" />;
   }
 
   return (
