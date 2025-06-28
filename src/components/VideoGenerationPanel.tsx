@@ -81,7 +81,7 @@ const qualities = [
 const VideoGenerationPanel: React.FC<VideoGenerationPanelProps> = ({
   combinations = [],
   campaignId,
-  onComplete,
+  onComplete: _onComplete,
 }) => {
   const { activeClient } = useClient();
   const { showNotification } = useNotification();

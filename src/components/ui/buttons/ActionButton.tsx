@@ -31,6 +31,7 @@ export const ActionButton: React.FC<ActionButtonProps> = ({
   size = 'medium',
   startIcon,
   endIcon,
+  sx,
   ...props
 }) => {
   const theme = useTheme();
@@ -176,7 +177,7 @@ export const ActionButton: React.FC<ActionButtonProps> = ({
       sx={[
         sizeStyles,
         variantStyles.sx,
-        props.sx
+        sx
       ]}
     >
       <Box

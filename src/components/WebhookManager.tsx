@@ -58,7 +58,7 @@ interface Webhook {
   };
 }
 
-interface WebhookDelivery {
+interface _WebhookDelivery {
   id: string;
   webhook_id: string;
   event_type: string;
@@ -84,12 +84,12 @@ const WebhookManager: React.FC = () => {
   const { activeClient } = useClient();
   const { showNotification } = useNotification();
   const [webhooks, setWebhooks] = useState<Webhook[]>([]);
-  const [selectedWebhook, setSelectedWebhook] = useState<Webhook | null>(null);
-  const [statistics, setStatistics] = useState<WebhookStatistics | null>(null);
-  const [availableEvents, setAvailableEvents] = useState<string[]>([]);
+  const [_selectedWebhook, _setSelectedWebhook] = useState<Webhook | null>(null);
+  const [_statistics, _setStatistics] = useState<WebhookStatistics | null>(null);
+  const [_availableEvents, _setAvailableEvents] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [detailsDialogOpen, setDetailsDialogOpen] = useState(false);
+  const [_dialogOpen, _setDialogOpen] = useState(false);
+  const [_detailsDialogOpen, _setDetailsDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [testDialogOpen, setTestDialogOpen] = useState(false);
   const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
