@@ -19,8 +19,8 @@ interface PDFJSExtract {
  * Dynamically imports pdf-parse library only when needed
  * This reduces the main bundle size by ~33MB
  */
-async function loadPDFParse() {
-  const pdfParse = await import('pdf-parse');
+async function loadPDFParse(): Promise<(buffer: Buffer) => Promise<PDFData>> {
+  const pdfParse = await import('pdf-parse') as any;
   return pdfParse.default || pdfParse;
 }
 

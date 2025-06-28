@@ -418,13 +418,13 @@ const MonitoringDashboard: React.FC = () => {
         /* Overview Tab */
         <Grid container spacing={3}>
           {dashboardData.sections.map(section => (
-            <Grid item xs={12} key={section.id}>
+            <Grid size={{ xs: 12 }} key={section.id}>
               <Typography variant="h5" gutterBottom>
                 {section.title}
               </Typography>
               <Grid container spacing={2}>
                 {section.metrics.slice(0, 3).map((metric, index) => (
-                  <Grid item xs={12} sm={6} md={4} key={index}>
+                  <Grid size={{ xs: 12, sm: 6, md: 4 }} key={index}>
                     <MetricCard metric={metric} />
                   </Grid>
                 ))}
@@ -444,14 +444,14 @@ const MonitoringDashboard: React.FC = () => {
               <Grid container spacing={3}>
                 {/* Metrics */}
                 {section?.metrics.map((metric, index) => (
-                  <Grid item xs={12} sm={6} md={4} key={index}>
+                  <Grid size={{ xs: 12, sm: 6, md: 4 }} key={index}>
                     <MetricCard metric={metric} />
                   </Grid>
                 ))}
 
                 {/* Charts */}
                 {section?.charts.map(chart => (
-                  <Grid item xs={12} md={6} key={chart.id}>
+                  <Grid size={{ xs: 12, md: 6 }} key={chart.id}>
                     <Card>
                       <CardContent>
                         <Typography variant="h6" gutterBottom>
@@ -561,11 +561,11 @@ const MonitoringDashboard: React.FC = () => {
           {selectedAlert && (
             <Box>
               <Grid container spacing={2}>
-                <Grid item xs={12} sm={6}>
+                <Grid size={{ xs: 12, sm: 6 }}>
                   <Typography variant="subtitle2">Name</Typography>
                   <Typography variant="body1">{selectedAlert.name}</Typography>
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid size={{ xs: 12, sm: 6 }}>
                   <Typography variant="subtitle2">Severity</Typography>
                   <Chip
                     label={selectedAlert.severity}
@@ -578,21 +578,21 @@ const MonitoringDashboard: React.FC = () => {
                     }
                   />
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid size={{ xs: 12, sm: 6 }}>
                   <Typography variant="subtitle2">Current Value</Typography>
                   <Typography variant="body1">{selectedAlert.value}</Typography>
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid size={{ xs: 12, sm: 6 }}>
                   <Typography variant="subtitle2">Threshold</Typography>
                   <Typography variant="body1">{selectedAlert.threshold}</Typography>
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid size={{ xs: 12, sm: 6 }}>
                   <Typography variant="subtitle2">First Seen</Typography>
                   <Typography variant="body1">
                     {new Date(selectedAlert.firstSeen).toLocaleString()}
                   </Typography>
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid size={{ xs: 12, sm: 6 }}>
                   <Typography variant="subtitle2">Last Seen</Typography>
                   <Typography variant="body1">
                     {new Date(selectedAlert.lastSeen).toLocaleString()}

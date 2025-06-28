@@ -516,7 +516,11 @@ export class MetricsCollector {
     message: string;
     severity: 'low' | 'medium' | 'high' | 'critical';
   }> {
-    const alerts = [];
+    const alerts: Array<{
+      type: string;
+      message: string;
+      severity: 'low' | 'medium' | 'high' | 'critical';
+    }> = [];
 
     // System alerts
     if (system) {

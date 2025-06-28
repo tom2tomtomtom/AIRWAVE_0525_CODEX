@@ -57,15 +57,15 @@ export class StructuredLogger {
     formats.push(
       winston.format.printf(info => {
         const entry: StructuredLogEntry = {
-          timestamp: info.timestamp,
-          level: info.level.toUpperCase(),
-          message: info.message,
+          timestamp: info.timestamp as string,
+          level: (info.level as string).toUpperCase(),
+          message: info.message as string,
           service: this.service,
           environment: this.config.environment,
           version: this.version,
-          context: info.context,
-          stack: info.stack,
-          correlationId: info.correlationId,
+          context: info.context as LogContext,
+          stack: info.stack as string,
+          correlationId: info.correlationId as string,
         };
 
         // Remove undefined values

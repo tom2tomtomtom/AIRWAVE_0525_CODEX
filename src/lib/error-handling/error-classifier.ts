@@ -415,7 +415,7 @@ export class ErrorClassifier {
       severity: error.severity,
       retryable: error.retryable,
       fingerprint: error.fingerprint,
-      context: error.context
+      contextKeys: Object.keys(error.context || {}).length
     });
   }
   

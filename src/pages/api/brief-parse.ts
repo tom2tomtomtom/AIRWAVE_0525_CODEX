@@ -29,7 +29,7 @@ async function extractTextFromFile(fileUrl: string): Promise<string> {
     } else if (fileUrl.toLowerCase().endsWith('.pdf')) {
       // For PDF files, try to extract text using pdf-parse
       try {
-        const pdf = require('pdf-parse');
+        const pdf = require('pdf-parse') as (buffer: Buffer) => Promise<{ text: string }>;
         const data = await pdf(uint8Array);
         return data.text;
       } catch (pdfError: any) {

@@ -431,7 +431,7 @@ export class ReviewSystem {
         workflowId,
         reason,
         escalatedBy,
-        escalateTo
+        escalateToCount: escalateTo.length
       });
 
     } catch (error: any) {

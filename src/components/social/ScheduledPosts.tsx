@@ -386,11 +386,9 @@ const ScheduledPosts: React.FC<ScheduledPostsProps> = ({ clientId, onScheduleUpd
                               label={post.status}
                               size="small"
                               color={getStatusColor(post.status) as any}
-                              icon={
-                                post.status === 'publishing' ? (
-                                  <CircularProgress size={12} />
-                                ) : undefined
-                              }
+                              {...(post.status === 'publishing' && {
+                                icon: <CircularProgress size={12} />
+                              })}
                             />
                             <Typography variant="caption" color="text.secondary">
                               {getTimeLabel(post.scheduledAt)}

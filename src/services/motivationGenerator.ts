@@ -90,7 +90,7 @@ export class MotivationGenerator {
       logger.info('Starting motivation generation', {
         briefId: brief.id,
         motivationCount,
-        options
+        hasCustomPrompts: customPrompts.length > 0
       });
 
       // Generate core motivations using AI
@@ -128,8 +128,9 @@ export class MotivationGenerator {
 
     } catch (error: any) {
       const classified = classifyError(error as Error, {
-        route: 'motivation-generator',
-        metadata: { briefId: brief.id, motivationCount }
+        component: 'motivation-generator',
+        briefId: brief.id,
+        motivationCount
       });
       
       logger.error('Motivation generation failed', classified.originalError);
@@ -766,10 +767,10 @@ export const generateMotivations = (
   return getMotivationGenerator().generateMotivations(brief, options);
 };
 
-export const validateMotivationSet = (
+export const validateMotivationSet = async (
   motivationSet: MotivationSet
-): Promise<ReturnType<MotivationGenerator['validateMotivationSet']>> => {
-  return getMotivationGenerator().validateMotivationSet(motivationSet);
+): Promise<{ valid: boolean; issues: string[]; suggestions: string[]; }> => {
+  return await getMotivationGenerator().validateMotivationSet(motivationSet);
 };
 
 export const refineMotivations = (

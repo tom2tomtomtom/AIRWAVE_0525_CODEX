@@ -50,6 +50,11 @@ export function createSupabaseBrowserClient(): SupabaseClient<Database> {
     );
 
     loggers.supabase.info('Browser Supabase client initialized');
+    
+    if (!browserClientInstance) {
+      throw new Error('Failed to create Supabase client instance');
+    }
+    
     return browserClientInstance;
   } catch (error: any) {
     loggers.supabase.error('Failed to create browser Supabase client', error);

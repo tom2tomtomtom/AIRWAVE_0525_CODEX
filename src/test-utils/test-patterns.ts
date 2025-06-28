@@ -5,6 +5,7 @@
 
 import { NextApiHandler } from 'next';
 import { APIRequestBuilder, APITestRunner, TestDataFactory } from './api-test-utils';
+import { describe, it, expect, beforeEach, afterEach } from '@jest/globals';
 
 // Standard API test patterns
 export class APITestPatterns {

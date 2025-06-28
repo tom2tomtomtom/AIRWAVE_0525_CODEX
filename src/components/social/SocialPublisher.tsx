@@ -79,7 +79,6 @@ const SocialPublisher: React.FC<SocialPublisherProps> = ({
   const [content, setContent] = useState<PostContent>({
     text: initialContent?.text || '',
     images: [],
-    video: undefined,
     link: initialContent?.link || ''});
   
   const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>(
@@ -112,7 +111,7 @@ const SocialPublisher: React.FC<SocialPublisherProps> = ({
       case 'youtube':
         return <YouTubeIcon sx={{ color: '#FF0000' }} />;
       default:
-        return <Avatar sx={{ width: 24, height: 24 }}>{platform[0].toUpperCase()}</Avatar>;
+        return <Avatar sx={{ width: 24, height: 24 }}>{platform[0]?.toUpperCase()}</Avatar>;
     }
   };
 
@@ -233,7 +232,7 @@ const SocialPublisher: React.FC<SocialPublisherProps> = ({
         }
 
         // Reset form
-        setContent({ text: '', images: [], video: undefined, link: '' });
+        setContent({ text: '', images: [], link: '' });
         setSelectedPlatforms(platforms.filter((p: any) => p.status === 'active').map((p: any) => p.name));
         setScheduledAt(null);
         setIsScheduled(false);

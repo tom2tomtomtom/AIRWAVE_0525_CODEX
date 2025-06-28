@@ -576,8 +576,8 @@ Do not include explanations or alternatives - just the final copy.
 
     // Check character limit adherence
     const overLimitCount = copySet.variants.filter((v: any) => {
-      const limit = this.CHARACTER_LIMITS[v.type][v.format];
-      return v.characterCount > limit;
+      const limit = this.CHARACTER_LIMITS[v.type as keyof typeof this.CHARACTER_LIMITS]?.[v.format as keyof typeof this.CHARACTER_LIMITS[keyof typeof this.CHARACTER_LIMITS]];
+      return limit && v.characterCount > limit;
     }).length;
 
     if (overLimitCount > 0) {

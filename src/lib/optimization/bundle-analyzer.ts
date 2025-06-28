@@ -381,8 +381,8 @@ export class BundleAnalyzer {
     const large = modules
       .filter((module: any) => module.size > 50 * 1024) // > 50KB
       .map((module: any) => ({
-        name: module.name,
-        size: module.size,
+        name: module.name as string,
+        size: module.size as number,
         version: undefined // Would need package.json parsing
       }))
       .sort((a, b) => b.size - a.size);

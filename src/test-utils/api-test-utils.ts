@@ -3,8 +3,9 @@
  * Provides utilities for testing API endpoints, middleware, and database operations
  */
 
-import { NextApiRequest, NextApiResponse } from 'next';
+import { NextApiRequest, NextApiResponse, NextApiHandler } from 'next';
 import { createMocks } from 'node-mocks-http';
+import { jest, expect } from '@jest/globals';
 
 // Mock data factories
 export class TestDataFactory {
@@ -242,13 +243,13 @@ export class DatabaseMockManager {
 
 // API test runner with common patterns
 export class APITestRunner {
-  static async testAuthRequired(handler: unknown, method: string = 'GET') {
+  static async testAuthRequired(handler: NextApiHandler, method: string = 'GET') {
     const { req, res } = APIRequestBuilder.create().setMethod(method).build();
 
     await handler(req, res);
 
-    expect(res._getStatusCode()).toBe(401);
-    expect(JSON.parse(res._getData())).toMatchObject({
+    expect((res as any)._getStatusCode()).toBe(401);
+    expect(JSON.parse((res as any)._getData())).toMatchObject({
       success: false,
       error: expect.objectContaining({
         message: expect.stringContaining('Authentication required'),
@@ -256,7 +257,7 @@ export class APITestRunner {
     });
   }
 
-  static async testValidInput(handler: unknown, validData: unknown, method: string = 'POST') {
+  static async testValidInput(handler: NextApiHandler, validData: unknown, method: string = 'POST') {
     const { req, res } = APIRequestBuilder.create()
       .setMethod(method)
       .setBody(validData)
@@ -265,13 +266,13 @@ export class APITestRunner {
 
     await handler(req, res);
 
-    expect(res._getStatusCode()).toBe(200);
-    expect(JSON.parse(res._getData())).toMatchObject({
+    expect((res as any)._getStatusCode()).toBe(200);
+    expect(JSON.parse((res as any)._getData())).toMatchObject({
       success: true,
     });
   }
 
-  static async testInvalidInput(handler: unknown, invalidData: unknown, method: string = 'POST') {
+  static async testInvalidInput(handler: NextApiHandler, invalidData: unknown, method: string = 'POST') {
     const { req, res } = APIRequestBuilder.create()
       .setMethod(method)
       .setBody(invalidData)
@@ -280,8 +281,8 @@ export class APITestRunner {
 
     await handler(req, res);
 
-    expect(res._getStatusCode()).toBe(400);
-    expect(JSON.parse(res._getData())).toMatchObject({
+    expect((res as any)._getStatusCode()).toBe(400);
+    expect(JSON.parse((res as any)._getData())).toMatchObject({
       success: false,
       error: expect.objectContaining({
         message: expect.any(String),
@@ -308,7 +309,7 @@ export class APITestRunner {
     await handler(req, res);
 
     expect(res._getStatusCode()).toBe(500);
-    expect(JSON.parse(res._getData())).toMatchObject({
+    expect(JSON.parse((res as any)._getData())).toMatchObject({
       success: false,
       error: expect.objectContaining({
         message: expect.stringContaining('Database'),
@@ -332,8 +333,8 @@ export class APITestRunner {
   }
 
   static expectSuccessResponse(res: unknown, expectedData?: unknown) {
-    expect(res._getStatusCode()).toBe(200);
-    const data = JSON.parse(res._getData());
+    expect((res as any)._getStatusCode()).toBe(200);
+    const data = JSON.parse((res as any)._getData());
     expect(data.success).toBe(true);
 
     if (expectedData) {
@@ -343,7 +344,7 @@ export class APITestRunner {
 
   static expectErrorResponse(res: unknown, expectedStatus: number = 400, expectedMessage?: string) {
     expect(res._getStatusCode()).toBe(expectedStatus);
-    const data = JSON.parse(res._getData());
+    const data = JSON.parse((res as any)._getData());
     expect(data.success).toBe(false);
     expect(data.error).toBeDefined();
 
@@ -358,8 +359,8 @@ export class APITestRunner {
   }
 
   static expectSuccess(res: unknown) {
-    expect(res._getStatusCode()).toBe(200);
-    const data = JSON.parse(res._getData());
+    expect((res as any)._getStatusCode()).toBe(200);
+    const data = JSON.parse((res as any)._getData());
     expect(data.success).toBe(true);
     return data;
   }
@@ -448,7 +449,7 @@ export const SecurityTestHelpers = {
 
     await handler(req, res);
 
-    const responseData = JSON.parse(res._getData());
+    const responseData = JSON.parse((res as any)._getData());
     if (responseData.data && responseData.data[field]) {
       expect(responseData.data[field]).not.toContain('<script>');
     }

@@ -259,7 +259,9 @@ export class EnvironmentConfig {
     // Throw error if any required validation failed
     if (errors.length > 0) {
       const errorMessage = `Environment validation failed:\n${errors.join('\n')}`;
-      loggers.general.error('Environment validation failed', undefined, { errors });
+      loggers.general.error('Environment validation failed', undefined, { 
+        errorCount: errors.length 
+      });
       throw new AppError(errorMessage, ErrorCode.SYSTEM_CONFIGURATION_ERROR, 500, {
         errors,
         warnings,
