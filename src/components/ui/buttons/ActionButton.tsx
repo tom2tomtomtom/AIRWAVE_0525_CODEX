@@ -39,7 +39,7 @@ export const ActionButton: React.FC<ActionButtonProps> = ({
   // Create accessible button props
   const accessibilityProps = createButtonProps({
     disabled: isDisabled,
-    type: props.type});
+    ...(props.type && { type: props.type })});
 
   // Determine button styling based on variant
   const getVariantStyles = () => {
@@ -173,11 +173,11 @@ export const ActionButton: React.FC<ActionButtonProps> = ({
         ) : undefined
       }
       endIcon={iconPosition === 'end' ? endIcon : undefined}
-      sx={{
-        ...sizeStyles,
-        ...variantStyles.sx,
-        ...props.sx
-      }}
+      sx={[
+        sizeStyles,
+        variantStyles.sx,
+        props.sx
+      ].filter(Boolean)}
     >
       <Box
         sx={{

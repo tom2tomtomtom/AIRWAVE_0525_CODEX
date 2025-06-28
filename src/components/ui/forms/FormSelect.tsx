@@ -62,7 +62,7 @@ export const FormSelect: React.FC<FormSelectProps> = ({
   const { fieldProps, labelProps, descriptionProps, errorProps } = createAccessibleField(label, {
     required: Boolean(rules.required),
     invalid: hasError,
-    description,
+    ...(description && { description }),
     errorMessage,
   });
 
@@ -111,7 +111,7 @@ export const FormSelect: React.FC<FormSelectProps> = ({
           {...labelProps}
         >
           {label}
-          {rules.required && (
+          {Boolean(rules.required) && (
             <Typography component="span" sx={{ color: 'error.main', ml: 0.5 }}>
               *
             </Typography>
