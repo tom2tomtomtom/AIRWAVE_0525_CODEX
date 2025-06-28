@@ -294,7 +294,11 @@ export class AICircuitBreaker {
    */
   private getConfigForKey(circuitKey: string): CircuitBreakerConfig {
     const service = circuitKey.split(':')[0];
-    return this.configs[service!] || this.configs['default'];
+    const config = this.configs[service!] || this.configs['default'];
+    if (!config) {
+      throw new Error(`No circuit breaker config found for service: ${service}`);
+    }
+    return config;
   }
 
   /**

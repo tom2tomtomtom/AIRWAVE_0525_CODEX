@@ -40,7 +40,7 @@ export class DatabaseSeeder {
     };
 
     try {
-      loggers.general.info('Starting database seeding', options);
+      loggers.general.info('Starting database seeding', { environment: options.environment });
 
       if (options.reset) {
         await this.resetDatabase();
@@ -95,7 +95,7 @@ export class DatabaseSeeder {
           .neq('id', '00000000-0000-0000-0000-000000000000'); // Delete all except system records
 
         if (error) {
-          loggers.general.warn(`Failed to clear table ${table}`, error);
+          loggers.general.warn(`Failed to clear table ${table}`, { errorMessage: error?.message });
         }
       } catch (error: any) {
         loggers.general.warn(`Error clearing table ${table}`, error);
@@ -301,7 +301,7 @@ export class DatabaseSeeder {
     return baseClients;
   }
 
-  private getProjectSeeds(environment: string): Omit<Project, 'created_at' | 'updated_at'>[] {
+  private getProjectSeeds(_environment: string): Omit<Project, 'created_at' | 'updated_at'>[] {
     return [
       {
         id: '11111111-2222-3333-4444-555555555555',

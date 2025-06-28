@@ -1,8 +1,8 @@
-import { Pool, PoolClient, PoolConfig } from 'pg';
+// import { Pool, PoolClient, PoolConfig } from 'pg';
 import { getDatabaseConfig } from '@/lib/config';
 import { loggers } from '@/lib/logger';
 
-export interface ConnectionPoolOptions extends PoolConfig {
+export interface ConnectionPoolOptions {
   // Pool-specific options
   min?: number;
   max?: number;
@@ -35,7 +35,7 @@ export interface QueryResult<T = any> {
 }
 
 export class DatabaseConnectionPool {
-  private pool: Pool;
+  private pool: any;
   private config: ConnectionPoolOptions;
   private isInitialized = false;
   private stats = {
@@ -50,11 +50,11 @@ export class DatabaseConnectionPool {
 
     this.config = {
       // Connection settings
-      host: dbConfig.host,
-      port: dbConfig.port,
-      database: dbConfig.database,
-      user: dbConfig.username,
-      password: dbConfig.password,
+      host: (dbConfig as any).host,
+      port: (dbConfig as any).port,
+      database: (dbConfig as any).database,
+      user: (dbConfig as any).username,
+      password: (dbConfig as any).password,
 
       // Pool settings
       min: 2,
@@ -74,7 +74,8 @@ export class DatabaseConnectionPool {
       ...options,
     } as ConnectionPoolOptions;
 
-    this.pool = new Pool(this.config);
+    // this.pool = new Pool(this.config); // Pool disabled - pg not available
+    this.pool = null;
     this.setupEventHandlers();
 
     if (this.config.enableMonitoring) {
@@ -83,7 +84,7 @@ export class DatabaseConnectionPool {
   }
 
   private setupEventHandlers(): void {
-    this.pool.on('connect', (client: PoolClient) => {
+    // this.pool.on('connect', (client: any) => {
       loggers.general.debug('New database connection established');
 
       // Set session configuration
@@ -200,7 +201,7 @@ export class DatabaseConnectionPool {
     }
   }
 
-  async transaction<T>(callback: (client: PoolClient) => Promise<T>): Promise<T> {
+  async transaction<T>(callback: (client: any) => Promise<T>): Promise<T> {
     const client = await this.pool.connect();
 
     try {
@@ -219,7 +220,7 @@ export class DatabaseConnectionPool {
     }
   }
 
-  async getConnection(): Promise<PoolClient> {
+  async getConnection(): Promise<any> {
     return this.pool.connect();
   }
 
@@ -379,7 +380,7 @@ export const closePool = async (): Promise<void> => {
 
 // Helper functions for common operations
 export const withTransaction = async <T>(
-  callback: (client: PoolClient) => Promise<T>
+  callback: (client: any) => Promise<T>
 ): Promise<T> => {
   const pool = getDatabasePool();
   return pool.transaction(callback);

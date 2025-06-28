@@ -99,7 +99,9 @@ export class MigrationManager {
       // Parse metadata comments
       if (trimmed.startsWith('-- @')) {
         const [key, ...valueParts] = trimmed.substring(4).split(':');
-        metadata[key.trim()] = valueParts.join(':').trim();
+        if (key) {
+          metadata[key.trim()] = valueParts.join(':').trim();
+        }
         continue;
       }
 
@@ -123,7 +125,7 @@ export class MigrationManager {
 
     // Extract version from filename (e.g., "001_initial_schema.sql" -> 1)
     const versionMatch = filename.match(/^(\d+)_/);
-    const version = versionMatch ? parseInt(versionMatch[1], 10) : 0;
+    const version = versionMatch?.[1] ? parseInt(versionMatch[1], 10) : 0;
 
     // Generate checksum
     const checksum = this.generateChecksum(upSection + downSection);

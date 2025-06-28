@@ -254,7 +254,7 @@ export class DatabaseBackupManager {
         const { error } = await this.supabase.from(table).upsert(records, { onConflict: 'id' });
 
         if (error) {
-          loggers.general.warn(`Failed to restore table ${table}`, error);
+          loggers.general.warn(`Failed to restore table ${table}`, { errorMessage: error?.message });
         } else {
           tablesRestored++;
           loggers.general.info(`Restored ${records.length} records to ${table}`);
@@ -289,7 +289,7 @@ export class DatabaseBackupManager {
   }
 
   // Schedule automated backups
-  async scheduleBackups(schedule: {
+  async scheduleBackups(_schedule: {
     full: { enabled: boolean; cron: string; retention: number };
     incremental: { enabled: boolean; cron: string; retention: number };
     destination: string;
@@ -303,10 +303,10 @@ export class DatabaseBackupManager {
     const parts = ['pg_dump'];
 
     // Connection parameters
-    if (this.config.host) parts.push(`--host=${this.config.host}`);
-    if (this.config.port) parts.push(`--port=${this.config.port}`);
-    if (this.config.database) parts.push(`--dbname=${this.config.database}`);
-    if (this.config.username) parts.push(`--username=${this.config.username}`);
+    if ((this.config as any).host) parts.push(`--host=${(this.config as any).host}`);
+    if ((this.config as any).port) parts.push(`--port=${(this.config as any).port}`);
+    if ((this.config as any).database) parts.push(`--dbname=${(this.config as any).database}`);
+    if ((this.config as any).username) parts.push(`--username=${(this.config as any).username}`);
 
     // Backup options
     parts.push('--verbose');
@@ -337,10 +337,10 @@ export class DatabaseBackupManager {
     const parts = ['pg_restore'];
 
     // Connection parameters
-    if (this.config.host) parts.push(`--host=${this.config.host}`);
-    if (this.config.port) parts.push(`--port=${this.config.port}`);
-    if (this.config.database) parts.push(`--dbname=${this.config.database}`);
-    if (this.config.username) parts.push(`--username=${this.config.username}`);
+    if ((this.config as any).host) parts.push(`--host=${(this.config as any).host}`);
+    if ((this.config as any).port) parts.push(`--port=${(this.config as any).port}`);
+    if ((this.config as any).database) parts.push(`--dbname=${(this.config as any).database}`);
+    if ((this.config as any).username) parts.push(`--username=${(this.config as any).username}`);
 
     // Restore options
     parts.push('--verbose');
@@ -368,7 +368,7 @@ export class DatabaseBackupManager {
           table_name: table.table_name,
         });
         if (dropError) {
-          loggers.general.warn(`Failed to drop table ${table.table_name}`, dropError);
+          loggers.general.warn(`Failed to drop table ${table.table_name}`, { errorMessage: dropError?.message });
         }
       } catch (error: any) {
         loggers.general.warn(`Error dropping table ${table.table_name}`, error);
@@ -378,7 +378,7 @@ export class DatabaseBackupManager {
 
   private async countTables(): Promise<number> {
     try {
-      const { data, error } = await this.supabase.rpc('get_table_names');
+      const { data, error: _error } = await this.supabase.rpc('get_table_names');
       return data?.length || 0;
     } catch (error: any) {
       return 0;
