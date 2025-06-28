@@ -20,13 +20,15 @@ import {
   DialogTitle,
   DialogContent,
   IconButton,
-  FormHelperText} from '@mui/material';
+  FormHelperText,
+} from '@mui/material';
 import {
   AutoAwesome,
   Close as CloseIcon,
   Download,
   ContentCopy,
-  Info as InfoIcon} from '@mui/icons-material';
+  Info as InfoIcon,
+} from '@mui/icons-material';
 import axios, { AxiosError } from 'axios';
 import { Asset, BrandGuidelines } from '@/types/models';
 import { demoAssets } from '@/utils/demoData';
@@ -58,28 +60,30 @@ interface AIImageGeneratorProps {
 export const AIImageGenerator: React.FC<AIImageGeneratorProps> = ({
   clientId,
   onImageGenerated,
-  brandGuidelines}) => {
+  brandGuidelines,
+}) => {
   const [prompt, setPrompt] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [validationError, setValidationError] = useState<string | null>(null);
   const [generatedImage, setGeneratedImage] = useState<GeneratedImageResponse | null>(null);
   const [showDialog, setShowDialog] = useState(false);
-  
+
   // Generation options
   const [options, setOptions] = useState({
     size: '1024x1024',
     quality: 'standard',
     style: 'vivid',
     purpose: 'general',
-    enhance_prompt: true});
+    enhance_prompt: true,
+  });
 
   const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === 'true';
   const hasApiKey = process.env.NEXT_PUBLIC_OPENAI_API_KEY || false;
 
   const validateInput = (): string[] => {
     const errors: string[] = [];
-    
+
     if (!prompt || prompt.trim().length === 0) {
       errors.push('Please enter a description for your image');
     } else if (prompt.trim().length < 3) {
@@ -87,14 +91,14 @@ export const AIImageGenerator: React.FC<AIImageGeneratorProps> = ({
     } else if (prompt.trim().length > 1000) {
       errors.push('Description must be less than 1000 characters');
     }
-    
+
     // Check for inappropriate content
     const bannedWords = ['explicit', 'violence', 'gore']; // Add more as needed
     const lowerPrompt = prompt.toLowerCase();
     if (bannedWords.some(word => lowerPrompt.includes(word))) {
       errors.push('Your prompt contains inappropriate content');
     }
-    
+
     return errors;
   };
 
@@ -116,7 +120,7 @@ export const AIImageGenerator: React.FC<AIImageGeneratorProps> = ({
       // Demo mode - return a random demo image
       if (isDemoMode) {
         await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate delay
-        
+
         const demoImage = demoAssets[Math.floor(Math.random() * 3)]; // Random AI generated asset
         const response: GeneratedImageResponse = {
           success: true,
@@ -125,23 +129,23 @@ export const AIImageGenerator: React.FC<AIImageGeneratorProps> = ({
             name: `AI Generated - ${prompt.substring(0, 50)}...`,
             ai_prompt: prompt,
             created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString()
+            updated_at: new Date().toISOString(),
           } as unknown as Asset,
           generation_details: {
             original_prompt: prompt,
-            enhanced_prompt: isDemoMode ? `[DEMO MODE] Enhanced: ${prompt}` : undefined,
+            enhanced_prompt: isDemoMode ? `[DEMO MODE] Enhanced: ${prompt}` : '',
             model: 'dall-e-3',
             settings: {
               size: options.size,
               quality: options.quality,
-              style: options.style
-            }
-          }
+              style: options.style,
+            },
+          },
         };
-        
+
         setGeneratedImage(response);
         setShowDialog(true);
-        
+
         if (onImageGenerated) {
           onImageGenerated(response.asset);
         }
@@ -150,7 +154,9 @@ export const AIImageGenerator: React.FC<AIImageGeneratorProps> = ({
 
       // Check for API key
       if (!hasApiKey) {
-        setError('OpenAI API key is not configured. Please add NEXT_PUBLIC_OPENAI_API_KEY to your environment variables.');
+        setError(
+          'OpenAI API key is not configured. Please add NEXT_PUBLIC_OPENAI_API_KEY to your environment variables.'
+        );
         return;
       }
 
@@ -160,12 +166,13 @@ export const AIImageGenerator: React.FC<AIImageGeneratorProps> = ({
         client_id: clientId,
         ...options,
         brand_guidelines: brandGuidelines,
-        tags: ['ai-generated', options.purpose]});
+        tags: ['ai-generated', options.purpose],
+      });
 
       if (response?.data?.success) {
         setGeneratedImage(response.data);
         setShowDialog(true);
-        
+
         if (onImageGenerated) {
           onImageGenerated(response?.data?.asset);
         }
@@ -174,22 +181,25 @@ export const AIImageGenerator: React.FC<AIImageGeneratorProps> = ({
       }
     } catch (err: any) {
       console.error('Generation error:', err);
-      
+
       if (axios.isAxiosError(err)) {
         const axiosError = err as AxiosError<{ message?: string; error?: string }>;
-        
+
         // Specific error messages based on status codes
         if (axiosError.response?.status === 401) {
           setError('Invalid API key. Please check your OpenAI API key configuration.');
         } else if (axiosError.response?.status === 429) {
           setError('Rate limit exceeded. Please try again in a few moments.');
         } else if (axiosError.response?.status === 400) {
-          setError(axiosError.response?.data?.message || 'Invalid request. Please check your prompt and try again.');
+          setError(
+            axiosError.response?.data?.message ||
+              'Invalid request. Please check your prompt and try again.'
+          );
         } else {
           setError(
-            axiosError.response?.data?.message || 
-            axiosError.response?.data?.error ||
-            'Failed to generate image. Please try again.'
+            axiosError.response?.data?.message ||
+              axiosError.response?.data?.error ||
+              'Failed to generate image. Please try again.'
           );
         }
       } else if (err instanceof Error) {
@@ -224,14 +234,7 @@ export const AIImageGenerator: React.FC<AIImageGeneratorProps> = ({
         <Box display="flex" alignItems="center" mb={3}>
           <AutoAwesome sx={{ mr: 1, color: 'primary.main' }} />
           <Typography variant="h5">AI Image Generator (DALL-E 3)</Typography>
-          {isDemoMode && (
-            <Chip 
-              label="DEMO MODE" 
-              size="small" 
-              color="info" 
-              sx={{ ml: 2 }}
-            />
-          )}
+          {isDemoMode && <Chip label="DEMO MODE" size="small" color="info" sx={{ ml: 2 }} />}
         </Box>
 
         {isDemoMode && (
@@ -242,7 +245,8 @@ export const AIImageGenerator: React.FC<AIImageGeneratorProps> = ({
 
         {!hasApiKey && !isDemoMode && (
           <Alert severity="warning" sx={{ mb: 3 }}>
-            OpenAI API key is not configured. Add NEXT_PUBLIC_OPENAI_API_KEY to your .env file to enable image generation.
+            OpenAI API key is not configured. Add NEXT_PUBLIC_OPENAI_API_KEY to your .env file to
+            enable image generation.
           </Alert>
         )}
 
@@ -254,7 +258,7 @@ export const AIImageGenerator: React.FC<AIImageGeneratorProps> = ({
               rows={3}
               label="Describe the image you want to create"
               value={prompt}
-              onChange={(e) => {
+              onChange={e => {
                 setPrompt(e.target.value);
                 setValidationError(null); // Clear validation error on change
               }}
@@ -270,7 +274,7 @@ export const AIImageGenerator: React.FC<AIImageGeneratorProps> = ({
               <InputLabel>Image Size</InputLabel>
               <Select
                 value={options.size}
-                onChange={(e) => setOptions({ ...options, size: e.target.value as string })}
+                onChange={e => setOptions({ ...options, size: e.target.value as string })}
                 disabled={loading}
               >
                 <MenuItem value="1024x1024">Square (1024×1024)</MenuItem>
@@ -286,7 +290,7 @@ export const AIImageGenerator: React.FC<AIImageGeneratorProps> = ({
               <InputLabel>Purpose</InputLabel>
               <Select
                 value={options.purpose}
-                onChange={(e) => setOptions({ ...options, purpose: e.target.value as string })}
+                onChange={e => setOptions({ ...options, purpose: e.target.value as string })}
                 disabled={loading}
               >
                 <MenuItem value="general">General</MenuItem>
@@ -306,7 +310,7 @@ export const AIImageGenerator: React.FC<AIImageGeneratorProps> = ({
               <InputLabel>Quality</InputLabel>
               <Select
                 value={options.quality}
-                onChange={(e) => setOptions({ ...options, quality: e.target.value as string })}
+                onChange={e => setOptions({ ...options, quality: e.target.value as string })}
                 disabled={loading}
               >
                 <MenuItem value="standard">Standard</MenuItem>
@@ -320,7 +324,7 @@ export const AIImageGenerator: React.FC<AIImageGeneratorProps> = ({
               <InputLabel>Style</InputLabel>
               <Select
                 value={options.style}
-                onChange={(e) => setOptions({ ...options, style: e.target.value as string })}
+                onChange={e => setOptions({ ...options, style: e.target.value as string })}
                 disabled={loading}
               >
                 <MenuItem value="vivid">Vivid (More artistic)</MenuItem>
@@ -334,7 +338,7 @@ export const AIImageGenerator: React.FC<AIImageGeneratorProps> = ({
               control={
                 <Switch
                   checked={options.enhance_prompt}
-                  onChange={(e) => setOptions({ ...options, enhance_prompt: e.target.checked })}
+                  onChange={e => setOptions({ ...options, enhance_prompt: e.target.checked })}
                   disabled={loading}
                 />
               }
@@ -365,12 +369,7 @@ export const AIImageGenerator: React.FC<AIImageGeneratorProps> = ({
         </Grid>
 
         {/* Result Dialog */}
-        <Dialog
-          open={showDialog}
-          onClose={() => setShowDialog(false)}
-          maxWidth="lg"
-          fullWidth
-        >
+        <Dialog open={showDialog} onClose={() => setShowDialog(false)} maxWidth="lg" fullWidth>
           <DialogTitle>
             <Box display="flex" justifyContent="space-between" alignItems="center">
               <Typography variant="h6">Generated Image</Typography>
@@ -391,7 +390,8 @@ export const AIImageGenerator: React.FC<AIImageGeneratorProps> = ({
                     maxHeight: '70vh',
                     objectFit: 'contain',
                     borderRadius: 2,
-                    mb: 2}}
+                    mb: 2,
+                  }}
                 />
 
                 <Box mb={2}>

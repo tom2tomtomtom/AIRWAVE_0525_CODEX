@@ -14,7 +14,8 @@ import {
   Slide,
   Zoom,
   Chip,
-  Avatar} from '@mui/material';
+  Avatar,
+} from '@mui/material';
 import {
   Close,
   ArrowBack,
@@ -26,7 +27,8 @@ import {
   VideoLibrary,
   Send,
   SwipeLeft,
-  SwipeRight} from '@mui/icons-material';
+  SwipeRight,
+} from '@mui/icons-material';
 import { useSwipeable } from 'react-swipeable';
 
 interface MobileWorkflowStep {
@@ -47,7 +49,8 @@ interface MobileOptimizedWorkflowProps {
 export const MobileOptimizedWorkflow: React.FC<MobileOptimizedWorkflowProps> = ({
   open,
   onClose,
-  onComplete}) => {
+  onComplete,
+}) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [activeStep, setActiveStep] = useState(0);
@@ -61,43 +64,58 @@ export const MobileOptimizedWorkflow: React.FC<MobileOptimizedWorkflowProps> = (
       title: 'Upload Brief',
       description: 'Tap to upload or drag & drop your document',
       icon: <CloudUpload />,
-      component: <MobileUploadStep onUpload={(data) => setWorkflowData({...workflowData, brief: data})} />
+      component: (
+        <MobileUploadStep onUpload={data => setWorkflowData({ ...workflowData, brief: data })} />
+      ),
     },
     {
       id: 'motivations',
       title: 'Select Motivations',
       description: 'Tap to select strategic motivations',
       icon: <AutoAwesome />,
-      component: <MobileMotivationsStep onSelect={(data) => setWorkflowData({...workflowData, motivations: data})} />
+      component: (
+        <MobileMotivationsStep
+          onSelect={data => setWorkflowData({ ...workflowData, motivations: data })}
+        />
+      ),
     },
     {
       id: 'copy',
       title: 'Choose Copy',
       description: 'Swipe through copy variations',
       icon: <ContentCopy />,
-      component: <MobileCopyStep onSelect={(data) => setWorkflowData({...workflowData, copy: data})} />
+      component: (
+        <MobileCopyStep onSelect={data => setWorkflowData({ ...workflowData, copy: data })} />
+      ),
     },
     {
       id: 'assets',
       title: 'Pick Assets',
       description: 'Select or generate visual assets',
       icon: <Image />,
-      component: <MobileAssetsStep onSelect={(data) => setWorkflowData({...workflowData, assets: data})} />,
-      canSkip: true },
+      component: (
+        <MobileAssetsStep onSelect={data => setWorkflowData({ ...workflowData, assets: data })} />
+      ),
+      canSkip: true,
+    },
     {
       id: 'template',
       title: 'Choose Template',
       description: 'Pick your video template',
       icon: <VideoLibrary />,
-      component: <MobileTemplateStep onSelect={(data) => setWorkflowData({...workflowData, template: data})} />
+      component: (
+        <MobileTemplateStep
+          onSelect={data => setWorkflowData({ ...workflowData, template: data })}
+        />
+      ),
     },
     {
       id: 'complete',
       title: 'Ready to Render',
       description: 'Review and start rendering',
       icon: <Send />,
-      component: <MobileCompleteStep data={workflowData} onComplete={onComplete} />
-    }
+      component: <MobileCompleteStep data={workflowData} onComplete={onComplete} />,
+    },
   ];
 
   const swipeHandlers = useSwipeable({
@@ -105,7 +123,8 @@ export const MobileOptimizedWorkflow: React.FC<MobileOptimizedWorkflowProps> = (
     onSwipedRight: () => handleBack(),
     trackMouse: false,
     trackTouch: true,
-    delta: 50});
+    delta: 50,
+  });
 
   const handleNext = () => {
     if (activeStep < steps.length - 1) {
@@ -120,7 +139,7 @@ export const MobileOptimizedWorkflow: React.FC<MobileOptimizedWorkflowProps> = (
   };
 
   const handleSkip = () => {
-    if (steps[activeStep].canSkip) {
+    if (steps[activeStep]?.canSkip) {
       handleNext();
     }
   };
@@ -145,8 +164,8 @@ export const MobileOptimizedWorkflow: React.FC<MobileOptimizedWorkflowProps> = (
       fullScreen
       PaperProps={{
         sx: {
-          bgcolor: 'background.default'
-        }
+          bgcolor: 'background.default',
+        },
       }}
     >
       <DialogContent sx={{ p: 0, height: '100vh', display: 'flex', flexDirection: 'column' }}>
@@ -159,14 +178,15 @@ export const MobileOptimizedWorkflow: React.FC<MobileOptimizedWorkflowProps> = (
             borderColor: 'divider',
             position: 'sticky',
             top: 0,
-            zIndex: 1}}
+            zIndex: 1,
+          }}
         >
           <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
             <IconButton onClick={onClose} edge="start" aria-label="close">
               <Close />
             </IconButton>
             <Typography variant="h6" flex={1} textAlign="center">
-              {steps[activeStep].title}
+              {steps[activeStep]?.title || 'Step'}
             </Typography>
             <Box width={40} /> {/* Spacer for centering */}
           </Box>
@@ -180,7 +200,8 @@ export const MobileOptimizedWorkflow: React.FC<MobileOptimizedWorkflowProps> = (
                 height: 6,
                 borderRadius: 3,
                 '& .MuiLinearProgress-bar': {
-                  borderRadius: 3}
+                  borderRadius: 3,
+                },
               }}
             />
             <Typography variant="caption" color="text.secondary" sx={{ mt: 1, display: 'block' }}>
@@ -195,13 +216,10 @@ export const MobileOptimizedWorkflow: React.FC<MobileOptimizedWorkflowProps> = (
           sx={{
             flex: 1,
             overflow: 'hidden',
-            position: 'relative'}}
+            position: 'relative',
+          }}
         >
-          <Slide
-            direction="left"
-            in={true}
-            key={activeStep}
-          >
+          <Slide direction="left" in={true} key={activeStep}>
             <Box sx={{ height: '100%', p: 2 }}>
               {/* Step Description */}
               <Box textAlign="center" mb={3}>
@@ -211,18 +229,19 @@ export const MobileOptimizedWorkflow: React.FC<MobileOptimizedWorkflowProps> = (
                     width: 60,
                     height: 60,
                     mx: 'auto',
-                    mb: 2}}
+                    mb: 2,
+                  }}
                 >
-                  {steps[activeStep].icon}
+                  {steps[activeStep]?.icon}
                 </Avatar>
                 <Typography variant="body1" color="text.secondary">
-                  {steps[activeStep].description}
+                  {steps[activeStep]?.description || ''}
                 </Typography>
               </Box>
 
               {/* Step Content */}
               <Box sx={{ height: 'calc(100% - 120px)', overflow: 'auto' }}>
-                {steps[activeStep].component}
+                {steps[activeStep]?.component}
               </Box>
             </Box>
           </Slide>
@@ -244,7 +263,8 @@ export const MobileOptimizedWorkflow: React.FC<MobileOptimizedWorkflowProps> = (
                   px: 2,
                   py: 1,
                   borderRadius: 2,
-                  animation: 'pulse 2s infinite'}}
+                  animation: 'pulse 2s infinite',
+                }}
               >
                 <SwipeLeft />
                 <Typography variant="caption">Swipe to navigate</Typography>
@@ -263,7 +283,8 @@ export const MobileOptimizedWorkflow: React.FC<MobileOptimizedWorkflowProps> = (
             borderColor: 'divider',
             display: 'flex',
             justifyContent: 'space-between',
-            alignItems: 'center'}}
+            alignItems: 'center',
+          }}
         >
           <Button
             onClick={handleBack}
@@ -274,7 +295,7 @@ export const MobileOptimizedWorkflow: React.FC<MobileOptimizedWorkflowProps> = (
             Back
           </Button>
 
-          {steps[activeStep].canSkip && (
+          {steps[activeStep]?.canSkip && (
             <Button onClick={handleSkip} color="inherit">
               Skip
             </Button>
@@ -308,8 +329,10 @@ const MobileUploadStep: React.FC<{ onUpload: (data: any) => void }> = ({ onUploa
         bgcolor: 'primary.light',
         cursor: 'pointer',
         '&:active': {
-          transform: 'scale(0.98)' },
-        transition: 'transform 0.1s ease' }}
+          transform: 'scale(0.98)',
+        },
+        transition: 'transform 0.1s ease',
+      }}
       onClick={() => onUpload({ fileName: 'sample-brief.pdf' })}
     >
       <CloudUpload sx={{ fontSize: 60, color: 'primary.main', mb: 2 }} />
@@ -320,7 +343,7 @@ const MobileUploadStep: React.FC<{ onUpload: (data: any) => void }> = ({ onUploa
         PDF, Word, or Text files
       </Typography>
     </Box>
-    
+
     <Typography variant="caption" color="text.secondary">
       Or use the camera to scan documents
     </Typography>
@@ -329,7 +352,7 @@ const MobileUploadStep: React.FC<{ onUpload: (data: any) => void }> = ({ onUploa
 
 const MobileMotivationsStep: React.FC<{ onSelect: (data: any) => void }> = ({ onSelect }) => {
   const [selected, setSelected] = useState<string[]>([]);
-  
+
   const motivations = [
     { id: '1', title: 'Emotional Connection', score: 92 },
     { id: '2', title: 'Social Proof', score: 88 },
@@ -355,8 +378,9 @@ const MobileMotivationsStep: React.FC<{ onSelect: (data: any) => void }> = ({ on
             borderColor: selected.includes(motivation.id) ? 'primary.main' : 'transparent',
             cursor: 'pointer',
             '&:active': {
-              transform: 'scale(0.98)' },
-            transition: 'all 0.2s ease'
+              transform: 'scale(0.98)',
+            },
+            transition: 'all 0.2s ease',
           }}
           onClick={() => handleToggle(motivation.id)}
         >
@@ -365,11 +389,7 @@ const MobileMotivationsStep: React.FC<{ onSelect: (data: any) => void }> = ({ on
               <Typography variant="h6" flex={1}>
                 {motivation.title}
               </Typography>
-              <Chip
-                label={`${motivation.score}%`}
-                color="primary"
-                size="small"
-              />
+              <Chip label={`${motivation.score}%`} color="primary" size="small" />
             </Box>
           </CardContent>
         </Card>
@@ -424,7 +444,10 @@ const MobileTemplateStep: React.FC<{ onSelect: (data: any) => void }> = ({ onSel
   </Box>
 );
 
-const MobileCompleteStep: React.FC<{ data: any; onComplete: (data: any) => void }> = ({ data, onComplete }) => (
+const MobileCompleteStep: React.FC<{ data: any; onComplete: (data: any) => void }> = ({
+  data,
+  onComplete,
+}) => (
   <Box textAlign="center" py={4}>
     <Send sx={{ fontSize: 60, color: 'success.main', mb: 2 }} />
     <Typography variant="h5" gutterBottom>
@@ -433,12 +456,7 @@ const MobileCompleteStep: React.FC<{ data: any; onComplete: (data: any) => void 
     <Typography variant="body2" color="text.secondary" mb={4}>
       Your content is configured and ready for video generation
     </Typography>
-    <Button
-      variant="contained"
-      size="large"
-      fullWidth
-      onClick={() => onComplete(data)}
-    >
+    <Button variant="contained" size="large" fullWidth onClick={() => onComplete(data)}>
       Start Rendering
     </Button>
   </Box>
