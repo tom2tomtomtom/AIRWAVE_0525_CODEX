@@ -4,7 +4,10 @@ import React from 'react';
 
 // Heavy components (600+ lines) with lazy loading for better performance
 export const LazyAssetBrowser = dynamic(
-  () => import('../ui/AssetBrowser/EnhancedAssetBrowser').then(mod => ({ default: mod.default })),
+  () =>
+    import('../ui/AssetBrowser/EnhancedAssetBrowser').then(mod => ({
+      default: mod.EnhancedAssetBrowser,
+    })),
   {
     loading: () => <div className="animate-pulse bg-gray-200 h-96 w-full rounded" />,
     ssr: false,

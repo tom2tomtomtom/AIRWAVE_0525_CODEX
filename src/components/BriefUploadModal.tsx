@@ -109,7 +109,7 @@ export const BriefUploadModal: React.FC<BriefUploadModalProps> = ({
 
     try {
       const formData = new FormData();
-      formData.append('file', files[0].file);
+      formData.append('file', files[0]?.file);
 
       // Simulate upload progress
       const progressInterval = setInterval(() => {

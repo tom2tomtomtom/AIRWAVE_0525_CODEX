@@ -115,7 +115,10 @@ const defaultFields: MatrixField[] = [
   },
 ];
 
-export const CampaignMatrix: React.FC<CampaignMatrixProps> = ({ campaignId: _campaignId, onRender }) => {
+export const CampaignMatrix: React.FC<CampaignMatrixProps> = ({
+  campaignId: _campaignId,
+  onRender,
+}) => {
   const { activeClient } = useClient();
   const { showNotification } = useNotification();
 
@@ -292,7 +295,7 @@ export const CampaignMatrix: React.FC<CampaignMatrixProps> = ({ campaignId: _cam
         // Copy from a random unlocked row or use locked row data
         const sourceRow = unlockedRows[i % unlockedRows.length] || rows[0];
         fields.forEach((field: any) => {
-          combination.fields[field.id] = sourceRow.cells[field.id] || {
+          combination.fields[field.id] = sourceRow?.cells[field.id] || {
             type: field.type,
             value: '',
           };

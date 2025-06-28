@@ -168,7 +168,7 @@ export const GlobalSearch: React.FC<GlobalSearchProps> = ({ open, onClose }) => 
       case 'Enter':
         event.preventDefault();
         if (results[selectedIndex]) {
-          handleSelectResult(results[selectedIndex]);
+          handleSelectResult(results[selectedIndex]!);
         }
         break;
       case 'Escape':
