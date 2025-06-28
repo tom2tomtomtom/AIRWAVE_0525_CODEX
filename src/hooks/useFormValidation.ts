@@ -145,13 +145,16 @@ export const createValidationRules = {
         fileSize: (files: FileList) => {
           if (!files || files.length === 0) return true;
           const file = files[0];
-          return file.size <= maxSizeMB * 1024 * 1024 || validationMessages.fileSize(maxSizeMB);
+          return (
+            (file && file.size <= maxSizeMB * 1024 * 1024) || validationMessages.fileSize(maxSizeMB)
+          );
         },
       }),
       ...(allowedTypes && {
         fileType: (files: FileList) => {
           if (!files || files.length === 0) return true;
           const file = files[0];
+          if (!file) return validationMessages.fileType(allowedTypes);
           const fileType = file.type;
           const fileExtension = file.name.split('.').pop()?.toLowerCase();
           return (
@@ -182,19 +185,22 @@ export function useFormValidation<T extends FieldValues>({
   autoSaveDelay = 1000,
   ...formOptions
 }: UseFormValidationOptions<T> = {}) {
-  const form = useForm<T>({
+  const formConfig: any = {
     ...formOptions,
-    resolver: schema ? zodResolver(schema) : undefined,
-  });
+  };
+  if (schema) {
+    formConfig.resolver = zodResolver(schema);
+  }
+  const form = useForm<T>(formConfig);
 
   const {
     handleSubmit,
-    watch,
+    // watch,
     formState: { errors, isSubmitting, isDirty },
   } = form;
 
   // Auto-save functionality
-  const watchedValues = watch();
+  // const watchedValues = watch();
 
   const handleFormSubmit = useCallback(
     async (data: T) => {
@@ -262,7 +268,7 @@ export function useFormValidation<T extends FieldValues>({
 
   // Confirm password validation helper
   const addConfirmPasswordValidation = useCallback(
-    (passwordField: Path<T>, confirmPasswordField: Path<T>) => {
+    (passwordField: Path<T>, _confirmPasswordField: Path<T>) => {
       return {
         validate: (value: string) => {
           const passwordValue = form.getValues(passwordField);

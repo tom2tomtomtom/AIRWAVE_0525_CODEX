@@ -2,7 +2,6 @@ import { useCallback, useState } from 'react';
 import { useWorkflow } from '@/components/workflow/WorkflowProvider';
 import { loggers } from '@/lib/logger';
 
-
 export interface WorkflowError {
   id: string;
   type: 'validation' | 'network' | 'ai_cost' | 'processing' | 'unknown';
@@ -39,7 +38,7 @@ export function useWorkflowErrorHandler() {
         details: error.message,
         recoverable: true,
         retryable: true,
-        context,
+        context: context || 'unknown',
         timestamp,
       };
     }
@@ -57,7 +56,7 @@ export function useWorkflowErrorHandler() {
         details: error.message,
         recoverable: true,
         retryable: false,
-        context,
+        context: context || 'unknown',
         timestamp,
       };
     }
@@ -71,7 +70,7 @@ export function useWorkflowErrorHandler() {
         details: error.message,
         recoverable: true,
         retryable: false,
-        context,
+        context: context || 'unknown',
         timestamp,
       };
     }
@@ -85,7 +84,7 @@ export function useWorkflowErrorHandler() {
         details: error.message,
         recoverable: true,
         retryable: true,
-        context,
+        context: context || 'unknown',
         timestamp,
       };
     }
@@ -98,7 +97,7 @@ export function useWorkflowErrorHandler() {
       details: error.message || error.toString(),
       recoverable: true,
       retryable: true,
-      context,
+      context: context || 'unknown',
       timestamp,
     };
   }, []);
@@ -176,7 +175,7 @@ export function useWorkflowErrorHandler() {
 
   // AI cost error recovery
   const handleAICostError = useCallback(
-    async (error: WorkflowError, options?: ErrorRecoveryOptions) => {
+    async (_error: WorkflowError, options?: ErrorRecoveryOptions) => {
       // Suggest fallback or skip step
       if (options?.fallback) {
         options.fallback();
@@ -191,7 +190,7 @@ export function useWorkflowErrorHandler() {
 
   // Validation error recovery
   const handleValidationError = useCallback(
-    async (error: WorkflowError, options?: ErrorRecoveryOptions) => {
+    async (error: WorkflowError, _options?: ErrorRecoveryOptions) => {
       // For validation errors, we typically need user intervention
       // Just keep the error message visible for user to fix
       loggers.general.error('Validation error requires user intervention:', error.details);

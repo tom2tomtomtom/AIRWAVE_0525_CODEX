@@ -40,7 +40,7 @@ export const useRealtime = (options: UseRealtimeOptions = {}) => {
     pollInterval = 10000, // 10 seconds
     enableNotifications = true,
     categories = [],
-    autoMarkRead = false
+    autoMarkRead = false,
   } = options;
 
   const { activeClient } = useClient();
@@ -64,18 +64,18 @@ export const useRealtime = (options: UseRealtimeOptions = {}) => {
       const params = new URLSearchParams({
         client_id: activeClient.id,
         limit: '50',
-        ...(lastFetch && { since: lastFetch })
+        ...(lastFetch && { since: lastFetch }),
       });
 
       const response = await fetch(`/api/realtime/websocket?${params}`, {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
       });
 
       if (response.ok) {
         const data = await response.json();
-        
+
         if (data.events && data?.events?.length > 0) {
           setEvents(prev => {
             const newEvents = data?.events?.filter(
@@ -111,10 +111,10 @@ export const useRealtime = (options: UseRealtimeOptions = {}) => {
         setNotifications([]);
         return;
       }
-      
+
       const user = JSON.parse(storedUser);
       const token = user.token;
-      
+
       if (!token) {
         console.warn('No auth token found for notifications');
         setNotifications([]);
@@ -124,7 +124,7 @@ export const useRealtime = (options: UseRealtimeOptions = {}) => {
       const params = new URLSearchParams({
         client_id: activeClient.id,
         read: 'false',
-        limit: '20'
+        limit: '20',
       });
 
       if (categories.length > 0) {
@@ -133,9 +133,9 @@ export const useRealtime = (options: UseRealtimeOptions = {}) => {
 
       const response = await fetch(`/api/notifications?${params}`, {
         headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
       });
 
       if (response.ok) {
@@ -158,101 +158,105 @@ export const useRealtime = (options: UseRealtimeOptions = {}) => {
   }, [isAuthenticated, activeClient, enableNotifications, categories]);
 
   // Mark events as read
-  const markEventsAsRead = useCallback(async (eventIds: string[]) => {
-    if (!isAuthenticated || eventIds.length === 0) return;
+  const markEventsAsRead = useCallback(
+    async (eventIds: string[]) => {
+      if (!isAuthenticated || eventIds.length === 0) return;
 
-    try {
-      await fetch('/api/realtime/websocket', {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
-        body: JSON.stringify({ event_ids: eventIds })
-      });
+      try {
+        await fetch('/api/realtime/websocket', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+          body: JSON.stringify({ event_ids: eventIds }),
+        });
 
-      setEvents(prev => 
-        prev.map((event: any) => 
-          eventIds.includes(event.id) ? { ...event, read: true } : event
-        )
-      );
-    } catch (err: any) {
-      console.error('Error marking events as read:', err);
-    }
-  }, [isAuthenticated]);
+        setEvents(prev =>
+          prev.map((event: any) => (eventIds.includes(event.id) ? { ...event, read: true } : event))
+        );
+      } catch (err: any) {
+        console.error('Error marking events as read:', err);
+      }
+    },
+    [isAuthenticated]
+  );
 
   // Mark notification as read
-  const markNotificationAsRead = useCallback(async (notificationId: string) => {
-    if (!isAuthenticated) return;
+  const markNotificationAsRead = useCallback(
+    async (notificationId: string) => {
+      if (!isAuthenticated) return;
 
-    try {
-      await fetch(`/api/notifications/${notificationId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
-        body: JSON.stringify({ read: true })
-      });
+      try {
+        await fetch(`/api/notifications/${notificationId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+          body: JSON.stringify({ read: true }),
+        });
 
-      setNotifications(prev => 
-        prev.map((notification: any) => 
-          notification.id === notificationId 
-            ? { ...notification, read: true } 
-            : notification
-        )
-      );
-    } catch (err: any) {
-      console.error('Error marking notification as read:', err);
-    }
-  }, [isAuthenticated]);
+        setNotifications(prev =>
+          prev.map((notification: any) =>
+            notification.id === notificationId ? { ...notification, read: true } : notification
+          )
+        );
+      } catch (err: any) {
+        console.error('Error marking notification as read:', err);
+      }
+    },
+    [isAuthenticated]
+  );
 
   // Dismiss notification
-  const dismissNotification = useCallback(async (notificationId: string) => {
-    if (!isAuthenticated) return;
+  const dismissNotification = useCallback(
+    async (notificationId: string) => {
+      if (!isAuthenticated) return;
 
-    try {
-      await fetch(`/api/notifications/${notificationId}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      });
+      try {
+        await fetch(`/api/notifications/${notificationId}`, {
+          method: 'DELETE',
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        });
 
-      setNotifications(prev => 
-        prev.filter((notification: any) => notification.id !== notificationId)
-      );
-    } catch (err: any) {
-      console.error('Error dismissing notification:', err);
-    }
-  }, [isAuthenticated]);
+        setNotifications(prev =>
+          prev.filter((notification: any) => notification.id !== notificationId)
+        );
+      } catch (err: any) {
+        console.error('Error dismissing notification:', err);
+      }
+    },
+    [isAuthenticated]
+  );
 
   // Create event
-  const createEvent = useCallback(async (
-    type: string, 
-    data: any, 
-    targetUserIds?: string[]
-  ) => {
-    if (!isAuthenticated || !activeClient) return;
+  const createEvent = useCallback(
+    async (type: string, data: any, targetUserIds?: string[]) => {
+      if (!isAuthenticated || !activeClient) return;
 
-    try {
-      await fetch('/api/realtime/websocket', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
-        body: JSON.stringify({
-          type,
-          data,
-          client_id: activeClient.id,
-          target_user_ids: targetUserIds
-        })
-      });
-    } catch (err: any) {
-      console.error('Error creating event:', err);
-    }
-  }, [isAuthenticated, activeClient]);
+      try {
+        await fetch('/api/realtime/websocket', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+          body: JSON.stringify({
+            type,
+            data,
+            client_id: activeClient.id,
+            target_user_ids: targetUserIds,
+          }),
+        });
+      } catch (err: any) {
+        console.error('Error creating event:', err);
+      }
+    },
+    [isAuthenticated, activeClient]
+  );
 
   // Start/stop polling
   const startPolling = useCallback(() => {
@@ -296,7 +300,7 @@ export const useRealtime = (options: UseRealtimeOptions = {}) => {
       const unreadEventIds = events
         .filter((event: any) => !event.read)
         .map((event: any) => event.id);
-      
+
       if (unreadEventIds.length > 0) {
         markEventsAsRead(unreadEventIds);
       }
@@ -314,12 +318,12 @@ export const useRealtime = (options: UseRealtimeOptions = {}) => {
     notifications,
     unreadEvents,
     unreadNotifications,
-    
+
     // State
     loading,
     error,
     connectionStatus,
-    
+
     // Actions
     markEventsAsRead,
     markNotificationAsRead,
@@ -331,7 +335,7 @@ export const useRealtime = (options: UseRealtimeOptions = {}) => {
     },
     // Control
     startPolling,
-    stopPolling
+    stopPolling,
   };
 };
 
@@ -342,38 +346,37 @@ export const useExecutionEvents = () => {
     pollInterval: 5000, // More frequent polling for executions
   });
 
-  const executionEvents = realtime.events.filter(
-    event => event.type === 'execution_status_change'
-  );
+  const executionEvents = realtime.events.filter(event => event.type === 'execution_status_change');
 
   return {
     ...realtime,
-    executionEvents
+    executionEvents,
   };
 };
 
 // Hook for approval events
 export const useApprovalEvents = () => {
   const realtime = useRealtime({
-    categories: ['approval']
+    categories: ['approval'],
   });
 
-  const approvalEvents = realtime.events.filter(
-    event => event.type === 'approval_decision'
-  );
+  const approvalEvents = realtime.events.filter(event => event.type === 'approval_decision');
 
   return {
     ...realtime,
-    approvalEvents
+    approvalEvents,
   };
 };
 
 // Hook for notifications only
 export const useNotifications = (options: { categories?: string[] } = {}) => {
-  const realtime = useRealtime({
+  const realtimeConfig: any = {
     enableNotifications: true,
-    categories: options.categories
-  });
+  };
+  if (options.categories) {
+    realtimeConfig.categories = options.categories;
+  }
+  const realtime = useRealtime(realtimeConfig);
 
   return {
     notifications: realtime.notifications,
@@ -382,6 +385,6 @@ export const useNotifications = (options: { categories?: string[] } = {}) => {
     dismiss: realtime.dismissNotification,
     loading: realtime.loading,
     error: realtime.error,
-    refresh: realtime.refresh
+    refresh: realtime.refresh,
   };
 };

@@ -5,7 +5,6 @@ import { getErrorMessage } from '@/utils/errorUtils';
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { loggers } from '@/lib/logger';
 
-
 export interface RealTimeEvent {
   type: string;
   data: any;
@@ -90,7 +89,7 @@ export function useRealTimeUpdates(options: UseRealTimeUpdatesOptions = {}) {
         try {
           callback(data);
         } catch (error: any) {
-          const message = getErrorMessage(error);
+          getErrorMessage(error);
           console.error(`Error in event listener for ${eventType}:`, error);
         }
       });
@@ -118,7 +117,7 @@ export function useRealTimeUpdates(options: UseRealTimeUpdatesOptions = {}) {
         }
       };
 
-      eventSource.onerror = (event: any) => {
+      eventSource.onerror = (_event: any) => {
         setConnected(false);
 
         if (eventSource.readyState === EventSource.CLOSED) {
@@ -155,7 +154,7 @@ export function useRealTimeUpdates(options: UseRealTimeUpdatesOptions = {}) {
           setLastEvent(realTimeEvent);
           emit('message', realTimeEvent);
         } catch (error: any) {
-          const message = getErrorMessage(error);
+          getErrorMessage(error);
           console.error('Failed to parse SSE message:', error);
         }
       };
@@ -177,19 +176,21 @@ export function useRealTimeUpdates(options: UseRealTimeUpdatesOptions = {}) {
         setLastEvent({ type: 'render_progress', data, timestamp: Date.now() });
       });
 
-      eventSource.addEventListener('render_complete', _event => {
+      eventSource.addEventListener('render_complete', event => {
+        if (!event || !event.data) return;
         const data: RenderCompleteEvent = JSON.parse(event.data);
         emit('render_complete', data);
         setLastEvent({ type: 'render_complete', data, timestamp: Date.now() });
       });
 
-      eventSource.addEventListener('notification', _event => {
+      eventSource.addEventListener('notification', event => {
+        if (!event || !event.data) return;
         const data: NotificationEvent = JSON.parse(event.data);
         emit('notification', data);
         setLastEvent({ type: 'notification', data, timestamp: Date.now() });
       });
     } catch (error: any) {
-      const message = getErrorMessage(error);
+      getErrorMessage(error);
       console.error('Failed to create SSE connection:', error);
       setError(error instanceof Error ? error.message : 'Connection failed');
     }

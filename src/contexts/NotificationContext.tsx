@@ -35,7 +35,7 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
   );
 
   const handleClose = (id: string) => {
-    setNotifications(prev => prev.filter((n: NotificationData) => n.id !== id));
+    setNotifications(prev => prev.filter((n: Notification) => n.id !== id));
   };
 
   return (

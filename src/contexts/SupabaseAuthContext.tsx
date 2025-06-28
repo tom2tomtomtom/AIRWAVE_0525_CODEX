@@ -136,7 +136,7 @@ export const SupabaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({ 
     // Listen for auth state changes
     const {
       data: { subscription },
-    } = supabaseClient.auth.onAuthStateChange(async (_event, session) => {
+    } = supabaseClient.auth.onAuthStateChange(async (event, session) => {
       process.env.NODE_ENV === 'development' && loggers.general.error('Auth state changed:', event);
       if (session) {
         setAuthState({
@@ -294,7 +294,10 @@ export const SupabaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({ 
       return { success: false };
     } catch (error: unknown) {
       console.error('Session refresh error:', error);
-      return { success: false, error: error.message };
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Session refresh failed',
+      };
     }
   };
 

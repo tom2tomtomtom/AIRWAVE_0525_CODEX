@@ -145,7 +145,7 @@ export const TemplateSelectionStep: React.FC<TemplateSelectionStepProps> = ({
       if (!acc[category]) {
         acc[category] = [];
       }
-      acc[category].push(template);
+      acc[category]!.push(template);
       return acc;
     },
     {} as Record<string, Template[]>
