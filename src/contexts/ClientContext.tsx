@@ -11,14 +11,14 @@ interface ClientContextType {
   setActiveClient: (client: Client | null) => void;
   createClient: (clientData: Partial<Client>) => Promise<Client>;
   updateClient: (id: string, clientData: Partial<Client>) => Promise<Client>;
-    deleteClient: (id: string) => Promise<void>;
+  deleteClient: (id: string) => Promise<void>;
 }
 
 const ClientContext = createContext<ClientContextType>({
   clients: [],
-        activeClient: null,
+  activeClient: null,
   loading: true,
-        error: null,
+  error: null,
   setActiveClient: () => {},
   createClient: async () => {
     throw new Error('ClientContext not initialized');
@@ -28,7 +28,7 @@ const ClientContext = createContext<ClientContextType>({
   },
   deleteClient: async () => {
     throw new Error('ClientContext not initialized');
-  }
+  },
 });
 
 export const useClient = () => useContext(ClientContext);
@@ -45,44 +45,45 @@ export const ClientProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     if (authLoading) {
       return;
     }
-    
+
     if (isAuthenticated && user && user.token) {
       const loadClients = async () => {
         try {
           // Get user from localStorage
-          const storedUser = localStorage.getItem("airwave_user");
+          const storedUser = localStorage.getItem('airwave_user');
           if (!storedUser) {
-            process.env.NODE_ENV === 'development' &&             setLoading(false);
+            process.env.NODE_ENV === 'development' && setLoading(false);
             return;
           }
-          
+
           const user = JSON.parse(storedUser);
-          
+
           // Check if we have a valid token
-          if (!user.token || user.token === "mock_token") {
-            process.env.NODE_ENV === 'development' &&             setLoading(false);
+          if (!user.token || user.token === 'mock_token') {
+            process.env.NODE_ENV === 'development' && setLoading(false);
             return;
           }
-          
+
           // Fetch clients from API
-          const response = await fetch("/api/clients", {
+          const response = await fetch('/api/clients', {
             headers: {
-              Authorization: `Bearer ${user.token}` },
+              Authorization: `Bearer ${user.token}`,
+            },
           });
-          
+
           const data = await response.json();
-          
+
           if (response.ok && data.success && data.clients) {
             setClients(data.clients);
-            
+
             // Check for active client in localStorage
-            const storedActiveClient = localStorage.getItem("airwave_active_client");
+            const storedActiveClient = localStorage.getItem('airwave_active_client');
             if (storedActiveClient) {
               setActiveClient(JSON.parse(storedActiveClient));
             } else if (data?.clients?.length > 0 && data.clients[0]) {
               // Set first client as active if none is selected
               setActiveClient(data.clients[0]);
-              localStorage.setItem("airwave_active_client", JSON.stringify(data.clients[0]));
+              localStorage.setItem('airwave_active_client', JSON.stringify(data.clients[0]));
             }
           } else {
             // Fallback to localStorage if API fails
@@ -101,9 +102,9 @@ export const ClientProvider: React.FC<{ children: React.ReactNode }> = ({ childr
             }
           }
         } catch (error: unknown) {
-    const message = getErrorMessage(error);
+          const _message = getErrorMessage(error);
           console.error('Error loading clients:', error);
-          
+
           // Fallback to localStorage
           const storedClients = localStorage.getItem('airwave_clients');
           const parsedClients = storedClients ? JSON.parse(storedClients) : [];
@@ -141,51 +142,51 @@ export const ClientProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
   // Create a new client via API
   const createClient = async (clientData: Partial<Client>): Promise<Client> => {
-    const storedUser = localStorage.getItem("airwave_user");
+    const storedUser = localStorage.getItem('airwave_user');
     if (!storedUser) {
-      throw new Error("User not authenticated");
+      throw new Error('User not authenticated');
     }
-    
+
     const user = JSON.parse(storedUser);
-    
+
     try {
       // Call API to create client
-      const response = await fetch("/api/clients", {
-        method: "POST",
+      const response = await fetch('/api/clients', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${user.token || "mock_token"}`
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${user.token || 'mock_token'}`,
         },
-        body: JSON.stringify(clientData)
+        body: JSON.stringify(clientData),
       });
-      
+
       const data = await response.json();
-      
+
       if (!response.ok) {
-        throw new Error(data.message || "Failed to create client");
+        throw new Error(data.message || 'Failed to create client');
       }
-      
+
       if (data.success && data.client) {
         // Add to clients list
         const updatedClients = [...clients, data.client];
         setClients(updatedClients);
-        
+
         // Set as active client if it's the first one
         if (updatedClients.length === 1) {
           handleSetActiveClient(data.client);
         }
-        
+
         return data.client;
       } else {
-        throw new Error("Invalid response from server");
+        throw new Error('Invalid response from server');
       }
     } catch (error: unknown) {
-    const message = getErrorMessage(error);
+      const _message = getErrorMessage(error);
       console.error('Error creating client:', error);
-      
+
       // Fallback to local creation
       const newClient: Client = {
-    id: 'client_' + Math.random().toString(36).substring(2, 9),
+        id: 'client_' + Math.random().toString(36).substring(2, 9),
         name: clientData.name || 'New Client',
         industry: clientData.industry || 'Other',
         logo: clientData.logo || '',
@@ -198,7 +199,7 @@ export const ClientProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         brand_guidelines: clientData.brand_guidelines || {
           voiceTone: '',
           targetAudience: '',
-          keyMessages: []
+          keyMessages: [],
         },
         tenantId: 'tenant-1',
         isActive: true,
@@ -206,7 +207,7 @@ export const ClientProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         lastModified: new Date().toISOString(),
         createdBy: user?.id || 'user-1',
         version: 1,
-        metadata: {}
+        metadata: {},
       };
 
       const updatedClients = [...clients, newClient];
@@ -223,46 +224,47 @@ export const ClientProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
   // Update an existing client via API
   const updateClient = async (id: string, clientData: Partial<Client>): Promise<Client> => {
-    const storedUser = localStorage.getItem("airwave_user");
+    const storedUser = localStorage.getItem('airwave_user');
     if (!storedUser) {
-      throw new Error("User not authenticated");
+      throw new Error('User not authenticated');
     }
-    
+
     const user = JSON.parse(storedUser);
-    
+
     try {
       // Call API to update client
       const response = await fetch(`/api/clients/${id}`, {
-        method: "PUT",
+        method: 'PUT',
         headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${user.token || "mock_token"}`
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${user.token || 'mock_token'}`,
         },
-        body: JSON.stringify(clientData) });      
+        body: JSON.stringify(clientData),
+      });
       const data = await response.json();
-      
+
       if (!response.ok) {
-        throw new Error(data.message || "Failed to update client");
+        throw new Error(data.message || 'Failed to update client');
       }
-      
+
       if (data.success && data.client) {
         // Update clients list
-        const updatedClients = clients.map((c: unknown) => c.id === id ? data.client : c);
+        const updatedClients = clients.map((c: unknown) => (c.id === id ? data.client : c));
         setClients(updatedClients);
-        
+
         // Update active client if it's the one being updated
         if (activeClient?.id === id) {
           handleSetActiveClient(data.client);
         }
-        
+
         return data.client;
       } else {
-        throw new Error("Invalid response from server");
+        throw new Error('Invalid response from server');
       }
     } catch (error: unknown) {
-    const message = getErrorMessage(error);
+      const _message = getErrorMessage(error);
       console.error('Error updating client:', error);
-      
+
       // Fallback to local update
       const clientIndex = clients.findIndex(c => c.id === id);
       if (clientIndex === -1) {
@@ -279,7 +281,8 @@ export const ClientProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         ...clientData,
         name: clientData.name || existingClient.name, // Ensure name is always defined
         lastModified: new Date().toISOString(),
-        version: existingClient.version + 1 };      
+        version: existingClient.version + 1,
+      };
       const updatedClients = [...clients];
       updatedClients[clientIndex] = updatedClient;
 
@@ -296,27 +299,28 @@ export const ClientProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
   // Delete a client via API
   const deleteClient = async (id: string): Promise<void> => {
-    const storedUser = localStorage.getItem("airwave_user");
+    const storedUser = localStorage.getItem('airwave_user');
     if (!storedUser) {
-      throw new Error("User not authenticated");
+      throw new Error('User not authenticated');
     }
-    
+
     const user = JSON.parse(storedUser);
-    
+
     try {
       // Call API to delete client
       const response = await fetch(`/api/clients/${id}`, {
-        method: "DELETE",
+        method: 'DELETE',
         headers: {
-          Authorization: `Bearer ${user.token || "mock_token"}` },
+          Authorization: `Bearer ${user.token || 'mock_token'}`,
+        },
       });
-      
+
       const data = await response.json();
-      
+
       if (!response.ok) {
-        throw new Error(data.message || "Failed to delete client");
+        throw new Error(data.message || 'Failed to delete client');
       }
-      
+
       if (data.success) {
         // Update local state
         const updatedClients = clients.filter((c: unknown) => c.id !== id);
@@ -333,9 +337,9 @@ export const ClientProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         }
       }
     } catch (error: unknown) {
-    const message = getErrorMessage(error);
+      const _message = getErrorMessage(error);
       console.error('Error deleting client:', error);
-      
+
       // Fallback to local deletion
       const updatedClients = clients.filter((c: unknown) => c.id !== id);
       setClients(updatedClients);

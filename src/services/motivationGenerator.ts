@@ -10,18 +10,18 @@ export interface PsychologicalMotivation {
   title: string;
   description: string;
   psychologyType: 'cognitive' | 'emotional' | 'social' | 'behavioral';
-  motivationCategory: 
-    | 'fear_of_missing_out' 
-    | 'social_proof' 
-    | 'authority' 
-    | 'scarcity' 
-    | 'reciprocity' 
-    | 'commitment' 
-    | 'aspiration' 
-    | 'security' 
-    | 'convenience' 
-    | 'status' 
-    | 'belonging' 
+  motivationCategory:
+    | 'fear_of_missing_out'
+    | 'social_proof'
+    | 'authority'
+    | 'scarcity'
+    | 'reciprocity'
+    | 'commitment'
+    | 'aspiration'
+    | 'security'
+    | 'convenience'
+    | 'status'
+    | 'belonging'
     | 'achievement';
   targetSegment: string;
   keyMessage: string;
@@ -39,13 +39,12 @@ export interface MotivationSet {
   generatedAt: Date;
   version: number;
   metadata: {
-        totalMotivations: number;
+    totalMotivations: number;
     diversityScore: number;
     averageConfidence: number;
     psychologyDistribution: Record<string, number>;
     targetCoverage: string[];
-  
-      };
+  };
 }
 
 export interface MotivationGenerationOptions {
@@ -61,7 +60,7 @@ export class MotivationGenerator {
   private readonly PSYCHOLOGY_TYPES = ['cognitive', 'emotional', 'social', 'behavioral'];
   private readonly MOTIVATION_CATEGORIES = [
     'fear_of_missing_out',
-    'social_proof', 
+    'social_proof',
     'authority',
     'scarcity',
     'reciprocity',
@@ -71,7 +70,7 @@ export class MotivationGenerator {
     'convenience',
     'status',
     'belonging',
-    'achievement'
+    'achievement',
   ];
 
   async generateMotivations(
@@ -83,30 +82,28 @@ export class MotivationGenerator {
       diversityWeight = 0.8,
       includeNiche = true,
       psychologyBalance = true,
-      customPrompts = []
+      customPrompts = [],
     } = options;
 
     try {
-      logger.info('Starting motivation generation', {
-        briefId: brief.id,
-        motivationCount,
-        hasCustomPrompts: customPrompts.length > 0
-      });
+      logger.info('Starting motivation generation');
+      logger.info('Brief ID: ' + brief.id);
+      logger.info('Motivation count: ' + motivationCount);
 
       // Generate core motivations using AI
       const coreMotivations = await this.generateCoreMotivations(brief, motivationCount);
-      
+
       // Enhance with psychological analysis
       const enhancedMotivations = await this.enhanceWithPsychology(brief, coreMotivations);
-      
+
       // Apply diversity and balance
       const balancedMotivations = this.balanceMotivations(
-        enhancedMotivations, 
+        enhancedMotivations,
         motivationCount,
         diversityWeight,
         psychologyBalance
       );
-      
+
       // Generate final motivation set
       const motivationSet: MotivationSet = {
         id: this.generateMotivationSetId(brief.id),
@@ -114,25 +111,24 @@ export class MotivationGenerator {
         motivations: balancedMotivations,
         generatedAt: new Date(),
         version: 1,
-        metadata: this.calculateMetadata(balancedMotivations)
+        metadata: this.calculateMetadata(balancedMotivations),
       };
 
       logger.info('Motivation generation completed', {
         briefId: brief.id,
         motivationSetId: motivationSet.id,
         totalMotivations: motivationSet.motivations.length,
-        averageConfidence: motivationSet.metadata.averageConfidence
+        averageConfidence: motivationSet.metadata.averageConfidence,
       });
 
       return motivationSet;
-
     } catch (error: any) {
       const classified = classifyError(error as Error, {
         component: 'motivation-generator',
         briefId: brief.id,
-        motivationCount
+        motivationCount,
       });
-      
+
       logger.error('Motivation generation failed', classified.originalError);
       throw error;
     }
@@ -143,7 +139,7 @@ export class MotivationGenerator {
     count: number
   ): Promise<Partial<PsychologicalMotivation>[]> {
     const cacheKey = `motivations_core_${this.hashBrief(brief)}_${count}`;
-    
+
     return cached(
       async () => {
         const prompt = this.buildMotivationPrompt(brief, count);
@@ -230,174 +226,224 @@ Make them diverse, authentic, and psychologically grounded.
   private async callAIService(prompt: string): Promise<string> {
     // Placeholder for AI service integration
     // This would integrate with OpenAI, Anthropic, or your preferred AI service
-    
+
     // For now, return mock response with realistic psychological motivations
     return JSON.stringify({
       motivations: [
         {
-          title: "Stay Ahead of Trends",
-          description: "Appeals to innovators who fear being left behind by technological or market changes. Creates urgency around competitive positioning.",
-          psychologyType: "cognitive",
-          motivationCategory: "fear_of_missing_out",
-          targetSegment: "Forward-thinking professionals and early adopters",
+          title: 'Stay Ahead of Trends',
+          description:
+            'Appeals to innovators who fear being left behind by technological or market changes. Creates urgency around competitive positioning.',
+          psychologyType: 'cognitive',
+          motivationCategory: 'fear_of_missing_out',
+          targetSegment: 'Forward-thinking professionals and early adopters',
           keyMessage: "Don't let your competitors get ahead while you're still catching up",
-          emotionalTriggers: ["anxiety", "determination", "ambition", "urgency"],
-          copyDirection: "Future-focused language with emphasis on competitive advantage and market leadership",
-          examples: ["Industry leaders are already using this", "The future of [industry] starts here", "Join the innovators"],
-          intensity: "high",
-          confidence: 0.9
+          emotionalTriggers: ['anxiety', 'determination', 'ambition', 'urgency'],
+          copyDirection:
+            'Future-focused language with emphasis on competitive advantage and market leadership',
+          examples: [
+            'Industry leaders are already using this',
+            'The future of [industry] starts here',
+            'Join the innovators',
+          ],
+          intensity: 'high',
+          confidence: 0.9,
         },
         {
-          title: "Trusted by Experts",
-          description: "Leverages authority and credibility to reduce risk perception. Appeals to customers who value expert validation.",
-          psychologyType: "social",
-          motivationCategory: "authority",
-          targetSegment: "Risk-averse decision makers and quality-conscious buyers",
+          title: 'Trusted by Experts',
+          description:
+            'Leverages authority and credibility to reduce risk perception. Appeals to customers who value expert validation.',
+          psychologyType: 'social',
+          motivationCategory: 'authority',
+          targetSegment: 'Risk-averse decision makers and quality-conscious buyers',
           keyMessage: "If it's good enough for the experts, it's good enough for you",
-          emotionalTriggers: ["confidence", "trust", "security", "validation"],
-          copyDirection: "Authoritative tone with credible testimonials and expert endorsements",
-          examples: ["Recommended by 9/10 specialists", "Chosen by Fortune 500 companies", "Expert-approved solution"],
-          intensity: "medium",
-          confidence: 0.85
+          emotionalTriggers: ['confidence', 'trust', 'security', 'validation'],
+          copyDirection: 'Authoritative tone with credible testimonials and expert endorsements',
+          examples: [
+            'Recommended by 9/10 specialists',
+            'Chosen by Fortune 500 companies',
+            'Expert-approved solution',
+          ],
+          intensity: 'medium',
+          confidence: 0.85,
         },
         {
-          title: "Exclusive Community Access",
-          description: "Taps into belonging and status needs. Creates desire through exclusivity and community membership.",
-          psychologyType: "social",
-          motivationCategory: "belonging",
-          targetSegment: "Status-conscious individuals and community seekers",
-          keyMessage: "Join an exclusive group of like-minded achievers",
-          emotionalTriggers: ["belonging", "pride", "exclusivity", "connection"],
-          copyDirection: "Inclusive yet exclusive language emphasizing community and shared values",
-          examples: ["Member-only benefits", "Private community access", "Connect with industry leaders"],
-          intensity: "medium",
-          confidence: 0.8
+          title: 'Exclusive Community Access',
+          description:
+            'Taps into belonging and status needs. Creates desire through exclusivity and community membership.',
+          psychologyType: 'social',
+          motivationCategory: 'belonging',
+          targetSegment: 'Status-conscious individuals and community seekers',
+          keyMessage: 'Join an exclusive group of like-minded achievers',
+          emotionalTriggers: ['belonging', 'pride', 'exclusivity', 'connection'],
+          copyDirection: 'Inclusive yet exclusive language emphasizing community and shared values',
+          examples: [
+            'Member-only benefits',
+            'Private community access',
+            'Connect with industry leaders',
+          ],
+          intensity: 'medium',
+          confidence: 0.8,
         },
         {
-          title: "Effortless Results",
-          description: "Appeals to convenience-seekers who want maximum results with minimal effort. Reduces friction and complexity.",
-          psychologyType: "behavioral",
-          motivationCategory: "convenience",
-          targetSegment: "Busy professionals and efficiency-focused users",
-          keyMessage: "Achieve more while doing less",
-          emotionalTriggers: ["relief", "satisfaction", "ease", "accomplishment"],
-          copyDirection: "Simple, clear language emphasizing ease of use and quick results",
-          examples: ["Set it and forget it", "Results in minutes, not hours", "Automated for your convenience"],
-          intensity: "medium",
-          confidence: 0.88
+          title: 'Effortless Results',
+          description:
+            'Appeals to convenience-seekers who want maximum results with minimal effort. Reduces friction and complexity.',
+          psychologyType: 'behavioral',
+          motivationCategory: 'convenience',
+          targetSegment: 'Busy professionals and efficiency-focused users',
+          keyMessage: 'Achieve more while doing less',
+          emotionalTriggers: ['relief', 'satisfaction', 'ease', 'accomplishment'],
+          copyDirection: 'Simple, clear language emphasizing ease of use and quick results',
+          examples: [
+            'Set it and forget it',
+            'Results in minutes, not hours',
+            'Automated for your convenience',
+          ],
+          intensity: 'medium',
+          confidence: 0.88,
         },
         {
-          title: "Risk-Free Investment",
-          description: "Reduces purchase anxiety through guarantees and risk mitigation. Appeals to cautious buyers.",
-          psychologyType: "cognitive",
-          motivationCategory: "security",
-          targetSegment: "Risk-averse buyers and first-time customers",
-          keyMessage: "Try it risk-free - your satisfaction is guaranteed",
-          emotionalTriggers: ["security", "confidence", "trust", "peace_of_mind"],
-          copyDirection: "Reassuring tone with emphasis on guarantees and customer protection",
-          examples: ["30-day money-back guarantee", "No-risk trial", "100% satisfaction guaranteed"],
-          intensity: "low",
-          confidence: 0.92
+          title: 'Risk-Free Investment',
+          description:
+            'Reduces purchase anxiety through guarantees and risk mitigation. Appeals to cautious buyers.',
+          psychologyType: 'cognitive',
+          motivationCategory: 'security',
+          targetSegment: 'Risk-averse buyers and first-time customers',
+          keyMessage: 'Try it risk-free - your satisfaction is guaranteed',
+          emotionalTriggers: ['security', 'confidence', 'trust', 'peace_of_mind'],
+          copyDirection: 'Reassuring tone with emphasis on guarantees and customer protection',
+          examples: [
+            '30-day money-back guarantee',
+            'No-risk trial',
+            '100% satisfaction guaranteed',
+          ],
+          intensity: 'low',
+          confidence: 0.92,
         },
         {
-          title: "Limited Time Opportunity",
-          description: "Creates urgency through time-based scarcity. Motivates immediate action to avoid regret.",
-          psychologyType: "emotional",
-          motivationCategory: "scarcity",
-          targetSegment: "Action-oriented buyers and deal seekers",
-          keyMessage: "Act now before this opportunity disappears forever",
-          emotionalTriggers: ["urgency", "regret_avoidance", "excitement", "determination"],
-          copyDirection: "Urgent, time-sensitive language with clear deadlines",
-          examples: ["Limited time offer", "Only 48 hours left", "Expires at midnight"],
-          intensity: "high",
-          confidence: 0.87
+          title: 'Limited Time Opportunity',
+          description:
+            'Creates urgency through time-based scarcity. Motivates immediate action to avoid regret.',
+          psychologyType: 'emotional',
+          motivationCategory: 'scarcity',
+          targetSegment: 'Action-oriented buyers and deal seekers',
+          keyMessage: 'Act now before this opportunity disappears forever',
+          emotionalTriggers: ['urgency', 'regret_avoidance', 'excitement', 'determination'],
+          copyDirection: 'Urgent, time-sensitive language with clear deadlines',
+          examples: ['Limited time offer', 'Only 48 hours left', 'Expires at midnight'],
+          intensity: 'high',
+          confidence: 0.87,
         },
         {
-          title: "Proven Track Record",
-          description: "Uses social proof and past success to build confidence. Appeals to evidence-based decision makers.",
-          psychologyType: "cognitive",
-          motivationCategory: "social_proof",
-          targetSegment: "Data-driven buyers and skeptical customers",
-          keyMessage: "Join thousands who have already transformed their results",
-          emotionalTriggers: ["confidence", "validation", "optimism", "belonging"],
-          copyDirection: "Evidence-based language with statistics and success stories",
-          examples: ["10,000+ satisfied customers", "98% success rate", "Real results from real people"],
-          intensity: "medium",
-          confidence: 0.9
+          title: 'Proven Track Record',
+          description:
+            'Uses social proof and past success to build confidence. Appeals to evidence-based decision makers.',
+          psychologyType: 'cognitive',
+          motivationCategory: 'social_proof',
+          targetSegment: 'Data-driven buyers and skeptical customers',
+          keyMessage: 'Join thousands who have already transformed their results',
+          emotionalTriggers: ['confidence', 'validation', 'optimism', 'belonging'],
+          copyDirection: 'Evidence-based language with statistics and success stories',
+          examples: [
+            '10,000+ satisfied customers',
+            '98% success rate',
+            'Real results from real people',
+          ],
+          intensity: 'medium',
+          confidence: 0.9,
         },
         {
-          title: "Achieve Your Dreams",
-          description: "Connects product to personal aspirations and life goals. Appeals to ambitious individuals.",
-          psychologyType: "emotional",
-          motivationCategory: "aspiration",
-          targetSegment: "Goal-oriented individuals and self-improvers",
-          keyMessage: "Transform your aspirations into achievable reality",
-          emotionalTriggers: ["inspiration", "hope", "determination", "pride"],
-          copyDirection: "Inspirational tone focusing on personal transformation and achievement",
-          examples: ["Unlock your potential", "Live the life you've imagined", "Make your dreams reality"],
-          intensity: "high",
-          confidence: 0.83
+          title: 'Achieve Your Dreams',
+          description:
+            'Connects product to personal aspirations and life goals. Appeals to ambitious individuals.',
+          psychologyType: 'emotional',
+          motivationCategory: 'aspiration',
+          targetSegment: 'Goal-oriented individuals and self-improvers',
+          keyMessage: 'Transform your aspirations into achievable reality',
+          emotionalTriggers: ['inspiration', 'hope', 'determination', 'pride'],
+          copyDirection: 'Inspirational tone focusing on personal transformation and achievement',
+          examples: [
+            'Unlock your potential',
+            "Live the life you've imagined",
+            'Make your dreams reality',
+          ],
+          intensity: 'high',
+          confidence: 0.83,
         },
         {
-          title: "Industry Recognition",
-          description: "Appeals to status and professional recognition needs. Creates desire for peer acknowledgment.",
-          psychologyType: "social",
-          motivationCategory: "status",
-          targetSegment: "Career-focused professionals and ambitious individuals",
-          keyMessage: "Gain the recognition and respect you deserve",
-          emotionalTriggers: ["pride", "ambition", "satisfaction", "superiority"],
-          copyDirection: "Professional tone emphasizing career advancement and recognition",
-          examples: ["Stand out from the crowd", "Earn industry respect", "Become the go-to expert"],
-          intensity: "medium",
-          confidence: 0.81
+          title: 'Industry Recognition',
+          description:
+            'Appeals to status and professional recognition needs. Creates desire for peer acknowledgment.',
+          psychologyType: 'social',
+          motivationCategory: 'status',
+          targetSegment: 'Career-focused professionals and ambitious individuals',
+          keyMessage: 'Gain the recognition and respect you deserve',
+          emotionalTriggers: ['pride', 'ambition', 'satisfaction', 'superiority'],
+          copyDirection: 'Professional tone emphasizing career advancement and recognition',
+          examples: [
+            'Stand out from the crowd',
+            'Earn industry respect',
+            'Become the go-to expert',
+          ],
+          intensity: 'medium',
+          confidence: 0.81,
         },
         {
-          title: "Family Protection Priority",
-          description: "Taps into protective instincts and family responsibility. Appeals to parents and caregivers.",
-          psychologyType: "emotional",
-          motivationCategory: "security",
-          targetSegment: "Parents, caregivers, and family-focused individuals",
-          keyMessage: "Protect what matters most to you",
-          emotionalTriggers: ["love", "responsibility", "protection", "peace_of_mind"],
-          copyDirection: "Caring, protective tone emphasizing family benefits and safety",
-          examples: ["Keep your family safe", "For those who matter most", "Peace of mind for parents"],
-          intensity: "high",
-          confidence: 0.89
+          title: 'Family Protection Priority',
+          description:
+            'Taps into protective instincts and family responsibility. Appeals to parents and caregivers.',
+          psychologyType: 'emotional',
+          motivationCategory: 'security',
+          targetSegment: 'Parents, caregivers, and family-focused individuals',
+          keyMessage: 'Protect what matters most to you',
+          emotionalTriggers: ['love', 'responsibility', 'protection', 'peace_of_mind'],
+          copyDirection: 'Caring, protective tone emphasizing family benefits and safety',
+          examples: [
+            'Keep your family safe',
+            'For those who matter most',
+            'Peace of mind for parents',
+          ],
+          intensity: 'high',
+          confidence: 0.89,
         },
         {
-          title: "Return the Favor",
-          description: "Uses reciprocity principle by highlighting value received. Appeals to fairness-minded individuals.",
-          psychologyType: "behavioral",
-          motivationCategory: "reciprocity",
-          targetSegment: "Fair-minded customers and relationship builders",
+          title: 'Return the Favor',
+          description:
+            'Uses reciprocity principle by highlighting value received. Appeals to fairness-minded individuals.',
+          psychologyType: 'behavioral',
+          motivationCategory: 'reciprocity',
+          targetSegment: 'Fair-minded customers and relationship builders',
           keyMessage: "We've helped you succeed - now help us grow",
-          emotionalTriggers: ["gratitude", "fairness", "loyalty", "connection"],
-          copyDirection: "Appreciative tone emphasizing mutual benefit and relationship",
-          examples: ["Return the favor", "Help us help others", "Be part of our success story"],
-          intensity: "low",
-          confidence: 0.75
+          emotionalTriggers: ['gratitude', 'fairness', 'loyalty', 'connection'],
+          copyDirection: 'Appreciative tone emphasizing mutual benefit and relationship',
+          examples: ['Return the favor', 'Help us help others', 'Be part of our success story'],
+          intensity: 'low',
+          confidence: 0.75,
         },
         {
-          title: "Smart Investment Choice",
-          description: "Appeals to rational buyers focused on ROI and long-term value. Emphasizes financial wisdom.",
-          psychologyType: "cognitive",
-          motivationCategory: "achievement",
-          targetSegment: "Analytical buyers and value-conscious customers",
-          keyMessage: "Make the smart choice that pays for itself",
-          emotionalTriggers: ["confidence", "pride", "satisfaction", "wisdom"],
-          copyDirection: "Rational, value-focused language with emphasis on ROI and long-term benefits",
-          examples: ["Best value for money", "Smart investment", "Pays for itself in months"],
-          intensity: "medium",
-          confidence: 0.86
-        }
-      ]
+          title: 'Smart Investment Choice',
+          description:
+            'Appeals to rational buyers focused on ROI and long-term value. Emphasizes financial wisdom.',
+          psychologyType: 'cognitive',
+          motivationCategory: 'achievement',
+          targetSegment: 'Analytical buyers and value-conscious customers',
+          keyMessage: 'Make the smart choice that pays for itself',
+          emotionalTriggers: ['confidence', 'pride', 'satisfaction', 'wisdom'],
+          copyDirection:
+            'Rational, value-focused language with emphasis on ROI and long-term benefits',
+          examples: ['Best value for money', 'Smart investment', 'Pays for itself in months'],
+          intensity: 'medium',
+          confidence: 0.86,
+        },
+      ],
     });
   }
 
   private parseMotivationResponse(response: string): Partial<PsychologicalMotivation>[] {
     try {
       const parsed = JSON.parse(response);
-      
+
       if (!parsed.motivations || !Array.isArray(parsed.motivations)) {
         throw new Error('Invalid AI response format');
       }
@@ -410,7 +456,7 @@ Make them diverse, authentic, and psychologically grounded.
         motivationCategory: motivation.motivationCategory,
         targetSegment: this.sanitizeString(motivation.targetSegment),
         keyMessage: this.sanitizeString(motivation.keyMessage),
-        emotionalTriggers: Array.isArray(motivation.emotionalTriggers) 
+        emotionalTriggers: Array.isArray(motivation.emotionalTriggers)
           ? motivation.emotionalTriggers.map((t: string) => this.sanitizeString(t)).filter(Boolean)
           : [],
         copyDirection: this.sanitizeString(motivation.copyDirection),
@@ -418,7 +464,7 @@ Make them diverse, authentic, and psychologically grounded.
           ? motivation.examples.map((e: string) => this.sanitizeString(e)).filter(Boolean)
           : [],
         intensity: motivation.intensity || 'medium',
-        confidence: typeof motivation.confidence === 'number' ? motivation.confidence : 0.5
+        confidence: typeof motivation.confidence === 'number' ? motivation.confidence : 0.5,
       }));
     } catch (error: any) {
       logger.error('Failed to parse motivation response', error);
@@ -444,7 +490,7 @@ Make them diverse, authentic, and psychologically grounded.
         copyDirection: motivation.copyDirection || 'Engaging and benefit-focused',
         examples: motivation.examples || ['Example not provided'],
         intensity: motivation.intensity || 'medium',
-        confidence: motivation.confidence || 0.5
+        confidence: motivation.confidence || 0.5,
       };
 
       // Enhance confidence based on brief alignment
@@ -476,7 +522,9 @@ Make them diverse, authentic, and psychologically grounded.
     return balanced.slice(0, targetCount);
   }
 
-  private ensurePsychologyBalance(motivations: PsychologicalMotivation[]): PsychologicalMotivation[] {
+  private ensurePsychologyBalance(
+    motivations: PsychologicalMotivation[]
+  ): PsychologicalMotivation[] {
     const balanced: PsychologicalMotivation[] = [];
     const typeGroups = this.groupByPsychologyType(motivations);
     const targetPerType = Math.floor(motivations.length / this.PSYCHOLOGY_TYPES.length);
@@ -503,45 +551,69 @@ Make them diverse, authentic, and psychologically grounded.
     return balanced;
   }
 
-  private groupByPsychologyType(motivations: PsychologicalMotivation[]): Record<string, PsychologicalMotivation[]> {
-    return motivations.reduce((groups, motivation) => {
-      const type = motivation.psychologyType;
-      if (!groups[type]) groups[type] = [];
-      groups[type].push(motivation);
-      return groups;
-    }, {} as Record<string, PsychologicalMotivation[]>);
+  private groupByPsychologyType(
+    motivations: PsychologicalMotivation[]
+  ): Record<string, PsychologicalMotivation[]> {
+    return motivations.reduce(
+      (groups, motivation) => {
+        const type = motivation.psychologyType;
+        if (!groups[type]) groups[type] = [];
+        groups[type].push(motivation);
+        return groups;
+      },
+      {} as Record<string, PsychologicalMotivation[]>
+    );
   }
 
-  private calculateConfidenceScore(brief: ParsedBrief, motivation: PsychologicalMotivation): number {
+  private calculateConfidenceScore(
+    brief: ParsedBrief,
+    motivation: PsychologicalMotivation
+  ): number {
     let score = motivation.confidence || 0.5;
-    
+
     // Boost score based on brief alignment
-    if (brief.targetAudience && motivation.targetSegment.toLowerCase().includes(brief.targetAudience.toLowerCase())) {
+    if (
+      brief.targetAudience &&
+      motivation.targetSegment.toLowerCase().includes(brief.targetAudience.toLowerCase())
+    ) {
       score += 0.1;
     }
-    
-    if (brief.objective && motivation.keyMessage.toLowerCase().includes(brief.objective.toLowerCase())) {
+
+    if (
+      brief.objective &&
+      motivation.keyMessage.toLowerCase().includes(brief.objective.toLowerCase())
+    ) {
       score += 0.1;
     }
-    
+
     // Cap at 1.0
     return Math.min(score, 1.0);
   }
 
-  private calculateDiversityScore(motivation: PsychologicalMotivation, allMotivations: PsychologicalMotivation[]): number {
+  private calculateDiversityScore(
+    motivation: PsychologicalMotivation,
+    allMotivations: PsychologicalMotivation[]
+  ): number {
     // Calculate how different this motivation is from others
-    const typeScore = allMotivations.filter((m: any) => m.psychologyType === motivation.psychologyType).length / allMotivations.length;
-    const categoryScore = allMotivations.filter((m: any) => m.motivationCategory === motivation.motivationCategory).length / allMotivations.length;
-    
+    const typeScore =
+      allMotivations.filter((m: any) => m.psychologyType === motivation.psychologyType).length /
+      allMotivations.length;
+    const categoryScore =
+      allMotivations.filter((m: any) => m.motivationCategory === motivation.motivationCategory)
+        .length / allMotivations.length;
+
     // Lower scores mean more diverse (fewer similar motivations)
-    return 1 - ((typeScore + categoryScore) / 2);
+    return 1 - (typeScore + categoryScore) / 2;
   }
 
   private calculateMetadata(motivations: PsychologicalMotivation[]): MotivationSet['metadata'] {
-    const psychologyDistribution = motivations.reduce((dist, m) => {
-      dist[m.psychologyType] = (dist[m.psychologyType] || 0) + 1;
-      return dist;
-    }, {} as Record<string, number>);
+    const psychologyDistribution = motivations.reduce(
+      (dist, m) => {
+        dist[m.psychologyType] = (dist[m.psychologyType] || 0) + 1;
+        return dist;
+      },
+      {} as Record<string, number>
+    );
 
     const totalConfidence = motivations.reduce((sum, m) => sum + m.confidence, 0);
     const averageConfidence = totalConfidence / motivations.length;
@@ -554,7 +626,7 @@ Make them diverse, authentic, and psychologically grounded.
       diversityScore,
       averageConfidence,
       psychologyDistribution,
-      targetCoverage: uniqueSegments
+      targetCoverage: uniqueSegments,
     };
   }
 
@@ -580,7 +652,9 @@ Make them diverse, authentic, and psychologically grounded.
     }
 
     // Check confidence levels
-    const lowConfidenceCount = motivationSet.motivations.filter((m: any) => m.confidence < 0.6).length;
+    const lowConfidenceCount = motivationSet.motivations.filter(
+      (m: any) => m.confidence < 0.6
+    ).length;
     if (lowConfidenceCount > 3) {
       suggestions.push('Some motivations have low confidence - consider regenerating');
     }
@@ -593,7 +667,7 @@ Make them diverse, authentic, and psychologically grounded.
     return {
       valid: issues.length === 0,
       issues,
-      suggestions
+      suggestions,
     };
   }
 
@@ -631,20 +705,26 @@ Make them diverse, authentic, and psychologically grounded.
       ...motivationSet,
       motivations: refinedMotivations,
       version: motivationSet.version + 1,
-      metadata: this.calculateMetadata(refinedMotivations)
+      metadata: this.calculateMetadata(refinedMotivations),
     };
   }
 
-  private async enhanceMotivationConfidence(motivations: PsychologicalMotivation[]): Promise<PsychologicalMotivation[]> {
+  private async enhanceMotivationConfidence(
+    motivations: PsychologicalMotivation[]
+  ): Promise<PsychologicalMotivation[]> {
     // Use AI to enhance low-confidence motivations
     const lowConfidence = motivations.filter((m: any) => m.confidence < 0.7);
     const enhanced = await Promise.all(
-      lowConfidence.map(async (motivation) => {
+      lowConfidence.map(async motivation => {
         const enhancementPrompt = this.buildEnhancementPrompt(motivation);
         try {
           const response = await this.callAIService(enhancementPrompt);
           const enhanced = this.parseEnhancementResponse(response);
-          return { ...motivation, ...enhanced, confidence: Math.min(motivation.confidence + 0.2, 1.0) };
+          return {
+            ...motivation,
+            ...enhanced,
+            confidence: Math.min(motivation.confidence + 0.2, 1.0),
+          };
         } catch (error: any) {
           logger.warn('Failed to enhance motivation', error);
           return motivation;
@@ -653,8 +733,8 @@ Make them diverse, authentic, and psychologically grounded.
     );
 
     // Replace original motivations with enhanced versions
-    return motivations.map((original: any) => 
-      enhanced.find((e: any) => e.id === original.id) || original
+    return motivations.map(
+      (original: any) => enhanced.find((e: any) => e.id === original.id) || original
     );
   }
 
@@ -676,20 +756,24 @@ Make them diverse, authentic, and psychologically grounded.
     return diverse;
   }
 
-  private async alignWithSegments(motivations: PsychologicalMotivation[], segments: string[]): Promise<PsychologicalMotivation[]> {
+  private async alignWithSegments(
+    motivations: PsychologicalMotivation[],
+    segments: string[]
+  ): Promise<PsychologicalMotivation[]> {
     // Adjust motivations to better align with specified target segments
     return motivations.map((motivation: any) => ({
       ...motivation,
-      targetSegment: this.findBestSegmentMatch(motivation, segments)
+      targetSegment: this.findBestSegmentMatch(motivation, segments),
     }));
   }
 
   private findBestSegmentMatch(motivation: PsychologicalMotivation, segments: string[]): string {
     // Simple matching - in real implementation would use more sophisticated matching
     const currentSegment = motivation.targetSegment.toLowerCase();
-    const match = segments.find((segment: any) => 
-      currentSegment.includes(segment.toLowerCase()) || 
-      segment.toLowerCase().includes(currentSegment)
+    const match = segments.find(
+      (segment: any) =>
+        currentSegment.includes(segment.toLowerCase()) ||
+        segment.toLowerCase().includes(currentSegment)
     );
     return match || motivation.targetSegment;
   }
@@ -742,7 +826,7 @@ Respond in JSON format with enhanced fields.
     let hash = 0;
     for (let i = 0; i < key.length; i++) {
       const char = key.charCodeAt(i);
-      hash = ((hash << 5) - hash) + char;
+      hash = (hash << 5) - hash + char;
       hash = hash & hash;
     }
     return Math.abs(hash).toString(36);
@@ -761,7 +845,7 @@ export const getMotivationGenerator = (): MotivationGenerator => {
 
 // Convenience functions
 export const generateMotivations = (
-  brief: ParsedBrief, 
+  brief: ParsedBrief,
   options?: MotivationGenerationOptions
 ): Promise<MotivationSet> => {
   return getMotivationGenerator().generateMotivations(brief, options);
@@ -769,8 +853,8 @@ export const generateMotivations = (
 
 export const validateMotivationSet = async (
   motivationSet: MotivationSet
-): Promise<{ valid: boolean; issues: string[]; suggestions: string[]; }> => {
-  return await getMotivationGenerator().validateMotivationSet(motivationSet);
+): Promise<{ valid: boolean; issues: string[]; suggestions: string[] }> => {
+  return getMotivationGenerator().validateMotivationSet(motivationSet);
 };
 
 export const refineMotivations = (

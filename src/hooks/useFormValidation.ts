@@ -50,7 +50,7 @@ export const createValidationSchema = {
     return required ? schema : schema.optional();
   },
 
-  confirmPassword: (passwordField: string) => z.string().min(1, validationMessages.required),
+  confirmPassword: (_passwordField: string) => z.string().min(1, validationMessages.required),
 
   text: (required = true, min?: number, max?: number) => {
     let schema = z.string();
@@ -86,7 +86,7 @@ export const createValidationSchema = {
           .optional()
           .refine(val => !val || validationPatterns.phone.test(val), validationMessages.phone),
 
-  file: (required = true, maxSizeMB?: number, allowedTypes?: string[]) => {
+  file: (required = true, _maxSizeMB?: number, _allowedTypes?: string[]) => {
     const schema = z.instanceof(File);
     // Note: File validation in Zod is complex, so we'll handle this in the form validation hook
     return required ? schema : schema.optional();

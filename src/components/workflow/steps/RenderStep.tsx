@@ -85,14 +85,14 @@ export const RenderStep: React.FC<RenderStepProps> = ({ onPrevious, onComplete }
 
       // Update job status to rendering
       setRenderJobs(prev =>
-        prev.map((j: any) => (j.id === job.id ? { ...j, status: 'rendering' as const } : j))
+        prev.map((j: any) => (j.id === job?.id ? { ...j, status: 'rendering' as const } : j))
       );
 
       // Simulate rendering progress
       for (let progress = 0; progress <= 100; progress += 10) {
         await new Promise(resolve => setTimeout(resolve, 200));
 
-        setRenderJobs(prev => prev.map((j: any) => (j.id === job.id ? { ...j, progress } : j)));
+        setRenderJobs(prev => prev.map((j: any) => (j.id === job?.id ? { ...j, progress } : j)));
 
         // Update overall progress
         const completedJobs = i;
@@ -110,7 +110,8 @@ export const RenderStep: React.FC<RenderStepProps> = ({ onPrevious, onComplete }
                 ...j,
                 status: success ? ('completed' as const) : ('failed' as const),
                 videoUrl: success ? `https://example.com/video-${job.id}.mp4` : undefined,
-                error: success ? undefined : 'Rendering failed due to template incompatibility' }
+                error: success ? undefined : 'Rendering failed due to template incompatibility',
+              }
             : j
         )
       );
@@ -143,7 +144,8 @@ export const RenderStep: React.FC<RenderStepProps> = ({ onPrevious, onComplete }
               ...j,
               status: success ? ('completed' as const) : ('failed' as const),
               videoUrl: success ? `https://example.com/video-${jobId}-retry.mp4` : undefined,
-              error: success ? undefined : 'Retry failed - please check template settings' }
+              error: success ? undefined : 'Retry failed - please check template settings',
+            }
           : j
       )
     );
@@ -175,7 +177,8 @@ export const RenderStep: React.FC<RenderStepProps> = ({ onPrevious, onComplete }
       selectedCopy,
       selectedAssets,
       selectedTemplate,
-      renderedVideos: completedJobs });
+      renderedVideos: completedJobs,
+    });
   }, [
     renderJobs,
     briefData,
@@ -244,7 +247,8 @@ export const RenderStep: React.FC<RenderStepProps> = ({ onPrevious, onComplete }
             display: 'grid',
             gap: 3,
             gridTemplateColumns: { xs: '1fr 1fr', md: '1fr 1fr 1fr 1fr' },
-            mb: 3 }}
+            mb: 3,
+          }}
         >
           <Box sx={{ textAlign: 'center' }}>
             <Typography variant="h3" color="success.main">
@@ -378,7 +382,7 @@ export const RenderStep: React.FC<RenderStepProps> = ({ onPrevious, onComplete }
                 <Stack direction="row" spacing={1}>
                   {job.status === 'completed' && job.videoUrl && (
                     <>
-       <Tooltip title="Download">
+                      <Tooltip title="Download">
                         <IconButton onClick={() => handleDownload(job)}>
                           <DownloadIcon />
                         </IconButton>

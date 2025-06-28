@@ -19,12 +19,11 @@ export interface ParsedBrief {
   extractedSections: Record<string, string>;
   confidence: number;
   metadata: {
-        fileType: string;
+    fileType: string;
     wordCount: number;
     extractedAt: Date;
     source: 'upload' | 'manual' | 'api';
-  
-      };
+  };
 }
 
 export interface BriefExtractionOptions {
@@ -36,32 +35,27 @@ export interface BriefExtractionOptions {
 export class BriefParser {
   private readonly REQUIRED_FIELDS = [
     'product',
-    'brand', 
+    'brand',
     'objective',
     'keyProposition',
-    'coreReasonToBuy'
+    'coreReasonToBuy',
   ];
 
-  async parse(
-    file: File, 
-    options: BriefExtractionOptions = {}
-  ): Promise<ParsedBrief> {
+  async parse(file: File, options: BriefExtractionOptions = {}): Promise<ParsedBrief> {
     const {
       enhanceWithAI = true,
       validateRequiredFields = true,
-      confidenceThreshold = 0.7
+      confidenceThreshold = 0.7,
     } = options;
 
     try {
-      logger.info('Starting brief parsing', {
-        fileName: file.name,
-        fileSize: file.size,
-        fileType: file.type
-      });
+      logger.info(
+        'Starting brief parsing: ' + file.name + ', size: ' + file.size + ', type: ' + file.type
+      );
 
       // 1. Extract text from file
       const extractedText = await this.extractText(file);
-      
+
       // 2. Parse with AI if enabled
       let parsed: Partial<ParsedBrief>;
       if (enhanceWithAI) {
@@ -78,20 +72,19 @@ export class BriefParser {
         objective: parsed.objective || '',
         keyProposition: parsed.keyProposition || '',
         coreReasonToBuy: parsed.coreReasonToBuy || '',
-        targetAudience: parsed.targetAudience,
+        ...(parsed.targetAudience && { targetAudience: parsed.targetAudience }),
         platforms: parsed.platforms || [],
-        budget: parsed.budget,
-        timeline: parsed.timeline,
+        ...(parsed.budget && { budget: parsed.budget }),
+        ...(parsed.timeline && { timeline: parsed.timeline }),
         rawContent: extractedText,
         extractedSections: parsed.extractedSections || {},
         confidence: parsed.confidence || 0,
         metadata: {
-        fileType: file.type,
+          fileType: file.type,
           wordCount: extractedText.split(/\s+/).length,
           extractedAt: new Date(),
-          source: 'upload'
-        
-      }
+          source: 'upload',
+        },
       };
 
       // 4. Validate if required
@@ -103,17 +96,16 @@ export class BriefParser {
         briefId: briefData.id,
         confidence: briefData.confidence,
         wordCount: briefData.metadata.wordCount,
-        fieldsExtracted: Object.keys(briefData.extractedSections).length
+        fieldsExtracted: Object.keys(briefData.extractedSections).length,
       });
 
       return briefData;
-
     } catch (error: any) {
       const classified = classifyError(error as Error, {
         route: 'brief-parser',
-        metadata: { fileName: file.name, fileSize: file.size }
+        metadata: { fileName: file.name, fileSize: file.size },
       });
-      
+
       logger.error('Brief parsing failed', classified.originalError);
       throw error;
     }
@@ -150,12 +142,12 @@ export class BriefParser {
     // In a real implementation, you'd use a PDF parsing library like pdf-parse
     // For now, we'll use a placeholder
     const buffer = await file.arrayBuffer();
-    
+
     try {
       // This would use pdf-parse or similar library
       // const pdf = await pdfParse(buffer);
       // return pdf.text;
-      
+
       // Placeholder implementation
       throw new Error('PDF parsing not yet implemented. Please convert to text or DOCX format.');
     } catch (error: any) {
@@ -166,12 +158,12 @@ export class BriefParser {
   private async extractFromDocx(file: File): Promise<string> {
     // In a real implementation, you'd use a library like mammoth
     const buffer = await file.arrayBuffer();
-    
+
     try {
       // This would use mammoth or similar library
       // const result = await mammoth.extractRawText({ buffer });
       // return result.value;
-      
+
       // Placeholder implementation
       throw new Error('DOCX parsing not yet implemented. Please convert to text format.');
     } catch (error: any) {
@@ -181,14 +173,14 @@ export class BriefParser {
 
   private async aiExtract(text: string): Promise<Partial<ParsedBrief>> {
     const cacheKey = `brief_extract_${this.hashText(text)}`;
-    
+
     return cached(
       async () => {
         const prompt = this.buildExtractionPrompt(text);
-        
+
         // This would integrate with your AI service (OpenAI, Anthropic, etc.)
         const response = await this.callAIService(prompt);
-        
+
         return this.parseAIResponse(response);
       },
       () => cacheKey,
@@ -242,31 +234,31 @@ If information is not clearly stated, use null for that field. Be accurate and d
   private async callAIService(prompt: string): Promise<string> {
     // Placeholder for AI service integration
     // This would integrate with OpenAI, Anthropic, or your preferred AI service
-    
+
     // For now, return a mock response for development
     return JSON.stringify({
-      product: "Example Product",
-      brand: "Example Brand",
-      objective: "Increase brand awareness and drive sales",
-      keyProposition: "Revolutionary solution that saves time",
-      coreReasonToBuy: "Exclusive benefits for early adopters",
-      targetAudience: "Tech-savvy professionals aged 25-45",
-      platforms: ["social media", "digital"],
+      product: 'Example Product',
+      brand: 'Example Brand',
+      objective: 'Increase brand awareness and drive sales',
+      keyProposition: 'Revolutionary solution that saves time',
+      coreReasonToBuy: 'Exclusive benefits for early adopters',
+      targetAudience: 'Tech-savvy professionals aged 25-45',
+      platforms: ['social media', 'digital'],
       budget: null,
       timeline: null,
       extractedSections: {
-        background: "Company background information",
-        target: "Target audience details",
-        strategy: "Strategic approach"
+        background: 'Company background information',
+        target: 'Target audience details',
+        strategy: 'Strategic approach',
       },
-      confidence: 0.8
+      confidence: 0.8,
     });
   }
 
   private parseAIResponse(response: string): Partial<ParsedBrief> {
     try {
       const parsed = JSON.parse(response);
-      
+
       // Validate the response structure
       if (typeof parsed !== 'object' || parsed === null) {
         throw new Error('Invalid AI response format');
@@ -279,11 +271,13 @@ If information is not clearly stated, use null for that field. Be accurate and d
         keyProposition: this.sanitizeString(parsed.keyProposition),
         coreReasonToBuy: this.sanitizeString(parsed.coreReasonToBuy),
         targetAudience: this.sanitizeString(parsed.targetAudience),
-        platforms: Array.isArray(parsed.platforms) ? parsed.platforms.map((p: any) => this.sanitizeString(p)).filter(Boolean) : [],
+        platforms: Array.isArray(parsed.platforms)
+          ? parsed.platforms.map((p: any) => this.sanitizeString(p)).filter(Boolean)
+          : [],
         budget: this.sanitizeString(parsed.budget),
         timeline: this.sanitizeString(parsed.timeline),
         extractedSections: parsed.extractedSections || {},
-        confidence: typeof parsed.confidence === 'number' ? parsed.confidence : 0
+        confidence: typeof parsed.confidence === 'number' ? parsed.confidence : 0,
       };
     } catch (error: any) {
       logger.error('Failed to parse AI response', error);
@@ -294,7 +288,7 @@ If information is not clearly stated, use null for that field. Be accurate and d
   private async basicExtract(text: string): Promise<Partial<ParsedBrief>> {
     // Basic keyword-based extraction as fallback
     const sections = this.extractSections(text);
-    
+
     return {
       product: this.extractByKeywords(text, ['product', 'service', 'offering']),
       brand: this.extractByKeywords(text, ['brand', 'company', 'client']),
@@ -302,36 +296,42 @@ If information is not clearly stated, use null for that field. Be accurate and d
       keyProposition: this.extractByKeywords(text, ['proposition', 'benefit', 'advantage']),
       coreReasonToBuy: this.extractByKeywords(text, ['reason', 'why', 'motivation']),
       extractedSections: sections,
-      confidence: 0.4 // Lower confidence for basic extraction
+      confidence: 0.4, // Lower confidence for basic extraction
     };
   }
 
   private extractSections(text: string): Record<string, string> {
     const sections: Record<string, string> = {};
     const lines = text.split('\n');
-    
+
     let currentSection = '';
     let currentContent: string[] = [];
-    
+
     const sectionHeaders = [
-      'background', 'objective', 'target', 'strategy', 
-      'brief', 'context', 'audience', 'goals'
+      'background',
+      'objective',
+      'target',
+      'strategy',
+      'brief',
+      'context',
+      'audience',
+      'goals',
     ];
 
     for (const line of lines) {
       const trimmed = line.trim().toLowerCase();
-      
+
       // Check if line is a section header
-      const matchedHeader = sectionHeaders.find((header: any) => 
-        trimmed.includes(header) && trimmed.length < 50
+      const matchedHeader = sectionHeaders.find(
+        (header: any) => trimmed.includes(header) && trimmed.length < 50
       );
-      
+
       if (matchedHeader) {
         // Save previous section
         if (currentSection && currentContent.length > 0) {
           sections[currentSection] = currentContent.join('\n').trim();
         }
-        
+
         // Start new section
         currentSection = matchedHeader;
         currentContent = [];
@@ -339,46 +339,46 @@ If information is not clearly stated, use null for that field. Be accurate and d
         currentContent.push(line);
       }
     }
-    
+
     // Save last section
     if (currentSection && currentContent.length > 0) {
       sections[currentSection] = currentContent.join('\n').trim();
     }
-    
+
     return sections;
   }
 
   private extractByKeywords(text: string, keywords: string[]): string {
     const sentences = text.split(/[.!?]+/);
-    
+
     for (const sentence of sentences) {
       const lowerSentence = sentence.toLowerCase();
       if (keywords.some(keyword => lowerSentence.includes(keyword))) {
         return sentence.trim();
       }
     }
-    
+
     return '';
   }
 
   private validateBrief(brief: ParsedBrief, threshold: number): void {
     const missing: string[] = [];
-    
+
     for (const field of this.REQUIRED_FIELDS) {
       const value = brief[field as keyof ParsedBrief];
       if (!value || (typeof value === 'string' && value.trim().length === 0)) {
         missing.push(field);
       }
     }
-    
+
     if (missing.length > 0) {
       throw new Error(`Missing required fields: ${missing.join(', ')}`);
     }
-    
+
     if (brief.confidence < threshold) {
       throw new Error(
         `Extraction confidence (${brief.confidence}) below threshold (${threshold}). ` +
-        'Please review and manually input missing information.'
+          'Please review and manually input missing information.'
       );
     }
   }
@@ -397,7 +397,7 @@ If information is not clearly stated, use null for that field. Be accurate and d
     let hash = 0;
     for (let i = 0; i < text.length; i++) {
       const char = text.charCodeAt(i);
-      hash = ((hash << 5) - hash) + char;
+      hash = (hash << 5) - hash + char;
       hash = hash & hash;
     }
     return Math.abs(hash).toString(36);
@@ -434,22 +434,22 @@ If information is not clearly stated, use null for that field. Be accurate and d
     return {
       valid: issues.length === 0,
       issues,
-      suggestions
+      suggestions,
     };
   }
 
   async enhanceBrief(brief: ParsedBrief): Promise<ParsedBrief> {
     // Use AI to enhance/expand brief fields that are too short or generic
     const enhancements = await this.generateEnhancements(brief);
-    
+
     return {
       ...brief,
       ...enhancements,
       metadata: {
         ...brief.metadata,
         enhanced: true,
-        enhancedAt: new Date()
-      }
+        enhancedAt: new Date(),
+      },
     };
   }
 
@@ -498,6 +498,8 @@ export const parseBrief = (file: File, options?: BriefExtractionOptions): Promis
   return getBriefParser().parse(file, options);
 };
 
-export const validateBrief = (brief: ParsedBrief): Promise<ReturnType<BriefParser['validateParsedBrief']>> => {
+export const validateBrief = (
+  brief: ParsedBrief
+): Promise<ReturnType<BriefParser['validateParsedBrief']>> => {
   return getBriefParser().validateParsedBrief(brief);
 };

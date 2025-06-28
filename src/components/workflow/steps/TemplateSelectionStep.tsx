@@ -72,7 +72,8 @@ export const TemplateSelectionStep: React.FC<TemplateSelectionStepProps> = ({
           `${creatomateTemplate.width}x${creatomateTemplate.height} video template (${creatomateTemplate.duration}s)`,
         thumbnail: creatomateTemplate.thumbnail || creatomateTemplate.preview,
         category,
-        selected: false };
+        selected: false,
+      };
     },
     []
   );
@@ -156,7 +157,7 @@ export const TemplateSelectionStep: React.FC<TemplateSelectionStepProps> = ({
     // Enhanced recommendation logic based on platforms and brief content
     const platforms = briefData.platforms || [];
     const objective = briefData.objective?.toLowerCase() || '';
-    const targetAudience = briefData.targetAudience?.toLowerCase() || '';
+    const _targetAudience = briefData.targetAudience?.toLowerCase() || '';
 
     let recommendedTemplates: Template[] = [];
 
@@ -262,7 +263,7 @@ export const TemplateSelectionStep: React.FC<TemplateSelectionStepProps> = ({
       {/* Show content only when not loading or when templates are available */}
       {(!loading || templates.length > 0) && (
         <>
-      {/* Recommended Templates */}
+          {/* Recommended Templates */}
           {recommendedTemplates.length > 0 && (
             <Box sx={{ mb: 4 }}>
               <Typography
@@ -278,7 +279,8 @@ export const TemplateSelectionStep: React.FC<TemplateSelectionStepProps> = ({
                   display: 'grid',
                   gap: 3,
                   gridTemplateColumns: { xs: '1fr', md: '1fr 1fr', lg: '1fr 1fr 1fr' },
-                  mb: 3 }}
+                  mb: 3,
+                }}
               >
                 {recommendedTemplates.map((template: any) => {
                   const creatomateTemplate = creatomateTemplates.find(
@@ -300,7 +302,8 @@ export const TemplateSelectionStep: React.FC<TemplateSelectionStepProps> = ({
                           '&:hover': {
                             borderColor: 'primary.main',
                             transform: 'translateY(-2px)',
-                            boxShadow: 2 },
+                            boxShadow: 2,
+                          },
                         }}
                         onClick={() => handleSelectTemplate(template)}
                       >
@@ -317,7 +320,8 @@ export const TemplateSelectionStep: React.FC<TemplateSelectionStepProps> = ({
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            position: 'relative' }}
+                            position: 'relative',
+                          }}
                         >
                           {!template.thumbnail && (
                             <VideoLibraryIcon sx={{ fontSize: 48, color: 'grey.500' }} />
@@ -332,7 +336,8 @@ export const TemplateSelectionStep: React.FC<TemplateSelectionStepProps> = ({
                                 color: 'primary.main',
                                 bgcolor: 'white',
                                 borderRadius: '50%',
-                                fontSize: 24 }}
+                                fontSize: 24,
+                              }}
                             />
                           )}
                           <Chip
@@ -342,7 +347,8 @@ export const TemplateSelectionStep: React.FC<TemplateSelectionStepProps> = ({
                             sx={{
                               position: 'absolute',
                               bottom: 8,
-                              left: 8 }}
+                              left: 8,
+                            }}
                           />
                         </Box>
 
@@ -357,7 +363,7 @@ export const TemplateSelectionStep: React.FC<TemplateSelectionStepProps> = ({
                             <Chip label={template.category} size="small" />
                             {creatomateTemplate && (
                               <>
-       <Chip
+                                <Chip
                                   label={`${creatomateTemplate.width}×${creatomateTemplate.height}`}
                                   size="small"
                                   variant="outlined"
@@ -382,7 +388,7 @@ export const TemplateSelectionStep: React.FC<TemplateSelectionStepProps> = ({
           {/* All Templates by Category */}
           {templates.length > 0 ? (
             <>
-       <Typography variant="h6" gutterBottom>
+              <Typography variant="h6" gutterBottom>
                 All Templates ({templates.length})
               </Typography>
 
@@ -396,7 +402,8 @@ export const TemplateSelectionStep: React.FC<TemplateSelectionStepProps> = ({
                     sx={{
                       display: 'grid',
                       gap: 3,
-                      gridTemplateColumns: { xs: '1fr', md: '1fr 1fr', lg: '1fr 1fr 1fr' } }}
+                      gridTemplateColumns: { xs: '1fr', md: '1fr 1fr', lg: '1fr 1fr 1fr' },
+                    }}
                   >
                     {categoryTemplates.map((template: any) => {
                       const creatomateTemplate = creatomateTemplates.find(
@@ -418,7 +425,8 @@ export const TemplateSelectionStep: React.FC<TemplateSelectionStepProps> = ({
                               '&:hover': {
                                 borderColor: 'primary.main',
                                 transform: 'translateY(-2px)',
-                                boxShadow: 2 },
+                                boxShadow: 2,
+                              },
                             }}
                             onClick={() => handleSelectTemplate(template)}
                           >
@@ -435,7 +443,8 @@ export const TemplateSelectionStep: React.FC<TemplateSelectionStepProps> = ({
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
-                                position: 'relative' }}
+                                position: 'relative',
+                              }}
                             >
                               {!template.thumbnail && (
                                 <VideoLibraryIcon sx={{ fontSize: 48, color: 'grey.500' }} />
@@ -450,7 +459,8 @@ export const TemplateSelectionStep: React.FC<TemplateSelectionStepProps> = ({
                                     color: 'primary.main',
                                     bgcolor: 'white',
                                     borderRadius: '50%',
-                                    fontSize: 24 }}
+                                    fontSize: 24,
+                                  }}
                                 />
                               )}
                             </Box>
@@ -466,7 +476,7 @@ export const TemplateSelectionStep: React.FC<TemplateSelectionStepProps> = ({
                                 <Chip label={template.category} size="small" />
                                 {creatomateTemplate && (
                                   <>
-       <Chip
+                                    <Chip
                                       label={`${creatomateTemplate.width}×${creatomateTemplate.height}`}
                                       size="small"
                                       variant="outlined"

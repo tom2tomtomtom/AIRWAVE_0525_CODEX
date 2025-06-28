@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  Button,
-  ButtonProps,
-  CircularProgress,
-  Box,
-  Tooltip,
-  alpha} from '@mui/material';
+import { Button, ButtonProps, CircularProgress, Box, Tooltip, alpha } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { createButtonProps } from '@/utils/accessibility';
 
@@ -40,7 +34,8 @@ export const ActionButton: React.FC<ActionButtonProps> = ({
   // Create accessible button props
   const accessibilityProps = createButtonProps({
     disabled: isDisabled,
-    ...(props.type && { type: props.type })});
+    ...(props.type && { type: props.type }),
+  });
 
   // Determine button styling based on variant
   const getVariantStyles = () => {
@@ -59,18 +54,19 @@ export const ActionButton: React.FC<ActionButtonProps> = ({
             '&:hover': {
               transform: 'translateY(-2px)',
               boxShadow: `0 8px 24px ${alpha(theme.palette.primary.main, 0.35)}`,
-              background: `linear-gradient(135deg, ${theme.palette.primary.dark} 0%, ${theme.palette.secondary.dark} 100%)`
+              background: `linear-gradient(135deg, ${theme.palette.primary.dark} 0%, ${theme.palette.secondary.dark} 100%)`,
             },
             '&:active': {
-              transform: 'translateY(0)'
+              transform: 'translateY(0)',
             },
             '&:disabled': {
               background: theme.palette.action.disabledBackground,
               color: theme.palette.action.disabled,
               transform: 'none',
-              boxShadow: 'none'
-            }
-          }};
+              boxShadow: 'none',
+            },
+          },
+        };
 
       case 'secondary':
         return {
@@ -81,9 +77,10 @@ export const ActionButton: React.FC<ActionButtonProps> = ({
             fontWeight: 500,
             '&:hover': {
               backgroundColor: theme.palette.secondary.dark,
-              transform: 'translateY(-1px)'
-            }
-          }};
+              transform: 'translateY(-1px)',
+            },
+          },
+        };
 
       case 'outline':
         return {
@@ -97,9 +94,10 @@ export const ActionButton: React.FC<ActionButtonProps> = ({
               borderColor: theme.palette.primary.dark,
               backgroundColor: alpha(theme.palette.primary.main, 0.08),
               transform: 'translateY(-1px)',
-              borderWidth: 2
-            }
-          }};
+              borderWidth: 2,
+            },
+          },
+        };
 
       case 'ghost':
         return {
@@ -109,9 +107,10 @@ export const ActionButton: React.FC<ActionButtonProps> = ({
             fontWeight: 500,
             '&:hover': {
               backgroundColor: alpha(theme.palette.primary.main, 0.08),
-              transform: 'translateY(-1px)'
-            }
-          }};
+              transform: 'translateY(-1px)',
+            },
+          },
+        };
 
       case 'danger':
         return {
@@ -122,9 +121,10 @@ export const ActionButton: React.FC<ActionButtonProps> = ({
             fontWeight: 500,
             '&:hover': {
               backgroundColor: theme.palette.error.dark,
-              transform: 'translateY(-1px)'
-            }
-          }};
+              transform: 'translateY(-1px)',
+            },
+          },
+        };
 
       default:
         return { variant: 'contained' as const };
@@ -140,19 +140,19 @@ export const ActionButton: React.FC<ActionButtonProps> = ({
         return {
           padding: '6px 16px',
           fontSize: '0.875rem',
-          minHeight: '32px'
+          minHeight: '32px',
         };
       case 'large':
         return {
           padding: '12px 32px',
           fontSize: '1rem',
-          minHeight: '48px'
+          minHeight: '48px',
         };
       default:
         return {
           padding: '10px 24px',
           fontSize: '0.875rem',
-          minHeight: '40px'
+          minHeight: '40px',
         };
     }
   };
@@ -174,14 +174,18 @@ export const ActionButton: React.FC<ActionButtonProps> = ({
         ) : undefined
       }
       endIcon={iconPosition === 'end' ? endIcon : undefined}
-      sx={[sizeStyles, variantStyles.sx, sx].filter(Boolean)}
+      sx={{
+        ...sizeStyles,
+        ...variantStyles.sx,
+        ...sx,
+      }}
     >
       <Box
         sx={{
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          gap: 1
+          gap: 1,
         }}
       >
         {loading && loadingText ? loadingText : children}

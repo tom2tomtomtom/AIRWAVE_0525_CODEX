@@ -175,8 +175,8 @@ export class AssetManager {
         fileSize: file.size,
         url: '',
         metadata: {
-          description,
-          altText,
+          ...(description && { description }),
+          ...(altText && { altText }),
           keywords: tags,
         },
         tags,
@@ -249,7 +249,9 @@ export class AssetManager {
       if (analyzeWithAI && (fileType === 'image' || fileType === 'video')) {
         try {
           const aiAnalysis = await this.analyzeAssetWithAI(asset);
-          asset.metadata.aiAnalysis = aiAnalysis;
+          if (aiAnalysis) {
+            asset.metadata.aiAnalysis = aiAnalysis;
+          }
         } catch (error: any) {
           logger.warn('AI analysis failed', error);
         }
@@ -273,10 +275,15 @@ export class AssetManager {
 
       return asset;
     } catch (error: any) {
-      const classified = classifyError(error as Error, {
-        route: 'asset-manager',
-        metadata: { fileName: file.name, briefId, fileSize: file.size },
-      });
+      const classified = classifyError(
+        error as Error,
+        {
+          component: 'asset-manager',
+          fileName: file.name,
+          briefId,
+          fileSize: file.size,
+        } as any
+      );
 
       logger.error('Asset upload failed', classified.originalError);
       throw error;
@@ -487,7 +494,7 @@ export class AssetManager {
         .in('id', allAssetIds);
 
       if (!error && assetData) {
-        assetData.forEach(assetRow => {
+        assetData.forEach((assetRow: any) => {
           assetMap.set(assetRow.id, this.mapRowToAsset(assetRow));
         });
       }
@@ -522,7 +529,7 @@ export class AssetManager {
     }
 
     const collections = await Promise.all(
-      (data || []).map(async row => {
+      (data || []).map(async (row: any) => {
         const collection = this.mapRowToCollection(row);
 
         // Load assets for each collection (N+1 query)
@@ -612,7 +619,7 @@ export class AssetManager {
     };
   }
 
-  private async processVideo(file: File): Promise<{
+  private async processVideo(_file: File): Promise<{
     duration: number;
     fps: number;
     codec: string;
@@ -628,7 +635,7 @@ export class AssetManager {
     };
   }
 
-  private async processDocument(file: File): Promise<{
+  private async processDocument(_file: File): Promise<{
     pageCount: number;
     wordCount: number;
   }> {
@@ -647,7 +654,7 @@ export class AssetManager {
   ): Promise<{ success: boolean; url?: string; error?: string }> {
     try {
       const supabase = await this.getSupabase();
-      const { data, error } = await supabase.storage.from(bucket).upload(path, file, {
+      const { data: _data, error } = await supabase.storage.from(bucket).upload(path, file, {
         upsert: true,
       });
 
@@ -674,14 +681,11 @@ export class AssetManager {
     const { error } = await supabase.storage.from(bucket).remove([path]);
 
     if (error) {
-      logger.warn('Failed to delete file from storage', {
-        errorMessage: error.message,
-        errorCode: error.statusCode,
-      });
+      logger.warn('Failed to delete file from storage: ' + error.message);
     }
   }
 
-  private async analyzeAssetWithAI(asset: Asset): Promise<AssetMetadata['aiAnalysis']> {
+  private async analyzeAssetWithAI(_asset: Asset): Promise<AssetMetadata['aiAnalysis']> {
     // Placeholder for AI analysis
     // Would integrate with vision AI services
     return {

@@ -7,12 +7,14 @@ import {
   TextField,
   Alert,
   LinearProgress,
-  Paper} from '@mui/material';
+  Paper,
+} from '@mui/material';
 import {
   CloudUpload as CloudUploadIcon,
   CheckCircle as CheckCircleIcon,
   ArrowForward as ArrowForwardIcon,
-  Clear as ClearIcon} from '@mui/icons-material';
+  Clear as ClearIcon,
+} from '@mui/icons-material';
 import { useDropzone } from 'react-dropzone';
 import { useWorkflow } from '../WorkflowProvider';
 import { BriefData, StepComponentProps } from '@/lib/workflow/workflow-types';
@@ -20,8 +22,7 @@ import { withErrorBoundary } from '../ErrorBoundary';
 
 interface BriefUploadStepProps extends StepComponentProps {}
 
-const BriefUploadStepComponent: React.FC<BriefUploadStepProps> = ({
-  onNext}) => {
+const BriefUploadStepComponent: React.FC<BriefUploadStepProps> = ({ onNext }) => {
   const { state, actions } = useWorkflow();
   const {
     briefData,
@@ -30,15 +31,19 @@ const BriefUploadStepComponent: React.FC<BriefUploadStepProps> = ({
     uploadedFile,
     showBriefReview,
     briefConfirmed,
-    lastError} = state;
+    lastError,
+  } = state;
 
   // Dropzone configuration
-  const onDrop = useCallback((acceptedFiles: File[]) => {
-    if (acceptedFiles.length > 0) {
-      const file = acceptedFiles[0];
-      if (file) actions.uploadBrief(file);
-    }
-  }, [actions]);
+  const onDrop = useCallback(
+    (acceptedFiles: File[]) => {
+      if (acceptedFiles.length > 0) {
+        const file = acceptedFiles[0];
+        if (file) actions.uploadBrief(file);
+      }
+    },
+    [actions]
+  );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
@@ -53,12 +58,15 @@ const BriefUploadStepComponent: React.FC<BriefUploadStepProps> = ({
   });
 
   // Handle field changes in brief review
-  const handleFieldChange = useCallback((field: keyof BriefData, value: any) => {
-    if (briefData) {
-      const updatedBrief = { ...briefData, [field]: value };
-      actions.confirmBrief(updatedBrief);
-    }
-  }, [briefData, actions]);
+  const handleFieldChange = useCallback(
+    (field: keyof BriefData, value: any) => {
+      if (briefData) {
+        const updatedBrief = { ...briefData, [field]: value };
+        actions.confirmBrief(updatedBrief);
+      }
+    },
+    [briefData, actions]
+  );
 
   // Handle brief confirmation
   const handleConfirmBrief = useCallback(() => {
@@ -82,7 +90,7 @@ const BriefUploadStepComponent: React.FC<BriefUploadStepProps> = ({
   const renderFileUpload = () => (
     <Card
       {...(() => {
-        const { className, ...props } = getRootProps();
+        const { className, style, ...props } = getRootProps();
         return props;
       })()}
       sx={{
@@ -95,7 +103,9 @@ const BriefUploadStepComponent: React.FC<BriefUploadStepProps> = ({
         transition: 'all 0.2s ease-in-out',
         '&:hover': {
           borderColor: 'primary.main',
-          bgcolor: 'action.hover'}}}
+          bgcolor: 'action.hover',
+        },
+      }}
     >
       <input {...getInputProps()} />
       <CloudUploadIcon sx={{ fontSize: 48, color: 'primary.main', mb: 2 }} />
@@ -138,7 +148,7 @@ const BriefUploadStepComponent: React.FC<BriefUploadStepProps> = ({
             label="Title"
             variant="outlined"
             value={briefData.title || ''}
-            onChange={(e) => handleFieldChange('title', e.target.value)}
+            onChange={e => handleFieldChange('title', e.target.value)}
             placeholder="Campaign title"
           />
 
@@ -147,7 +157,7 @@ const BriefUploadStepComponent: React.FC<BriefUploadStepProps> = ({
             label="Industry"
             variant="outlined"
             value={briefData.industry || ''}
-            onChange={(e) => handleFieldChange('industry', e.target.value)}
+            onChange={e => handleFieldChange('industry', e.target.value)}
             placeholder="e.g., Technology, Healthcare, Retail"
           />
 
@@ -156,7 +166,7 @@ const BriefUploadStepComponent: React.FC<BriefUploadStepProps> = ({
             label="Product/Service"
             variant="outlined"
             value={briefData.product || briefData.service || ''}
-            onChange={(e) => handleFieldChange('product', e.target.value)}
+            onChange={e => handleFieldChange('product', e.target.value)}
             placeholder="Describe your product or service"
           />
 
@@ -167,8 +177,12 @@ const BriefUploadStepComponent: React.FC<BriefUploadStepProps> = ({
               multiline
               rows={4}
               variant="outlined"
-              value={typeof briefData.objective === 'string' ? briefData.objective : String(briefData.objective || '')}
-              onChange={(e) => handleFieldChange('objective', e.target.value)}
+              value={
+                typeof briefData.objective === 'string'
+                  ? briefData.objective
+                  : String(briefData.objective || '')
+              }
+              onChange={e => handleFieldChange('objective', e.target.value)}
               placeholder="Describe the main objective of your campaign..."
             />
           </Box>
@@ -179,8 +193,12 @@ const BriefUploadStepComponent: React.FC<BriefUploadStepProps> = ({
             multiline
             rows={4}
             variant="outlined"
-            value={typeof briefData.targetAudience === 'string' ? briefData.targetAudience : String(briefData.targetAudience || '')}
-            onChange={(e) => handleFieldChange('targetAudience', e.target.value)}
+            value={
+              typeof briefData.targetAudience === 'string'
+                ? briefData.targetAudience
+                : String(briefData.targetAudience || '')
+            }
+            onChange={e => handleFieldChange('targetAudience', e.target.value)}
             placeholder="Describe your target audience in detail..."
           />
 
@@ -190,8 +208,12 @@ const BriefUploadStepComponent: React.FC<BriefUploadStepProps> = ({
             multiline
             rows={4}
             variant="outlined"
-            value={typeof briefData.valueProposition === 'string' ? briefData.valueProposition || '' : String(briefData.valueProposition || '')}
-            onChange={(e) => handleFieldChange('valueProposition', e.target.value)}
+            value={
+              typeof briefData.valueProposition === 'string'
+                ? briefData.valueProposition || ''
+                : String(briefData.valueProposition || '')
+            }
+            onChange={e => handleFieldChange('valueProposition', e.target.value)}
             placeholder="What unique value does your product/service offer?"
           />
 
@@ -200,7 +222,7 @@ const BriefUploadStepComponent: React.FC<BriefUploadStepProps> = ({
             label="Budget"
             variant="outlined"
             value={briefData.budget || ''}
-            onChange={(e) => handleFieldChange('budget', e.target.value)}
+            onChange={e => handleFieldChange('budget', e.target.value)}
             placeholder="e.g., $50,000 or TBD"
           />
 
@@ -209,24 +231,16 @@ const BriefUploadStepComponent: React.FC<BriefUploadStepProps> = ({
             label="Timeline"
             variant="outlined"
             value={briefData.timeline || ''}
-            onChange={(e) => handleFieldChange('timeline', e.target.value)}
+            onChange={e => handleFieldChange('timeline', e.target.value)}
             placeholder="e.g., 3 months or Q1 2024"
           />
         </Box>
 
         <Box sx={{ mt: 4, display: 'flex', gap: 2, justifyContent: 'flex-end' }}>
-          <Button
-            variant="outlined"
-            onClick={handleResetBrief}
-            startIcon={<ClearIcon />}
-          >
+          <Button variant="outlined" onClick={handleResetBrief} startIcon={<ClearIcon />}>
             Reset to Original
           </Button>
-          <Button
-            variant="contained"
-            onClick={handleConfirmBrief}
-            startIcon={<ArrowForwardIcon />}
-          >
+          <Button variant="contained" onClick={handleConfirmBrief} startIcon={<ArrowForwardIcon />}>
             Confirm & Generate Motivations
           </Button>
         </Box>
@@ -240,16 +254,13 @@ const BriefUploadStepComponent: React.FC<BriefUploadStepProps> = ({
         Upload Your Brief
       </Typography>
       <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
-        Start by uploading your campaign brief. Our AI will parse the content and extract key information.
+        Start by uploading your campaign brief. Our AI will parse the content and extract key
+        information.
       </Typography>
 
       {/* Error Alert */}
       {lastError && (
-        <Alert 
-          severity="error" 
-          sx={{ mb: 3 }}
-          onClose={handleClearError}
-        >
+        <Alert severity="error" sx={{ mb: 3 }} onClose={handleClearError}>
           {lastError}
         </Alert>
       )}

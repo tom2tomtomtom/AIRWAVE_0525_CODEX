@@ -25,7 +25,8 @@ const AuthContext = createContext<AuthContextType>({
   login: async () => {},
   signup: async () => {},
   logout: () => {},
-  isAuthenticated: false });
+  isAuthenticated: false,
+});
 
 export const useAuth = () => useContext(AuthContext);
 
@@ -58,7 +59,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           }
         }
       } catch (error) {
-        const message = getErrorMessage(error);
+        const _message = getErrorMessage(error);
         if (process.env.NODE_ENV === 'development') {
           console.error('Authentication error:', error);
         }
@@ -117,7 +118,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         throw new Error('Invalid response from server');
       }
     } catch (error) {
-      const message = getErrorMessage(error);
+      const _message = getErrorMessage(error);
       console.error('Login error:', error);
       throw error;
     } finally {
@@ -166,7 +167,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         throw new Error('Invalid response from server');
       }
     } catch (error) {
-      const message = getErrorMessage(error);
+      const _message = getErrorMessage(error);
       console.error('Signup error:', error);
       throw error;
     } finally {
@@ -193,7 +194,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         login,
         signup,
         logout,
-        isAuthenticated: !!user }}
+        isAuthenticated: !!user,
+      }}
     >
       {children}
     </AuthContext.Provider>

@@ -27,7 +27,7 @@ interface CopyGenerationStepProps extends StepComponentProps {}
 
 export const CopyGenerationStep: React.FC<CopyGenerationStepProps> = ({ onNext, onPrevious }) => {
   const { state, actions } = useWorkflow();
-  const { briefData, motivations, copyVariations, processing, lastError } = state;
+  const { briefData: _briefData, motivations, copyVariations, processing, lastError } = state;
 
   // Get selected motivations
   const selectedMotivations = motivations.filter((m: any) => m.selected);
@@ -90,7 +90,7 @@ export const CopyGenerationStep: React.FC<CopyGenerationStepProps> = ({ onNext, 
       if (!acc[copy.platform]) {
         acc[copy.platform] = [];
       }
-      acc[copy.platform].push(copy);
+      acc[copy.platform]?.push(copy);
       return acc;
     },
     {} as Record<string, typeof copyVariations>
@@ -171,7 +171,7 @@ export const CopyGenerationStep: React.FC<CopyGenerationStepProps> = ({ onNext, 
                 sx={{
                   display: 'grid',
                   gap: 2,
-                  gridTemplateColumns: { xs: '1fr', md: '1fr 1fr', lg: '1fr 1fr 1fr'  }
+                  gridTemplateColumns: { xs: '1fr', md: '1fr 1fr', lg: '1fr 1fr 1fr' },
                 }}
               >
                 {copies.map((copy: any) => (
@@ -187,7 +187,8 @@ export const CopyGenerationStep: React.FC<CopyGenerationStepProps> = ({ onNext, 
                         '&:hover': {
                           borderColor: 'primary.main',
                           transform: 'translateY(-2px)',
-                          boxShadow: 2 },
+                          boxShadow: 2,
+                        },
                       }}
                       onClick={() => handleSelectCopy(copy.id)}
                     >
@@ -211,7 +212,8 @@ export const CopyGenerationStep: React.FC<CopyGenerationStepProps> = ({ onNext, 
                                 display: '-webkit-box',
                                 WebkitLineClamp: 4,
                                 WebkitBoxOrient: 'vertical',
-                                overflow: 'hidden' }}
+                                overflow: 'hidden',
+                              }}
                             >
                               {copy.text}
                             </Typography>
@@ -223,7 +225,8 @@ export const CopyGenerationStep: React.FC<CopyGenerationStepProps> = ({ onNext, 
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'space-between',
-                            mt: 'auto' }}
+                            mt: 'auto',
+                          }}
                         >
                           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                             {copy.selected && (

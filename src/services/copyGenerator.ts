@@ -33,15 +33,14 @@ export interface CopySet {
   generatedAt: Date;
   version: number;
   metadata: {
-        totalVariants: number;
+    totalVariants: number;
     typeDistribution: Record<string, number>;
     toneDistribution: Record<string, number>;
     platformDistribution: Record<string, number>;
     averageConfidence: number;
     averageEmotionalImpact: number;
     diversityScore: number;
-  
-      };
+  };
 }
 
 export interface CopyGenerationOptions {
@@ -72,22 +71,37 @@ export interface CopyTemplate {
 export class CopyGenerator {
   private readonly DEFAULT_VARIANTS_PER_MOTIVATION = 8;
   private readonly COPY_TYPES: Array<CopyVariant['type']> = [
-    'headline', 'subheadline', 'body', 'cta', 'tagline', 'social'
+    'headline',
+    'subheadline',
+    'body',
+    'cta',
+    'tagline',
+    'social',
   ];
   private readonly TONE_OPTIONS: Array<CopyVariant['tone']> = [
-    'professional', 'casual', 'urgent', 'emotional', 'authoritative', 'friendly'
+    'professional',
+    'casual',
+    'urgent',
+    'emotional',
+    'authoritative',
+    'friendly',
   ];
   private readonly PLATFORM_OPTIONS: Array<CopyVariant['platform']> = [
-    'web', 'social', 'email', 'print', 'video', 'universal'
+    'web',
+    'social',
+    'email',
+    'print',
+    'video',
+    'universal',
   ];
 
   private readonly CHARACTER_LIMITS = {
-    headline: { short: 30, medium: 60, long: 90  },
-  subheadline: { short: 50, medium: 100, long: 150  },
-  body: { short: 100, medium: 250, long: 500  },
-  cta: { short: 15, medium: 25, long: 40  },
-  tagline: { short: 20, medium: 40, long: 60  },
-  social: { short: 140, medium: 280, long: 500 }
+    headline: { short: 30, medium: 60, long: 90 },
+    subheadline: { short: 50, medium: 100, long: 150 },
+    body: { short: 100, medium: 250, long: 500 },
+    cta: { short: 15, medium: 25, long: 40 },
+    tagline: { short: 20, medium: 40, long: 60 },
+    social: { short: 140, medium: 280, long: 500 },
   };
 
   async generateCopySet(
@@ -103,7 +117,7 @@ export class CopyGenerator {
       tonePreferences = this.TONE_OPTIONS,
       platformTargets = ['web', 'social', 'email'],
       brandVoice,
-      competitorAnalysis = false
+      competitorAnalysis = false,
     } = options;
 
     try {
@@ -111,10 +125,10 @@ export class CopyGenerator {
         briefId: brief.id,
         motivationSetId: motivationSet.id,
         selectedMotivations: selectedMotivationIds.length,
-        variantsPerMotivation
+        variantsPerMotivation,
       });
 
-      const selectedMotivations = motivationSet.motivations.filter((m: any) => 
+      const selectedMotivations = motivationSet.motivations.filter((m: any) =>
         selectedMotivationIds.includes(m.id)
       );
 
@@ -124,7 +138,7 @@ export class CopyGenerator {
 
       // Generate copy variants for each selected motivation
       const allVariants: CopyVariant[] = [];
-      
+
       for (const motivation of selectedMotivations) {
         const motivationVariants = await this.generateVariantsForMotivation(
           brief,
@@ -149,28 +163,27 @@ export class CopyGenerator {
         variants: balancedVariants,
         generatedAt: new Date(),
         version: 1,
-        metadata: this.calculateCopyMetadata(balancedVariants)
+        metadata: this.calculateCopyMetadata(balancedVariants),
       };
 
       logger.info('Copy generation completed', {
         briefId: brief.id,
         copySetId: copySet.id,
         totalVariants: copySet.variants.length,
-        averageConfidence: copySet.metadata.averageConfidence
+        averageConfidence: copySet.metadata.averageConfidence,
       });
 
       return copySet;
-
     } catch (error: any) {
       const classified = classifyError(error as Error, {
         route: 'copy-generator',
-        metadata: { 
-          briefId: brief.id, 
+        metadata: {
+          briefId: brief.id,
           motivationSetId: motivationSet.id,
-          selectedCount: selectedMotivationIds.length 
-        }
+          selectedCount: selectedMotivationIds.length,
+        },
       });
-      
+
       logger.error('Copy generation failed', classified.originalError);
       throw error;
     }
@@ -186,24 +199,29 @@ export class CopyGenerator {
     brandVoice?: CopyGenerationOptions['brandVoice']
   ): Promise<CopyVariant[]> {
     const cacheKey = `copy_variants_${this.hashMotivation(motivation)}_${variantCount}`;
-    
+
     return cached(
       async () => {
         const variants: CopyVariant[] = [];
-        
+
         // Calculate distribution across types, tones, and platforms
-        const distribution = this.calculateVariantDistribution(variantCount, types, tones, platforms);
-        
+        const distribution = this.calculateVariantDistribution(
+          variantCount,
+          types,
+          tones,
+          platforms
+        );
+
         for (const config of distribution) {
           const prompt = this.buildCopyPrompt(brief, motivation, config, brandVoice);
           const response = await this.callAIService(prompt);
           const generatedCopy = await this.parseCopyResponse(response, motivation.id, config);
-          
+
           if (generatedCopy) {
             variants.push(generatedCopy);
           }
         }
-        
+
         return variants;
       },
       () => cacheKey,
@@ -230,16 +248,16 @@ export class CopyGenerator {
     }> = [];
 
     const formats: Array<CopyVariant['format']> = ['short', 'medium', 'long'];
-    
+
     for (let i = 0; i < totalVariants; i++) {
       distribution.push({
         type: types[i % types.length],
         tone: tones[i % tones.length],
         platform: platforms[i % platforms.length],
-        format: formats[i % formats.length]
+        format: formats[i % formats.length],
       });
     }
-    
+
     return distribution;
   }
 
@@ -255,7 +273,7 @@ export class CopyGenerator {
     brandVoice?: CopyGenerationOptions['brandVoice']
   ): string {
     const characterLimit = this.CHARACTER_LIMITS[config.type][config.format];
-    
+
     return `
 You are an expert copywriter creating ${config.type} copy for a marketing campaign.
 
@@ -281,12 +299,16 @@ Copy Requirements:
 - Platform: ${config.platform}
 - Format: ${config.format}
 - Character Limit: ${characterLimit} characters
-${brandVoice ? `
+${
+  brandVoice
+    ? `
 Brand Voice:
 - Personality: ${brandVoice.personality}
 - Values: ${brandVoice.values.join(', ')}
 - Avoid: ${brandVoice.avoidWords.join(', ')}
-- Style: ${brandVoice.preferredStyle}` : ''}
+- Style: ${brandVoice.preferredStyle}`
+    : ''
+}
 
 Platform-Specific Guidelines:
 ${this.getPlatformGuidelines(config.platform)}
@@ -310,43 +332,52 @@ Do not include explanations or alternatives - just the final copy.
   private getPlatformGuidelines(platform: CopyVariant['platform']): string {
     const guidelines = {
       web: '- Optimized for web reading patterns\n- Clear hierarchy and scannable\n- SEO-conscious language',
-      social: '- Engaging and shareable\n- Hashtag-friendly\n- Mobile-optimized\n- Conversation starters',
-      email: '- Subject line focused\n- Personal and direct\n- Clear call-to-action\n- Mobile preview optimized',
-      print: '- High visual impact\n- Readable at distance\n- Timeless messaging\n- Print-safe language',
-      video: '- Audio-friendly\n- Quick engagement\n- Visual storytelling support\n- Memorable phrases',
-      universal: '- Cross-platform adaptable\n- Clear and direct\n- Brand-focused\n- Versatile messaging'
+      social:
+        '- Engaging and shareable\n- Hashtag-friendly\n- Mobile-optimized\n- Conversation starters',
+      email:
+        '- Subject line focused\n- Personal and direct\n- Clear call-to-action\n- Mobile preview optimized',
+      print:
+        '- High visual impact\n- Readable at distance\n- Timeless messaging\n- Print-safe language',
+      video:
+        '- Audio-friendly\n- Quick engagement\n- Visual storytelling support\n- Memorable phrases',
+      universal:
+        '- Cross-platform adaptable\n- Clear and direct\n- Brand-focused\n- Versatile messaging',
     };
-    
+
     return guidelines[platform] || guidelines.universal;
   }
 
   private getCopyTypeGuidelines(type: CopyVariant['type']): string {
     const guidelines = {
-      headline: '- Grab immediate attention\n- Convey core benefit\n- Create curiosity or urgency\n- Use powerful, emotional words',
-      subheadline: '- Support and expand the headline\n- Add credibility or details\n- Bridge to body copy\n- Clarify the value proposition',
+      headline:
+        '- Grab immediate attention\n- Convey core benefit\n- Create curiosity or urgency\n- Use powerful, emotional words',
+      subheadline:
+        '- Support and expand the headline\n- Add credibility or details\n- Bridge to body copy\n- Clarify the value proposition',
       body: '- Tell the complete story\n- Address objections\n- Build desire and trust\n- Lead naturally to CTA',
       cta: '- Create immediate action\n- Use action verbs\n- Remove friction\n- Create urgency when appropriate',
-      tagline: '- Memorable brand association\n- Capture brand essence\n- Be distinctive and ownable\n- Work across contexts',
-      social: '- Encourage engagement\n- Be conversation-worthy\n- Include clear value\n- Optimize for sharing'
+      tagline:
+        '- Memorable brand association\n- Capture brand essence\n- Be distinctive and ownable\n- Work across contexts',
+      social:
+        '- Encourage engagement\n- Be conversation-worthy\n- Include clear value\n- Optimize for sharing',
     };
-    
+
     return guidelines[type] || '';
   }
 
   private async callAIService(prompt: string): Promise<string> {
     // Placeholder for AI service integration
     // This would integrate with OpenAI, Anthropic, or your preferred AI service
-    
+
     // For now, return mock responses that vary by copy type
     const mockResponses = [
-      "Transform Your Business Today - Join Industry Leaders",
+      'Transform Your Business Today - Join Industry Leaders',
       "Unlock exclusive benefits that your competitors don't have access to",
       "Don't let another day pass without the competitive advantage you deserve. Our solution has helped over 10,000 professionals achieve breakthrough results in just 30 days.",
-      "Get Started Risk-Free",
-      "Innovation That Delivers Results",
-      "Ready to join the success stories? 🚀 #Innovation #Success"
+      'Get Started Risk-Free',
+      'Innovation That Delivers Results',
+      'Ready to join the success stories? 🚀 #Innovation #Success',
     ];
-    
+
     return mockResponses[Math.floor(Math.random() * mockResponses.length)];
   }
 
@@ -362,7 +393,7 @@ Do not include explanations or alternatives - just the final copy.
   ): Promise<CopyVariant | null> {
     try {
       const content = response.trim();
-      
+
       if (!content) {
         throw new Error('Empty copy response');
       }
@@ -390,7 +421,7 @@ Do not include explanations or alternatives - just the final copy.
         clarity: scores.clarity,
         uniqueness: scores.uniqueness,
         brandAlignment: scores.brandAlignment,
-        generatedAt: new Date()
+        generatedAt: new Date(),
       };
     } catch (error: any) {
       logger.error('Failed to parse copy response', error);
@@ -406,7 +437,7 @@ Do not include explanations or alternatives - just the final copy.
       platform: CopyVariant['platform'];
       format: CopyVariant['format'];
     },
-  characterLimit: number
+    characterLimit: number
   ): {
     confidence: number;
     abTestSuitability: number;
@@ -417,65 +448,90 @@ Do not include explanations or alternatives - just the final copy.
   } {
     // Simple scoring algorithm - in production would use more sophisticated analysis
     const lengthScore = Math.min(content.length / characterLimit, 1.0);
-    const complexityScore = 1.0 - (content.split(' ').length / content.length);
+    const complexityScore = 1.0 - content.split(' ').length / content.length;
     const actionWordScore = this.hasActionWords(content) ? 0.8 : 0.4;
-    
+
     return {
       confidence: (lengthScore + complexityScore + actionWordScore) / 3,
       abTestSuitability: Math.random() * 0.3 + 0.7, // 0.7-1.0
       emotionalImpact: this.analyzeEmotionalImpact(content),
       clarity: this.analyzeClarity(content),
       uniqueness: Math.random() * 0.4 + 0.6, // 0.6-1.0
-      brandAlignment: Math.random() * 0.3 + 0.7 // 0.7-1.0
+      brandAlignment: Math.random() * 0.3 + 0.7, // 0.7-1.0
     };
   }
 
   private hasActionWords(content: string): boolean {
     const actionWords = [
-      'get', 'start', 'begin', 'discover', 'unlock', 'transform', 
-      'achieve', 'improve', 'boost', 'increase', 'gain', 'save',
-      'learn', 'master', 'create', 'build', 'join', 'try'
+      'get',
+      'start',
+      'begin',
+      'discover',
+      'unlock',
+      'transform',
+      'achieve',
+      'improve',
+      'boost',
+      'increase',
+      'gain',
+      'save',
+      'learn',
+      'master',
+      'create',
+      'build',
+      'join',
+      'try',
     ];
-    
+
     const words = content.toLowerCase().split(/\s+/);
     return actionWords.some(action => words.includes(action));
   }
 
   private analyzeEmotionalImpact(content: string): number {
     const emotionalWords = [
-      'amazing', 'incredible', 'transform', 'breakthrough', 'exclusive',
-      'limited', 'urgent', 'secret', 'proven', 'guaranteed', 'free',
-      'instant', 'powerful', 'revolutionary', 'effortless'
+      'amazing',
+      'incredible',
+      'transform',
+      'breakthrough',
+      'exclusive',
+      'limited',
+      'urgent',
+      'secret',
+      'proven',
+      'guaranteed',
+      'free',
+      'instant',
+      'powerful',
+      'revolutionary',
+      'effortless',
     ];
-    
+
     const words = content.toLowerCase().split(/\s+/);
-    const emotionalWordCount = emotionalWords.filter((word: any) => 
+    const emotionalWordCount = emotionalWords.filter((word: any) =>
       words.some(w => w.includes(word))
     ).length;
-    
+
     return Math.min(emotionalWordCount / 3, 1.0);
   }
 
   private analyzeClarity(content: string): number {
     // Simple clarity analysis based on sentence length and word complexity
     const sentences = content.split(/[.!?]+/).filter((s: any) => s.trim());
-    const avgSentenceLength = sentences.reduce((sum, s) => sum + s.split(' ').length, 0) / sentences.length;
-    
+    const avgSentenceLength =
+      sentences.reduce((sum, s) => sum + s.split(' ').length, 0) / sentences.length;
+
     // Prefer moderate sentence lengths (10-20 words)
     const idealLength = 15;
     const lengthScore = 1 - Math.abs(avgSentenceLength - idealLength) / idealLength;
-    
+
     return Math.max(lengthScore, 0.3);
   }
 
-  private balanceVariants(
-    variants: CopyVariant[],
-    options: CopyGenerationOptions
-  ): CopyVariant[] {
+  private balanceVariants(variants: CopyVariant[], options: CopyGenerationOptions): CopyVariant[] {
     // Sort by overall quality score
     const scored = variants.map((variant: any) => ({
       variant,
-      qualityScore: this.calculateOverallQualityScore(variant)
+      qualityScore: this.calculateOverallQualityScore(variant),
     }));
 
     scored.sort((a, b) => b.qualityScore - a.qualityScore);
@@ -502,7 +558,7 @@ Do not include explanations or alternatives - just the final copy.
 
     for (const variant of variants) {
       const combination = `${variant.type}_${variant.tone}_${variant.platform}`;
-      
+
       if (!seenCombinations.has(combination)) {
         diverse.push(variant);
         seenCombinations.add(combination);
@@ -516,25 +572,37 @@ Do not include explanations or alternatives - just the final copy.
   }
 
   private calculateCopyMetadata(variants: CopyVariant[]): CopySet['metadata'] {
-    const typeDistribution = variants.reduce((dist, v) => {
-      dist[v.type] = (dist[v.type] || 0) + 1;
-      return dist;
-    }, {} as Record<string, number>);
+    const typeDistribution = variants.reduce(
+      (dist, v) => {
+        dist[v.type] = (dist[v.type] || 0) + 1;
+        return dist;
+      },
+      {} as Record<string, number>
+    );
 
-    const toneDistribution = variants.reduce((dist, v) => {
-      dist[v.tone] = (dist[v.tone] || 0) + 1;
-      return dist;
-    }, {} as Record<string, number>);
+    const toneDistribution = variants.reduce(
+      (dist, v) => {
+        dist[v.tone] = (dist[v.tone] || 0) + 1;
+        return dist;
+      },
+      {} as Record<string, number>
+    );
 
-    const platformDistribution = variants.reduce((dist, v) => {
-      dist[v.platform] = (dist[v.platform] || 0) + 1;
-      return dist;
-    }, {} as Record<string, number>);
+    const platformDistribution = variants.reduce(
+      (dist, v) => {
+        dist[v.platform] = (dist[v.platform] || 0) + 1;
+        return dist;
+      },
+      {} as Record<string, number>
+    );
 
     const averageConfidence = variants.reduce((sum, v) => sum + v.confidence, 0) / variants.length;
-    const averageEmotionalImpact = variants.reduce((sum, v) => sum + v.emotionalImpact, 0) / variants.length;
+    const averageEmotionalImpact =
+      variants.reduce((sum, v) => sum + v.emotionalImpact, 0) / variants.length;
 
-    const uniqueCombinations = new Set(variants.map((v: any) => `${v.type}_${v.tone}_${v.platform}`));
+    const uniqueCombinations = new Set(
+      variants.map((v: any) => `${v.type}_${v.tone}_${v.platform}`)
+    );
     const diversityScore = uniqueCombinations.size / variants.length;
 
     return {
@@ -544,7 +612,7 @@ Do not include explanations or alternatives - just the final copy.
       platformDistribution,
       averageConfidence,
       averageEmotionalImpact,
-      diversityScore
+      diversityScore,
     };
   }
 
@@ -576,7 +644,13 @@ Do not include explanations or alternatives - just the final copy.
 
     // Check character limit adherence
     const overLimitCount = copySet.variants.filter((v: any) => {
-      const limit = this.CHARACTER_LIMITS[v.type as keyof typeof this.CHARACTER_LIMITS]?.[v.format as keyof typeof this.CHARACTER_LIMITS[keyof typeof this.CHARACTER_LIMITS]];
+      const validType = v.type as keyof typeof this.CHARACTER_LIMITS;
+      if (!this.CHARACTER_LIMITS[validType]) return false;
+
+      const typeLimit = this.CHARACTER_LIMITS[validType];
+      const validFormat = v.format as keyof typeof typeLimit;
+      const limit = typeLimit[validFormat];
+
       return limit && v.characterCount > limit;
     }).length;
 
@@ -587,7 +661,7 @@ Do not include explanations or alternatives - just the final copy.
     return {
       valid: issues.length === 0,
       issues,
-      suggestions
+      suggestions,
     };
   }
 
@@ -606,7 +680,7 @@ Do not include explanations or alternatives - just the final copy.
     return {
       ...copySet,
       version: copySet.version + 1,
-      metadata: this.calculateCopyMetadata(copySet.variants)
+      metadata: this.calculateCopyMetadata(copySet.variants),
     };
   }
 
@@ -624,7 +698,7 @@ Do not include explanations or alternatives - just the final copy.
     let hash = 0;
     for (let i = 0; i < key.length; i++) {
       const char = key.charCodeAt(i);
-      hash = ((hash << 5) - hash) + char;
+      hash = (hash << 5) - hash + char;
       hash = hash & hash;
     }
     return Math.abs(hash).toString(36);

@@ -4,7 +4,6 @@ import { User, Session } from '@supabase/supabase-js';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { loggers } from '@/lib/logger';
 
-
 interface AuthState {
   user: User | null;
   session: Session | null;
@@ -14,7 +13,11 @@ interface AuthState {
 
 interface SupabaseAuthContextType extends AuthState {
   login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
-  signup: (email: string, password: string, name: string) => Promise<{ success: boolean; error?: string; user?: User }>;
+  signup: (
+    email: string,
+    password: string,
+    name: string
+  ) => Promise<{ success: boolean; error?: string; user?: User }>;
   logout: () => Promise<void>;
   refreshSession: () => Promise<{ success: boolean; error?: string }>;
 }
@@ -27,7 +30,8 @@ const SupabaseAuthContext = createContext<SupabaseAuthContextType>({
   login: async () => ({ success: false }),
   signup: async () => ({ success: false }),
   logout: async () => {},
-  refreshSession: async () => ({ success: false }) });
+  refreshSession: async () => ({ success: false }),
+});
 export const useSupabaseAuth = () => {
   const context = useContext(SupabaseAuthContext);
   if (!context) {
@@ -43,7 +47,9 @@ export const SupabaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({ 
     loading: true,
     isAuthenticated: false,
   });
-  const [supabaseClient, setSupabaseClient] = useState<ReturnType<typeof createSupabaseBrowserClient> | null>(null);
+  const [supabaseClient, setSupabaseClient] = useState<ReturnType<
+    typeof createSupabaseBrowserClient
+  > | null>(null);
   const router = useRouter();
 
   // Initialize Supabase client only on the client side
@@ -66,15 +72,19 @@ export const SupabaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({ 
 
     const checkSession = async () => {
       try {
-        const { data: { session }, error } = await supabaseClient.auth.getSession();
-        
+        const {
+          data: { session },
+          error,
+        } = await supabaseClient.auth.getSession();
+
         if (error) {
           console.error('Error getting session:', error);
           setAuthState({
             user: null,
             session: null,
             loading: false,
-            isAuthenticated: false });
+            isAuthenticated: false,
+          });
           return;
         }
 
@@ -83,8 +93,9 @@ export const SupabaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({ 
             user: session.user,
             session,
             loading: false,
-            isAuthenticated: true });
-          
+            isAuthenticated: true,
+          });
+
           // Store user data in localStorage for compatibility with other parts of the app
           if (typeof window !== 'undefined' && session.user) {
             const userData = {
@@ -92,7 +103,8 @@ export const SupabaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({ 
               email: session.user.email || '',
               name: session.user.user_metadata?.name || session.user.email?.split('@')[0] || 'User',
               token: session.access_token,
-              role: session.user.user_metadata?.role || 'user'};
+              role: session.user.user_metadata?.role || 'user',
+            };
             localStorage.setItem('airwave_user', JSON.stringify(userData));
           }
         } else {
@@ -100,8 +112,9 @@ export const SupabaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({ 
             user: null,
             session: null,
             loading: false,
-            isAuthenticated: false });
-          
+            isAuthenticated: false,
+          });
+
           // Clear localStorage when logged out
           if (typeof window !== 'undefined') {
             localStorage.removeItem('airwave_user');
@@ -113,56 +126,60 @@ export const SupabaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({ 
           user: null,
           session: null,
           loading: false,
-          isAuthenticated: false });
+          isAuthenticated: false,
+        });
       }
     };
 
     checkSession();
 
     // Listen for auth state changes
-    const { data: { subscription } } = supabaseClient.auth.onAuthStateChange(
-      async (_event, session) => {
-        process.env.NODE_ENV === 'development' && loggers.general.error('Auth state changed:', event);
-        if (session) {
-          setAuthState({
-            user: session.user,
-            session,
-            loading: false,
-            isAuthenticated: true });
-          
-          // Store user data in localStorage for compatibility with other parts of the app
-          if (typeof window !== 'undefined' && session.user) {
-            const userData = {
-              id: session.user.id,
-              email: session.user.email || '',
-              name: session.user.user_metadata?.name || session.user.email?.split('@')[0] || 'User',
-              token: session.access_token,
-              role: session.user.user_metadata?.role || 'user'};
-            localStorage.setItem('airwave_user', JSON.stringify(userData));
-          }
-        } else {
-          setAuthState({
-            user: null,
-            session: null,
-            loading: false,
-            isAuthenticated: false });
-          
-          // Clear localStorage when logged out
-          if (typeof window !== 'undefined') {
-            localStorage.removeItem('airwave_user');
-          }
-        }
+    const {
+      data: { subscription },
+    } = supabaseClient.auth.onAuthStateChange(async (_event, session) => {
+      process.env.NODE_ENV === 'development' && loggers.general.error('Auth state changed:', event);
+      if (session) {
+        setAuthState({
+          user: session.user,
+          session,
+          loading: false,
+          isAuthenticated: true,
+        });
 
-        // Handle auth events
-        if (event === 'SIGNED_OUT') {
-          router.push('/login');
-        } else if (event === 'TOKEN_REFRESHED') {
-          process.env.NODE_ENV === 'development' && loggers.general.error('Token refreshed');
-        } else if (event === 'USER_UPDATED') {
-          process.env.NODE_ENV === 'development' && loggers.general.error('User updated');
+        // Store user data in localStorage for compatibility with other parts of the app
+        if (typeof window !== 'undefined' && session.user) {
+          const userData = {
+            id: session.user.id,
+            email: session.user.email || '',
+            name: session.user.user_metadata?.name || session.user.email?.split('@')[0] || 'User',
+            token: session.access_token,
+            role: session.user.user_metadata?.role || 'user',
+          };
+          localStorage.setItem('airwave_user', JSON.stringify(userData));
+        }
+      } else {
+        setAuthState({
+          user: null,
+          session: null,
+          loading: false,
+          isAuthenticated: false,
+        });
+
+        // Clear localStorage when logged out
+        if (typeof window !== 'undefined') {
+          localStorage.removeItem('airwave_user');
         }
       }
-    );
+
+      // Handle auth events
+      if (event === 'SIGNED_OUT') {
+        router.push('/login');
+      } else if (event === 'TOKEN_REFRESHED') {
+        process.env.NODE_ENV === 'development' && loggers.general.error('Token refreshed');
+      } else if (event === 'USER_UPDATED') {
+        process.env.NODE_ENV === 'development' && loggers.general.error('User updated');
+      }
+    });
 
     return () => {
       subscription.unsubscribe();
@@ -186,7 +203,8 @@ export const SupabaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({ 
 
       const { data, error } = await supabaseClient.auth.signInWithPassword({
         email: email.trim(),
-        password: password });
+        password: password,
+      });
       if (error) {
         console.error('Supabase auth error:', error);
         throw error;
@@ -200,14 +218,18 @@ export const SupabaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({ 
       throw new Error('No session returned from login');
     } catch (error: unknown) {
       console.error('Login error:', error);
-      return { 
-        success: false, 
-        error: error.message || 'Login failed. Please try again.' 
+      return {
+        success: false,
+        error: error.message || 'Login failed. Please try again.',
       };
     }
   };
 
-  const signup = async (email: string, password: string, name: string): Promise<{ success: boolean; error?: string; user?: User }> => {
+  const signup = async (
+    email: string,
+    password: string,
+    name: string
+  ): Promise<{ success: boolean; error?: string; user?: User }> => {
     if (!supabaseClient) {
       return { success: false, error: 'Supabase client not initialized' };
     }
@@ -219,12 +241,16 @@ export const SupabaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({ 
         options: {
           data: {
             name,
-            role: 'authenticated' },
+            role: 'authenticated',
+          },
         },
       });
       if (error) throw error;
 
-      return { success: true, user: data.user || undefined };
+      return {
+        success: true,
+        ...(data.user && { user: data.user }),
+      };
     } catch (error: unknown) {
       console.error('Signup error:', error);
       return { success: false, error: error instanceof Error ? error.message : 'Signup failed' };
@@ -239,7 +265,7 @@ export const SupabaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({ 
     try {
       const { error } = await supabaseClient.auth.signOut();
       if (error) throw error;
-      
+
       // The onAuthStateChange listener will handle the state update and redirect
     } catch (error: unknown) {
       console.error('Logout error:', error);
@@ -252,14 +278,17 @@ export const SupabaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({ 
     }
 
     try {
-      const { data: { session }, error } = await supabaseClient.auth.refreshSession();
-      
+      const {
+        data: { session },
+        error,
+      } = await supabaseClient.auth.refreshSession();
+
       if (error) throw error;
-      
+
       if (session) {
         return { success: true };
       }
-      
+
       return { success: false };
     } catch (error: unknown) {
       console.error('Session refresh error:', error);
