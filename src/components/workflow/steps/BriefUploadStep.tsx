@@ -25,7 +25,7 @@ const BriefUploadStepComponent: React.FC<BriefUploadStepProps> = ({
   const { state, actions } = useWorkflow();
   const {
     briefData,
-    originalBriefData,
+    originalBriefData: _originalBriefData,
     processing,
     uploadedFile,
     showBriefReview,
@@ -36,7 +36,7 @@ const BriefUploadStepComponent: React.FC<BriefUploadStepProps> = ({
   const onDrop = useCallback((acceptedFiles: File[]) => {
     if (acceptedFiles.length > 0) {
       const file = acceptedFiles[0];
-      actions.uploadBrief(file);
+      if (file) actions.uploadBrief(file);
     }
   }, [actions]);
 
@@ -81,7 +81,10 @@ const BriefUploadStepComponent: React.FC<BriefUploadStepProps> = ({
   // Render file upload area
   const renderFileUpload = () => (
     <Card
-      {...getRootProps()}
+      {...(() => {
+        const { className, ...props } = getRootProps();
+        return props;
+      })()}
       sx={{
         p: 4,
         textAlign: 'center',

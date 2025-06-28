@@ -174,11 +174,7 @@ export const ActionButton: React.FC<ActionButtonProps> = ({
         ) : undefined
       }
       endIcon={iconPosition === 'end' ? endIcon : undefined}
-      sx={(theme) => ({
-        ...sizeStyles,
-        ...(variantStyles.sx && typeof variantStyles.sx === 'function' ? variantStyles.sx(theme) : variantStyles.sx || {}),
-        ...(sx && typeof sx === 'function' ? sx(theme) : sx || {})
-      })}
+      sx={[sizeStyles, variantStyles.sx, sx].filter(Boolean)}
     >
       <Box
         sx={{

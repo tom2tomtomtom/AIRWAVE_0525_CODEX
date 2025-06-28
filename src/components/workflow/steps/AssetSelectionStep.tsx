@@ -473,14 +473,13 @@ export const AssetSelectionStep: React.FC<AssetSelectionStepProps> = ({
             <AIImageGenerator
               clientId={clientId || ''}
               onImageGenerated={handleAIImageGenerated}
-              brandGuidelines={typeof briefData?.brandGuidelines === 'string' ?
-                {
+              {...(briefData?.brandGuidelines && {
+                brandGuidelines: typeof briefData.brandGuidelines === 'string' ? {
                   voiceTone: briefData.brandGuidelines,
                   targetAudience: '',
                   keyMessages: []
-                } :
-                briefData?.brandGuidelines
-              }
+                } : briefData.brandGuidelines
+              })}
             />
           </Box>
         </DialogContent>
