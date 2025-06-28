@@ -9,7 +9,8 @@ const AI_NAMESPACES = {
   IMAGE_GENERATION: 'ai:image',
   VIDEO_GENERATION: 'ai:video',
   MOTIVATIONS: 'ai:motivations',
-  CONTENT_OPTIMIZATION: 'ai:optimization' } as const;
+  CONTENT_OPTIMIZATION: 'ai:optimization',
+} as const;
 
 // Generate cache key from content hash
 function generateContentHash(content: string | object): string {
@@ -150,7 +151,7 @@ export class VideoGenerationCache {
     duration: number,
     userId: string,
     generatedVideos: any
-  ): Promise<void> {
+  ): Promise<boolean> {
     const content = { prompt, style, duration };
     const key = `${userId}:${generateContentHash(content)}`;
     const tags = [`user:${userId}`, 'video-generation'];
@@ -172,19 +173,19 @@ export class VideoGenerationCache {
     return success;
   }
 
-  static async invalidateUser(userId: string): Promise<void> {
+  static async invalidateUser(userId: string): Promise<number> {
     return await cacheManager.invalidateByTag(`user:${userId}`);
   }
 }
 
 // Motivations Caching
 export class MotivationsCache {
-  static async get(briefContent: string, userId: string): Promise<void> {
+  static async get(briefContent: string, userId: string): Promise<any> {
     const key = `${userId}:${generateContentHash(briefContent)}`;
     return await cacheManager.get(key, AI_NAMESPACES.MOTIVATIONS);
   }
 
-  static async set(briefContent: string, userId: string, motivations: any): Promise<void> {
+  static async set(briefContent: string, userId: string, motivations: any): Promise<boolean> {
     const key = `${userId}:${generateContentHash(briefContent)}`;
     const tags = [`user:${userId}`, 'motivations'];
 
@@ -205,14 +206,14 @@ export class MotivationsCache {
     return success;
   }
 
-  static async invalidateUser(userId: string): Promise<void> {
+  static async invalidateUser(userId: string): Promise<number> {
     return await cacheManager.invalidateByTag(`user:${userId}`);
   }
 }
 
 // Content Optimization Caching
 export class ContentOptimizationCache {
-  static async get(content: string, platform: string, userId: string): Promise<void> {
+  static async get(content: string, platform: string, userId: string): Promise<any> {
     const cacheContent = { content, platform };
     const key = `${userId}:${generateContentHash(cacheContent)}`;
     return await cacheManager.get(key, AI_NAMESPACES.CONTENT_OPTIMIZATION);
@@ -223,7 +224,7 @@ export class ContentOptimizationCache {
     platform: string,
     userId: string,
     optimization: any
-  ): Promise<void> {
+  ): Promise<boolean> {
     const cacheContent = { content, platform };
     const key = `${userId}:${generateContentHash(cacheContent)}`;
     const tags = [`user:${userId}`, 'content-optimization'];
@@ -245,7 +246,7 @@ export class ContentOptimizationCache {
     return success;
   }
 
-  static async invalidateUser(userId: string): Promise<void> {
+  static async invalidateUser(userId: string): Promise<number> {
     return await cacheManager.invalidateByTag(`user:${userId}`);
   }
 }
@@ -253,14 +254,14 @@ export class ContentOptimizationCache {
 // Utility functions for AI cache management
 export class AICacheUtils {
   // Clear all AI cache for a user
-  static async clearUserCache(userId: string): Promise<void> {
+  static async clearUserCache(userId: string): Promise<number> {
     const deleted = await cacheManager.invalidateByTag(`user:${userId}`);
     loggers.ai.info('User AI cache cleared', { userId, deletedEntries: deleted });
     return deleted;
   }
 
   // Clear specific AI cache type
-  static async clearCacheType(type: keyof typeof AI_NAMESPACES): Promise<void> {
+  static async clearCacheType(type: keyof typeof AI_NAMESPACES): Promise<boolean> {
     const namespace = AI_NAMESPACES[type];
     const success = await cacheManager.clear(namespace);
     loggers.ai.info('AI cache type cleared', { type, namespace, success });
@@ -268,14 +269,14 @@ export class AICacheUtils {
   }
 
   // Get AI cache statistics
-  static async getCacheStats(): Promise<void> {
+  static async getCacheStats(): Promise<any> {
     const stats = await cacheManager.getStats();
     loggers.ai.debug('AI cache stats retrieved', stats as any);
     return stats;
   }
 
   // Warm up cache with common requests
-  static async warmUpCache(userId: string, commonRequests: any[]): Promise<void> {
+  static async warmUpCache(userId: string, commonRequests: any[]): Promise<number> {
     let warmedUp = 0;
 
     for (const request of commonRequests) {
