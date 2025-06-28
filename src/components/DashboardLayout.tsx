@@ -69,8 +69,9 @@ const navigation = [
     href: '/social-publishing',
     icon: SocialIcon,
     disabled: true,
-    comingSoon: true },
-  { name: 'Webhooks', href: '/webhooks', icon: WebhookIcon }
+    comingSoon: true,
+  },
+  { name: 'Webhooks', href: '/webhooks', icon: WebhookIcon },
 ];
 
 export type DashboardLayoutProps = {
@@ -111,7 +112,8 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ title, childre
             display: 'flex',
             alignItems: 'center',
             width: '100%',
-            justifyContent: 'center' }}
+            justifyContent: 'center',
+          }}
         >
           <Typography
             variant="h5"
@@ -122,7 +124,8 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ title, childre
               fontWeight: 700,
               cursor: 'pointer',
               fontSize: '1.75rem',
-              letterSpacing: '-0.02em' }}
+              letterSpacing: '-0.02em',
+            }}
             onClick={() => router.push('/dashboard')}
           >
             AIrFLOW
@@ -146,7 +149,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ title, childre
             <ListItem key={item.name} disablePadding>
               <ListItemButton
                 selected={isActive}
-                disabled={item.disabled}
+                disabled={!!item.disabled}
                 onClick={e => {
                   e.preventDefault();
                   e.stopPropagation();
@@ -164,7 +167,8 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ title, childre
                   transition: 'all 0.3s ease',
                   opacity: item.disabled ? 0.5 : 1,
                   '&:hover': {
-                    paddingLeft: item.disabled ? '16px' : '20px' },
+                    paddingLeft: item.disabled ? '16px' : '20px',
+                  },
                   '&.Mui-selected': {
                     background: theme =>
                       theme.palette.mode === 'light'
@@ -172,14 +176,17 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ title, childre
                         : 'linear-gradient(135deg, #A78BFA 0%, #F472B6 100%)',
                     color: '#FFFFFF',
                     '& .MuiListItemIcon-root': {
-                      color: '#FFFFFF' },
+                      color: '#FFFFFF',
+                    },
                     '&:hover': {
-                      opacity: 0.9 },
+                      opacity: 0.9,
+                    },
                   },
                   '&.Mui-disabled': {
                     opacity: 0.5,
                     '& .MuiListItemIcon-root': {
-                      color: 'text.disabled' },
+                      color: 'text.disabled',
+                    },
                   },
                 }}
               >
@@ -187,7 +194,8 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ title, childre
                   sx={{
                     minWidth: 40,
                     transition: 'transform 0.3s ease',
-                    ...(isActive && { transform: 'scale(1.1)' }) }}
+                    ...(isActive && { transform: 'scale(1.1)' }),
+                  }}
                 >
                   <Icon />
                 </ListItemIcon>
@@ -196,10 +204,12 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ title, childre
                   secondary={item.comingSoon ? 'Coming Soon' : undefined}
                   primaryTypographyProps={{
                     fontWeight: isActive ? 600 : 500,
-                    fontSize: '0.95rem' }}
+                    fontSize: '0.95rem',
+                  }}
                   secondaryTypographyProps={{
                     fontSize: '0.75rem',
-                    color: 'text.disabled' }}
+                    color: 'text.disabled',
+                  }}
                 />
                 {item.comingSoon && (
                   <Chip
@@ -209,7 +219,8 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ title, childre
                       height: 20,
                       fontSize: '0.6rem',
                       bgcolor: 'warning.light',
-                      color: 'warning.contrastText' }}
+                      color: 'warning.contrastText',
+                    }}
                   />
                 )}
               </ListItemButton>
@@ -278,13 +289,15 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ title, childre
                     />
                   </InputAdornment>
                 ),
-                readOnly: true }}
+                readOnly: true,
+              }}
               sx={{
                 minWidth: 200,
                 cursor: 'pointer',
                 '& .MuiInputBase-input': {
-                  cursor: 'pointer' },
-                display: { xs: 'none', md: 'block' }
+                  cursor: 'pointer',
+                },
+                display: { xs: 'none', md: 'block' },
               }}
             />
 
@@ -313,8 +326,10 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ title, childre
                     theme.palette.mode === 'light'
                       ? 'rgba(124, 58, 237, 0.2)'
                       : 'rgba(167, 139, 250, 0.2)',
-                  transform: 'rotate(180deg)' },
-                transition: 'all 0.3s ease' }}
+                  transform: 'rotate(180deg)',
+                },
+                transition: 'all 0.3s ease',
+              }}
               title={mode === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode'}
             >
               {mode === 'light' ? <DarkModeIcon /> : <LightModeIcon />}
@@ -391,7 +406,8 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ title, childre
           width: { sm: `calc(100% - ${drawerWidth}px)` },
           minHeight: '100vh',
           background: 'transparent',
-          position: 'relative' }}
+          position: 'relative',
+        }}
       >
         <Toolbar />
         {children}

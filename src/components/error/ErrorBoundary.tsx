@@ -63,17 +63,18 @@ function DefaultErrorFallback({ error, errorInfo, resetError, eventId }: ErrorFa
         justifyContent: 'center',
         minHeight: '400px',
         padding: 3,
-        textAlign: 'center'}}
+        textAlign: 'center',
+      }}
     >
       <BugReportOutlined sx={{ fontSize: 64, color: 'error.main', mb: 2 }} />
-      
+
       <Typography variant="h4" component="h1" gutterBottom>
         Oops! Something went wrong
       </Typography>
-      
+
       <Typography variant="body1" color="text.secondary" sx={{ mb: 3, maxWidth: 600 }}>
-        We&apos;re sorry for the inconvenience. An unexpected error occurred while loading this page.
-        Our team has been notified and we&apos;re working to fix this issue.
+        We&apos;re sorry for the inconvenience. An unexpected error occurred while loading this
+        page. Our team has been notified and we&apos;re working to fix this issue.
       </Typography>
 
       {eventId && (
@@ -93,20 +94,12 @@ function DefaultErrorFallback({ error, errorInfo, resetError, eventId }: ErrorFa
         >
           Try Again
         </Button>
-        
-        <Button
-          variant="outlined"
-          startIcon={<RefreshOutlined />}
-          onClick={handleReload}
-        >
+
+        <Button variant="outlined" startIcon={<RefreshOutlined />} onClick={handleReload}>
           Reload Page
         </Button>
-        
-        <Button
-          variant="outlined"
-          startIcon={<HomeOutlined />}
-          onClick={handleGoHome}
-        >
+
+        <Button variant="outlined" startIcon={<HomeOutlined />} onClick={handleGoHome}>
           Go Home
         </Button>
       </Stack>
@@ -127,28 +120,38 @@ function DefaultErrorFallback({ error, errorInfo, resetError, eventId }: ErrorFa
             <Typography variant="h6" gutterBottom>
               Development Error Details
             </Typography>
-            
-            <Typography variant="body2" component="pre" sx={{ 
-              whiteSpace: 'pre-wrap', 
-              fontSize: '0.8rem',
-              backgroundColor: 'rgba(0,0,0,0.05)',
-              padding: 1,
-              borderRadius: 1,
-              mb: 2}}>
+
+            <Typography
+              variant="body2"
+              component="pre"
+              sx={{
+                whiteSpace: 'pre-wrap',
+                fontSize: '0.8rem',
+                backgroundColor: 'rgba(0,0,0,0.05)',
+                padding: 1,
+                borderRadius: 1,
+                mb: 2,
+              }}
+            >
               {error.stack}
             </Typography>
-            
+
             {errorInfo.componentStack && (
               <Box>
                 <Typography variant="subtitle2" gutterBottom>
                   Component Stack:
                 </Typography>
-                <Typography variant="body2" component="pre" sx={{ 
-                  whiteSpace: 'pre-wrap', 
-                  fontSize: '0.8rem',
-                  backgroundColor: 'rgba(0,0,0,0.05)',
-                  padding: 1,
-                  borderRadius: 1}}>
+                <Typography
+                  variant="body2"
+                  component="pre"
+                  sx={{
+                    whiteSpace: 'pre-wrap',
+                    fontSize: '0.8rem',
+                    backgroundColor: 'rgba(0,0,0,0.05)',
+                    padding: 1,
+                    borderRadius: 1,
+                  }}
+                >
                   {errorInfo.componentStack}
                 </Typography>
               </Box>
@@ -166,29 +169,32 @@ function DefaultErrorFallback({ error, errorInfo, resetError, eventId }: ErrorFa
 export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   constructor(props: ErrorBoundaryProps) {
     super(props);
-    
+
     this.state = {
       hasError: false,
       error: null,
       errorInfo: null,
-      eventId: null};
+      eventId: null,
+    };
   }
 
   static getDerivedStateFromError(error: Error): Partial<ErrorBoundaryState> {
     // Update state so the next render will show the fallback UI
     return {
       hasError: true,
-      error};
+      error,
+    };
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     // Generate unique error ID
     const eventId = this.generateErrorId();
-    
+
     this.setState({
       error,
       errorInfo,
-      eventId});
+      eventId,
+    });
 
     // Log error locally
     // eslint-disable-next-line no-console
@@ -223,19 +229,21 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
         fetch('/api/errors', {
           method: 'POST',
           headers: {
-        'Content-Type': 'application/json' 
-      },
+            'Content-Type': 'application/json',
+          },
           body: JSON.stringify({
             eventId,
             error: {
               name: error.name,
               message: error.message,
-              stack: error.stack
+              stack: error.stack,
             },
             errorInfo,
             timestamp: new Date().toISOString(),
             userAgent: navigator.userAgent,
-            url: window.location.href})}).catch(reportingError => {
+            url: window.location.href,
+          }),
+        }).catch(reportingError => {
           console.error('Failed to report error:', reportingError);
         });
       }
@@ -249,19 +257,20 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
       hasError: false,
       error: null,
       errorInfo: null,
-      eventId: null});
+      eventId: null,
+    });
   };
 
   render() {
     if (this.state.hasError && this.state.error && this.state.errorInfo) {
       const FallbackComponent = this.props.fallback || DefaultErrorFallback;
-      
+
       return (
         <FallbackComponent
           error={this.state.error}
           errorInfo={this.state.errorInfo}
           resetError={this.resetError}
-          eventId={this.state.eventId}
+          eventId={this.state.eventId || ''}
         />
       );
     }
@@ -301,30 +310,38 @@ export function useErrorHandler() {
 /**
  * Error boundary for specific features
  */
-export function FeatureErrorBoundary({ children, feature }: { children: ReactNode; feature: string }) {
+export function FeatureErrorBoundary({
+  children,
+  feature,
+}: {
+  children: ReactNode;
+  feature: string;
+}) {
   const handleError = (error: Error, errorInfo: ErrorInfo) => {
     console.error(`Error in ${feature}:`, error, errorInfo);
-    
+
     // Report feature-specific error
     fetch('/api/errors', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json' 
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         feature,
         error: {
           name: error.name,
           message: error.message,
-          stack: error.stack
+          stack: error.stack,
         },
         errorInfo,
-        timestamp: new Date().toISOString()})}).catch(console.error);
+        timestamp: new Date().toISOString(),
+      }),
+    }).catch(console.error);
   };
 
   const CustomFallback = ({ error, resetError }: ErrorFallbackProps) => (
-    <Alert 
-      severity="error" 
+    <Alert
+      severity="error"
       sx={{ m: 2 }}
       action={
         <Button color="inherit" size="small" onClick={resetError}>

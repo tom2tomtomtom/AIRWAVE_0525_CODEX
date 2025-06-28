@@ -443,14 +443,14 @@ const MonitoringDashboard: React.FC = () => {
             <Box>
               <Grid container spacing={3}>
                 {/* Metrics */}
-                {section.metrics.map((metric, index) => (
+                {section?.metrics.map((metric, index) => (
                   <Grid item xs={12} sm={6} md={4} key={index}>
                     <MetricCard metric={metric} />
                   </Grid>
                 ))}
 
                 {/* Charts */}
-                {section.charts.map(chart => (
+                {section?.charts.map(chart => (
                   <Grid item xs={12} md={6} key={chart.id}>
                     <Card>
                       <CardContent>
