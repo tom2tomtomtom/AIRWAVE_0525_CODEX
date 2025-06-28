@@ -1,6 +1,6 @@
 // Performance dashboard component
 import React from 'react';
-import { Card, CardContent, Typography, Grid2 as Grid } from '@mui/material';
+import { Card, CardContent, Typography, Grid } from '@mui/material';
 
 export const PerformanceDashboard: React.FC = () => {
   const metrics = {
@@ -13,7 +13,7 @@ export const PerformanceDashboard: React.FC = () => {
 
   return (
     <Grid container spacing={2}>
-      <Grid item xs={12} md={6}>
+      <Grid size={{ xs: 12, md: 6 }}>
         <Card>
           <CardContent>
             <Typography variant="h6">First Contentful Paint</Typography>
@@ -23,7 +23,7 @@ export const PerformanceDashboard: React.FC = () => {
           </CardContent>
         </Card>
       </Grid>
-      <Grid item xs={12} md={6}>
+      <Grid size={{ xs: 12, md: 6 }}>
         <Card>
           <CardContent>
             <Typography variant="h6">Largest Contentful Paint</Typography>
@@ -33,7 +33,7 @@ export const PerformanceDashboard: React.FC = () => {
           </CardContent>
         </Card>
       </Grid>
-      <Grid item xs={12} md={6}>
+      <Grid size={{ xs: 12, md: 6 }}>
         <Card>
           <CardContent>
             <Typography variant="h6">Time to Interactive</Typography>
@@ -43,7 +43,7 @@ export const PerformanceDashboard: React.FC = () => {
           </CardContent>
         </Card>
       </Grid>
-      <Grid item xs={12} md={6}>
+      <Grid size={{ xs: 12, md: 6 }}>
         <Card>
           <CardContent>
             <Typography variant="h6">Performance Score</Typography>

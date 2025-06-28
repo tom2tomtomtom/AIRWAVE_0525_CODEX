@@ -19,7 +19,8 @@ import {
   Stack,
   CircularProgress,
   Button,
-  Grid } from '@mui/material';
+  Grid,
+} from '@mui/material';
 import {
   TrendingUp as TrendingUpIcon,
   TrendingDown as TrendingDownIcon,
@@ -32,7 +33,8 @@ import {
   ThumbUp as LikesIcon,
   Share as SharesIcon,
   Download as DownloadIcon,
-  Refresh as RefreshIcon } from '@mui/icons-material';
+  Refresh as RefreshIcon,
+} from '@mui/icons-material';
 import {
   AreaChart,
   Area,
@@ -44,7 +46,8 @@ import {
   CartesianGrid,
   Tooltip as ChartTooltip,
   Legend,
-  ResponsiveContainer } from 'recharts';
+  ResponsiveContainer,
+} from 'recharts';
 import { format, subDays } from 'date-fns';
 import { useNotification } from '@/contexts/NotificationContext';
 
@@ -116,7 +119,8 @@ interface AnalyticsData {
 
 const PublishingAnalytics: React.FC<PublishingAnalyticsProps> = ({
   clientId,
-  platforms: _platforms }) => {
+  platforms: _platforms,
+}) => {
   const { showNotification } = useNotification();
   const [timeRange, setTimeRange] = useState('30d');
   // const [selectedMetric, setSelectedMetric] = useState('engagement'); // TODO: Implement metric selection
@@ -128,7 +132,8 @@ const PublishingAnalytics: React.FC<PublishingAnalyticsProps> = ({
     twitter: '#1DA1F2',
     linkedin: '#0A66C2',
     instagram: '#E4405F',
-    youtube: '#FF0000' };
+    youtube: '#FF0000',
+  };
 
   const getPlatformIcon = (platform: string) => {
     switch (platform) {
@@ -143,7 +148,7 @@ const PublishingAnalytics: React.FC<PublishingAnalyticsProps> = ({
       case 'youtube':
         return <YouTubeIcon sx={{ color: platformColors.youtube }} />;
       default:
-        return <Avatar sx={{ width: 24, height: 24 }}>{platform[0].toUpperCase()}</Avatar>;
+        return <Avatar sx={{ width: 24, height: 24 }}>{platform[0]?.toUpperCase()}</Avatar>;
     }
   };
 
@@ -170,7 +175,8 @@ const PublishingAnalytics: React.FC<PublishingAnalyticsProps> = ({
           twitter: Math.floor(baseReach * 0.25),
           linkedin: Math.floor(baseReach * 0.15),
           instagram: Math.floor(baseReach * 0.15),
-          youtube: Math.floor(baseReach * 0.05) };
+          youtube: Math.floor(baseReach * 0.05),
+        };
       });
 
       const totalPosts = timeSeriesData.reduce((sum, day) => sum + day.posts, 0);
@@ -187,8 +193,8 @@ const PublishingAnalytics: React.FC<PublishingAnalyticsProps> = ({
             posts: Math.floor(Math.random() * 40) - 20, // -20% to +20%
             reach: Math.floor(Math.random() * 60) - 30, // -30% to +30%
             engagement: Math.floor(Math.random() * 50) - 25, // -25% to +25%
-            engagementRate: Math.floor(Math.random() * 30) - 15 // -15% to +15%
-          }
+            engagementRate: Math.floor(Math.random() * 30) - 15, // -15% to +15%
+          },
         },
         platformMetrics: [
           {
@@ -197,35 +203,40 @@ const PublishingAnalytics: React.FC<PublishingAnalyticsProps> = ({
             reach: Math.floor(totalReach * 0.4),
             engagement: Math.floor(totalEngagement * 0.35),
             engagementRate: 4.2,
-            color: platformColors.facebook },
+            color: platformColors.facebook,
+          },
           {
             platform: 'Twitter',
             posts: Math.floor(totalPosts * 0.25),
             reach: Math.floor(totalReach * 0.25),
             engagement: Math.floor(totalEngagement * 0.3),
             engagementRate: 2.8,
-            color: platformColors.twitter },
+            color: platformColors.twitter,
+          },
           {
             platform: 'LinkedIn',
             posts: Math.floor(totalPosts * 0.2),
             reach: Math.floor(totalReach * 0.15),
             engagement: Math.floor(totalEngagement * 0.2),
             engagementRate: 5.1,
-            color: platformColors.linkedin },
+            color: platformColors.linkedin,
+          },
           {
             platform: 'Instagram',
             posts: Math.floor(totalPosts * 0.2),
             reach: Math.floor(totalReach * 0.15),
             engagement: Math.floor(totalEngagement * 0.12),
             engagementRate: 3.6,
-            color: platformColors.instagram },
+            color: platformColors.instagram,
+          },
           {
             platform: 'YouTube',
             posts: Math.floor(totalPosts * 0.05),
             reach: Math.floor(totalReach * 0.05),
             engagement: Math.floor(totalEngagement * 0.03),
             engagementRate: 6.2,
-            color: platformColors.youtube }
+            color: platformColors.youtube,
+          },
         ],
         timeSeriesData,
         topPosts: [
@@ -239,12 +250,13 @@ const PublishingAnalytics: React.FC<PublishingAnalyticsProps> = ({
               likes: 340,
               comments: 67,
               shares: 89,
-              engagementRate: 4.8
-            }
+              engagementRate: 4.8,
+            },
           },
           {
             id: '2',
-            content: 'Behind the scenes of our creative process. Here\'s how we bring ideas to life!',
+            content:
+              "Behind the scenes of our creative process. Here's how we bring ideas to life!",
             platform: 'Instagram',
             publishedAt: '2024-01-14T14:30:00Z',
             metrics: {
@@ -252,8 +264,8 @@ const PublishingAnalytics: React.FC<PublishingAnalyticsProps> = ({
               likes: 520,
               comments: 43,
               shares: 76,
-              engagementRate: 7.2
-            }
+              engagementRate: 7.2,
+            },
           },
           {
             id: '3',
@@ -265,17 +277,48 @@ const PublishingAnalytics: React.FC<PublishingAnalyticsProps> = ({
               likes: 180,
               comments: 34,
               shares: 45,
-              engagementRate: 4.6
-            }
+              engagementRate: 4.6,
+            },
           },
         ],
         engagementBreakdown: [
-          { platform: 'Facebook', likes: 1240, comments: 340, shares: 180, color: platformColors.facebook },
-          { platform: 'Twitter', likes: 890, comments: 120, shares: 450, color: platformColors.twitter },
-          { platform: 'LinkedIn', likes: 670, comments: 230, shares: 120, color: platformColors.linkedin },
-          { platform: 'Instagram', likes: 1560, comments: 180, shares: 90, color: platformColors.instagram },
-          { platform: 'YouTube', likes: 340, comments: 45, shares: 23, color: platformColors.youtube }
-        ] };
+          {
+            platform: 'Facebook',
+            likes: 1240,
+            comments: 340,
+            shares: 180,
+            color: platformColors.facebook,
+          },
+          {
+            platform: 'Twitter',
+            likes: 890,
+            comments: 120,
+            shares: 450,
+            color: platformColors.twitter,
+          },
+          {
+            platform: 'LinkedIn',
+            likes: 670,
+            comments: 230,
+            shares: 120,
+            color: platformColors.linkedin,
+          },
+          {
+            platform: 'Instagram',
+            likes: 1560,
+            comments: 180,
+            shares: 90,
+            color: platformColors.instagram,
+          },
+          {
+            platform: 'YouTube',
+            likes: 340,
+            comments: 45,
+            shares: 23,
+            color: platformColors.youtube,
+          },
+        ],
+      };
 
       setAnalyticsData(analyticsData);
     } catch (error: any) {
@@ -297,7 +340,11 @@ const PublishingAnalytics: React.FC<PublishingAnalyticsProps> = ({
   };
 
   const getTrendIcon = (trend: number) => {
-    return trend > 0 ? <TrendingUpIcon color="success" fontSize="small" /> : <TrendingDownIcon color="error" fontSize="small" />;
+    return trend > 0 ? (
+      <TrendingUpIcon color="success" fontSize="small" />
+    ) : (
+      <TrendingDownIcon color="error" fontSize="small" />
+    );
   };
 
   if (loading || !analyticsData) {
@@ -312,33 +359,24 @@ const PublishingAnalytics: React.FC<PublishingAnalyticsProps> = ({
     <Box sx={{ p: 3 }}>
       {/* Header Controls */}
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-        <Typography variant="h6">
-          Publishing Analytics
-        </Typography>
+        <Typography variant="h6">Publishing Analytics</Typography>
         <Stack direction="row" spacing={2}>
           <FormControl size="small" sx={{ minWidth: 120 }}>
             <InputLabel>Time Range</InputLabel>
             <Select
               value={timeRange}
               label="Time Range"
-              onChange={(e) => setTimeRange(e.target.value)}
+              onChange={e => setTimeRange(e.target.value)}
             >
               <MenuItem value="7d">Last 7 days</MenuItem>
               <MenuItem value="30d">Last 30 days</MenuItem>
               <MenuItem value="90d">Last 90 days</MenuItem>
             </Select>
           </FormControl>
-          <Button
-            startIcon={<RefreshIcon />}
-            onClick={loadAnalytics}
-            disabled={loading}
-          >
+          <Button startIcon={<RefreshIcon />} onClick={loadAnalytics} disabled={loading}>
             Refresh
           </Button>
-          <Button
-            startIcon={<DownloadIcon />}
-            variant="outlined"
-          >
+          <Button startIcon={<DownloadIcon />} variant="outlined">
             Export
           </Button>
         </Stack>
@@ -349,7 +387,9 @@ const PublishingAnalytics: React.FC<PublishingAnalyticsProps> = ({
         <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <Card>
             <CardContent>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+              <Box
+                sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}
+              >
                 <Box>
                   <Typography color="text.secondary" variant="body2" gutterBottom>
                     Total Posts
@@ -361,7 +401,9 @@ const PublishingAnalytics: React.FC<PublishingAnalyticsProps> = ({
                     {getTrendIcon(analyticsData.overview.trends.posts)}
                     <Typography
                       variant="body2"
-                      color={analyticsData.overview.trends.posts > 0 ? 'success.main' : 'error.main'}
+                      color={
+                        analyticsData.overview.trends.posts > 0 ? 'success.main' : 'error.main'
+                      }
                     >
                       {Math.abs(analyticsData.overview.trends.posts)}%
                     </Typography>
@@ -377,7 +419,9 @@ const PublishingAnalytics: React.FC<PublishingAnalyticsProps> = ({
         <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <Card>
             <CardContent>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+              <Box
+                sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}
+              >
                 <Box>
                   <Typography color="text.secondary" variant="body2" gutterBottom>
                     Total Reach
@@ -389,7 +433,9 @@ const PublishingAnalytics: React.FC<PublishingAnalyticsProps> = ({
                     {getTrendIcon(analyticsData.overview.trends.reach)}
                     <Typography
                       variant="body2"
-                      color={analyticsData.overview.trends.reach > 0 ? 'success.main' : 'error.main'}
+                      color={
+                        analyticsData.overview.trends.reach > 0 ? 'success.main' : 'error.main'
+                      }
                     >
                       {Math.abs(analyticsData.overview.trends.reach)}%
                     </Typography>
@@ -405,7 +451,9 @@ const PublishingAnalytics: React.FC<PublishingAnalyticsProps> = ({
         <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <Card>
             <CardContent>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+              <Box
+                sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}
+              >
                 <Box>
                   <Typography color="text.secondary" variant="body2" gutterBottom>
                     Total Engagement
@@ -417,7 +465,9 @@ const PublishingAnalytics: React.FC<PublishingAnalyticsProps> = ({
                     {getTrendIcon(analyticsData.overview.trends.engagement)}
                     <Typography
                       variant="body2"
-                      color={analyticsData.overview.trends.engagement > 0 ? 'success.main' : 'error.main'}
+                      color={
+                        analyticsData.overview.trends.engagement > 0 ? 'success.main' : 'error.main'
+                      }
                     >
                       {Math.abs(analyticsData.overview.trends.engagement)}%
                     </Typography>
@@ -433,7 +483,9 @@ const PublishingAnalytics: React.FC<PublishingAnalyticsProps> = ({
         <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <Card>
             <CardContent>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+              <Box
+                sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}
+              >
                 <Box>
                   <Typography color="text.secondary" variant="body2" gutterBottom>
                     Avg. Engagement Rate
@@ -445,7 +497,11 @@ const PublishingAnalytics: React.FC<PublishingAnalyticsProps> = ({
                     {getTrendIcon(analyticsData.overview.trends.engagementRate)}
                     <Typography
                       variant="body2"
-                      color={analyticsData.overview.trends.engagementRate > 0 ? 'success.main' : 'error.main'}
+                      color={
+                        analyticsData.overview.trends.engagementRate > 0
+                          ? 'success.main'
+                          : 'error.main'
+                      }
                     >
                       {Math.abs(analyticsData.overview.trends.engagementRate)}%
                     </Typography>
@@ -517,7 +573,7 @@ const PublishingAnalytics: React.FC<PublishingAnalyticsProps> = ({
                       outerRadius={80}
                       fill="#8884d8"
                       dataKey="engagement"
-                      label={(entry) => `${entry.platform}: ${entry.engagementRate}%`}
+                      label={entry => `${entry.platform}: ${entry.engagementRate}%`}
                     >
                       {analyticsData.platformMetrics.map((entry, index) => (
                         <Cell key={`cell-${index}`} fill={entry.color} />
@@ -565,7 +621,13 @@ const PublishingAnalytics: React.FC<PublishingAnalyticsProps> = ({
                       <Chip
                         label={`${platform.engagementRate}%`}
                         size="small"
-                        color={platform.engagementRate > 4 ? 'success' : platform.engagementRate > 2 ? 'warning' : 'default'}
+                        color={
+                          platform.engagementRate > 4
+                            ? 'success'
+                            : platform.engagementRate > 2
+                              ? 'warning'
+                              : 'default'
+                        }
                       />
                     </TableCell>
                   </TableRow>
@@ -600,7 +662,9 @@ const PublishingAnalytics: React.FC<PublishingAnalyticsProps> = ({
                   <TableRow key={post.id}>
                     <TableCell>
                       <Typography variant="body2" sx={{ maxWidth: 200 }}>
-                        {post.content.length > 50 ? `${post.content.substring(0, 50)}...` : post.content}
+                        {post.content.length > 50
+                          ? `${post.content.substring(0, 50)}...`
+                          : post.content}
                       </Typography>
                     </TableCell>
                     <TableCell>

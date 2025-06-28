@@ -19,23 +19,7 @@ import {
   Grid,
 } from '@mui/material';
 import { Add as AddIcon, Delete as DeleteIcon } from '@mui/icons-material';
-interface Brief {
-  id: string;
-  title: string;
-  type: 'campaign' | 'content' | 'product' | 'general';
-  campaignId?: string;
-  objective: string;
-  targetAudience: string;
-  keyMessages: string[];
-  tone: string;
-  deliverables: string[];
-  timeline: string;
-  budget?: string;
-  additionalNotes?: string;
-  status: 'draft' | 'submitted' | 'in_progress' | 'completed';
-  dateCreated: string;
-  lastModified: string;
-}
+
 interface BriefDialogProps {
   open: boolean;
   onClose: () => void;
@@ -58,7 +42,7 @@ const BriefDialog: React.FC<BriefDialogProps> = ({
 }) => {
   // const steps = [
   //   'Basic Information',
-  //   'Objectives & Audience', 
+  //   'Objectives & Audience',
   //   'Messages & Deliverables',
   //   'Timeline & Budget',
   // ]; // TODO: Add step indicator UI
