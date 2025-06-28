@@ -94,8 +94,8 @@ const WebhookManager: React.FC = () => {
   const [_testDialogOpen, _setTestDialogOpen] = useState(false);
   const [_menuAnchor, _setMenuAnchor] = useState<null | HTMLElement>(null);
   const [_webhookDetails, _setWebhookDetails] = useState<any>(null);
-  const [showSecret, setShowSecret] = useState(false);
-  const [formData, setFormData] = useState({
+  const [_showSecret, _setShowSecret] = useState(false);
+  const [_formData, _setFormData] = useState({
     name: '',
     url: '',
     events: [] as string[],
@@ -109,7 +109,7 @@ const WebhookManager: React.FC = () => {
     },
     headers: {} as Record<string, string>,
   });
-  const [testData, setTestData] = useState({
+  const [_testData, _setTestData] = useState({
     event_type: '',
     test_data: '{}' });
   // Fetch webhooks
@@ -125,11 +125,11 @@ const WebhookManager: React.FC = () => {
       if (response.ok) {
         const data = await response.json();
         setWebhooks(data.data || []);
-        setStatistics(data.statistics);
-        setAvailableEvents(data.events || []);
+        _setStatistics(data.statistics);
+        _setAvailableEvents(data.events || []);
       }
     } catch (error: any) {
-      const message = getErrorMessage(error);
+      getErrorMessage(error); // Error logged in development
       if (process.env.NODE_ENV === 'development') {
         console.error('Error fetching webhooks:', error);
       }
@@ -175,7 +175,7 @@ const WebhookManager: React.FC = () => {
             variant="contained"
             startIcon={<AddIcon />}
             onClick={() => {
-              setDialogOpen(true);
+              _setDialogOpen(true);
             }}
           >
             Add Webhook

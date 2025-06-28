@@ -294,7 +294,7 @@ export function withErrorBoundary<P extends object>(
 ) {
   return function WrappedComponent(props: P) {
     return (
-      <WorkflowErrorBoundary context={context} showDetails={process.env.NODE_ENV === 'development'}>
+      <WorkflowErrorBoundary {...(context && { context })} showDetails={process.env.NODE_ENV === 'development'}>
         <Component {...props} />
       </WorkflowErrorBoundary>
     );

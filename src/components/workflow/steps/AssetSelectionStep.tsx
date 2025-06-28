@@ -54,12 +54,12 @@ export const AssetSelectionStep: React.FC<AssetSelectionStepProps> = ({
   const {
     briefData,
     selectedAssets,
-    processing,
+    processing: _processing,
     lastError,
     clientId} = state;
 
-  const [activeTab, setActiveTab] = useState(0);
-  const [generatingAssets, setGeneratingAssets] = useState(false);
+  const [_activeTab, _setActiveTab] = useState(0);
+  const [_generatingAssets, _setGeneratingAssets] = useState(false);
   const [showAssetBrowser, setShowAssetBrowser] = useState(false);
   const [showAIGenerator, setShowAIGenerator] = useState(false);
 
@@ -77,7 +77,7 @@ export const AssetSelectionStep: React.FC<AssetSelectionStepProps> = ({
       id: browserAsset.id,
       type: workflowType,
       url: browserAsset.url,
-      content: browserAsset.type === 'text' ? browserAsset.description : undefined,
+      content: browserAsset.type === 'text' ? (browserAsset.description || '') : '',
       metadata: {
         ...browserAsset.metadata,
         name: browserAsset.name,
@@ -210,7 +210,10 @@ export const AssetSelectionStep: React.FC<AssetSelectionStepProps> = ({
   const getAssetCounts = () => {
     const counts = { image: 0, video: 0, copy: 0, template: 0 };
     selectedAssets.forEach((asset: any) => {
-      counts[asset.type] = (counts[asset.type] || 0) + 1;
+      const assetType = asset.type as keyof typeof counts;
+      if (assetType in counts) {
+        counts[assetType] = (counts[assetType] || 0) + 1;
+      }
     });
     return counts;
   };
@@ -405,7 +408,7 @@ export const AssetSelectionStep: React.FC<AssetSelectionStepProps> = ({
         </DialogTitle>
         <DialogContent>
           <AssetBrowser
-            clientId={clientId || undefined}
+            {...(clientId && { clientId })}
             onAssetSelect={handleAssetBrowserSelect}
             selectionMode={true}
           />
