@@ -101,7 +101,7 @@ export class AICircuitBreaker {
 
     // Check circuit state
     const stats = await this.getStats(circuitKey);
-    const state = await this.determineState(stats, config);
+    const state = await this.determineState(stats, config!);
 
     // Update stats
     await this.incrementTotalCalls(circuitKey);
@@ -121,7 +121,7 @@ export class AICircuitBreaker {
       case CircuitState.HALF_OPEN:
         // Allow limited calls to test service recovery
         const halfOpenCalls = await this.getHalfOpenCalls(circuitKey);
-        if (halfOpenCalls >= config.halfOpenMaxCalls) {
+        if (config && halfOpenCalls >= config.halfOpenMaxCalls) {
           await this.incrementRejectedCalls(circuitKey);
           console.warn(`🚫 Circuit breaker HALF_OPEN for ${circuitKey} - max test calls reached`);
 
@@ -294,7 +294,7 @@ export class AICircuitBreaker {
    */
   private getConfigForKey(circuitKey: string): CircuitBreakerConfig {
     const service = circuitKey.split(':')[0];
-    return this.configs[service] || this.configs.default;
+    return this.configs[service!] || this.configs['default'];
   }
 
   /**

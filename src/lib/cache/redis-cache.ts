@@ -64,12 +64,12 @@ export class RedisCache {
         password: config.password,
         database: config.db,
         socket: {
-          reconnectStrategy: (retries) => Math.min(retries * 50, 500),
+          reconnectStrategy: (retries: number) => Math.min(retries * 50, 500),
           connectTimeout: 5000,
           commandTimeout: 5000 },
       }) as RedisClientType;
       
-      this.client.on('error', (error) => {
+      this.client.on('error', (error: any) => {
         logger.error('Redis cache error', error);
         this.isConnected = false;
         this.stats.errors++;
@@ -322,7 +322,7 @@ export class RedisCache {
       if (this.isConnected && this.client) {
         const values = await this.client.mGet(cacheKeys);
         return Promise.all(
-          values.map(async (value, index) => {
+          values.map(async (value: any, _index: any) => {
             if (value !== null) {
               this.stats.hits++;
               return await this.deserializeValue(value, opts);

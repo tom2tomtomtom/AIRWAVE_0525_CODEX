@@ -132,8 +132,8 @@ export const validateEnvironmentRequirements = (env: Environment, config: Partia
   });
 
   // Check recommended secrets for production
-  if (env === 'production' && rules.recommendedSecrets) {
-    rules.recommendedSecrets.forEach((secret: any) => {
+  if (env === 'production' && (rules as any).recommendedSecrets) {
+    (rules as any).recommendedSecrets.forEach((secret: any) => {
       if (!config[secret as keyof AppConfig]) {
         warnings.push(`Missing recommended secret for production: ${secret}`);
       }
@@ -141,7 +141,9 @@ export const validateEnvironmentRequirements = (env: Environment, config: Partia
   }
 
   // Add environment-specific warnings
-  warnings.push(...(rules.warnings || []));
+  if ((rules as any).warnings) {
+    warnings.push(...(rules as any).warnings);
+  }
 
   // Production-specific validations
   if (env === 'production') {

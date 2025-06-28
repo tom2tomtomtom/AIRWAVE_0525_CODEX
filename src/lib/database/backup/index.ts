@@ -46,7 +46,7 @@ export class DatabaseBackupManager {
     const startTime = Date.now();
 
     try {
-      loggers.general.info('Starting database backup', options);
+      loggers.general.info('Starting database backup', { destination: options.destination });
 
       // Ensure backup directory exists
       await fs.mkdir(path.dirname(options.destination), { recursive: true });
@@ -59,7 +59,7 @@ export class DatabaseBackupManager {
       }
 
       // Execute backup
-      const { stdout, stderr } = await execAsync(dumpCommand);
+      const { stdout: _stdout, stderr } = await execAsync(dumpCommand);
 
       if (stderr && !stderr.includes('WARNING')) {
         throw new Error(`Backup failed: ${stderr}`);
@@ -100,7 +100,7 @@ export class DatabaseBackupManager {
     const startTime = Date.now();
 
     try {
-      loggers.general.info('Starting database restore', options);
+      loggers.general.info('Starting database restore', { backupFile: options.backupFile });
 
       // Check if backup file exists
       await fs.access(options.backupFile);
@@ -117,7 +117,7 @@ export class DatabaseBackupManager {
       }
 
       // Execute restore
-      const { stdout, stderr } = await execAsync(restoreCommand);
+      const { stdout: _stdout2, stderr } = await execAsync(restoreCommand);
 
       if (stderr && !stderr.includes('WARNING') && !stderr.includes('NOTICE')) {
         throw new Error(`Restore failed: ${stderr}`);

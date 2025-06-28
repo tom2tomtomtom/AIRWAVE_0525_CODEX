@@ -117,7 +117,7 @@ export class AIResponseCache {
       let cachedResponse: CachedResponse<T> | null = null;
 
       if (this.useRedis) {
-        cachedResponse = await redisManager.get<CachedResponse<T>>(key);
+        cachedResponse = await redisManager.get(key) as CachedResponse<T> | null;
       } else {
         cachedResponse = (this.memoryCache.get(key) as CachedResponse<T>) || null;
       }
@@ -130,7 +130,7 @@ export class AIResponseCache {
       const now = Date.now();
       const ageInSeconds = (now - cachedResponse.timestamp) / 1000;
 
-      if (ageInSeconds > config.ttl) {
+      if (config && ageInSeconds > config.ttl) {
         // Cache expired, remove it
         await this.delete(operation, input);
         return null;
@@ -161,13 +161,13 @@ export class AIResponseCache {
         data,
         timestamp: Date.now(),
         version: '1.0',
-        metadata,
+        ...(metadata && { metadata }),
       };
 
       if (this.useRedis) {
-        const success = await redisManager.set(key, cachedResponse, config.ttl);
+        const success = await redisManager.set(key, cachedResponse, config?.ttl || 3600);
         if (success) {
-          loggers.general.error(`💾 Cached ${operation} response for ${config.ttl}s`);
+          loggers.general.error(`💾 Cached ${operation} response for ${config?.ttl || 3600}s`);
         }
         return success;
       } else {
@@ -324,8 +324,10 @@ export class AIResponseCache {
    * Update cache configuration for an operation
    */
   updateConfig(operation: string, config: Partial<CacheConfig>): void {
+    const existingConfig = this.cacheConfigs[operation] || { ttl: 3600, keyPrefix: 'default' };
     this.cacheConfigs[operation] = {
-      ...this.cacheConfigs[operation],
+      ttl: existingConfig.ttl,
+      keyPrefix: existingConfig.keyPrefix,
       ...config,
     };
   }
