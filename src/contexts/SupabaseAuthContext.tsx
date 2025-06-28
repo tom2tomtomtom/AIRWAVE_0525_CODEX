@@ -220,7 +220,9 @@ export const SupabaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({ 
       console.error('Login error:', error);
       return {
         success: false,
-        error: error.message || 'Login failed. Please try again.',
+        error:
+          (error instanceof Error ? error.message : 'Login failed') ||
+          'Login failed. Please try again.',
       };
     }
   };

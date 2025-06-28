@@ -59,7 +59,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           }
         }
       } catch (error) {
-        const _message = getErrorMessage(error);
+        getErrorMessage(error);
         if (process.env.NODE_ENV === 'development') {
           console.error('Authentication error:', error);
         }
@@ -118,7 +118,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         throw new Error('Invalid response from server');
       }
     } catch (error) {
-      const _message = getErrorMessage(error);
+      getErrorMessage(error);
       console.error('Login error:', error);
       throw error;
     } finally {
@@ -167,7 +167,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         throw new Error('Invalid response from server');
       }
     } catch (error) {
-      const _message = getErrorMessage(error);
+      getErrorMessage(error);
       console.error('Signup error:', error);
       throw error;
     } finally {

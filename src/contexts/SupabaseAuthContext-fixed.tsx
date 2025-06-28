@@ -200,7 +200,7 @@ export const SupabaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({ 
       throw new Error('No session returned from login');
     } catch (error: unknown) {
       console.error('💥 Login error:', error);
-      return { success: false, error: error.message };
+      return { success: false, error: error instanceof Error ? error.message : 'Login failed' };
     }
   };
 
@@ -269,7 +269,10 @@ export const SupabaseAuthProvider: React.FC<{ children: React.ReactNode }> = ({ 
       return { success: false };
     } catch (error: unknown) {
       console.error('💥 Session refresh error:', error);
-      return { success: false, error: error.message };
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Session refresh failed',
+      };
     }
   };
 

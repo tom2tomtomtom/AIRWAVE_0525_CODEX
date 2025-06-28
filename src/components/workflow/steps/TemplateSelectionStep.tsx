@@ -141,10 +141,11 @@ export const TemplateSelectionStep: React.FC<TemplateSelectionStepProps> = ({
   // Group templates by category
   const templatesByCategory = templates.reduce(
     (acc, template) => {
-      if (!acc[template.category]) {
-        acc[template.category] = [];
+      const category = template.category || 'uncategorized';
+      if (!acc[category]) {
+        acc[category] = [];
       }
-      acc[template.category].push(template);
+      acc[category].push(template);
       return acc;
     },
     {} as Record<string, Template[]>
@@ -157,7 +158,6 @@ export const TemplateSelectionStep: React.FC<TemplateSelectionStepProps> = ({
     // Enhanced recommendation logic based on platforms and brief content
     const platforms = briefData.platforms || [];
     const objective = briefData.objective?.toLowerCase() || '';
-    const _targetAudience = briefData.targetAudience?.toLowerCase() || '';
 
     let recommendedTemplates: Template[] = [];
 

@@ -105,11 +105,11 @@ export const RenderStep: React.FC<RenderStepProps> = ({ onPrevious, onComplete }
       const success = Math.random() > 0.1; // 90% success rate
       setRenderJobs(prev =>
         prev.map((j: any) =>
-          j.id === job.id
+          j.id === job?.id
             ? {
                 ...j,
                 status: success ? ('completed' as const) : ('failed' as const),
-                videoUrl: success ? `https://example.com/video-${job.id}.mp4` : undefined,
+                videoUrl: success ? `https://example.com/video-${job?.id}.mp4` : undefined,
                 error: success ? undefined : 'Rendering failed due to template incompatibility',
               }
             : j
