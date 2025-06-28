@@ -163,7 +163,7 @@ export const ActionButton: React.FC<ActionButtonProps> = ({
     <Button
       {...props}
       {...accessibilityProps}
-      {...variantStyles}
+      variant={variantStyles.variant}
       disabled={isDisabled}
       onClick={onClick}
       startIcon={

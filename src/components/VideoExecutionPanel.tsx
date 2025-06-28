@@ -238,7 +238,7 @@ const VideoExecutionPanel: React.FC<VideoExecutionPanelProps> = ({
         showNotification(error.error || 'Failed to start video execution', 'error');
       }
     } catch (error: any) {
-      const _message = getErrorMessage(error);
+      getErrorMessage(error); // Error handled by notification
       showNotification('Error starting video execution', 'error');
     } finally {
       setIsExecuting(false);
@@ -262,7 +262,7 @@ const VideoExecutionPanel: React.FC<VideoExecutionPanelProps> = ({
         showNotification(error.error || 'Failed to retry execution', 'error');
       }
     } catch (error: any) {
-      const _message = getErrorMessage(error);
+      getErrorMessage(error); // Error handled by notification
       showNotification('Error retrying execution', 'error');
     }
   };
@@ -284,7 +284,7 @@ const VideoExecutionPanel: React.FC<VideoExecutionPanelProps> = ({
         showNotification(error.error || 'Failed to delete execution', 'error');
       }
     } catch (error: any) {
-      const _message = getErrorMessage(error);
+      getErrorMessage(error); // Error handled by notification
       showNotification('Error deleting execution', 'error');
     }
   };

@@ -58,16 +58,16 @@ interface Webhook {
   };
 }
 
-interface _WebhookDelivery {
-  id: string;
-  webhook_id: string;
-  event_type: string;
-  payload: any;
-  response_status: number;
-  response_body: string;
-  success: boolean;
-  delivered_at: string;
-}
+// interface _WebhookDelivery {
+//   id: string;
+//   webhook_id: string;
+//   event_type: string;
+//   payload: any;
+//   response_status: number;
+//   response_body: string;
+//   success: boolean;
+//   delivered_at: string;
+// }
 
 interface WebhookStatistics {
   total: number;
@@ -90,10 +90,10 @@ const WebhookManager: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [_dialogOpen, _setDialogOpen] = useState(false);
   const [_detailsDialogOpen, _setDetailsDialogOpen] = useState(false);
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [testDialogOpen, setTestDialogOpen] = useState(false);
-  const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
-  const [webhookDetails, setWebhookDetails] = useState<any>(null);
+  const [_deleteDialogOpen, _setDeleteDialogOpen] = useState(false);
+  const [_testDialogOpen, _setTestDialogOpen] = useState(false);
+  const [_menuAnchor, _setMenuAnchor] = useState<null | HTMLElement>(null);
+  const [_webhookDetails, _setWebhookDetails] = useState<any>(null);
   const [showSecret, setShowSecret] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
