@@ -158,7 +158,10 @@ export class DatabaseBackupManager {
     const startTime = Date.now();
 
     try {
-      loggers.general.info('Starting incremental backup', { tables, since });
+      loggers.general.info('Starting incremental backup', {
+        tableCount: tables.length,
+        since: since?.toISOString(),
+      });
 
       const backupData: Record<string, any[]> = {};
 
