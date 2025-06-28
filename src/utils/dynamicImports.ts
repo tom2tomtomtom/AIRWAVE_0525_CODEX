@@ -4,9 +4,7 @@
  */
 
 import dynamic from 'next/dynamic';
-import { ComponentType } from 'react';
-import { loggers } from '@/lib/logger';
-
+import React, { ComponentType } from 'react';
 
 /**
  * Default loading component reference
@@ -32,7 +30,7 @@ export function createLazyComponent<T = Record<string, never>>(
   const { fallback = LoadingFallback, ssr = false } = options;
 
   return dynamic(importFn, {
-    loading: fallback,
+    loading: fallback ? () => React.createElement(fallback as React.ComponentType) : undefined,
     ssr,
   });
 }
@@ -50,23 +48,11 @@ export const LazyVideoEditor = createLazyComponent(
   { ssr: false }
 );
 
-export const LazyAnalytics = createLazyComponent(() => import('@/components/Analytics/Analytics'), {
-  ssr: false,
-});
-
-export const LazyWorkflowCanvas = createLazyComponent(
-  () => import('@/components/Workflow/WorkflowCanvas'),
-  { ssr: false }
-);
-
-export const LazyBriefUpload = createLazyComponent(() => import('@/components/Forms/BriefUpload'), {
-  ssr: false,
-});
-
-export const LazyAssetManager = createLazyComponent(
-  () => import('@/components/Assets/AssetManager'),
-  { ssr: false }
-);
+// Temporarily disabled - components don't exist or have different paths
+export const LazyAnalytics = null;
+export const LazyWorkflowCanvas = null;
+export const LazyBriefUpload = null;
+export const LazyAssetManager = null;
 */
 
 // Placeholder exports to maintain module structure
@@ -106,7 +92,7 @@ export class FeatureLazyLoader {
    */
   static async loadFeature<T>(featureName: string, importFn: () => Promise<T>): Promise<T> {
     if (this.cache.has(featureName)) {
-      return this.cache.get(featureName);
+      return this.cache.get(featureName) as T;
     }
 
     const promise = importFn().catch(error => {
@@ -154,7 +140,7 @@ export const loadAnalyticsEngine = () =>
   FeatureLazyLoader.loadFeature('analytics-engine', () => import('@/lib/analytics/engine'));
 */
 
-// Placeholder functions to maintain module structure  
+// Placeholder functions to maintain module structure
 export const loadAIProcessor = () => Promise.resolve(null);
 export const loadVideoGenerator = () => Promise.resolve(null);
 export const loadAnalyticsEngine = () => Promise.resolve(null);
@@ -168,7 +154,7 @@ export const routeBasedComponents = {
   // Dashboard routes
   dashboard: () => import('@/pages/dashboard'),
   campaigns: () => import('@/pages/campaigns'),
-  analytics: () => import('@/pages/analytics'),
+  analytics: () => import('@/pages/analytics.tsx'),
 
   // Content creation routes
   briefUpload: () => import('@/pages/brief/upload'),

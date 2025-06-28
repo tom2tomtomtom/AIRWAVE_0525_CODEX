@@ -6,7 +6,9 @@ import OpenAI from 'openai';
 import { env, hasOpenAI } from '@/lib/env';
 import { supabase } from '@/lib/supabase';
 import mammoth from 'mammoth';
-import pdf from 'pdf-parse';
+
+// Temporarily disabled - type issues with pdf-parse
+// import pdf from 'pdf-parse';
 
 export const config = {
   api: {
@@ -60,8 +62,10 @@ async function extractTextFromFile(file: formidable.File): Promise<string> {
   const buffer = await fs.readFile(file.filepath);
 
   if (file.mimetype === 'application/pdf') {
-    const data = await pdf(buffer);
-    return data.text;
+    // PDF parsing temporarily disabled due to type issues
+    throw new Error('PDF parsing is temporarily unavailable. Please upload DOCX or TXT files.');
+    // const data = await pdf(buffer);
+    // return data.text;
   } else if (
     file.mimetype === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
   ) {

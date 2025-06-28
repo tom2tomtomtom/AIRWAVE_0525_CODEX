@@ -124,7 +124,7 @@ export class AssetManager {
     'text/plain',
   ];
 
-  private async getSupabase(): Promise<void> {
+  private async getSupabase() {
     return await this.supabasePromise;
   }
 
@@ -143,7 +143,7 @@ export class AssetManager {
       autoOptimize = true,
       generateThumbnail = true,
       analyzeWithAI = true,
-      collectionId
+      collectionId,
     } = options;
 
     try {
@@ -152,7 +152,7 @@ export class AssetManager {
         fileSize: file.size,
         briefId,
         category,
-        usage
+        usage,
       });
 
       // Validate file
@@ -177,7 +177,7 @@ export class AssetManager {
         metadata: {
           description,
           altText,
-          keywords: tags
+          keywords: tags,
         },
         tags,
         category,
@@ -185,7 +185,7 @@ export class AssetManager {
         status: 'uploading',
         uploadedAt: new Date(),
         updatedAt: new Date(),
-        uploadedBy
+        uploadedBy,
       };
 
       // Update status to processing
@@ -268,14 +268,14 @@ export class AssetManager {
         assetId,
         fileName,
         fileSize: asset.fileSize,
-        url: asset.url
+        url: asset.url,
       });
 
       return asset;
     } catch (error: any) {
       const classified = classifyError(error as Error, {
         route: 'asset-manager',
-        metadata: { fileName: file.name, briefId, fileSize: file.size }
+        metadata: { fileName: file.name, briefId, fileSize: file.size },
       });
 
       logger.error('Asset upload failed', classified.originalError);
@@ -298,7 +298,7 @@ export class AssetManager {
       sortBy = 'uploadedAt',
       sortOrder = 'desc',
       limit = 20,
-      offset = 0
+      offset = 0,
     } = options;
 
     try {
@@ -338,7 +338,7 @@ export class AssetManager {
       return {
         assets,
         total,
-        hasMore
+        hasMore,
       };
     } catch (error: any) {
       logger.error('Asset search failed', error);
@@ -421,7 +421,7 @@ export class AssetManager {
         usage,
         createdAt: new Date(),
         updatedAt: new Date(),
-        createdBy
+        createdBy,
       };
 
       // Save to database
@@ -582,7 +582,7 @@ export class AssetManager {
     // Optimize main image
     const optimized = await optimizeImage(buffer, {
       quality: 90,
-      format: 'webp'
+      format: 'webp',
     });
 
     // Generate thumbnail if requested
@@ -592,7 +592,7 @@ export class AssetManager {
         width: 300,
         height: 300,
         quality: 80,
-        format: 'jpeg'
+        format: 'jpeg',
       });
       thumbnail = thumbResult.buffer;
     }
@@ -602,13 +602,13 @@ export class AssetManager {
       thumbnail,
       dimensions: {
         width: analysis.metadata.width,
-        height: analysis.metadata.height
+        height: analysis.metadata.height,
       },
-  colorPalette: [analysis.dominantColor],
+      colorPalette: [analysis.dominantColor],
       dominantColor: analysis.dominantColor,
       format: analysis.metadata.format,
       hasTransparency: analysis.hasTransparency,
-      isAnimated: analysis.isAnimated
+      isAnimated: analysis.isAnimated,
     };
   }
 
@@ -624,7 +624,7 @@ export class AssetManager {
       duration: 0,
       fps: 30,
       codec: 'h264',
-      dimensions: { width: 1920, height: 1080 }
+      dimensions: { width: 1920, height: 1080 },
     };
   }
 
@@ -636,7 +636,7 @@ export class AssetManager {
     // In production, would parse PDF/DOC files
     return {
       pageCount: 1,
-      wordCount: 0
+      wordCount: 0,
     };
   }
 
@@ -648,7 +648,7 @@ export class AssetManager {
     try {
       const supabase = await this.getSupabase();
       const { data, error } = await supabase.storage.from(bucket).upload(path, file, {
-        upsert: true
+        upsert: true,
       });
 
       if (error) {
@@ -659,12 +659,12 @@ export class AssetManager {
 
       return {
         success: true,
-        url: urlData.publicUrl
+        url: urlData.publicUrl,
       };
     } catch (error: any) {
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Unknown error'
+        error: error instanceof Error ? error.message : 'Unknown error',
       };
     }
   }
@@ -674,7 +674,10 @@ export class AssetManager {
     const { error } = await supabase.storage.from(bucket).remove([path]);
 
     if (error) {
-      logger.warn('Failed to delete file from storage', error);
+      logger.warn('Failed to delete file from storage', {
+        errorMessage: error.message,
+        errorCode: error.statusCode,
+      });
     }
   }
 
@@ -686,7 +689,7 @@ export class AssetManager {
       objects: ['object1', 'object2'],
       mood: 'professional',
       style: 'modern',
-      confidence: 0.85
+      confidence: 0.85,
     };
   }
 
@@ -712,7 +715,7 @@ export class AssetManager {
       status: asset.status,
       uploaded_at: asset.uploadedAt.toISOString(),
       updated_at: asset.updatedAt.toISOString(),
-      uploaded_by: asset.uploadedBy
+      uploaded_by: asset.uploadedBy,
     });
 
     if (error) {
@@ -733,7 +736,7 @@ export class AssetManager {
       usage: collection.usage,
       created_at: collection.createdAt.toISOString(),
       updated_at: collection.updatedAt.toISOString(),
-      created_by: collection.createdBy
+      created_by: collection.createdBy,
     });
 
     if (error) {
@@ -746,7 +749,7 @@ export class AssetManager {
     const { error } = await supabase.from('collection_assets').upsert({
       collection_id: collectionId,
       asset_id: assetId,
-      added_at: new Date().toISOString()
+      added_at: new Date().toISOString(),
     });
 
     if (error) {
@@ -802,7 +805,7 @@ export class AssetManager {
       status: row.status,
       uploadedAt: new Date(row.uploaded_at),
       updatedAt: new Date(row.updated_at),
-      uploadedBy: row.uploaded_by
+      uploadedBy: row.uploaded_by,
     };
   }
 
@@ -819,7 +822,7 @@ export class AssetManager {
       usage: row.usage,
       createdAt: new Date(row.created_at),
       updatedAt: new Date(row.updated_at),
-      createdBy: row.created_by
+      createdBy: row.created_by,
     };
   }
 
