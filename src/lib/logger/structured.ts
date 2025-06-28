@@ -1,5 +1,5 @@
 import winston from 'winston';
-import { getLoggingConfig } from '@/lib/config';
+// import { getLoggingConfig } from '@/lib/config'; // Function not available
 
 export interface LogContext {
   userId?: string;
@@ -389,7 +389,9 @@ export class LoggerFactory {
   }
 
   static createUserLogger(userId: string, clientId?: string): StructuredLogger {
-    return this.getLogger('user').child({ userId, clientId });
+    const context: any = { userId };
+    if (clientId) context.clientId = clientId;
+    return this.getLogger('user').child(context);
   }
 }
 

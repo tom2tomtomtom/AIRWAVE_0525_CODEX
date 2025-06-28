@@ -1,5 +1,5 @@
 import winston from 'winston';
-import { getLoggingConfig } from '@/lib/config';
+// import { getLoggingConfig } from '@/lib/config'; // Function not available
 import {
   StructuredLogger,
   LoggerFactory,
@@ -100,9 +100,12 @@ export const createRequestLogger = (
   userId?: string,
   clientId?: string
 ): StructuredLogger => {
+  const context: any = {};
+  if (userId) context.userId = userId;
+  if (clientId) context.clientId = clientId;
   return LoggerFactory.getLogger('request')
     .withCorrelationId(requestId)
-    .child({ userId, clientId });
+    .child(context);
 };
 
 // Middleware logger for Express/Next.js
@@ -187,14 +190,7 @@ export const setupGracefulShutdown = () => {
 export const initializeLogging = () => {
   const logger = getLogger('system');
 
-  logger.info('Logging system initialized', {
-    environment: process.env.NODE_ENV || 'development',
-    logLevel: getLoggingConfig().level,
-    transports: {
-      console: getLoggingConfig().console.enabled,
-      file: getLoggingConfig().file.enabled,
-    },
-  });
+  logger.info('Logging system initialized');
 
   // Set up graceful shutdown
   setupGracefulShutdown();
@@ -207,8 +203,6 @@ export const initializeLogging = () => {
 
   // Handle unhandled promise rejections
   process.on('unhandledRejection', (reason, promise) => {
-    logger.error('Unhandled promise rejection', reason as Error, {
-      promise: promise.toString(),
-    });
+    logger.error('Unhandled promise rejection', reason as Error);
   });
 };

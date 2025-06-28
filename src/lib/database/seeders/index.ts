@@ -329,7 +329,7 @@ export class DatabaseSeeder {
     ];
   }
 
-  private getCampaignSeeds(environment: string): Omit<Campaign, 'created_at' | 'updated_at'>[] {
+  private getCampaignSeeds(_environment: string): Omit<Campaign, 'created_at' | 'updated_at'>[] {
     return [
       {
         id: '33333333-4444-5555-6666-777777777777',

@@ -63,6 +63,9 @@ export async function setupMFA(userId: string, userEmail: string): Promise<MFASe
   const qrCodeUrl = await generateQRCode(secret, userEmail);
 
   // Store MFA configuration in database
+  if (!supabase) {
+    throw new Error('Supabase client not available');
+  }
   const { error } = await supabase.from('user_mfa').upsert({
     user_id: userId,
     secret_encrypted: await encryptSecret(secret),
@@ -92,6 +95,9 @@ export async function verifyAndEnableMFA(
 ): Promise<MFAValidationResult> {
   try {
     // Get user's MFA configuration
+    if (!supabase) {
+      throw new Error('Supabase client not available');
+    }
     const { data: mfaConfig, error } = await supabase
       .from('user_mfa')
       .select('secret_encrypted, is_enabled')
@@ -115,6 +121,9 @@ export async function verifyAndEnableMFA(
     }
 
     // Enable MFA
+    if (!supabase) {
+      throw new Error('Supabase client not available');
+    }
     const { error: updateError } = await supabase
       .from('user_mfa')
       .update({
