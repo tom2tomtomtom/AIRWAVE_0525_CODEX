@@ -392,8 +392,8 @@ const MonitoringDashboard: React.FC = () => {
             <Tab
               key={index}
               label={label}
-              icon={
-                index === tabLabels.length - 1 ? (
+              {...(index === tabLabels.length - 1 && {
+                icon: (
                   <Box display="flex" alignItems="center" gap={0.5}>
                     <NotificationsIcon />
                     {alerts.length > 0 && (
@@ -405,8 +405,8 @@ const MonitoringDashboard: React.FC = () => {
                       />
                     )}
                   </Box>
-                ) : undefined
-              }
+                ),
+              })}
               iconPosition="end"
             />
           ))}

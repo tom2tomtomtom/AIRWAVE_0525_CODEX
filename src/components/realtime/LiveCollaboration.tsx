@@ -33,7 +33,6 @@ import { useClient } from '@/contexts/ClientContext';
 import { formatDistanceToNow } from 'date-fns';
 import { loggers } from '@/lib/logger';
 
-
 interface UserPresence {
   id: string;
   name: string;
@@ -75,7 +74,8 @@ const LiveCollaboration: React.FC<LiveCollaborationProps> = ({
         last_seen: new Date().toISOString(),
         current_page: '/campaigns/create',
         activity: 'editing',
-        role: 'Campaign Manager' },
+        role: 'Campaign Manager',
+      },
       {
         id: '2',
         name: 'Mike Rodriguez',
@@ -83,7 +83,8 @@ const LiveCollaboration: React.FC<LiveCollaborationProps> = ({
         last_seen: new Date(Date.now() - 5 * 60 * 1000).toISOString(),
         current_page: '/analytics',
         activity: 'viewing',
-        role: 'Data Analyst' },
+        role: 'Data Analyst',
+      },
       {
         id: '3',
         name: 'Emma Thompson',
@@ -91,7 +92,8 @@ const LiveCollaboration: React.FC<LiveCollaborationProps> = ({
         last_seen: new Date(Date.now() - 15 * 60 * 1000).toISOString(),
         current_page: '/approvals',
         activity: 'idle',
-        role: 'Creative Director' },
+        role: 'Creative Director',
+      },
       {
         id: '4',
         name: 'David Kim',
@@ -99,7 +101,8 @@ const LiveCollaboration: React.FC<LiveCollaborationProps> = ({
         last_seen: new Date(Date.now() - 2 * 60 * 1000).toISOString(),
         current_page: '/matrix/builder',
         activity: 'editing',
-        role: 'Strategy Lead' },
+        role: 'Strategy Lead',
+      },
     ];
 
     // Filter out current user and simulate real-time updates
@@ -112,7 +115,8 @@ const LiveCollaboration: React.FC<LiveCollaborationProps> = ({
       setPresenceData(prev =>
         prev.map((p: any) => ({
           ...p,
-          last_seen: p.status === 'online' ? new Date().toISOString() : p.last_seen }))
+          last_seen: p.status === 'online' ? new Date().toISOString() : p.last_seen,
+        }))
       );
     }, 30000);
 
@@ -189,12 +193,13 @@ const LiveCollaboration: React.FC<LiveCollaborationProps> = ({
               height: 12,
               borderRadius: '50%',
               backgroundColor: getStatusColor(user.status),
-              border: '2px solid white' }}
+              border: '2px solid white',
+            }}
           />
         }
       >
         <Avatar
-          src={user.avatar}
+          src={user.avatar || ''}
           alt={user.name}
           sx={{ width: size, height: size, cursor: 'pointer' }}
         >
@@ -221,7 +226,7 @@ const LiveCollaboration: React.FC<LiveCollaborationProps> = ({
 
   return (
     <>
-       <Card>
+      <Card>
         <CardContent>
           <Box
             sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}
@@ -249,7 +254,7 @@ const LiveCollaboration: React.FC<LiveCollaborationProps> = ({
 
           {showDetails && (
             <>
-       <Divider sx={{ my: 2 }} />
+              <Divider sx={{ my: 2 }} />
 
               <List dense>
                 {onlineUsers.map((user: any) => (
@@ -286,7 +291,7 @@ const LiveCollaboration: React.FC<LiveCollaborationProps> = ({
 
               {(awayUsers.length > 0 || busyUsers.length > 0) && (
                 <>
-       <Divider sx={{ my: 2 }} />
+                  <Divider sx={{ my: 2 }} />
                   <Button
                     variant="text"
                     size="small"
@@ -339,7 +344,8 @@ const LiveCollaboration: React.FC<LiveCollaborationProps> = ({
               startIcon={<MessageIcon />}
               onClick={() => {
                 // Implement team chat or collaboration features
-                process.env.NODE_ENV === 'development' && loggers.general.error('Team chat clicked');
+                process.env.NODE_ENV === 'development' &&
+                  loggers.general.error('Team chat clicked');
               }}
             >
               Team Chat
@@ -357,7 +363,8 @@ const LiveCollaboration: React.FC<LiveCollaborationProps> = ({
         onClose={handleClose}
         anchorOrigin={{
           vertical: 'bottom',
-          horizontal: 'left' }}
+          horizontal: 'left',
+        }}
       >
         <Paper sx={{ p: 2, maxWidth: 300 }}>
           <Typography variant="subtitle2" gutterBottom>

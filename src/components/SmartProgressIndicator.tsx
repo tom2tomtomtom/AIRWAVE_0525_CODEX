@@ -143,7 +143,8 @@ export const SmartProgressIndicator: React.FC<SmartProgressIndicatorProps> = ({
             height: 8,
             borderRadius: 1,
             '& .MuiLinearProgress-bar': {
-              borderRadius: 1 },
+              borderRadius: 1,
+            },
           }}
         />
         <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5, display: 'block' }}>
@@ -179,7 +180,8 @@ export const SmartProgressIndicator: React.FC<SmartProgressIndicatorProps> = ({
               height: 12,
               borderRadius: 2,
               '& .MuiLinearProgress-bar': {
-                borderRadius: 2 },
+                borderRadius: 2,
+              },
             }}
           />
         </Box>
@@ -236,7 +238,7 @@ export const SmartProgressIndicator: React.FC<SmartProgressIndicatorProps> = ({
                           justifyContent="center"
                         >
                           <Typography variant="caption" fontWeight={600}>
-                            {Math.round(stepProgress[step.id])}%
+                            {Math.round(stepProgress[step.id] || 0)}%
                           </Typography>
                         </Box>
                       )}
@@ -285,47 +287,54 @@ export const briefWorkflowSteps: ProgressStep[] = [
     description: 'Analyzing document and extracting key information',
     icon: <CloudUpload />,
     estimatedTime: 15,
-    status: 'pending' },
+    status: 'pending',
+  },
   {
     id: 'motivations',
     label: 'Generating Motivations',
     description: 'AI creating strategic motivations from brief content',
     icon: <Psychology />,
     estimatedTime: 25,
-    status: 'pending' },
+    status: 'pending',
+  },
   {
     id: 'copy',
     label: 'Creating Copy',
     description: 'Generating platform-specific copy variations',
     icon: <ContentCopy />,
     estimatedTime: 20,
-    status: 'pending' },
+    status: 'pending',
+  },
   {
     id: 'assets',
     label: 'Preparing Assets',
     description: 'Organizing and optimizing visual assets',
     icon: <Image />,
     estimatedTime: 10,
-    status: 'pending' },
+    status: 'pending',
+  },
   {
     id: 'template',
     label: 'Configuring Template',
     description: 'Setting up video template with content',
     icon: <VideoLibrary />,
     estimatedTime: 15,
-    status: 'pending' },
+    status: 'pending',
+  },
   {
     id: 'matrix',
     label: 'Building Matrix',
     description: 'Creating content matrix for all variations',
     icon: <GridView />,
     estimatedTime: 10,
-    status: 'pending' },
+    status: 'pending',
+  },
   {
     id: 'render',
     label: 'Ready to Render',
     description: 'Preparing final configuration for video generation',
     icon: <Send />,
     estimatedTime: 5,
-    status: 'pending' },
+    status: 'pending',
+  },
 ];

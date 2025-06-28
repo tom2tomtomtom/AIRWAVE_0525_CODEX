@@ -12,7 +12,8 @@ import {
   Chip,
   LinearProgress,
   IconButton,
-  Fade} from '@mui/material';
+  Fade,
+} from '@mui/material';
 import {
   Close,
   PlayArrow,
@@ -24,7 +25,8 @@ import {
   ArrowForward,
   Lightbulb,
   Speed,
-  Group} from '@mui/icons-material';
+  Group,
+} from '@mui/icons-material';
 
 interface OnboardingStep {
   id: string;
@@ -49,7 +51,7 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
   open,
   onClose,
   onComplete,
-  userType: _userType = 'new'
+  userType: _userType = 'new',
 }) => {
   const [activeStep, setActiveStep] = useState(0);
   const [_completed, setCompleted] = useState<Set<number>>(new Set());
@@ -78,8 +80,8 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
               '@keyframes pulse': {
                 '0%': { transform: 'scale(1)' },
                 '50%': { transform: 'scale(1.05)' },
-                '100%': { transform: 'scale(1)' }
-              }
+                '100%': { transform: 'scale(1)' },
+              },
             }}
           >
             <PlayArrow sx={{ fontSize: 60, color: 'white' }} />
@@ -88,14 +90,14 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
             Welcome to AIrFLOW! 🚀
           </Typography>
           <Typography variant="body1" color="text.secondary" paragraph>
-            Transform your briefs into stunning videos with AI-powered workflows.
-            Let's get you started in just a few steps.
+            Transform your briefs into stunning videos with AI-powered workflows. Let's get you
+            started in just a few steps.
           </Typography>
           <Grid container spacing={2} sx={{ mt: 3 }}>
             {[
               { icon: <Speed />, label: '10x Faster', desc: 'Create videos in minutes' },
               { icon: <AutoAwesome />, label: 'AI-Powered', desc: 'Smart automation' },
-              { icon: <Group />, label: 'Team Ready', desc: 'Collaborate seamlessly' }
+              { icon: <Group />, label: 'Team Ready', desc: 'Collaborate seamlessly' },
             ].map((feature, index) => (
               <Grid size={{ xs: 12, md: 4 }} key={index}>
                 <Card variant="outlined">
@@ -115,7 +117,7 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
             ))}
           </Grid>
         </Box>
-      )
+      ),
     },
     {
       id: 'workflow',
@@ -134,33 +136,33 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
                 title: 'Upload Brief',
                 desc: 'Drag & drop your brief document',
                 icon: <CloudUpload />,
-                color: '#2196F3'
+                color: '#2196F3',
               },
               {
                 step: '2',
                 title: 'AI Processing',
                 desc: 'AI extracts motivations and generates copy',
                 icon: <AutoAwesome />,
-                color: '#9C27B0'
+                color: '#9C27B0',
               },
               {
                 step: '3',
                 title: 'Select & Customize',
                 desc: 'Choose templates and assets',
                 icon: <VideoLibrary />,
-                color: '#FF9800'
+                color: '#FF9800',
               },
               {
                 step: '4',
                 title: 'Render & Share',
                 desc: 'Generate videos and publish',
                 icon: <TrendingUp />,
-                color: '#4CAF50'
-              }
+                color: '#4CAF50',
+              },
             ].map((item, index) => (
               <Grid size={{ xs: 12, sm: 6 }} key={index}>
-                <Card 
-                  sx={{ 
+                <Card
+                  sx={{
                     height: '100%',
                     border: 2,
                     borderColor: 'transparent',
@@ -168,18 +170,18 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
                     '&:hover': {
                       borderColor: item.color,
                       transform: 'translateY(-4px)',
-                      boxShadow: 3
-                    }
+                      boxShadow: 3,
+                    },
                   }}
                 >
                   <CardContent>
                     <Box display="flex" alignItems="center" mb={2}>
-                      <Avatar 
-                        sx={{ 
-                          bgcolor: item.color, 
+                      <Avatar
+                        sx={{
+                          bgcolor: item.color,
                           mr: 2,
                           width: 40,
-                          height: 40
+                          height: 40,
                         }}
                       >
                         {item.icon}
@@ -198,18 +200,14 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
               </Grid>
             ))}
           </Grid>
-          
+
           <Box textAlign="center" mt={4}>
-            <Button
-              variant="outlined"
-              onClick={() => setShowDemo(true)}
-              startIcon={<PlayArrow />}
-            >
+            <Button variant="outlined" onClick={() => setShowDemo(true)} startIcon={<PlayArrow />}>
               Watch 2-minute Demo
             </Button>
           </Box>
         </Box>
-      )
+      ),
     },
     {
       id: 'features',
@@ -223,27 +221,25 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
               title: 'Smart Brief Analysis',
               desc: 'AI reads and understands your brief documents, extracting key insights automatically.',
               icon: <AutoAwesome />,
-              benefits: ['PDF & Word support', 'Key insight extraction', 'Smart categorization']
+              benefits: ['PDF & Word support', 'Key insight extraction', 'Smart categorization'],
             },
             {
               title: 'Automated Workflows',
               desc: 'Guided step-by-step process from brief to final video with minimal manual work.',
               icon: <Speed />,
-              benefits: ['Step-by-step guidance', 'Auto-progression', 'Smart suggestions']
+              benefits: ['Step-by-step guidance', 'Auto-progression', 'Smart suggestions'],
             },
             {
               title: 'Template Library',
               desc: 'Professional video templates optimized for different platforms and use cases.',
               icon: <VideoLibrary />,
-              benefits: ['Platform optimized', 'Customizable designs', 'Regular updates']
-            }
+              benefits: ['Platform optimized', 'Customizable designs', 'Regular updates'],
+            },
           ].map((feature, index) => (
             <Grid size={{ xs: 12, md: 4 }} key={index}>
               <Card sx={{ height: '100%' }}>
                 <CardContent>
-                  <Avatar sx={{ bgcolor: 'primary.light', mb: 2 }}>
-                    {feature.icon}
-                  </Avatar>
+                  <Avatar sx={{ bgcolor: 'primary.light', mb: 2 }}>{feature.icon}</Avatar>
                   <Typography variant="h6" gutterBottom>
                     {feature.title}
                   </Typography>
@@ -266,12 +262,12 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
             </Grid>
           ))}
         </Grid>
-      )
+      ),
     },
     {
       id: 'ready',
       title: 'Ready to Start',
-      description: 'You\'re all set to create amazing content',
+      description: "You're all set to create amazing content",
       icon: <CheckCircle />,
       content: (
         <Box textAlign="center" py={4}>
@@ -282,7 +278,7 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
           <Typography variant="body1" color="text.secondary" paragraph>
             You now know the basics of AIrFLOW. Ready to create your first video?
           </Typography>
-          
+
           <Grid container spacing={2} sx={{ mt: 3, maxWidth: 600, mx: 'auto' }}>
             <Grid size={{ xs: 12, sm: 6 }}>
               <Button
@@ -313,7 +309,7 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
               </Button>
             </Grid>
           </Grid>
-          
+
           <Typography variant="caption" color="text.secondary" sx={{ mt: 3, display: 'block' }}>
             You can always access help and tutorials from the navigation menu
           </Typography>
@@ -321,9 +317,9 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
       ),
       action: {
         label: 'Get Started',
-        onClick: onComplete
-      }
-    }
+        onClick: onComplete,
+      },
+    },
   ];
 
   const handleNext = () => {
@@ -348,13 +344,13 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
   const progress = ((activeStep + 1) / steps.length) * 100;
 
   return (
-    <Dialog 
-      open={open} 
-      onClose={onClose} 
-      maxWidth="md" 
+    <Dialog
+      open={open}
+      onClose={onClose}
+      maxWidth="md"
       fullWidth
       PaperProps={{
-        sx: { borderRadius: 3, overflow: 'hidden' }
+        sx: { borderRadius: 3, overflow: 'hidden' },
       }}
     >
       <DialogContent sx={{ p: 0 }}>
@@ -369,21 +365,24 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
                 Step {activeStep + 1} of {steps.length}
               </Typography>
             </Box>
-            <IconButton onClick={onClose} sx={{ ml: 2 }} aria-label="Icon button">              <Close />
+            <IconButton onClick={onClose} sx={{ ml: 2 }} aria-label="Icon button">
+              {' '}
+              <Close />
             </IconButton>
           </Box>
-          
+
           {/* Progress Bar */}
           <Box sx={{ mt: 2 }}>
-            <LinearProgress 
-              variant="determinate" 
-              value={progress} 
-              sx={{ 
-                height: 8, 
+            <LinearProgress
+              variant="determinate"
+              value={progress}
+              sx={{
+                height: 8,
                 borderRadius: 1,
                 '& .MuiLinearProgress-bar': {
-                  borderRadius: 1}
-              }} 
+                  borderRadius: 1,
+                },
+              }}
             />
           </Box>
         </Box>
@@ -393,20 +392,18 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
           <Fade in={true} key={activeStep}>
             <Box>
               <Box display="flex" alignItems="center" mb={3}>
-                <Avatar sx={{ bgcolor: 'primary.light', mr: 2 }}>
-                  {steps[activeStep].icon}
-                </Avatar>
+                <Avatar sx={{ bgcolor: 'primary.light', mr: 2 }}>{steps[activeStep]?.icon}</Avatar>
                 <Box>
                   <Typography variant="h6" gutterBottom>
-                    {steps[activeStep].title}
+                    {steps[activeStep]?.title}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    {steps[activeStep].description}
+                    {steps[activeStep]?.description}
                   </Typography>
                 </Box>
               </Box>
-              
-              {steps[activeStep].content}
+
+              {steps[activeStep]?.content}
             </Box>
           </Fade>
         </Box>
@@ -417,16 +414,13 @@ export const OnboardingWizard: React.FC<OnboardingWizardProps> = ({
             <Button onClick={handleSkip} color="inherit">
               Skip Tutorial
             </Button>
-            
+
             <Box display="flex" gap={2}>
-              <Button 
-                onClick={handleBack} 
-                disabled={activeStep === 0}
-              >
+              <Button onClick={handleBack} disabled={activeStep === 0}>
                 Back
               </Button>
-              <Button 
-                variant="contained" 
+              <Button
+                variant="contained"
                 onClick={handleNext}
                 endIcon={activeStep === steps.length - 1 ? <CheckCircle /> : <ArrowForward />}
               >
