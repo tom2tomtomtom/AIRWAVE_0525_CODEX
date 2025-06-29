@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import TemplateSelector from '@/components/video-studio/TemplateSelector';
+import VideoOverview from '@/components/video-studio/VideoOverview';
 import {
   Box,
   Typography,
@@ -35,8 +36,6 @@ import {
   Switch,
   FormControlLabel,
   Slider,
-  Avatar,
-  Divider,
 } from '@mui/material';
 import {
   VideoLibrary,
@@ -1079,82 +1078,12 @@ const VideoStudioPage: React.FC = () => {
 
             {/* Sidebar */}
             <Grid size={{ xs: 12, md: 4 }}>
-              <Card>
-                <CardContent>
-                  <Typography variant="h6" gutterBottom>
-                    Video Overview
-                  </Typography>
-
-                  {activeClient && (
-                    <Box mb={3}>
-                      <Typography variant="subtitle2" color="text.secondary">
-                        Client
-                      </Typography>
-                      <Box display="flex" alignItems="center" gap={1}>
-                        <Avatar
-                          src={activeClient.logo}
-                          sx={{ width: 24, height: 24, bgcolor: activeClient.primaryColor }}
-                        >
-                          {activeClient.name.charAt(0)}
-                        </Avatar>
-                        <Typography variant="body1">{activeClient.name}</Typography>
-                      </Box>
-                    </Box>
-                  )}
-
-                  {selectedTemplate && (
-                    <Box mb={3}>
-                      <Typography variant="subtitle2" color="text.secondary">
-                        Template
-                      </Typography>
-                      <Typography variant="body1">{selectedTemplate.name}</Typography>
-                      <Typography variant="caption" color="text.secondary">
-                        {selectedTemplate.category} • {selectedTemplate.duration}s
-                      </Typography>
-                    </Box>
-                  )}
-
-                  {videoConfig.prompt && (
-                    <Box mb={3}>
-                      <Typography variant="subtitle2" color="text.secondary">
-                        Prompt
-                      </Typography>
-                      <Typography variant="body2">
-                        {videoConfig.prompt.substring(0, 100)}
-                        {videoConfig.prompt.length > 100 ? '...' : ''}
-                      </Typography>
-                    </Box>
-                  )}
-
-                  <Divider sx={{ my: 2 }} />
-
-                  <Box mb={2}>
-                    <Typography variant="subtitle2" color="text.secondary">
-                      Configuration
-                    </Typography>
-                    <Typography variant="body2">Style: {videoConfig.style}</Typography>
-                    <Typography variant="body2">Duration: {videoConfig.duration}s</Typography>
-                    <Typography variant="body2">Resolution: {videoConfig.resolution}</Typography>
-                    <Typography variant="body2">
-                      Aspect Ratio: {videoConfig.aspect_ratio}
-                    </Typography>
-                  </Box>
-
-                  {videoJobs.length > 0 && (
-                    <Box>
-                      <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-                        Generation Status
-                      </Typography>
-                      <Typography variant="h4" color="primary.main">
-                        {videoJobs.length}
-                      </Typography>
-                      <Typography variant="caption" color="text.secondary">
-                        Videos in queue
-                      </Typography>
-                    </Box>
-                  )}
-                </CardContent>
-              </Card>
+              <VideoOverview
+                activeClient={activeClient}
+                selectedTemplate={selectedTemplate}
+                videoConfig={videoConfig}
+                videoJobs={videoJobs}
+              />
             </Grid>
           </Grid>
         )}
