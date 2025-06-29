@@ -6,7 +6,9 @@ import OpenAI from 'openai';
 import { z } from 'zod';
 import axios from 'axios';
 import { loggers } from '@/lib/logger';
-
+import { withEnhancedSecurity, SecurityConfigs } from '@/middleware/withEnhancedSecurity';
+import { withAuth } from '@/middleware/withAuth';
+import { securityValidation } from '@/utils/validation-utils';
 
 // Initialize OpenAI only if we have a key
 const openai = hasOpenAI
@@ -65,7 +67,7 @@ const GenerateImageSchema = z.object({
   brand_guidelines: BrandGuidelinesSchema,
 });
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
+async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
   if (req.method !== 'POST') {
     return res.status(405).json({
       success: false,
@@ -73,7 +75,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
   }
 
-  // Get user info from headers
+  // Get user info from headers (set by withAuth middleware)
   const userId = req.headers['x-user-id'] as string;
 
   try {
@@ -88,8 +90,33 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       });
     }
 
+    // Additional security validation on prompt
+    const { prompt } = validationResult.data;
+    const securityCheck = securityValidation.validateAndSanitize(prompt, {
+      allowHTML: false,
+      maxLength: 4000,
+      checkMalicious: true,
+      throwOnMalicious: false,
+    });
+
+    if (!securityCheck.isValid) {
+      loggers.general.warn('Malicious content detected in DALL-E prompt', {
+        userId,
+        prompt: prompt.substring(0, 100),
+        warnings: securityCheck.warnings.join(', '),
+        ip: Array.isArray(req.headers['x-forwarded-for'])
+          ? req.headers['x-forwarded-for'][0]
+          : req.headers['x-forwarded-for'] || req.socket.remoteAddress,
+      });
+
+      return res.status(400).json({
+        success: false,
+        message: 'Prompt contains potentially harmful content',
+        warnings: securityCheck.warnings,
+      });
+    }
+
     const {
-      prompt,
       client_id,
       model,
       size,
@@ -102,6 +129,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       brand_guidelines,
     } = validationResult.data;
 
+    // Use sanitized prompt
+    const sanitizedPrompt = securityCheck.sanitized;
+
     // Check if AI service is available
     if (!hasOpenAI || !openai) {
       return res.status(503).json({
@@ -111,7 +141,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     // Enhance prompt if requested
-    let finalPrompt = prompt;
+    let finalPrompt = sanitizedPrompt;
 
     if (enhance_prompt) {
       const enhancementResponse = await openai.chat.completions.create({
@@ -123,7 +153,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           },
           {
             role: 'user',
-            content: `Enhance this image prompt for ${purpose || 'general'} use: ${prompt}`,
+            content: `Enhance this image prompt for ${purpose || 'general'} use: ${sanitizedPrompt}`,
           },
         ],
         max_tokens: 500,
@@ -142,7 +172,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     finalPrompt = `${safetyPrefix} ${finalPrompt}`;
 
     if (process.env.NODE_ENV === 'development') {
-      loggers.general.error('Starting DALL-E image generation with prompt:', prompt);
+      loggers.general.info('Starting DALL-E image generation', { prompt: sanitizedPrompt });
     }
 
     // Generate image with DALL-E
@@ -206,7 +236,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const { data: asset, error: assetError } = await serviceSupabase
       .from('assets')
       .insert({
-        name: `AI Generated: ${prompt.substring(0, 50)}...`,
+        name: `AI Generated: ${sanitizedPrompt.substring(0, 50)}...`,
         type: 'image',
         url: urlData.publicUrl,
         thumbnail_url: urlData.publicUrl,
@@ -217,7 +247,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         tags: [...tags, 'ai-generated', 'dalle-3', purpose].filter(Boolean),
         metadata: {
           ai_model: model,
-          original_prompt: prompt,
+          original_prompt: sanitizedPrompt,
           enhanced_prompt: finalPrompt,
           generation_settings: {
             size,
@@ -243,7 +273,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       message: 'Image generated successfully',
       asset,
       generation_details: {
-        original_prompt: prompt,
+        original_prompt: sanitizedPrompt,
         enhanced_prompt: enhance_prompt ? finalPrompt : undefined,
         revised_prompt: generatedImage.revised_prompt,
         model,
@@ -277,3 +307,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
   }
 }
+
+// Apply enhanced security with authentication and AI-specific rate limiting
+export default withAuth(
+  withEnhancedSecurity(
+    {
+      ...SecurityConfigs.api,
+      rateLimit: { windowMs: 15 * 60 * 1000, max: 20 }, // 20 requests per 15 minutes (strict for AI)
+      analysis: {
+        ...SecurityConfigs.api.analysis,
+        checkUserAgent: true,
+        detectBots: true,
+        logSuspiciousActivity: true,
+      },
+      validation: {
+        body: [
+          { field: 'prompt', type: 'string', required: true, minLength: 1, maxLength: 4000 },
+          { field: 'client_id', type: 'string', required: true },
+        ],
+      },
+    },
+    handler
+  )
+);
