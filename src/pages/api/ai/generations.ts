@@ -33,6 +33,10 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseData>):
 
     const { clientId } = req.query;
 
+    if (!supabase) {
+      return res.status(500).json({ success: false, message: 'Database connection error' });
+    }
+
     let query = supabase
       .from('generated_content')
       .select('*')
@@ -64,7 +68,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseData>):
       generations: formattedGenerations });
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Error fetching generations:', error);
+    console.error('Error fetching generations:', message);
     return res.status(500).json({
       success: false,
       message: 'Failed to fetch generations' });

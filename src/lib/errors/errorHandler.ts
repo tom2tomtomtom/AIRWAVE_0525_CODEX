@@ -26,7 +26,9 @@ export class AppError extends Error {
     this.name = 'AppError';
     this.statusCode = statusCode;
     this.code = code;
-    this.context = context;
+    if (context !== undefined) {
+      this.context = context;
+    }
   }
 }
 

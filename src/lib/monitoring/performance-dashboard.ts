@@ -4,7 +4,7 @@
  * Provides metrics aggregation and dashboard data generation
  */
 
-import { metrics } from './metrics-collector';
+// import { metrics } from './metrics-collector'; // Not used directly
 import { alerting } from './alerting-system';
 
 // Dashboard data structures
@@ -111,7 +111,7 @@ class PerformanceMetricsCalculator {
       case 'min':
         return Math.min(...relevantPoints.map(point => point.value));
       case 'last':
-        return relevantPoints[relevantPoints.length - 1].value;
+        return relevantPoints[relevantPoints.length - 1]?.value || 0;
       default:
         return null;
     }

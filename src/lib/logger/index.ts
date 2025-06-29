@@ -11,9 +11,26 @@ import {
   dbLogger,
 } from './structured';
 
+// Default logging configuration
+const getDefaultLoggingConfig = () => ({
+  level: 'info',
+  environment: 'development',
+  console: {
+    enabled: true,
+    level: 'debug',
+  },
+  file: {
+    enabled: false,
+    level: 'info',
+    path: './logs/app.log',
+    maxSize: 10485760,
+    maxFiles: 5,
+  },
+});
+
 // Create legacy winston logger for backwards compatibility
 const createLegacyLogger = (name: string): winston.Logger => {
-  const config = getLoggingConfig();
+  const config = getDefaultLoggingConfig();
 
   const formats = [
     winston.format.timestamp({
@@ -202,7 +219,7 @@ export const initializeLogging = () => {
   });
 
   // Handle unhandled promise rejections
-  process.on('unhandledRejection', (reason, promise) => {
+  process.on('unhandledRejection', (reason, _promise) => {
     logger.error('Unhandled promise rejection', reason as Error);
   });
 };

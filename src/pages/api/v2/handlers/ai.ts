@@ -22,7 +22,7 @@ class AICostController {
     return new AICostController();
   }
 
-  async checkBudget(service: string, model: string, tokens: number, userId: string) {
+  async checkBudget(service: string, model: string, tokens: number, _userId: string) {
     // Calculate estimated cost based on tokens
     const estimatedCost = this.calculateCost(service, model, tokens);
 
@@ -58,11 +58,11 @@ class AICostController {
     return { status: 'healthy', remaining: 1000 };
   }
 
-  async getMonthlyUsage(userId: string) {
+  async getMonthlyUsage(_userId: string) {
     return { totalCost: 0, totalTokens: 0, callCount: 0 };
   }
 
-  async getUsageBreakdown(userId: string, type: 'operation' | 'model') {
+  async getUsageBreakdown(_userId: string, type: 'operation' | 'model') {
     if (type === 'operation') {
       return {
         operationBreakdown: {
@@ -82,7 +82,7 @@ class AICostController {
     }
   }
 
-  async getDailyUsage(userId: string) {
+  async getDailyUsage(_userId: string) {
     return {
       dailyUsage: [
         { date: '2025-01-01', cost: 0.15, tokens: 500, operations: 3 },
@@ -92,7 +92,7 @@ class AICostController {
     };
   }
 
-  async getRecentOperations(userId: string, limit: number) {
+  async getRecentOperations(_userId: string, _limit: number) {
     return [];
   }
 }
@@ -119,7 +119,7 @@ export async function handleAIRoutes(
       return errorResponse(res, ApiErrorCode.UNAUTHORIZED, 'Authentication required', 401);
     }
 
-    const [endpoint, ...params] = subRoute;
+    const [endpoint, ..._params] = subRoute;
 
     switch (endpoint) {
       case 'generate':
@@ -198,7 +198,7 @@ async function handleGenerate(
     actualService &&
     actualModel &&
     validModels[actualService] &&
-    !validModels[actualService].includes(actualModel)
+    !validModels[actualService]?.includes(actualModel)
   ) {
     return errorResponse(
       res,
@@ -284,7 +284,7 @@ async function handleGenerate(
 
 // Cost checking
 async function handleCostCheck(
-  req: NextApiRequest,
+  _req: NextApiRequest,
   res: NextApiResponse,
   context: RouteContext
 ): Promise<void> {
@@ -292,7 +292,7 @@ async function handleCostCheck(
     return methodNotAllowed(res, ['POST']);
   }
 
-  const { service, model, estimatedTokens, operation } = context.body;
+  const { service, model, estimatedTokens, operation: _operation } = context.body;
 
   if (!service || !model || !estimatedTokens) {
     return errorResponse(
@@ -320,7 +320,7 @@ async function handleCostCheck(
 
 // Usage statistics
 async function handleUsage(
-  req: NextApiRequest,
+  _req: NextApiRequest,
   res: NextApiResponse,
   context: RouteContext
 ): Promise<void> {
@@ -328,7 +328,7 @@ async function handleUsage(
     return methodNotAllowed(res, ['GET']);
   }
 
-  const { type, period, timeRange, groupBy } = context.query;
+  const { type, period: _period, timeRange, groupBy } = context.query;
 
   // Validate timeRange parameter
   const validTimeRanges = ['1d', '7d', '30d', '90d'];
@@ -377,7 +377,7 @@ async function handleUsage(
 
 // Available models
 async function handleModels(
-  req: NextApiRequest,
+  _req: NextApiRequest,
   res: NextApiResponse,
   context: RouteContext
 ): Promise<void> {

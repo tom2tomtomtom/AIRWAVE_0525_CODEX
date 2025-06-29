@@ -440,7 +440,7 @@ const PreviewPage: React.FC = () => {
                               </Typography>
                               <Box display="flex" alignItems="center" gap={1}>
                                 <Avatar
-                                  src={previewItem.created_by.avatar_url}
+                                  {...(previewItem.created_by.avatar_url && { src: previewItem.created_by.avatar_url })}
                                   sx={{ width: 24, height: 24 }}
                                 >
                                   <PersonIcon />
@@ -456,7 +456,7 @@ const PreviewPage: React.FC = () => {
                               </Typography>
                               <Box display="flex" alignItems="center" gap={1}>
                                 <Avatar
-                                  src={previewItem.client.logo}
+                                  {...(previewItem.client.logo && { src: previewItem.client.logo })}
                                   sx={{ width: 24, height: 24 }}
                                 >
                                   <BusinessIcon />

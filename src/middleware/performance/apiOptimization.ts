@@ -161,10 +161,10 @@ class QueryOptimizer {
 /**
  * Response compression utility
  */
-function compressResponse(data: unknown): string {
-  // Simple JSON minification
-  return JSON.stringify(data, null, 0);
-}
+// function _compressResponse(data: unknown): string {
+//   // Simple JSON minification
+//   return JSON.stringify(data, null, 0);
+// }
 
 /**
  * Main API optimization middleware
@@ -312,7 +312,7 @@ function generateCacheKey(req: NextApiRequest): string {
 /**
  * Database query optimization helper
  */
-export function optimizeQuery(query: string, params?: unknown[]): string {
+export function optimizeQuery(query: string, _params?: unknown[]): string {
   // Add LIMIT if not present and no specific limit needed
   if (!query.toLowerCase().includes('limit') && query.toLowerCase().includes('select')) {
     query += ' LIMIT 100';

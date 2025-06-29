@@ -58,20 +58,21 @@ export interface MotivationGenerationOptions {
 export class MotivationGenerator {
   private readonly DEFAULT_MOTIVATION_COUNT = 12;
   private readonly PSYCHOLOGY_TYPES = ['cognitive', 'emotional', 'social', 'behavioral'];
-  private readonly MOTIVATION_CATEGORIES = [
-    'fear_of_missing_out',
-    'social_proof',
-    'authority',
-    'scarcity',
-    'reciprocity',
-    'commitment',
-    'aspiration',
-    'security',
-    'convenience',
-    'status',
-    'belonging',
-    'achievement',
-  ];
+  // Motivation categories for future categorization
+  // private readonly MOTIVATION_CATEGORIES = [
+  //   'fear_of_missing_out',
+  //   'social_proof',
+  //   'authority',
+  //   'scarcity',
+  //   'reciprocity',
+  //   'commitment',
+  //   'aspiration',
+  //   'security',
+  //   'convenience',
+  //   'status',
+  //   'belonging',
+  //   'achievement',
+  // ];
 
   async generateMotivations(
     brief: ParsedBrief,
@@ -80,9 +81,9 @@ export class MotivationGenerator {
     const {
       motivationCount = this.DEFAULT_MOTIVATION_COUNT,
       diversityWeight = 0.8,
-      includeNiche = true,
+      includeNiche: _includeNiche = true,
       psychologyBalance = true,
-      customPrompts = [],
+      customPrompts: _customPrompts = [],
     } = options;
 
     try {
@@ -124,10 +125,10 @@ export class MotivationGenerator {
       return motivationSet;
     } catch (error: any) {
       const classified = classifyError(error as Error, {
-        component: 'motivation-generator',
+        route: 'motivation-generator',
         briefId: brief.id,
         motivationCount,
-      });
+      } as any);
 
       logger.error('Motivation generation failed', classified.originalError);
       throw error;
@@ -223,7 +224,7 @@ Make them diverse, authentic, and psychologically grounded.
 `;
   }
 
-  private async callAIService(prompt: string): Promise<string> {
+  private async callAIService(_prompt: string): Promise<string> {
     // Placeholder for AI service integration
     // This would integrate with OpenAI, Anthropic, or your preferred AI service
 
@@ -558,7 +559,7 @@ Make them diverse, authentic, and psychologically grounded.
       (groups, motivation) => {
         const type = motivation.psychologyType;
         if (!groups[type]) groups[type] = [];
-        groups[type].push(motivation);
+        groups[type]!.push(motivation);
         return groups;
       },
       {} as Record<string, PsychologicalMotivation[]>

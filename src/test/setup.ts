@@ -54,4 +54,10 @@ process.env.OPENAI_API_KEY = 'sk-test-key';
 process.env.ELEVENLABS_API_KEY = 'test-elevenlabs-key';
 process.env.UPSTASH_REDIS_URL = 'redis://localhost:6379';
 process.env.UPSTASH_REDIS_TOKEN = 'test-redis-token';
-process.env.NODE_ENV = 'test';
+// NODE_ENV is read-only, but we can set it for tests via alternate method
+Object.defineProperty(process.env, 'NODE_ENV', {
+  value: 'test',
+  writable: false,
+  enumerable: true,
+  configurable: false,
+});

@@ -219,7 +219,7 @@ export class BundleAnalyzer {
     }
   }
   
-  private async analyzeChunks(buildDir: string, manifest: any): Promise<ChunkAnalysis[]> {
+  private async analyzeChunks(buildDir: string, _manifest: any): Promise<ChunkAnalysis[]> {
     const chunks: ChunkAnalysis[] = [];
     
     try {
@@ -323,7 +323,7 @@ export class BundleAnalyzer {
     return assets;
   }
   
-  private async extractModules(chunks: ChunkAnalysis[]): Promise<ModuleInfo[]> {
+  private async extractModules(_chunks: ChunkAnalysis[]): Promise<ModuleInfo[]> {
     // This would typically require webpack stats
     // For now, return estimated modules based on common patterns
     const modules: ModuleInfo[] = [];
@@ -337,14 +337,14 @@ export class BundleAnalyzer {
       { name: 'regenerator-runtime', estimatedSize: 15 * 1024 }
     ];
     
-    commonModules.forEach((mod, index) => {
+    commonModules.forEach((mod) => {
       modules.push({
         name: mod.name,
         size: mod.estimatedSize,
         reasons: ['entry'],
         chunks: ['main'],
-        depth: 0,
-        issuer: undefined
+        depth: 0
+        // issuer is optional, so we omit it
       });
     });
     
@@ -364,7 +364,7 @@ export class BundleAnalyzer {
     
     const duplicates: ModuleInfo[] = [];
     
-    moduleMap.forEach((moduleList, name) => {
+    moduleMap.forEach((moduleList) => {
       if (moduleList.length > 1) {
         duplicates.push(...moduleList);
       }
@@ -382,15 +382,15 @@ export class BundleAnalyzer {
       .filter((module: any) => module.size > 50 * 1024) // > 50KB
       .map((module: any) => ({
         name: module.name as string,
-        size: module.size as number,
-        version: undefined // Would need package.json parsing
+        size: module.size as number
+        // version is optional, so we omit it when not available
       }))
       .sort((a, b) => b.size - a.size);
     
     return large.slice(0, 10); // Top 10
   }
   
-  private async analyzeTreeShaking(buildDir: string): Promise<{
+  private async analyzeTreeShaking(_buildDir: string): Promise<{
     eliminatedModules: string[];
     unusedExports: Array<{ module: string; exports: string[] }>;
   }> {
@@ -422,7 +422,7 @@ export class BundleAnalyzer {
   private generateRecommendations(
     stats: BundleStats,
     chunks: ChunkAnalysis[],
-    assets: AssetInfo[],
+    _assets: AssetInfo[],
     duplicates: ModuleInfo[],
     largeDeps: Array<{ name: string; size: number }>,
     thresholds: BundleThresholds
@@ -488,7 +488,7 @@ export class BundleAnalyzer {
   private generateComparisonRecommendations(
     sizeChange: any,
     newChunks: string[],
-    removedChunks: string[]
+    _removedChunks: string[]
   ): BundleRecommendation[] {
     const recommendations: BundleRecommendation[] = [];
     

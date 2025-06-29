@@ -95,27 +95,27 @@ export class APIRequestBuilder {
     return this;
   }
 
-  get(path?: string) {
+  get(_path?: string) {
     this.method = 'GET';
     return this;
   }
 
-  post(path?: string) {
+  post(_path?: string) {
     this.method = 'POST';
     return this;
   }
 
-  put(path?: string) {
+  put(_path?: string) {
     this.method = 'PUT';
     return this;
   }
 
-  delete(path?: string) {
+  delete(_path?: string) {
     this.method = 'DELETE';
     return this;
   }
 
-  patch(path?: string) {
+  patch(_path?: string) {
     this.method = 'PATCH';
     return this;
   }
@@ -157,13 +157,13 @@ export class APIRequestBuilder {
 
   build() {
     const { req, res } = createMocks({
-      method: this.method,
-      body: this.body,
+      method: this.method as any,
+      body: this.body as any,
       query: this.query,
       headers: this.headers,
     });
 
-    return { req: req as NextApiRequest, res: res as NextApiResponse };
+    return { req: req as unknown as NextApiRequest, res: res as unknown as NextApiResponse };
   }
 }
 
@@ -216,22 +216,22 @@ export class DatabaseMockManager {
   }
 
   static mockSuccessfulQuery(data: unknown) {
-    this.supabaseMocks.from.mockReturnValue({
-      ...this.supabaseMocks.from(),
+    (this.supabaseMocks as any).from.mockReturnValue({
+      ...(this.supabaseMocks as any).from(),
       single: jest.fn(() => Promise.resolve({ data, error: null })),
     });
   }
 
   static mockFailedQuery(error: unknown) {
-    this.supabaseMocks.from.mockReturnValue({
-      ...this.supabaseMocks.from(),
+    (this.supabaseMocks as any).from.mockReturnValue({
+      ...(this.supabaseMocks as any).from(),
       single: jest.fn(() => Promise.resolve({ data: null, error })),
     });
   }
 
   static mockArrayQuery(data: unknown[]) {
-    this.supabaseMocks.from.mockReturnValue({
-      ...this.supabaseMocks.from(),
+    (this.supabaseMocks as any).from.mockReturnValue({
+      ...(this.supabaseMocks as any).from(),
       then: jest.fn(() => Promise.resolve({ data, error: null })),
     });
   }
@@ -293,9 +293,9 @@ export class APITestRunner {
   static async testMethodNotAllowed(handler: unknown, disallowedMethod: string = 'DELETE') {
     const { req, res } = APIRequestBuilder.create().setMethod(disallowedMethod).withAuth().build();
 
-    await handler(req, res);
+    await (handler as NextApiHandler)(req, res);
 
-    expect(res._getStatusCode()).toBe(405);
+    expect((res as any)._getStatusCode()).toBe(405);
   }
 
   static async testDatabaseError(handler: unknown, method: string = 'GET') {
@@ -306,9 +306,9 @@ export class APITestRunner {
 
     const { req, res } = APIRequestBuilder.create().setMethod(method).withAuth().build();
 
-    await handler(req, res);
+    await (handler as NextApiHandler)(req, res);
 
-    expect(res._getStatusCode()).toBe(500);
+    expect((res as any)._getStatusCode()).toBe(500);
     expect(JSON.parse((res as any)._getData())).toMatchObject({
       success: false,
       error: expect.objectContaining({
@@ -323,7 +323,7 @@ export class APITestRunner {
     for (let i = 0; i < attempts; i++) {
       const { req, res } = APIRequestBuilder.create().setMethod('POST').withAuth().build();
 
-      requests.push(handler(req, res));
+      requests.push((handler as NextApiHandler)(req, res));
     }
 
     await Promise.all(requests);
@@ -338,12 +338,12 @@ export class APITestRunner {
     expect(data.success).toBe(true);
 
     if (expectedData) {
-      expect(data.data).toMatchObject(expectedData);
+      expect(data.data).toMatchObject(expectedData as Record<string, unknown>);
     }
   }
 
   static expectErrorResponse(res: unknown, expectedStatus: number = 400, expectedMessage?: string) {
-    expect(res._getStatusCode()).toBe(expectedStatus);
+    expect((res as any)._getStatusCode()).toBe(expectedStatus);
     const data = JSON.parse((res as any)._getData());
     expect(data.success).toBe(false);
     expect(data.error).toBeDefined();
@@ -354,7 +354,7 @@ export class APITestRunner {
   }
 
   static async testEndpoint(handler: unknown, { req, res }: { req: unknown; res: unknown }) {
-    await handler(req, res);
+    await (handler as any)(req, res);
     return { req, res };
   }
 
@@ -376,7 +376,7 @@ export const mockExternalServices = () => {
           create: jest.fn().mockResolvedValue({
             choices: [{ message: { content: 'Mock AI response' } }],
             usage: { total_tokens: 100, prompt_tokens: 50, completion_tokens: 50 },
-          }),
+          } as any),
         },
       },
     })),
@@ -386,20 +386,20 @@ export const mockExternalServices = () => {
   jest.mock('ioredis', () => ({
     __esModule: true,
     default: jest.fn().mockImplementation(() => ({
-      get: jest.fn().mockResolvedValue(null),
-      set: jest.fn().mockResolvedValue('OK'),
-      del: jest.fn().mockResolvedValue(1),
-      incr: jest.fn().mockResolvedValue(1),
-      expire: jest.fn().mockResolvedValue(1),
-      connect: jest.fn().mockResolvedValue(undefined),
-      disconnect: jest.fn().mockResolvedValue(undefined),
+      get: jest.fn().mockResolvedValue(null as any),
+      set: jest.fn().mockResolvedValue('OK' as any),
+      del: jest.fn().mockResolvedValue(1 as any),
+      incr: jest.fn().mockResolvedValue(1 as any),
+      expire: jest.fn().mockResolvedValue(1 as any),
+      connect: jest.fn().mockResolvedValue(undefined as any),
+      disconnect: jest.fn().mockResolvedValue(undefined as any),
     })),
   }));
 
   // Mock file upload
   jest.mock('formidable', () => ({
     IncomingForm: jest.fn().mockImplementation(() => ({
-      parse: jest.fn().mockImplementation((req, callback) => {
+      parse: jest.fn().mockImplementation((_req: any, callback: any) => {
         callback(
           null,
           {},
@@ -430,10 +430,10 @@ export const SecurityTestHelpers = {
       .withAuth()
       .build();
 
-    await handler(req, res);
+    await (handler as any)(req, res);
 
     // Should not crash and should return validation error
-    expect(res._getStatusCode()).toBeLessThan(500);
+    expect((res as any)._getStatusCode()).toBeLessThan(500);
   },
 
   testXSSPrevention: async (handler: unknown, field: string) => {
@@ -447,7 +447,7 @@ export const SecurityTestHelpers = {
       .withAuth()
       .build();
 
-    await handler(req, res);
+    await (handler as any)(req, res);
 
     const responseData = JSON.parse((res as any)._getData());
     if (responseData.data && responseData.data[field]) {
@@ -463,7 +463,7 @@ export const SecurityTestHelpers = {
       // Missing CSRF token
       .build();
 
-    await handler(req, res);
+    await (handler as any)(req, res);
 
     // Should require CSRF token for state-changing operations
     // This is dependent on actual CSRF middleware implementation
@@ -482,7 +482,7 @@ export const PerformanceTestHelpers = {
     const { req, res } = APIRequestBuilder.create().withAuth().build();
 
     const executionTime = await PerformanceTestHelpers.measureExecutionTime(() =>
-      handler(req, res)
+      (handler as any)(req, res)
     );
 
     expect(executionTime).toBeLessThan(maxTime);

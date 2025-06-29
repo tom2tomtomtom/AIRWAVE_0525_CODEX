@@ -95,13 +95,13 @@ async function handleGetEvents(req: NextApiRequest, res: NextApiResponse, user: 
 
     // Get additional context for events
     const enrichedEvents = await Promise.all(
-      (events || []).map(async (_event) => {
+      (events || []).map(async (event) => {
         const enrichedEvent = { ...event };
         
         // Add context based on event type
         switch (event.type) {
           case 'execution_status_change':
-            if (event.data.execution_id) {
+            if (event.data?.execution_id) {
               const { data: execution } = await supabase
                 .from('executions')
                 .select(`
@@ -116,7 +116,7 @@ async function handleGetEvents(req: NextApiRequest, res: NextApiResponse, user: 
             break;
           
           case 'approval_decision':
-            if (event.data.approval_id) {
+            if (event.data?.approval_id) {
               const { data: approval } = await supabase
                 .from('approvals')
                 .select(`
@@ -141,7 +141,7 @@ async function handleGetEvents(req: NextApiRequest, res: NextApiResponse, user: 
       timestamp: new Date().toISOString()
     });
   } catch (error: any) {
-    const message = getErrorMessage(error);
+    getErrorMessage(error);
     console.error('Error in handleGetEvents:', error);
     return res.status(500).json({ error: 'Failed to fetch events' });
   }
@@ -211,7 +211,7 @@ async function handleCreateEvent(req: NextApiRequest, res: NextApiResponse, user
       count: successfulEvents.length
     });
   } catch (error: any) {
-    const message = getErrorMessage(error);
+    getErrorMessage(error);
     console.error('Error creating realtime event:', error);
     return res.status(500).json({ error: 'Failed to create event' });
   }
@@ -251,7 +251,7 @@ async function handleMarkRead(req: NextApiRequest, res: NextApiResponse, user: a
       updated_count: data?.length || 0
     });
   } catch (error: any) {
-    const message = getErrorMessage(error);
+    getErrorMessage(error);
     console.error('Error in handleMarkRead:', error);
     return res.status(500).json({ error: 'Failed to mark events as read' });
   }
@@ -316,7 +316,7 @@ async function triggerWebhookNotifications(
     });
 
   } catch (error: any) {
-    const message = getErrorMessage(error);
+    getErrorMessage(error);
     console.error('Error triggering webhook notifications:', error);
   }
 }
@@ -365,7 +365,7 @@ export async function broadcastEvent(
 
     await Promise.all(eventPromises);
   } catch (error: any) {
-    const message = getErrorMessage(error);
+    getErrorMessage(error);
     console.error('Error broadcasting event:', error);
   }
 }

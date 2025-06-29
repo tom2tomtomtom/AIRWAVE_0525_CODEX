@@ -27,7 +27,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     }
 
     // Get executions for this queue
-    const { data: executions, error: fetchError } = await supabase
+    const { data: executions, error: fetchError } = await supabase!
       .from('executions')
       .select('id, status')
       .eq('matrix_id', matrixId)
@@ -84,7 +84,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
     // Update executions
     const executionIds = targetExecutions.map((e: any) => e.id);
-    const { error: updateError } = await supabase
+    const { error: updateError } = await supabase!
       .from('executions')
       .update(updateData)
       .in('id', executionIds);
@@ -95,7 +95,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     }
 
     // Log the queue action
-    await supabase.from('execution_logs').insert({
+    await supabase!.from('execution_logs').insert({
       execution_id: null, // Queue-level action
       action: `queue_${action}`,
       details: {

@@ -44,6 +44,11 @@ async function searchClients(
   const sanitizedQuery = sanitizeInput(query);
 
   // Use parameterized search for security
+  if (!supabase) {
+    console.error('Supabase client not initialized');
+    return [];
+  }
+
   const { data, error } = await supabase
     .from('clients')
     .select('id, name, description, created_at, brand_colors')
@@ -81,6 +86,11 @@ async function searchCampaigns(
   const { sanitizeInput } = await import('@/utils/sanitization');
   const sanitizedQuery = sanitizeInput(query);
 
+  if (!supabase) {
+    console.error('Supabase client not initialized');
+    return [];
+  }
+
   const { data, error } = await supabase
     .from('campaigns')
     .select(
@@ -107,7 +117,7 @@ async function searchCampaigns(
     metadata: {
       date: new Date(campaign.created_at).toLocaleDateString(),
       status: campaign.status,
-      clientName: campaign.clients?.name,
+      clientName: (campaign.clients as any)?.name || 'Unknown Client',
     },
   }));
 }
@@ -119,6 +129,11 @@ async function searchAssets(query: string, userId: string, limit: number): Promi
   // Sanitize the search query to prevent SQL injection
   const { sanitizeInput } = await import('@/utils/sanitization');
   const sanitizedQuery = sanitizeInput(query);
+
+  if (!supabase) {
+    console.error('Supabase client not initialized');
+    return [];
+  }
 
   const { data, error } = await supabase
     .from('assets')
@@ -235,7 +250,7 @@ async function searchHandler(req: NextApiRequest, res: NextApiResponse) {
   try {
     // Validate request body
     const validatedData = SearchRequestSchema.parse(req.body);
-    const { query, limit, types, clientId } = validatedData;
+    const { query, limit, types, clientId: _clientId } = validatedData;
 
     const userId = (req as any).user?.id;
     if (!userId) {

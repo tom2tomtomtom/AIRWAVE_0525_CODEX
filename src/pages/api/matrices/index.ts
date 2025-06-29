@@ -19,7 +19,6 @@ const MatrixCreateSchema = z.object({
   generation_settings: z.any().optional(),
 });
 
-const MatrixUpdateSchema = MatrixCreateSchema.partial().omit(['campaign_id'] as any);
 
 async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
   const { method } = req;
@@ -205,7 +204,7 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse, user: any):
 
   // Auto-generate matrix if requested
   if (matrixData.auto_generate) {
-    const generatedMatrix = await generateMatrixContent(matrixData, template, user.id);
+    const generatedMatrix = await generateMatrixContent(matrixData, template);
     matrixData.variations = generatedMatrix.variations;
     matrixData.combinations = generatedMatrix.combinations;
     matrixData.field_assignments = generatedMatrix.field_assignments;
@@ -273,10 +272,9 @@ async function getMatrixExecutionStats(matrixId: string): Promise<any> {
       total: executions.length,
       by_status: statusBreakdown,
       by_platform: platformBreakdown,
-      last_execution: executions.length > 0 ? executions[executions.length - 1].created_at : null,
+      last_execution: executions.length > 0 ? executions[executions.length - 1]?.created_at : null,
     };
   } catch (error: any) {
-    const message = getErrorMessage(error);
     console.error('Error getting execution stats:', error);
     return { total: 0, by_status: {}, by_platform: {} };
   }
@@ -338,7 +336,7 @@ function generateMatrixSlug(name: string, campaignId: string): string {
   return `${campaignPrefix}-${baseSlug}`;
 }
 
-async function generateMatrixContent(matrixData: any, template: any, userId: string): Promise<any> {
+async function generateMatrixContent(matrixData: any, template: any): Promise<any> {
   try {
     // This is a simplified auto-generation
     // In a real implementation, this would use AI to generate optimal combinations
@@ -398,7 +396,6 @@ async function generateMatrixContent(matrixData: any, template: any, userId: str
       field_assignments: fieldAssignments,
     };
   } catch (error: any) {
-    const message = getErrorMessage(error);
     console.error('Error generating matrix content:', error);
     return {
       variations: [],

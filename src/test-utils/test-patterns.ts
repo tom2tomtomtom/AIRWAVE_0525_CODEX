@@ -5,7 +5,7 @@
 
 import { NextApiHandler } from 'next';
 import { APIRequestBuilder, APITestRunner, TestDataFactory } from './api-test-utils';
-import { describe, it, expect, beforeEach, afterEach } from '@jest/globals';
+import { describe, it, expect } from '@jest/globals';
 
 // Standard API test patterns
 export class APITestPatterns {
@@ -144,7 +144,7 @@ export class APITestPatterns {
             await handlers.list!(req, res);
             APITestRunner.expectSuccessResponse(res);
 
-            const data = JSON.parse(res._getData());
+            const data = JSON.parse((res as any)._getData());
             expect(data.data).toHaveProperty('items');
             expect(data.data).toHaveProperty('pagination');
           });
@@ -275,7 +275,7 @@ export class APITestPatterns {
 
             await handlers.session!(req, res);
 
-            const data = JSON.parse(res._getData());
+            const data = JSON.parse((res as any)._getData());
             expect(data.data.session).toBeNull();
           });
         });
@@ -371,7 +371,7 @@ export class APITestPatterns {
             await handlers.state!(req, res);
             APITestRunner.expectSuccessResponse(res);
 
-            const data = JSON.parse(res._getData());
+            const data = JSON.parse((res as any)._getData());
             expect(data.data).toHaveProperty('currentStep');
             expect(data.data).toHaveProperty('briefData');
           });
@@ -455,7 +455,7 @@ export class APITestPatterns {
 
             await handlers.costCheck!(req, res);
 
-            const data = JSON.parse(res._getData());
+            const data = JSON.parse((res as any)._getData());
             expect(data.data.allowed).toBe(false);
           });
         });
@@ -471,7 +471,7 @@ export class APITestPatterns {
             await handlers.usage!(req, res);
             APITestRunner.expectSuccessResponse(res);
 
-            const data = JSON.parse(res._getData());
+            const data = JSON.parse((res as any)._getData());
             expect(data.data).toHaveProperty('monthlyUsage');
             expect(data.data).toHaveProperty('budgetRemaining');
           });
@@ -496,7 +496,7 @@ export class APITestPatterns {
           .build();
 
         await handler(req, res);
-        expect(res._getStatusCode()).toBe(401);
+        expect((res as any)._getStatusCode()).toBe(401);
       });
 
       it('should reject expired tokens', async () => {
@@ -506,7 +506,7 @@ export class APITestPatterns {
           .build();
 
         await handler(req, res);
-        expect(res._getStatusCode()).toBe(401);
+        expect((res as any)._getStatusCode()).toBe(401);
       });
     });
   }
@@ -529,8 +529,8 @@ export class APITestPatterns {
 
         await handler(req, res);
 
-        if (res._getStatusCode() >= 400) {
-          const data = JSON.parse(res._getData());
+        if ((res as any)._getStatusCode() >= 400) {
+          const data = JSON.parse((res as any)._getData());
           expect(data).toHaveProperty('success', false);
           expect(data).toHaveProperty('error');
           expect(data.error).toHaveProperty('message');
@@ -545,7 +545,7 @@ export class APITestPatterns {
           .build();
 
         await handler(req, res);
-        expect(res._getStatusCode()).toBeGreaterThanOrEqual(400);
+        expect((res as any)._getStatusCode()).toBeGreaterThanOrEqual(400);
       });
     });
   }
@@ -603,8 +603,8 @@ export class APITestPatterns {
         await handler(req, res);
 
         // Should not return validation error
-        if (res._getStatusCode() >= 400) {
-          const data = JSON.parse(res._getData());
+        if ((res as any)._getStatusCode() >= 400) {
+          const data = JSON.parse((res as any)._getData());
           expect(data.error?.message).not.toContain('validation');
         }
       });
@@ -619,8 +619,8 @@ export class APITestPatterns {
 
           await handler(req, res);
 
-          expect(res._getStatusCode()).toBeGreaterThanOrEqual(400);
-          const data = JSON.parse(res._getData());
+          expect((res as any)._getStatusCode()).toBeGreaterThanOrEqual(400);
+          const data = JSON.parse((res as any)._getData());
           expect(data.success).toBe(false);
           expect(data.error?.message).toBeDefined();
         });
@@ -628,7 +628,7 @@ export class APITestPatterns {
 
       it('should sanitize input to prevent XSS', async () => {
         const xssData = {
-          ...testCases.valid,
+          ...(testCases.valid as Record<string, any>),
           name: "<script>alert('xss')</script>",
           description: "<img src=x onerror=alert('xss')>",
         };
@@ -641,8 +641,8 @@ export class APITestPatterns {
 
         await handler(req, res);
 
-        if (res._getStatusCode() === 200) {
-          const data = JSON.parse(res._getData());
+        if ((res as any)._getStatusCode() === 200) {
+          const data = JSON.parse((res as any)._getData());
           if (data.data) {
             expect(JSON.stringify(data.data)).not.toContain('<script>');
             expect(JSON.stringify(data.data)).not.toContain('onerror=');
@@ -652,7 +652,7 @@ export class APITestPatterns {
 
       it('should prevent SQL injection attempts', async () => {
         const sqlInjectionData = {
-          ...testCases.valid,
+          ...(testCases.valid as Record<string, any>),
           id: "1'; DROP TABLE assets; --",
           name: "'; SELECT * FROM users; --",
         };
@@ -666,7 +666,7 @@ export class APITestPatterns {
         await handler(req, res);
 
         // Should not crash the application
-        expect(res._getStatusCode()).toBeLessThan(500);
+        expect((res as any)._getStatusCode()).toBeLessThan(500);
       });
     });
   }
@@ -692,7 +692,7 @@ export class APITestPatterns {
           await handler(req, res);
 
           // Should not crash the application
-          expect(res._getStatusCode()).toBeLessThan(500);
+          expect((res as any)._getStatusCode()).toBeLessThan(500);
         });
       },
 
@@ -711,8 +711,8 @@ export class APITestPatterns {
 
           await handler(req, res);
 
-          if (res._getStatusCode() === 200) {
-            const responseData = JSON.parse(res._getData());
+          if ((res as any)._getStatusCode() === 200) {
+            const responseData = JSON.parse((res as any)._getData());
             // Check that script tags are removed/escaped
             if (responseData.data) {
               Object.values(responseData.data).forEach(value => {
@@ -733,7 +733,7 @@ export class APITestPatterns {
             APIRequestBuilder.create().setMethod('POST').withAuth().build()
           );
 
-          const responses = await Promise.all(requests.map(({ req, res }) => handler(req, res)));
+          await Promise.all(requests.map(({ req, res }) => handler(req, res)));
 
           // Check if any responses were rate limited
           // Implementation depends on rate limiting strategy

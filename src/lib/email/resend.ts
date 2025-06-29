@@ -17,7 +17,7 @@ export interface EmailOptions {
  */
 export async function sendEmail(options: EmailOptions): Promise<{ success: boolean; id?: string }> {
   // Placeholder implementation
-  loggers.db.debug('Email would be sent', { to: options.to, subject: options.subject });
+  loggers.db.debug('Email would be sent', { to: Array.isArray(options.to) ? options.to.join(',') : options.to, subject: options.subject });
 
   return {
     success: true,

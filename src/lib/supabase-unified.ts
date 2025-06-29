@@ -1,5 +1,4 @@
 import { createBrowserClient } from '@supabase/ssr';
-import { getErrorMessage } from '@/utils/errorUtils';
 import { Database } from '@/types/database';
 
 // Singleton instance to prevent multiple GoTrueClient warnings
@@ -122,7 +121,6 @@ export async function getUserFromToken(token: string): Promise<any> {
 
     return data.user;
   } catch (error: any) {
-    const message = getErrorMessage(error);
     console.error('Error getting user from token:', error);
     if (error instanceof Error) {
       throw error;
@@ -151,7 +149,6 @@ export async function getUserProfile(userId: string): Promise<any> {
 
     return data;
   } catch (error: any) {
-    const message = getErrorMessage(error);
     console.error('Error getting user profile:', error);
     throw error;
   }
@@ -176,7 +173,6 @@ export async function getUserClients(userId: string): Promise<string[]> {
 
     return data?.map((uc: { client_id: string }) => uc.client_id) || [];
   } catch (error: any) {
-    const message = getErrorMessage(error);
     console.error('Error getting user clients:', error);
     throw error;
   }
@@ -188,7 +184,6 @@ export async function userHasClientAccess(userId: string, clientId: string): Pro
     const userClients = await getUserClients(userId);
     return userClients.includes(clientId);
   } catch (error: any) {
-    const message = getErrorMessage(error);
     console.error('Error checking client access:', error);
     return false;
   }

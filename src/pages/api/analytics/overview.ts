@@ -98,6 +98,10 @@ async function getAnalyticsOverview(
     ? new Date(filters.startDate)
     : new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
 
+  if (!supabase) {
+    throw new Error('Database connection error');
+  }
+
   // Get user's accessible clients
   const { data: userClients } = await supabase
     .from('user_clients')
@@ -174,7 +178,8 @@ function calculateDailyPerformance(campaigns: any[], startDate: Date, endDate: D
   // Initialize all dates in range
   for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
     const dateStr = d.toISOString().split('T')[0];
-    dailyData[dateStr] = {
+    if (dateStr) {
+      dailyData[dateStr] = {
       date: dateStr,
       views: 0,
       engagement: 0,
@@ -183,6 +188,7 @@ function calculateDailyPerformance(campaigns: any[], startDate: Date, endDate: D
       clicks: 0,
       spend: 0,
     };
+    }
   }
 
   // Aggregate analytics data by date
@@ -255,7 +261,7 @@ async function getTopPerformingContent(
 ): Promise<Array<any>> {
   try {
     // Get campaigns with their analytics, ordered by performance
-    const { data: campaigns } = await supabase
+    const { data: campaigns } = await (supabase!
       .from('campaigns')
       .select(
         `
@@ -268,7 +274,7 @@ async function getTopPerformingContent(
       .gte('created_at', startDate.toISOString())
       .lte('created_at', endDate.toISOString())
       .order('created_at', { ascending: false })
-      .limit(10);
+      .limit(10));
 
     return (campaigns || [])
       .map((campaign: any) => {
@@ -348,7 +354,7 @@ async function calculateTrends(clientIds: string[], startDate: Date, endDate: Da
 
   try {
     // Get current period data
-    const { data: currentCampaigns } = await supabase
+    const { data: currentCampaigns } = await supabase!
       .from('campaigns')
       .select(`campaign_analytics(impressions, clicks, conversions, spend)`)
       .in('client_id', clientIds)
@@ -356,7 +362,7 @@ async function calculateTrends(clientIds: string[], startDate: Date, endDate: Da
       .lte('created_at', endDate.toISOString());
 
     // Get previous period data
-    const { data: previousCampaigns } = await supabase
+    const { data: previousCampaigns } = await supabase!
       .from('campaigns')
       .select(`campaign_analytics(impressions, clicks, conversions, spend)`)
       .in('client_id', clientIds)

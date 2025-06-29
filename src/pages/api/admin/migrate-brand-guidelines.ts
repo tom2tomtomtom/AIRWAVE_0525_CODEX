@@ -11,6 +11,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   try {
     // Add the brand_guidelines column if it doesn't exist
     process.env.NODE_ENV === 'development' && loggers.general.error('Adding brand_guidelines column...');
+    if (!supabase) {
+      return res.status(500).json({ error: 'Database client not available' });
+    }
     const { error: columnError } = await supabase.rpc('exec_sql', {
       sql: `
         DO $$ 
@@ -43,6 +46,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     // Verify the column was added
+    if (!supabase) {
+      return res.status(500).json({ error: 'Database client not available' });
+    }
     const { data: verification, error: verifyError } = await supabase
       .from('information_schema.columns')
       .select('column_name, data_type, is_nullable, column_default')

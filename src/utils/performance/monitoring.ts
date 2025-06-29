@@ -50,7 +50,11 @@ export const observePerformance = () => {
       list.getEntries().forEach((entry) => {
         // Log performance entries in development only
         if (entry.entryType === 'navigation' && process.env.NODE_ENV === 'development') {
-          loggers.ai.info('Navigation timing:', entry);
+          loggers.ai.info('Navigation timing:', { 
+            name: entry.name,
+            duration: entry.duration,
+            entryType: entry.entryType
+          });
         }
       });
     });

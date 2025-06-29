@@ -501,7 +501,7 @@ const CampaignBuilderPage: React.FC = () => {
                           </Alert>
                         )}
                         <Stepper activeStep={activeStep} orientation="vertical">
-                          {campaignSteps.map((step, index) => (
+                          {campaignSteps.map((step, _index) => (
                             <Step key={step.id}>
                               <StepLabel
                                 StepIconProps={{

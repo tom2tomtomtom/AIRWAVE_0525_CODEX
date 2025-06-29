@@ -259,7 +259,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('OAuth callback error:', error);
+    console.error('OAuth callback error:', error, 'Message:', message);
     res.redirect(`/social-publishing?error=connection_failed&platform=${platform}`);
     return;
   }

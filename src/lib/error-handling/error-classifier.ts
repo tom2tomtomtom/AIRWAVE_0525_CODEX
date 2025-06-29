@@ -297,7 +297,7 @@ export class ErrorClassifier {
     return components.join(':');
   }
   
-  private determineRecoveryActions(classification: ErrorClassification, error: Error): RecoveryAction[] {
+  private determineRecoveryActions(classification: ErrorClassification, _error: Error): RecoveryAction[] {
     const actions: RecoveryAction[] = [];
     
     switch (classification.type) {
@@ -420,7 +420,7 @@ export class ErrorClassifier {
   }
   
   private sendToAPM(error: ClassifiedError): void {
-    captureError(error.originalError, {
+    const apmData: any = {
       tags: {
         errorType: error.type,
         errorCategory: error.category,
@@ -438,12 +438,18 @@ export class ErrorClassifier {
         context: error.context,
         metadata: error.metadata,
         recoveryActions: error.recoveryActions
-      },
-      user: error.context.userId ? {
+      }
+    };
+
+    if (error.context.userId) {
+      apmData.user = {
         id: error.context.userId,
-        clientId: error.context.clientId
-      } : undefined
-    });
+        email: '', // Default value for required email field
+        ...(error.context.clientId && { clientId: error.context.clientId })
+      };
+    }
+
+    captureError(error.originalError, apmData);
   }
   
   // Error detection methods

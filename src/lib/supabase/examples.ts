@@ -87,10 +87,9 @@ export async function APIRouteExample(userId: string) {
     // Batch operation with conflict handling
     const updates = await upsertWithConflict(
       supabase,
-      'user_settings',
+      'profiles',
       [
-        { user_id: userId, key: 'theme', value: 'dark' },
-        { user_id: userId, key: 'language', value: 'en' }
+        { id: userId, first_name: 'Test', last_name: 'User' }
       ],
       {
         onConflict: 'user_id,key',
@@ -132,7 +131,7 @@ export async function CachedQueryExample(clientId: string) {
 export async function PaginatedQueryExample(page: number = 1) {
   const supabase = getSupabaseBrowserClient();
 
-  return paginatedQuery(supabase, 'campaigns', {
+  return paginatedQuery(supabase, 'briefs', {
     page,
     pageSize: 20,
     orderBy: 'created_at',
@@ -184,6 +183,10 @@ export async function AuthenticationExample(email: string, password: string) {
       operation: 'signIn',
       metadata: { email }
     });
+    return {
+      success: false,
+      message: 'Sign in failed'
+    };
   }
 }
 
@@ -223,6 +226,7 @@ export async function FileUploadExample(file: File, bucket: string) {
         bucket,
       },
     });
+    throw error;
   }
 }
 
@@ -243,7 +247,7 @@ export function RealtimeSubscriptionExample(campaignId: string, onUpdate: (paylo
         table: 'executions',
         filter: `campaign_id=eq.${campaignId}`
       },
-      payload => {
+      (payload: any) => {
         loggers.general.error('Execution update:', payload);
         onUpdate(payload);
       }

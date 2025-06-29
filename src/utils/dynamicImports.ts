@@ -14,7 +14,8 @@ const LoadingFallback = () => null; // Reference to @/components/ui/LoadingSpinn
 /**
  * Default error component reference
  */
-const ErrorFallback = ({ error: _error }: { error?: Error }) => null; // Reference to @/components/ui/ErrorFallback
+// Reference to @/components/ui/ErrorFallback - defined but not used in this utility
+// const ErrorFallback = ({ error: _error }: { error?: Error }) => null;
 
 /**
  * Enhanced dynamic import with loading and error handling
@@ -29,10 +30,13 @@ export function createLazyComponent<T = Record<string, never>>(
 ) {
   const { fallback = LoadingFallback, ssr = false } = options;
 
-  return dynamic(importFn, {
-    loading: fallback ? () => React.createElement(fallback as React.ComponentType) : undefined,
-    ssr,
-  });
+  const dynamicOptions: any = { ssr };
+  
+  if (fallback) {
+    dynamicOptions.loading = () => React.createElement(fallback as React.ComponentType);
+  }
+
+  return dynamic(importFn, dynamicOptions);
 }
 
 /**

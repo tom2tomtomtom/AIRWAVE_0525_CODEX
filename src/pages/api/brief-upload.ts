@@ -42,7 +42,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const fileBuffer = await fs.readFile(file.filepath);
       const filePath = `briefs/${Date.now()}_${file.originalFilename || 'unnamed'}`;
       
-      const { data, error } = await supabase.storage
+      const { data, error } = await supabase!
+        .storage
         .from(env.STORAGE_BUCKET)
         .upload(filePath, fileBuffer, { 
           contentType: file.mimetype || 'application/octet-stream' 
@@ -53,9 +54,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
       
       // Create brief record
-      const { data: brief, error: dbError } = await supabase
+      const { data: brief, error: dbError } = await supabase!
         .from('briefs')
-        .insert({ file_url: data.path, status: 'uploaded' })
+        .insert({ file_url: data!.path, status: 'uploaded' })
         .select()
         .single();
         
@@ -65,8 +66,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       
       return res.status(200).json({ success: true, brief });
     } catch (error: any) {
-    const message = getErrorMessage(error);
-      console.error('File processing error:', error);
+      const message = getErrorMessage(error);
+      console.error('File processing error:', message, error);
       return res.status(500).json({ 
         success: false, 
         message: 'File processing error', 

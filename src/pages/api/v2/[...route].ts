@@ -50,10 +50,10 @@ class AICostController {
   }
 
   async checkBudget(
-    service: string,
-    model: string,
-    tokens: number,
-    userId: string
+    _service: string,
+    _model: string,
+    _tokens: number,
+    _userId: string
   ): Promise<{ allowed: boolean; budgetRemaining: number; reason: string }> {
     return { allowed: true, budgetRemaining: 1000, reason: 'Budget check passed' };
   }
@@ -63,7 +63,7 @@ class AICostController {
     model: string,
     tokens: number,
     cost: number,
-    userId: string,
+    _userId: string,
     metadata: any
   ): Promise<void> {
     // Stub implementation
@@ -76,7 +76,7 @@ class PerformanceTracker {
     return new PerformanceTracker();
   }
 
-  startOperation(name: string) {
+  startOperation(_name: string) {
     return { end: () => {} };
   }
 
@@ -301,7 +301,7 @@ async function universalHandler(req: NextApiRequest, res: NextApiResponse): Prom
 
 // Health check endpoint
 async function handleHealthCheck(
-  req: NextApiRequest,
+  _req: NextApiRequest,
   res: NextApiResponse,
   context: RouteContext
 ): Promise<void> {
@@ -364,7 +364,7 @@ export async function withCostTracking(
   res: NextApiResponse,
   context: RouteContext,
   operation: string,
-  estimatedCost: number = 0
+  _estimatedCost: number = 0
 ): Promise<boolean> {
   if (!context.user?.id) {
     return true; // Skip cost tracking if no user
@@ -408,8 +408,8 @@ export async function withCostTracking(
 }
 
 // Input validation middleware
-export function validateInput(schema: any) {
-  return (req: NextApiRequest, res: NextApiResponse, next: () => void) => {
+export function validateInput(_schema: any) {
+  return (_req: NextApiRequest, res: NextApiResponse, next: () => void) => {
     try {
       // TODO: Implement Zod schema validation
       // const validated = schema.parse(req.body);

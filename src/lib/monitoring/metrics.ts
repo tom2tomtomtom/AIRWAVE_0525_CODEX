@@ -308,7 +308,7 @@ export class MetricsCollector {
   }
 
   // Helper methods for specific metric types
-  private async getRequestMetrics(startTime: number, endTime: number) {
+  private async getRequestMetrics(_startTime: number, _endTime: number) {
     // This would typically come from request logging middleware
     // For now, return mock data
     return {
@@ -321,7 +321,7 @@ export class MetricsCollector {
     };
   }
 
-  private async getUserMetrics(startTime: number, endTime: number) {
+  private async getUserMetrics(startTime: number, _endTime: number) {
     const { data: sessions } = await this.supabase
       .from('user_sessions')
       .select('user_id, created_at, is_active')
@@ -339,7 +339,7 @@ export class MetricsCollector {
     };
   }
 
-  private async getAIMetrics(startTime: number, endTime: number) {
+  private async getAIMetrics(startTime: number, _endTime: number) {
     const { data: generations } = await this.supabase
       .from('ai_generations')
       .select('status, total_tokens, cost_usd')
@@ -373,7 +373,7 @@ export class MetricsCollector {
     };
   }
 
-  private async getErrorMetrics(startTime: number, endTime: number) {
+  private async getErrorMetrics(_startTime: number, _endTime: number) {
     // This would come from error logging
     return {
       total: 0,
@@ -420,7 +420,7 @@ export class MetricsCollector {
       );
 
       if (error) {
-        logger.warn(`Failed to store ${type} metrics`, error);
+        logger.warn(`Failed to store ${type} metrics: ${error.message || error}`);
       }
 
       // Store in Redis for real-time access
@@ -466,7 +466,7 @@ export class MetricsCollector {
     type: 'system' | 'application' | 'business',
     startTime: number,
     endTime: number,
-    granularity: 'minute' | 'hour' | 'day' = 'hour'
+    _granularity: 'minute' | 'hour' | 'day' = 'hour'
   ): Promise<any[]> {
     const { data } = await this.supabase
       .from('performance_metrics')
@@ -510,7 +510,7 @@ export class MetricsCollector {
   private generateAlerts(
     system: any,
     application: any,
-    business: any
+    _business: any
   ): Array<{
     type: string;
     message: string;

@@ -164,7 +164,7 @@ export const getThemeConfig = (mode: PaletteMode) => {
       '0px 19px 38px rgba(0, 0, 0, 0.30), 0px 15px 12px rgba(0, 0, 0, 0.22)',
       '0px 24px 48px rgba(0, 0, 0, 0.35), 0px 20px 20px rgba(0, 0, 0, 0.22)',
       ...Array(18).fill('0px 24px 48px rgba(0, 0, 0, 0.35), 0px 20px 20px rgba(0, 0, 0, 0.22)') as string[],
-    ] as const,
+    ] as ["none", string, string, string, string, string, string, string, string, string, string, string, string, string, string, string, string, string, string, string, string, string, string, string, string],
     components: {
       MuiCssBaseline: {
         styleOverrides: {

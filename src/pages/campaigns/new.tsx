@@ -64,7 +64,7 @@ const NewCampaign: React.FC = () => {
   const router = useRouter();
   const { showNotification } = useNotification();
   const { activeClient } = useClient();
-  const { data: briefs } = useBriefs(activeClient?.id);
+  const { data: _briefs } = useBriefs(activeClient?.id);
 
   const [activeStep, setActiveStep] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);

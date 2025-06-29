@@ -89,7 +89,7 @@ function ThemedApp(props: MyAppProps) {
 }
 
 function MyApp(props: MyAppProps) {
-  const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
+  const { emotionCache = clientSideEmotionCache } = props;
 
   useEffect(() => {
     // Remove the server-side injected CSS

@@ -180,7 +180,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void>
     });
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Copy Assets Search API error:', error);
+    console.error('Copy Assets Search API error:', message, error);
     return res.status(500).json({
       error: 'Internal server error',
       details:
@@ -250,7 +250,7 @@ async function generateSearchSuggestions(query: string, clientIds: string[]): Pr
     return [...new Set(suggestions)].slice(0, 8);
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Error generating search suggestions:', error);
+    console.error('Error generating search suggestions:', message, error);
     return [];
   }
 }

@@ -191,7 +191,7 @@ async function handlePut(
 }
 
 async function handleDelete(
-  req: NextApiRequest,
+  _req: NextApiRequest,
   res: NextApiResponse,
   user: any,
   motivationId: string
@@ -291,7 +291,6 @@ async function getDetailedUsageStats(motivationId: string): Promise<any> {
       },
     };
   } catch (error: any) {
-    const message = getErrorMessage(error);
     console.error('Error getting detailed usage stats:', error);
     return {
       strategies: [],
@@ -342,7 +341,6 @@ async function getRelatedContent(motivationId: string, clientId: string): Promis
       suggested_content: suggestedContent || [],
     };
   } catch (error: any) {
-    const message = getErrorMessage(error);
     console.error('Error getting related content:', error);
     return {
       sibling_motivations: [],
@@ -374,8 +372,11 @@ async function generateMotivationInsights(motivation: any): Promise<string[]> {
     safety: 'Safety motivations are crucial for health and security products',
   };
 
-  if (categoryInsights[motivation.category]) {
-    insights.push(categoryInsights[motivation.category]);
+  if (motivation.category) {
+    const categoryInsight = categoryInsights[motivation.category];
+    if (categoryInsight) {
+      insights.push(categoryInsight);
+    }
   }
 
   // AI generation insights
@@ -472,7 +473,6 @@ async function getMotivationPerformanceHistory(motivationId: string): Promise<an
       },
     };
   } catch (error: any) {
-    const message = getErrorMessage(error);
     console.error('Error getting performance history:', error);
     return {
       has_data: false,
@@ -533,7 +533,6 @@ async function checkMotivationUsage(
       usageDetails,
     };
   } catch (error: any) {
-    const message = getErrorMessage(error);
     console.error('Error checking motivation usage:', error);
     return {
       isInUse: false,

@@ -86,14 +86,6 @@ export class CopyGenerator {
     'authoritative',
     'friendly',
   ];
-  private readonly PLATFORM_OPTIONS: Array<CopyVariant['platform']> = [
-    'web',
-    'social',
-    'email',
-    'print',
-    'video',
-    'universal',
-  ];
 
   private readonly CHARACTER_LIMITS = {
     headline: { short: 30, medium: 60, long: 90 },
@@ -112,12 +104,12 @@ export class CopyGenerator {
   ): Promise<CopySet> {
     const {
       variantsPerMotivation = this.DEFAULT_VARIANTS_PER_MOTIVATION,
-      includeAllTypes = true,
+      includeAllTypes: _includeAllTypes = true,
       specificTypes = this.COPY_TYPES,
       tonePreferences = this.TONE_OPTIONS,
       platformTargets = ['web', 'social', 'email'],
       brandVoice,
-      competitorAnalysis = false,
+      competitorAnalysis: _competitorAnalysis = false,
     } = options;
 
     try {
@@ -176,12 +168,7 @@ export class CopyGenerator {
       return copySet;
     } catch (error: any) {
       const classified = classifyError(error as Error, {
-        route: 'copy-generator',
-        metadata: {
-          briefId: brief.id,
-          motivationSetId: motivationSet.id,
-          selectedCount: selectedMotivationIds.length,
-        },
+        route: 'copy-generator'
       });
 
       logger.error('Copy generation failed', classified.originalError);
@@ -251,10 +238,10 @@ export class CopyGenerator {
 
     for (let i = 0; i < totalVariants; i++) {
       distribution.push({
-        type: types[i % types.length],
-        tone: tones[i % tones.length],
-        platform: platforms[i % platforms.length],
-        format: formats[i % formats.length],
+        type: types[i % types.length] || 'headline',
+        tone: tones[i % tones.length] || 'professional',
+        platform: platforms[i % platforms.length] || 'web',
+        format: formats[i % formats.length] || 'medium',
       });
     }
 
@@ -364,7 +351,7 @@ Do not include explanations or alternatives - just the final copy.
     return guidelines[type] || '';
   }
 
-  private async callAIService(prompt: string): Promise<string> {
+  private async callAIService(_prompt: string): Promise<string> {
     // Placeholder for AI service integration
     // This would integrate with OpenAI, Anthropic, or your preferred AI service
 
@@ -378,7 +365,7 @@ Do not include explanations or alternatives - just the final copy.
       'Ready to join the success stories? 🚀 #Innovation #Success',
     ];
 
-    return mockResponses[Math.floor(Math.random() * mockResponses.length)];
+    return mockResponses[Math.floor(Math.random() * mockResponses.length)] || 'Transform Your Business Today - Join Industry Leaders';
   }
 
   private async parseCopyResponse(
@@ -431,7 +418,7 @@ Do not include explanations or alternatives - just the final copy.
 
   private calculateQualityScores(
     content: string,
-    config: {
+    _config: {
       type: CopyVariant['type'];
       tone: CopyVariant['tone'];
       platform: CopyVariant['platform'];
@@ -527,7 +514,7 @@ Do not include explanations or alternatives - just the final copy.
     return Math.max(lengthScore, 0.3);
   }
 
-  private balanceVariants(variants: CopyVariant[], options: CopyGenerationOptions): CopyVariant[] {
+  private balanceVariants(variants: CopyVariant[], _options: CopyGenerationOptions): CopyVariant[] {
     // Sort by overall quality score
     const scored = variants.map((variant: any) => ({
       variant,
@@ -667,7 +654,7 @@ Do not include explanations or alternatives - just the final copy.
 
   async refineCopySet(
     copySet: CopySet,
-    refinements: {
+    _refinements: {
       improveQuality?: boolean;
       adjustTone?: CopyVariant['tone'];
       focusPlatform?: CopyVariant['platform'];
@@ -727,7 +714,7 @@ export const generateCopySet = (
 
 export const validateCopySet = (
   copySet: CopySet
-): Promise<ReturnType<CopyGenerator['validateCopySet']>> => {
+) => {
   return getCopyGenerator().validateCopySet(copySet);
 };
 

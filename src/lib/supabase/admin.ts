@@ -3,6 +3,9 @@ import { Database } from '@/types/database';
 import { validateSupabaseConfig, hasServiceRoleAccess } from './config';
 import { loggers } from '@/lib/logger';
 
+// Re-export config functions
+export { validateSupabaseConfig, hasServiceRoleAccess };
+
 // Singleton instance for admin client
 let adminClientInstance: SupabaseClient<Database> | null = null;
 

@@ -3,6 +3,8 @@
  * Implements multi-layer caching for API responses, static data, and user content
  */
 
+import { useState, useEffect, useCallback } from 'react';
+
 interface CacheConfig {
   ttl: number; // Time to live in milliseconds
   maxSize?: number; // Maximum number of entries
@@ -354,11 +356,11 @@ export function useCachedData<T>(
   fetchFn: () => Promise<T>,
   config: CacheConfig
 ) {
-  const [data, setData] = React.useState<T | null>(null);
-  const [loading, setLoading] = React.useState(true);
-  const [error, setError] = React.useState<Error | null>(null);
+  const [data, setData] = useState<T | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     let mounted = true;
 
     async function loadData() {
@@ -408,7 +410,7 @@ export function useCachedData<T>(
     };
   }, [namespace, key]);
 
-  const refresh = React.useCallback(async () => {
+  const refresh = useCallback(async () => {
     await cacheManager.delete(namespace, key);
     setLoading(true);
     
@@ -448,5 +450,4 @@ export async function preloadData<T>(
   }
 }
 
-// React import for the hook
-const React = typeof window !== 'undefined' ? require('react') : { useState: () => [null, () => {}], useEffect: () => {}, useCallback: (fn: any) => fn };
+// React hooks are now properly imported at the top of the file

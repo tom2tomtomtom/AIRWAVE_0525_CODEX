@@ -146,7 +146,7 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse, user: any): 
     });
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Error in handleGet:', error);
+    console.error('Error in handleGet:', message, error);
     return res.status(500).json({ error: 'Failed to fetch notifications' });
   }
 }
@@ -235,7 +235,7 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse, user: any):
     });
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Error creating notification:', error);
+    console.error('Error creating notification:', message, error);
     return res.status(500).json({ error: 'Failed to create notification' });
   }
 }
@@ -339,7 +339,7 @@ async function handleBulkUpdate(
     });
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error(`Error in bulk ${action}:`, error);
+    console.error(`Error in bulk ${action}:`, message, error);
     return res.status(500).json({ error: `Failed to ${action} notifications` });
   }
 }
@@ -396,7 +396,7 @@ async function calculateNotificationStatistics(userId: string, clientIds: string
     };
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Error calculating notification statistics:', error);
+    console.error('Error calculating notification statistics:', message, error);
     return getEmptyStatistics();
   }
 }
@@ -436,7 +436,7 @@ async function triggerNotificationEvent(notification: any): Promise<void> {
     );
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Error triggering notification event:', error);
+    console.error('Error triggering notification event:', message, error);
   }
 }
 
@@ -445,7 +445,7 @@ export async function createExecutionNotification(
   executionId: string,
   status: string,
   clientId: string,
-  createdBy: string
+  _createdBy: string
 ): Promise<void> {
   try {
     const { data: execution } = await supabase
@@ -472,7 +472,7 @@ export async function createExecutionNotification(
     if (!statusInfo) return;
 
     // Create notification
-    const response = await fetch('/api/notifications', {
+    await fetch('/api/notifications', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -491,7 +491,7 @@ export async function createExecutionNotification(
     });
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Error creating execution notification:', error);
+    console.error('Error creating execution notification:', message, error);
   }
 }
 
@@ -499,7 +499,7 @@ export async function createApprovalNotification(
   approvalId: string,
   action: string,
   clientId: string,
-  createdBy: string
+  _createdBy: string
 ): Promise<void> {
   try {
     const { data: approval } = await supabase
@@ -525,7 +525,7 @@ export async function createApprovalNotification(
     const actionInfo = actionMessages[action as keyof typeof actionMessages];
     if (!actionInfo) return;
 
-    const response = await fetch('/api/notifications', {
+    await fetch('/api/notifications', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -544,7 +544,7 @@ export async function createApprovalNotification(
     });
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Error creating approval notification:', error);
+    console.error('Error creating approval notification:', message, error);
   }
 }
 

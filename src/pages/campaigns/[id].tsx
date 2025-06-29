@@ -1,91 +1,16 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
-import { Box, Container } from '@mui/material';
-import {
-  Edit,
-  TrendingUp,
-  Facebook,
-  Instagram,
-  Twitter,
-  YouTube,
-  LinkedIn,
-  CheckCircle,
-  Warning,
-  Error,
-} from '@mui/icons-material';
+import { Container } from '@mui/material';
 import DashboardLayout from '../../components/DashboardLayout';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import ErrorMessage from '../../components/ErrorMessage';
 import { useCampaign } from '../../hooks/useData';
-import { useNotification } from '../../contexts/NotificationContext';
-interface TabPanelProps {
-  children?: React.ReactNode;
-  index: number;
-  value: number;
-}
-function TabPanel(props: TabPanelProps) {
-  const { children, value, index, ...other } = props;
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`campaign-tabpanel-${index}`}
-      aria-labelledby={`campaign-tab-${index}`}
-      {...other}
-    >
-      {' '}
-      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}{' '}
-    </div>
-  );
-}
-const platformIcons: Record<string, React.ReactElement> = {
-  facebook: <Facebook />,
-  instagram: <Instagram />,
-  twitter: <Twitter />,
-  youtube: <YouTube />,
-  linkedin: <LinkedIn /> };
-const statusColors: Record<
-  string,
-  'default' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning'
-> = {
-  draft: 'default',
-  active: 'primary',
-  paused: 'warning',
-  completed: 'success',
-  cancelled: 'error' };
-const statusIcons: Record<string, React.ReactElement> = {
-  draft: <Edit fontSize="small" />,
-  active: <TrendingUp fontSize="small" />,
-  paused: <Warning fontSize="small" />,
-  completed: <CheckCircle fontSize="small" />,
-  cancelled: <Error fontSize="small" /> };
 export default function CampaignDetail() {
   const router = useRouter();
   const { id } = router.query;
-  const { showNotification } = useNotification();
-  const [tabValue, setTabValue] = useState(0);
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [_tabValue] = useState(0);
+  const [_anchorEl] = useState<null | HTMLElement>(null);
   const { data: campaign, isLoading: loading, error } = useCampaign(id as string);
-  const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
-    setTabValue(newValue);
-  };
-  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-  };
-  const handleEdit = () => {
-    router.push(`/campaigns/${id}/edit`);
-  };
-  const handleDuplicate = () => {
-    showNotification('Campaign duplicated successfully', 'success');
-    handleMenuClose();
-  };
-  const handleArchive = () => {
-    showNotification('Campaign archived', 'info');
-    handleMenuClose();
-  };
   if (loading) {
     return (
       <DashboardLayout>

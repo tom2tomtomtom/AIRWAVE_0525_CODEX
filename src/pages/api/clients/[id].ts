@@ -3,7 +3,6 @@ import { getErrorMessage } from '@/utils/errorUtils';
 import { withAuth } from '@/middleware/withAuth';
 import { withSecurityHeaders } from '@/middleware/withSecurityHeaders';
 import type { Client } from '@/types/models';
-import { createServerClient } from '@supabase/ssr';
 import { getServiceSupabase } from '@/lib/supabase';
 
 type ResponseData = {
@@ -31,24 +30,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseData>):
     });
   }
 
-  // Create Supabase server client with proper cookie handling
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        get(name: string) {
-          return req.cookies[name];
-        },
-        set(name: string, value: string, options: any) {
-          // We don't need to set cookies in API routes
-        },
-        remove(name: string, options: any) {
-          // We don't need to remove cookies in API routes
-        },
-      },
-    }
-  );
+  // Note: We use service role client directly instead of user-scoped client
 
   try {
     if (!user) {
@@ -106,7 +88,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseData>):
     }
 
     // Fetch contacts for this client using service role
-    const { data: contacts, error: contactsError } = await serviceSupabase
+    const { data: contacts, error: _contactsError } = await serviceSupabase
       .from('client_contacts')
       .select('*')
       .eq('client_id', id)
@@ -137,7 +119,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseData>):
     });
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Individual client API error:', error);
+    console.error('Individual client API error:', message, error);
     return res.status(500).json({
       success: false,
       message: 'Internal server error',

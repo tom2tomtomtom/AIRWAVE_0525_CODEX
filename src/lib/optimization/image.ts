@@ -204,14 +204,23 @@ export class ImageOptimizer {
         );
       }
       
-      const metadata = await this.getImageMetadata(standardImages[0].buffer);
+      const firstImage = standardImages[0];
+      if (!firstImage) {
+        throw new Error('No images generated');
+      }
+      const metadata = await this.getImageMetadata(firstImage.buffer);
       
-      return {
+      const result: any = {
         sizes: standardImages,
         webp: webpImages,
-        avif: avifImages,
         metadata
       };
+      
+      if (avifImages) {
+        result.avif = avifImages;
+      }
+      
+      return result;
       
     } catch (error: any) {
       logger.error('Responsive image generation failed', error);
@@ -252,12 +261,12 @@ export class ImageOptimizer {
   
   async extractDominantColor(input: Buffer | string): Promise<string> {
     try {
-      const { dominant } = await sharp(input)
+      const { data } = await sharp(input)
         .resize(1, 1)
         .raw()
         .toBuffer({ resolveWithObject: true });
       
-      const [r, g, b] = dominant.data;
+      const [r, g, b] = data;
       return `rgb(${r}, ${g}, ${b})`;
       
     } catch (error: any) {

@@ -312,14 +312,14 @@ export function validateTemplate(template: any): { valid: boolean; data?: any; e
  * Rate limiting validation for AI operations
  */
 export function validateAIOperationRate(
-  userId: string,
-  operation: string,
+  _userId: string,
+  _operation: string,
   windowMs: number = 60000, // 1 minute
-  maxRequests: number = 10
+  _maxRequests: number = 10
 ): { allowed: boolean; resetTime?: number } {
   // This would typically use Redis for distributed rate limiting
   // For now, implementing a simple in-memory version
-  const key = `${userId}:${operation}`;
+  // const _key = `${userId}:${operation}`;
   const now = Date.now();
 
   // In production, this should use Redis with sliding window

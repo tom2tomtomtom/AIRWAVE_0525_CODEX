@@ -42,7 +42,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void>
 }
 
 async function handleGet(
-  req: NextApiRequest,
+  _req: NextApiRequest,
   res: NextApiResponse,
   user: any,
   notificationId: string
@@ -153,7 +153,7 @@ async function handleGet(
     return res.json({ data: enrichedNotification });
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Error in handleGet:', error);
+    console.error('Error in handleGet:', message, error);
     return res.status(500).json({ error: 'Failed to fetch notification' });
   }
 }
@@ -233,13 +233,13 @@ async function handlePut(
     return res.json({ data: notification });
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Error in handlePut:', error);
+    console.error('Error in handlePut:', message, error);
     return res.status(500).json({ error: 'Failed to update notification' });
   }
 }
 
 async function handleDelete(
-  req: NextApiRequest,
+  _req: NextApiRequest,
   res: NextApiResponse,
   user: any,
   notificationId: string
@@ -283,7 +283,7 @@ async function handleDelete(
     return res.status(200).json({ message: 'Notification deleted successfully' });
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Error in handleDelete:', error);
+    console.error('Error in handleDelete:', message, error);
     return res.status(500).json({ error: 'Failed to delete notification' });
   }
 }

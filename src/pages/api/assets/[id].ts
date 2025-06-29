@@ -40,7 +40,7 @@ async function getAsset(
   userId: string
 ) {
   try {
-    const { data: asset, error } = await supabase
+    const { data: asset, error } = await supabase!
       .from('assets')
       .select('*')
       .eq('id', assetId)
@@ -59,7 +59,7 @@ async function getAsset(
       asset: asset });
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Error fetching asset:', error);
+    console.error('Error fetching asset:', message);
     return res.status(500).json({ success: false, message: 'Internal server error' });
   }
 }
@@ -83,7 +83,7 @@ async function updateAsset(
     if (tags !== undefined) updateData.tags = tags;
     if (favorite !== undefined) updateData.favorite = favorite;
 
-    const { data: asset, error } = await supabase
+    const { data: asset, error } = await supabase!
       .from('assets')
       .update(updateData)
       .eq('id', assetId)
@@ -103,7 +103,7 @@ async function updateAsset(
       asset: asset });
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Error updating asset:', error);
+    console.error('Error updating asset:', message);
     return res.status(500).json({ success: false, message: 'Internal server error' });
   }
 }
@@ -115,7 +115,7 @@ async function deleteAsset(
   userId: string
 ) {
   try {
-    const { data: asset, error } = await supabase
+    const { data: asset, error } = await supabase!
       .from('assets')
       .delete()
       .eq('id', assetId)
@@ -136,7 +136,7 @@ async function deleteAsset(
       asset: asset });
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Error deleting asset:', error);
+    console.error('Error deleting asset:', message);
     return res.status(500).json({ success: false, message: 'Internal server error' });
   }
 }

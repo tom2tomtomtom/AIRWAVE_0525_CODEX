@@ -1,5 +1,4 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { withAuth } from '@/middleware/withAuth';
 import { withRoles } from '@/middleware/withAuth';
 import { UserRole } from '@/types/auth';
 import { securityLogger, SecurityEventType, SecuritySeverity } from '@/lib/security/security-logger';
@@ -121,10 +120,10 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
     // Get security events based on filters
     const events = securityLogger.getEvents({
-      userId,
-      ip,
-      type,
-      severity,
+      ...(userId && { userId }),
+      ...(ip && { ip }),
+      ...(type && { type }),
+      ...(severity && { severity }),
       minutes: minutesNum,
       limit: limitNum
     });

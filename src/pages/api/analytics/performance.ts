@@ -88,7 +88,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void>
     return handleGet(req, res, user);
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Performance Analytics API error:', error);
+    console.error('Performance Analytics API error:', message);
     return res.status(500).json({
       error: 'Internal server error',
       details:
@@ -352,7 +352,7 @@ function calculatePerformanceScore(metrics: any): number {
   return Math.round(ctrScore + conversionScore + roasScore + efficiencyScore);
 }
 
-async function getTopPerformers(filters: any, campaigns: any[]): Promise<any> {
+async function getTopPerformers(_filters: any, campaigns: any[]): Promise<any> {
   // Top performing campaigns
   const topCampaigns = campaigns.slice(0, 5).map((campaign: any) => ({
     id: campaign.id,

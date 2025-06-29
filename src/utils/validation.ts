@@ -267,22 +267,22 @@ export function validateField(value: unknown, rule: ValidationRule): string | nu
         }
         break;
       case 'email':
-        if (!isValidEmail(value)) {
+        if (!isValidEmail(value as string)) {
           return 'Must be a valid email address';
         }
         break;
       case 'url':
-        if (!isValidUrl(value)) {
+        if (!isValidUrl(value as string)) {
           return 'Must be a valid URL';
         }
         break;
       case 'uuid':
-        if (!isValidUuid(value)) {
+        if (!isValidUuid(value as string)) {
           return 'Must be a valid UUID';
         }
         break;
       case 'json':
-        if (!isValidJson(value)) {
+        if (!isValidJson(value as string)) {
           return 'Must be valid JSON';
         }
         break;
@@ -324,7 +324,7 @@ export function validateData(data: unknown, schema: ValidationSchema): Validatio
 
   // Validate each field in schema
   Object.keys(schema).forEach((key: string) => {
-    const value = data[key];
+    const value = (data as Record<string, unknown>)[key];
     const rule = schema[key];
 
     if (rule) {
@@ -483,10 +483,10 @@ export function withValidation(
   handler: (req: unknown, res: unknown) => Promise<void>
 ) {
   return async (req: unknown, res: unknown) => {
-    const validation = validateData(req.body, schema);
+    const validation = validateData((req as any).body, schema);
 
     if (!validation.isValid) {
-      return res.status(400).json({
+      return (res as any).status(400).json({
         error: 'Validation failed',
         code: 'VALIDATION_ERROR',
         details: validation.errors,
@@ -494,7 +494,7 @@ export function withValidation(
     }
 
     // Replace request body with sanitized data
-    req.body = validation.sanitizedData;
+    (req as any).body = validation.sanitizedData;
 
     return handler(req, res);
   };
@@ -513,7 +513,7 @@ export function sanitizeFileData(file: unknown): {
   }
 
   // Check file size (10MB max)
-  if (file.size > 10 * 1024 * 1024) {
+  if ((file as any).size > 10 * 1024 * 1024) {
     return { isValid: false, error: 'File too large (max 10MB)' };
   }
 
@@ -530,12 +530,12 @@ export function sanitizeFileData(file: unknown): {
     'application/pdf',
   ];
 
-  if (!allowedTypes.includes(file.type)) {
+  if (!allowedTypes.includes((file as any).type)) {
     return { isValid: false, error: 'File type not allowed' };
   }
 
   // Sanitize filename
-  const sanitizedName = file.name
+  const sanitizedName = (file as any).name
     .replace(/[^a-zA-Z0-9.-]/g, '_')
     .replace(/_{2}/g, '_')
     .toLowerCase();

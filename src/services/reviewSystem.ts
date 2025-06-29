@@ -205,7 +205,7 @@ export class ReviewSystem {
         currentStage: 0,
         status: 'pending',
         priority: options.priority || 'medium',
-        deadline: options.deadline,
+        ...(options.deadline && { deadline: options.deadline }),
         createdAt: new Date(),
         updatedAt: new Date(),
         createdBy: options.createdBy,
@@ -222,7 +222,7 @@ export class ReviewSystem {
       await this.saveWorkflow(workflow);
 
       // Send initial notifications
-      await this.sendStageNotifications(workflow, stages[0]);
+      await this.sendStageNotifications(workflow, stages[0]!);
 
       // Start workflow
       workflow.status = 'in-review';
@@ -312,7 +312,7 @@ export class ReviewSystem {
 
       return {
         success: true,
-        nextStage,
+        ...(nextStage && { nextStage }),
         workflowStatus: workflow.status,
         notifications,
       };
@@ -342,7 +342,7 @@ export class ReviewSystem {
 
       return {
         workflow,
-        currentStage,
+        currentStage: currentStage!,
         pendingReviewers,
         recentActivity,
         analytics,
@@ -355,7 +355,7 @@ export class ReviewSystem {
 
   async addComment(
     workflowId: string,
-    stageId: string,
+    _stageId: string,
     comment: Omit<ReviewComment, 'id' | 'createdAt' | 'status'>
   ): Promise<ReviewComment> {
     try {
@@ -472,7 +472,7 @@ export class ReviewSystem {
 
     const selectedStages = baseStages[template] || baseStages.standard;
 
-    return selectedStages.map((stage, index) => ({
+    return selectedStages!.map((stage, index) => ({
       id: this.generateStageId(),
       name: stage.name || `Stage ${index + 1}`,
       description: stage.description || '',
@@ -481,10 +481,10 @@ export class ReviewSystem {
       requirements: this.generateStageRequirements(stage.type || 'content'),
       status: 'pending',
       approvalThreshold: stage.approvalThreshold || 'majority',
-      timeLimit: stage.timeLimit,
+      ...(stage.timeLimit && { timeLimit: stage.timeLimit }),
       order: stage.order || index + 1,
       isOptional: stage.isOptional || false,
-      autoApprove: stage.autoApprove,
+      ...(stage.autoApprove !== undefined && { autoApprove: stage.autoApprove }),
       escalationRules: this.generateEscalationRules(stage.type || 'content'),
     }));
   }
@@ -518,7 +518,7 @@ export class ReviewSystem {
 
     const templates = requirementTemplates[stageType] || requirementTemplates.content;
 
-    return templates.map((req: any) => ({
+    return templates!.map((req: any) => ({
       id: this.generateRequirementId(),
       name: req.name || 'Requirement',
       description: req.description || '',
@@ -527,7 +527,7 @@ export class ReviewSystem {
     }));
   }
 
-  private generateEscalationRules(stageType: string): EscalationRule[] {
+  private generateEscalationRules(_stageType: string): EscalationRule[] {
     return [
       {
         id: this.generateEscalationId(),
@@ -552,7 +552,7 @@ export class ReviewSystem {
     // In production, would use more sophisticated assignment logic
     reviewers.forEach((reviewer, index) => {
       const stageIndex = index % stages.length;
-      stages[stageIndex].reviewers.push({
+      stages[stageIndex]!.reviewers.push({
         ...reviewer,
         status: 'assigned',
         assignedAt: new Date(),
@@ -561,7 +561,7 @@ export class ReviewSystem {
   }
 
   private async checkStageCompletion(
-    workflow: ReviewWorkflow,
+    _workflow: ReviewWorkflow,
     stage: ReviewStage
   ): Promise<boolean> {
     const completedReviewers = stage.reviewers.filter((r: any) => r.status === 'completed');
@@ -597,18 +597,18 @@ export class ReviewSystem {
     } else {
       // Move to next stage
       const nextStage = workflow.stages[workflow.currentStage];
-      nextStage.status = 'in-progress';
+      nextStage!.status = 'in-progress';
       workflow.updatedAt = new Date();
       await this.updateWorkflow(workflow);
 
-      const notifications = await this.sendStageNotifications(workflow, nextStage);
-      return { nextStage, notifications };
+      const notifications = await this.sendStageNotifications(workflow, nextStage!);
+      return { ...(nextStage && { nextStage }), notifications };
     }
   }
 
   private async handleRevisionRequest(
     workflow: ReviewWorkflow,
-    submission: ReviewSubmission
+    _submission: ReviewSubmission
   ): Promise<void> {
     workflow.metadata.revisionRounds += 1;
     workflow.status = 'revision-requested';
@@ -867,7 +867,7 @@ export class ReviewSystem {
       currentStage: row.current_stage || 0,
       status: row.status,
       priority: row.priority,
-      deadline: row.deadline ? new Date(row.deadline) : undefined,
+      ...(row.deadline && { deadline: new Date(row.deadline) }),
       createdAt: new Date(row.created_at),
       updatedAt: new Date(row.updated_at),
       createdBy: row.created_by,

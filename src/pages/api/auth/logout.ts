@@ -21,7 +21,7 @@ export default async function handler(
     if (token) {
       // Try to sign out from Supabase
       try {
-        await supabase.auth.signOut();
+        await supabase!.auth.signOut();
       } catch (error: any) {
         console.error('Supabase signout error:', error);
         // Continue with cookie clearing even if Supabase signout fails

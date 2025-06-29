@@ -67,7 +67,7 @@ async function handler(
     });
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('MFA verification error:', error);
+    console.error('MFA verification error:', message);
     return res.status(500).json({
       success: false,
       error: 'Failed to verify MFA. Please try again.',

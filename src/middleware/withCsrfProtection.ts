@@ -55,30 +55,30 @@ const DEFAULT_OPTIONS: Required<CsrfOptions> = {
 /**
  * Generate a cryptographically secure CSRF token
  */
-function generateCsrfToken(length: number = 32): string {
-  return crypto.randomBytes(length).toString('hex');
-}
+// function _generateCsrfToken(length: number = 32): string {
+//   return crypto.randomBytes(length).toString('hex');
+// }
 
 /**
  * Validate CSRF token using timing-safe comparison
  */
-function validateCsrfToken(token: string, cookieToken: string): boolean {
-  if (!token || !cookieToken) {
-    return false;
-  }
-
-  try {
-    // Ensure both tokens are the same length to prevent timing attacks
-    if (token.length !== cookieToken.length) {
-      return false;
-    }
-
-    return crypto.timingSafeEqual(Buffer.from(token, 'hex'), Buffer.from(cookieToken, 'hex'));
-  } catch (error) {
-    console.error('CSRF token validation error:', error);
-    return false;
-  }
-}
+// function _validateCsrfToken(token: string, cookieToken: string): boolean {
+//   if (!token || !cookieToken) {
+//     return false;
+//   }
+//
+//   try {
+//     // Ensure both tokens are the same length to prevent timing attacks
+//     if (token.length !== cookieToken.length) {
+//       return false;
+//     }
+//
+//     return crypto.timingSafeEqual(Buffer.from(token, 'hex'), Buffer.from(cookieToken, 'hex'));
+//   } catch (error) {
+//     console.error('CSRF token validation error:', error);
+//     return false;
+//   }
+// }
 
 /**
  * Extract CSRF token from request headers or body
@@ -280,7 +280,7 @@ export function withCsrfProtection(
  * Generate CSRF token for client-side use
  */
 export async function generateCsrfTokenAPI(
-  req: NextApiRequest,
+  _req: NextApiRequest,
   res: NextApiResponse
 ): Promise<void> {
   const options = { ...DEFAULT_OPTIONS };

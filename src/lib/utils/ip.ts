@@ -20,8 +20,8 @@ export function getClientIp(req: NextApiRequest): string {
   // X-Forwarded-For can contain multiple IPs, take the first one
   if (forwardedFor) {
     const ips = Array.isArray(forwardedFor) ? forwardedFor[0] : forwardedFor;
-    const firstIp = ips.split(',')[0].trim();
-    if (isValidIp(firstIp)) {
+    const firstIp = ips?.split(',')[0]?.trim();
+    if (firstIp && isValidIp(firstIp)) {
       return firstIp;
     }
   }
@@ -102,7 +102,7 @@ export function getRegionFromIp(ip: string): string {
 
   // This is a very basic implementation
   // In production, integrate with a proper GeoIP service
-  const firstOctet = parseInt(ip.split('.')[0]);
+  const firstOctet = parseInt(ip?.split('.')[0] || '0');
 
   if (firstOctet >= 1 && firstOctet <= 126) {
     return 'region-a'; // North America/Europe

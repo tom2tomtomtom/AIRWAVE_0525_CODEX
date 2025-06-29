@@ -235,7 +235,7 @@ async function selectWorkflowAssets(
     }
 
     // Update or create workflow session
-    const { data: workflow, error: workflowError } = await supabase
+    const { data: _workflow, error: workflowError } = await supabase
       .from('workflow_sessions')
       .upsert({
         id: workflowId,

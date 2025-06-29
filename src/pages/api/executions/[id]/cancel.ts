@@ -31,7 +31,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void>
     return handleCancel(req, res, user, id);
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Execution Cancel API error:', error);
+    console.error('Execution Cancel API error:', message, error);
     return res.status(500).json({
       error: 'Internal server error',
       details:
@@ -267,7 +267,7 @@ async function cleanupExternalResources(execution: any): Promise<any> {
     return cleanupResult;
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Error cleaning up external resources:', error);
+    console.error('Error cleaning up external resources:', message, error);
     cleanupResult.errors.push({
       type: 'general_cleanup',
       error: error instanceof Error ? error.message : String(error),
@@ -287,6 +287,7 @@ async function cancelCreatomateJob(jobId: string): Promise<{ success: boolean; e
     return { success: true };
   } catch (error: any) {
     const message = getErrorMessage(error);
+    console.error('Creatomate job cancellation error:', message);
     return {
       success: false,
       error: `Failed to cancel Creatomate job: ${error instanceof Error ? error.message : String(error)}`,
@@ -311,6 +312,7 @@ async function cancelPendingWebhooks(
       });
     } catch (error: any) {
       const message = getErrorMessage(error);
+      console.error('Webhook cancellation error:', message);
       errors.push({
         type: 'webhook',
         resource_id: webhookId,
@@ -332,7 +334,7 @@ async function cleanupTempFiles(
     return { success: true, files_cleaned: tempFiles.length };
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Error cleaning up temp files:', error);
+    console.error('Error cleaning up temp files:', message, error);
     return { success: false, files_cleaned: 0 };
   }
 }
@@ -394,7 +396,7 @@ async function handleRelatedExecutions(execution: any, force: boolean): Promise<
     };
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Error handling related executions:', error);
+    console.error('Error handling related executions:', message, error);
     return {
       affected_count: 0,
       actions: [],
@@ -418,11 +420,11 @@ async function logCancellationEvent(
     });
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Error logging cancellation event:', error);
+    console.error('Error logging cancellation event:', message, error);
   }
 }
 
-async function triggerCancellationNotification(execution: any, user: any): Promise<void> {
+async function triggerCancellationNotification(execution: any, _user: any): Promise<void> {
   try {
     // In a full implementation, this would trigger real-time notifications
     // via WebSocket or Server-Sent Events to relevant stakeholders
@@ -430,7 +432,7 @@ async function triggerCancellationNotification(execution: any, user: any): Promi
       loggers.general.error('Triggering cancellation notification for execution:', execution.id);
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Error triggering cancellation notification:', error);
+    console.error('Error triggering cancellation notification:', message, error);
   }
 }
 

@@ -178,7 +178,7 @@ async function checkAIServicesHealth(): Promise<HealthCheckResult> {
     let degradedServices = 0;
     let unhealthyServices = 0;
     
-    for (const [service, status] of Object.entries(circuitStatus)) {
+    for (const [, status] of Object.entries(circuitStatus)) {
       if (status.state === 'CLOSED') {
         healthyServices++;
       } else if (status.state === 'HALF_OPEN') {
@@ -260,7 +260,6 @@ async function checkMetricsHealth(): Promise<HealthCheckResult> {
     const realtimeStatus = await workflowMetrics.getRealTimeStatus();
     const responseTime = Date.now() - startTime;
     
-    const hasRecentActivity = realtimeStatus.activeSessions > 0;
     const hasPerformanceIssues = realtimeStatus.performanceAlerts.filter((a: any) => a.severity === 'high').length > 0;
     
     let status: 'healthy' | 'degraded' | 'unhealthy' = 'healthy';
@@ -300,7 +299,6 @@ async function checkCostMonitorHealth(): Promise<HealthCheckResult> {
     const dashboardData = await aiCostMonitor.getDashboardData('health_check_user');
     const responseTime = Date.now() - startTime;
     
-    const hasHighUsage = dashboardData.overallPercentUsed > 90;
     const hasCriticalAlerts = dashboardData.recentAlerts.filter((a: any) => a.severity === 'critical').length > 0;
     
     let status: 'healthy' | 'degraded' | 'unhealthy' = 'healthy';
@@ -388,8 +386,8 @@ async function getWorkflowMetrics(): Promise<{
     const performanceAlerts = realtimeStatus.performanceAlerts;
     const avgResponseTime = performanceAlerts.length > 0 
       ? performanceAlerts.reduce((sum, alert) => {
-          const match = alert.issue.match(/(\d+\.?\d*)s/);
-          return sum + (match ? parseFloat(match[1]) * 1000 : 0);
+          const match = alert.issue?.match(/(\d+\.?\d*)s/);
+          return sum + (match && match[1] ? parseFloat(match[1]) * 1000 : 0);
         }, 0) / performanceAlerts.length
       : 0;
     
@@ -399,7 +397,6 @@ async function getWorkflowMetrics(): Promise<{
     const errorRate = totalErrors / totalSessions;
     
     // Get cache stats for hit rate
-    const cacheStats = await aiResponseCache.getStats();
     const cacheHitRate = 0.85; // Placeholder - would calculate from actual cache metrics
     
     return {

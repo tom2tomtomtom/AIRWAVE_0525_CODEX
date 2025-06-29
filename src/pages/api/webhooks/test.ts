@@ -1,4 +1,3 @@
-import { getErrorMessage } from '@/utils/errorUtils';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { withErrorHandler } from '@/lib/errors/errorHandler';
 import { withAPIRateLimit } from '@/lib/rate-limiter';
@@ -51,7 +50,6 @@ async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void>
       success: true,
       message: `Webhook event '${event}' triggered successfully`});
   } catch (error: any) {
-    const message = getErrorMessage(error);
     console.error('Failed to trigger test webhook:', error);
     throw error;
   }

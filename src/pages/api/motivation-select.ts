@@ -20,7 +20,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
   const { strategy_id, selected, custom = [], user_id } = parseResult.data;
   // Save selected motivations and any custom ones
-  const { data, error } = await supabase
+  const { data, error } = await supabase!
     .from('selected_motivations')
     .insert({
       strategy_id,
@@ -35,5 +35,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       .status(500)
       .json({ success: false, message: 'Failed to save selection', error: error.message });
   }
-  return res.status(200).json({ success: true, selection: data });
+  return res.status(200).json({ success: true, selection: data! });
 }

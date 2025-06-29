@@ -57,12 +57,15 @@ export function createError(
   status?: number,
   details?: unknown
 ): AppError {
-  return {
+  const result: any = {
     message,
-    code,
-    status,
-    details,
   };
+  
+  if (code) result.code = code;
+  if (status) result.status = status;
+  if (details) result.details = details;
+  
+  return result;
 }
 
 /**
@@ -105,7 +108,8 @@ export function formatApiError(error: unknown): { error: string; code?: string }
   if (isAppError(error)) {
     return {
       error: error.message,
-      code: error.code };
+      ...(error.code && { code: error.code })
+    };
   }
 
   const message = getErrorMessage(error);
@@ -118,7 +122,7 @@ export function formatApiError(error: unknown): { error: string; code?: string }
  * @param error - The error that occurred
  * @param errorInfo - Additional error information
  */
-export function handleComponentError(error: Error, errorInfo: unknown): void {
+export function handleComponentError(error: Error, _errorInfo: unknown): void {
   logError(error, 'Component Error');
 
   // In production, you might want to send errors to a monitoring service

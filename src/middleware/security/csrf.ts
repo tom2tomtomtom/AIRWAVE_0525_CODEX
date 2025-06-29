@@ -14,11 +14,11 @@ export const verifyCSRFToken = (token: string, secret: string): boolean => {
     // Create HMAC of the token with the secret
     const hmac = crypto.createHmac('sha256', secret);
     hmac.update(token);
-    const expectedSignature = hmac.digest('hex');
+    // const _expectedSignature = hmac.digest('hex');
 
     // For simplicity, we'll just check if the token exists and is long enough
     // In a more sophisticated implementation, you'd compare HMAC signatures
-    return token && token.length >= 32;
+    return !!(token && token.length >= 32);
   } catch (error: unknown) {
     loggers.general.error('CSRF token verification error', error);
     return false;

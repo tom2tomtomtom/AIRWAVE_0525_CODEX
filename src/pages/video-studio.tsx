@@ -120,7 +120,7 @@ const VideoStudioPage: React.FC = () => {
 
   // State management
   const [activeStep, setActiveStep] = useState(0);
-  const [loading, setLoading] = useState(false);
+  const [_loading, _setLoading] = useState(false);
   const [generating, setGenerating] = useState(false);
   const [templates, setTemplates] = useState<VideoTemplate[]>([]);
   const [selectedTemplate, setSelectedTemplate] = useState<VideoTemplate | null>(null);
@@ -139,13 +139,12 @@ const VideoStudioPage: React.FC = () => {
   const [contentElements, setContentElements] = useState<ContentElements>({
     text_overlays: [],
     background_music: true,
-    voice_over: undefined,
-    brand_elements: activeClient
-      ? {
-          logo_url: activeClient.logo,
-          color_scheme: [activeClient.primaryColor, activeClient.secondaryColor],
-        }
-      : undefined,
+    ...(activeClient && {
+      brand_elements: {
+        logo_url: activeClient.logo,
+        color_scheme: [activeClient.primaryColor, activeClient.secondaryColor],
+      },
+    }),
   });
 
   const [generationSettings, setGenerationSettings] = useState({
@@ -369,7 +368,7 @@ const VideoStudioPage: React.FC = () => {
             <Grid size={{ xs: 12 }}>
               <Paper sx={{ p: 3, mb: 3 }}>
                 <Stepper activeStep={activeStep} orientation="horizontal">
-                  {steps.map((label, index) => (
+                  {steps.map((label, _index) => (
                     <Step key={label}>
                       <StepLabel>{label}</StepLabel>
                     </Step>
@@ -798,10 +797,8 @@ const VideoStudioPage: React.FC = () => {
                                         },
                                       });
                                     } else {
-                                      setContentElements({
-                                        ...contentElements,
-                                        voice_over: undefined,
-                                      });
+                                      const { voice_over, ...elementsWithoutVoiceOver } = contentElements;
+                                      setContentElements(elementsWithoutVoiceOver);
                                     }
                                   }}
                                 />

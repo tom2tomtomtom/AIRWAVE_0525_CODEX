@@ -98,15 +98,15 @@ async function handleAssetsCRUD(
   }
 }
 
-async function getAssets(req: NextApiRequest, res: NextApiResponse, context: RouteContext) {
+async function getAssets(_req: NextApiRequest, res: NextApiResponse, context: RouteContext) {
   const {
     page = '1',
     limit = '20',
     search = '',
     type = '',
     clientId = '',
-    sortBy = 'created_at',
-    sortOrder = 'desc',
+    sortBy: _sortBy = 'created_at',
+    sortOrder: _sortOrder = 'desc',
   } = context.query;
 
   const pageNum = parseInt(page as string, 10);
@@ -154,12 +154,7 @@ async function getAssets(req: NextApiRequest, res: NextApiResponse, context: Rou
   const paginatedAssets = filteredAssets.slice(startIndex, endIndex);
 
   const data = paginatedAssets;
-  const error = null;
   const count = filteredAssets.length;
-
-  if (error) {
-    throw new Error(`Failed to fetch assets: ${error.message}`);
-  }
 
   // Map to frontend format
   const assets = (data || []).map(mapDatabaseRowToAsset);
@@ -172,7 +167,7 @@ async function getAssets(req: NextApiRequest, res: NextApiResponse, context: Rou
   });
 }
 
-async function createAsset(req: NextApiRequest, res: NextApiResponse, context: RouteContext) {
+async function createAsset(_req: NextApiRequest, res: NextApiResponse, context: RouteContext) {
   const {
     name,
     type,
@@ -255,7 +250,6 @@ async function createAsset(req: NextApiRequest, res: NextApiResponse, context: R
   };
 
   const data = mockAssetData;
-  const error = null;
 
   const asset = mapDatabaseRowToAsset(data);
 
@@ -285,7 +279,7 @@ async function handleAssetById(
 }
 
 async function getAssetById(
-  req: NextApiRequest,
+  _req: NextApiRequest,
   res: NextApiResponse,
   context: RouteContext,
   assetId: string
@@ -317,7 +311,6 @@ async function getAssetById(
   };
 
   const data = mockAsset;
-  const error = null;
 
   const asset = mapDatabaseRowToAsset(data);
 
@@ -328,10 +321,10 @@ async function getAssetById(
 }
 
 async function updateAsset(
-  req: NextApiRequest,
+  _req: NextApiRequest,
   res: NextApiResponse,
   context: RouteContext,
-  assetId: string
+  _assetId: string
 ) {
   // Implementation for updating asset
   return successResponse(res, { updated: true }, 200, {
@@ -341,10 +334,10 @@ async function updateAsset(
 }
 
 async function deleteAsset(
-  req: NextApiRequest,
+  _req: NextApiRequest,
   res: NextApiResponse,
   context: RouteContext,
-  assetId: string
+  _assetId: string
 ) {
   // Implementation for deleting asset
   return successResponse(res, { deleted: true }, 200, {
@@ -354,12 +347,12 @@ async function deleteAsset(
 }
 
 // Asset upload
-async function handleUpload(req: NextApiRequest, res: NextApiResponse, context: RouteContext) {
+async function handleUpload(_req: NextApiRequest, res: NextApiResponse, context: RouteContext) {
   if (context.method !== 'POST') {
     return methodNotAllowed(res, ['POST']);
   }
 
-  const { fileName, fileType, fileSize, clientId } = context.body;
+  const { fileName, fileType, fileSize } = context.body;
 
   // Validate file upload parameters
   if (!fileName || !fileType) {
@@ -411,7 +404,7 @@ async function handleUpload(req: NextApiRequest, res: NextApiResponse, context: 
 }
 
 // Asset search
-async function handleSearch(req: NextApiRequest, res: NextApiResponse, context: RouteContext) {
+async function handleSearch(_req: NextApiRequest, res: NextApiResponse, context: RouteContext) {
   if (context.method !== 'GET') {
     return methodNotAllowed(res, ['GET']);
   }
@@ -420,10 +413,10 @@ async function handleSearch(req: NextApiRequest, res: NextApiResponse, context: 
     q: searchQuery,
     page = '1',
     limit = '20',
-    type,
-    tags,
-    sortBy = 'created_at',
-    sortOrder = 'desc',
+    type: _type,
+    tags: _tags,
+    sortBy: _sortBy = 'created_at',
+    sortOrder: _sortOrder = 'desc',
   } = context.query;
 
   const pageNum = parseInt(page as string, 10);
@@ -471,8 +464,8 @@ async function handleBulk(req: NextApiRequest, res: NextApiResponse, context: Ro
   }
 }
 
-async function handleBulkUpdate(req: NextApiRequest, res: NextApiResponse, context: RouteContext) {
-  const { assetIds, updates } = context.body;
+async function handleBulkUpdate(_req: NextApiRequest, res: NextApiResponse, context: RouteContext) {
+  const { assetIds } = context.body;
 
   if (!Array.isArray(assetIds) || assetIds.length === 0) {
     return errorResponse(res, ApiErrorCode.VALIDATION_ERROR, 'assetIds array is required', 400);
@@ -497,7 +490,7 @@ async function handleBulkUpdate(req: NextApiRequest, res: NextApiResponse, conte
   });
 }
 
-async function handleBulkDelete(req: NextApiRequest, res: NextApiResponse, context: RouteContext) {
+async function handleBulkDelete(_req: NextApiRequest, res: NextApiResponse, context: RouteContext) {
   const { assetIds } = context.body;
 
   if (!Array.isArray(assetIds) || assetIds.length === 0) {

@@ -1,10 +1,7 @@
 import crypto from 'crypto';
 
-// AES-256-GCM encryption for MFA secrets
-const ALGORITHM = 'aes-256-gcm';
+// AES-256-CBC encryption for MFA secrets
 const KEY_LENGTH = 32; // 256 bits
-const IV_LENGTH = 16; // 128 bits
-const TAG_LENGTH = 16; // 128 bits
 
 // Get encryption key from environment or generate one
 function getEncryptionKey(): Buffer {
@@ -28,18 +25,12 @@ function getEncryptionKey(): Buffer {
 export function encryptData(plaintext: string): string {
   try {
     const key = getEncryptionKey();
-    const iv = crypto.randomBytes(IV_LENGTH);
-
-    const cipher = crypto.createCipherGCM(ALGORITHM, key, iv);
-    cipher.setAAD(Buffer.from('mfa-secret'));
+    const cipher = crypto.createCipher('aes-256-cbc', key);
 
     let encrypted = cipher.update(plaintext, 'utf8', 'hex');
     encrypted += cipher.final('hex');
 
-    const tag = cipher.getAuthTag();
-
-    const result = iv.toString('hex') + tag.toString('hex') + encrypted;
-    return result;
+    return encrypted;
   } catch (error: unknown) {
     throw new Error('Failed to encrypt data');
   }
@@ -49,19 +40,9 @@ export function encryptData(plaintext: string): string {
 export function decryptData(encryptedData: string): string {
   try {
     const key = getEncryptionKey();
+    const decipher = crypto.createDecipher('aes-256-cbc', key);
 
-    const iv = Buffer.from(encryptedData.slice(0, IV_LENGTH * 2), 'hex');
-    const tag = Buffer.from(
-      encryptedData.slice(IV_LENGTH * 2, (IV_LENGTH + TAG_LENGTH) * 2),
-      'hex'
-    );
-    const encrypted = encryptedData.slice((IV_LENGTH + TAG_LENGTH) * 2);
-
-    const decipher = crypto.createDecipherGCM(ALGORITHM, key, iv);
-    decipher.setAAD(Buffer.from('mfa-secret'));
-    decipher.setAuthTag(tag);
-
-    let decrypted = decipher.update(encrypted, 'hex', 'utf8');
+    let decrypted = decipher.update(encryptedData, 'hex', 'utf8');
     decrypted += decipher.final('utf8');
 
     return decrypted;

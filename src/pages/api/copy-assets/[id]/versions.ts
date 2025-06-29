@@ -32,7 +32,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void>
     }
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Copy Asset Versions API error:', error);
+    console.error('Copy Asset Versions API error:', message, error);
     return res.status(500).json({
       error: 'Internal server error',
       details:
@@ -125,7 +125,7 @@ async function handleGet(
     minor_versions: versions?.filter((v: any) => !v.is_major).length || 0,
     first_created:
       versions && versions.length > 0
-        ? versions[versions.length - 1].created_at
+        ? versions[versions.length - 1]!.created_at
         : currentVersion?.updated_at,
     last_updated: currentVersion?.updated_at,
   };
@@ -158,7 +158,7 @@ async function handleGet(
       profiles: currentVersion.profiles,
       change_analysis:
         versions && versions.length > 0
-          ? analyzeContentChanges(versions[0].content, currentVersion.content)
+          ? analyzeContentChanges(versions[0]!.content, currentVersion.content)
           : null,
       is_current: true,
     });

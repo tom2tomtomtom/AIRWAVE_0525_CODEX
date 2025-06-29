@@ -106,7 +106,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void>
     return handleGet(req, res, user);
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Analytics Insights API error:', error);
+    console.error('Analytics Insights API error:', message);
     return res.status(500).json({
       error: 'Internal server error',
       details:
@@ -152,7 +152,7 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse, user: any): 
   });
 }
 
-async function generateAnalyticsInsights(filters: any, userId: string): Promise<AnalyticsInsights> {
+async function generateAnalyticsInsights(filters: any, _userId: string): Promise<AnalyticsInsights> {
   // Get client data for analysis
   const clientData = await getClientDataForInsights(filters.client_id);
 
@@ -341,7 +341,7 @@ function generatePerformanceInsights(data: any): any[] {
   return insights;
 }
 
-function generateOptimizationOpportunities(data: any): any[] {
+function generateOptimizationOpportunities(_data: any): any[] {
   const opportunities = [];
 
   // Budget Optimization
@@ -412,7 +412,7 @@ function generateOptimizationOpportunities(data: any): any[] {
   return opportunities.sort((a, b) => b.priority_score - a.priority_score);
 }
 
-function generateTrendAnalysis(data: any): any {
+function generateTrendAnalysis(_data: any): any {
   return {
     emerging_trends: [
       {
@@ -469,7 +469,7 @@ function generateAnomalyDetection(data: any): any[] {
     recentAnalytics.length;
 
   // Check for significant spikes or drops
-  recentAnalytics.forEach((item: any, index: number) => {
+  recentAnalytics.forEach((item: any, _index: number) => {
     if (item.impressions > avgImpressions * 2) {
       anomalies.push({
         type: 'spike',
@@ -574,7 +574,7 @@ function generateContentPerformanceInsights(data: any): any {
   };
 }
 
-function generateCompetitiveInsights(data: any): any {
+function generateCompetitiveInsights(_data: any): any {
   return {
     market_share_estimate: 12.5,
     competitive_position: 'competitive',

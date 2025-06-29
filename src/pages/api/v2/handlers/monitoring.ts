@@ -92,11 +92,11 @@ class AICostController {
     return new AICostController();
   }
 
-  async getBudgetStatus(): Promise<void> {
+  async getBudgetStatus(): Promise<{ status: string; remaining: number }> {
     return { status: 'healthy', remaining: 1000 };
   }
 
-  async getTotalSpent(): Promise<void> {
+  async getTotalSpent(): Promise<number> {
     return 0;
   }
 
@@ -158,7 +158,7 @@ export async function handleMonitoringRoutes(
 
 // System health check
 async function handleHealth(
-  req: NextApiRequest,
+  _req: NextApiRequest,
   res: NextApiResponse,
   context: RouteContext
 ): Promise<void> {
@@ -219,7 +219,7 @@ async function handleHealth(
 
 // Performance metrics
 async function handleMetrics(
-  req: NextApiRequest,
+  _req: NextApiRequest,
   res: NextApiResponse,
   context: RouteContext
 ): Promise<void> {
@@ -285,7 +285,7 @@ async function handleMetrics(
 
 // Application logs
 async function handleLogs(
-  req: NextApiRequest,
+  _req: NextApiRequest,
   res: NextApiResponse,
   context: RouteContext
 ): Promise<void> {
@@ -424,7 +424,7 @@ async function handleAlerts(
   }
 }
 
-async function getAlerts(req: NextApiRequest, res: NextApiResponse, context: RouteContext) {
+async function getAlerts(_req: NextApiRequest, res: NextApiResponse, context: RouteContext): Promise<void> {
   const { status = 'active', severity } = context.query;
 
   // Mock alert data
@@ -461,7 +461,7 @@ async function getAlerts(req: NextApiRequest, res: NextApiResponse, context: Rou
   );
 }
 
-async function createAlert(req: NextApiRequest, res: NextApiResponse, context: RouteContext) {
+async function createAlert(_req: NextApiRequest, res: NextApiResponse, context: RouteContext): Promise<void> {
   const { title, name, description, condition, severity, threshold, metric } = context.body;
 
   // Accept either title/description or name/condition for flexibility
@@ -495,11 +495,11 @@ async function createAlert(req: NextApiRequest, res: NextApiResponse, context: R
 }
 
 async function updateAlert(
-  req: NextApiRequest,
+  _req: NextApiRequest,
   res: NextApiResponse,
   context: RouteContext,
   alertId: string
-) {
+): Promise<void> {
   const { status, acknowledged } = context.body;
 
   // Mock alert update - in production, this would update the database
@@ -527,7 +527,7 @@ async function updateAlert(
 
 // Performance analysis
 async function handlePerformance(
-  req: NextApiRequest,
+  _req: NextApiRequest,
   res: NextApiResponse,
   context: RouteContext
 ): Promise<void> {
@@ -561,7 +561,7 @@ async function handlePerformance(
 
 // System information
 async function handleSystem(
-  req: NextApiRequest,
+  _req: NextApiRequest,
   res: NextApiResponse,
   context: RouteContext
 ): Promise<void> {

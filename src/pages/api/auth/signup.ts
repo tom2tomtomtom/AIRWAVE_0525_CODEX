@@ -3,12 +3,6 @@ import { getErrorMessage } from '@/utils/errorUtils';
 import { supabase } from '@/lib/supabase';
 import { loggers } from '@/lib/logger';
 
-interface SignupRequest {
-  email: string;
-  password: string;
-  name: string;
-}
-
 interface SignupResponse {
   success: boolean;
   user?: {
@@ -99,7 +93,7 @@ export default async function handler(
     if (process.env.NODE_ENV === 'development') {
       loggers.general.error('Creating user with Supabase auth...');
     }
-    const { data: authData, error: authError } = await supabase.auth.signUp({
+    const { data: authData, error: authError } = await supabase!.auth.signUp({
       email,
       password,
       options: {
@@ -154,7 +148,7 @@ export default async function handler(
     process.env.NODE_ENV === 'development' &&
       loggers.general.error('No email confirmation required, creating profile...');
     // First check if profiles table exists by attempting to query it
-    const { data: existingProfile, error: profileCheckError } = await supabase
+    const { data: existingProfile, error: profileCheckError } = await supabase!
       .from('profiles')
       .select('id')
       .eq('id', authData.user.id)
@@ -167,7 +161,7 @@ export default async function handler(
 
     if (!existingProfile) {
       // Try to create profile
-      const { error: profileError } = await supabase.from('profiles').insert({
+      const { error: profileError } = await supabase!.from('profiles').insert({
         id: authData.user.id,
         first_name: name.split(' ')[0] || name,
         last_name: name.split(' ').slice(1).join(' ') || '',
@@ -194,7 +188,7 @@ export default async function handler(
     });
   } catch (error) {
     const message = getErrorMessage(error);
-    console.error('Signup error:', error);
+    console.error('Signup error:', message);
     return res.status(500).json({
       success: false,
       error: 'An unexpected error occurred. Please try again later.',

@@ -45,6 +45,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       supabaseStatus = response.ok ? '✅ Connected' : `❌ Error: ${response.status}`;
     } catch (error: any) {
       const message = getErrorMessage(error);
+      console.error('Supabase connection error:', error, 'Message:', message);
       supabaseStatus = '❌ Connection failed';
     }
   }

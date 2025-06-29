@@ -1,4 +1,4 @@
-import { getErrorMessage } from '@/utils/errorUtils';
+// import { getErrorMessage } from '@/utils/errorUtils'; // Not needed
 import { z } from 'zod';
 import { loggers } from '@/lib/logger';
 
@@ -179,7 +179,6 @@ const parseEnv = () => {
 
     return parsed;
   } catch (error: any) {
-    const message = getErrorMessage(error);
     if (error instanceof z.ZodError) {
       const errorMessage = ['❌ Invalid environment variables:'];
       error.errors.forEach(err => {

@@ -179,7 +179,7 @@ async function handleDelete(req: NextApiRequest, res: NextApiResponse, user: any
 }
 
 async function deleteGeneration(
-  req: NextApiRequest,
+  _req: NextApiRequest,
   res: NextApiResponse,
   user: any,
   generationId: string
@@ -195,7 +195,10 @@ async function deleteGeneration(
   }
 
   // Verify user has access
-  const clientId = generations[0].client_id;
+  const clientId = generations[0]?.client_id;
+  if (!clientId) {
+    return res.status(500).json({ error: 'Invalid generation data' });
+  }
   const { data: clientAccess } = await supabase
     .from('user_clients')
     .select('id')
@@ -236,7 +239,7 @@ async function deleteGeneration(
 }
 
 async function deleteJob(
-  req: NextApiRequest,
+  _req: NextApiRequest,
   res: NextApiResponse,
   user: any,
   jobId: string

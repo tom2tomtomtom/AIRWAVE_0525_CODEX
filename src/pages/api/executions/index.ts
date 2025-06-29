@@ -37,7 +37,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void>
     }
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Executions API error:', error);
+    console.error('Executions API error:', message, error);
     return res.status(500).json({
       error: 'Internal server error',
       details: process.env.NODE_ENV === 'development' ? getErrorMessage(error) : undefined,
@@ -219,7 +219,7 @@ async function getExecutionAnalytics(executionId: string): Promise<any> {
     };
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Error getting execution analytics:', error);
+    console.error('Error getting execution analytics:', message, error);
     return {
       has_data: false,
       error: 'Failed to retrieve analytics',

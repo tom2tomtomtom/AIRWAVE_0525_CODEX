@@ -292,7 +292,7 @@ const ClientsPage: React.FC = () => {
                     label="Filter by Industry"
                     onChange={(e) => setIndustryFilter(e.target.value)}
                   >
-                    <MenuItem value="">All Industries</MenuItem>;
+                    <MenuItem value="">All Industries</MenuItem>
                     {industries.map((industry: any) => (
                       <MenuItem key={industry} value={industry}>
                         {industry}
@@ -302,7 +302,7 @@ const ClientsPage: React.FC = () => {
                 </FormControl>
               </Grid>
               <Grid size={{ xs: 12, md: 2 }}>
-                <Typography variant="body2" color="text.secondary">;
+                <Typography variant="body2" color="text.secondary">
                   {filteredClients.length} of {clients.length} clients
                 </Typography>
               </Grid>
@@ -391,16 +391,16 @@ const ClientsPage: React.FC = () => {
 
                     <Box display="flex" alignItems="center" gap={1} mb={2}>
                       {client.website && (
-                        <Tooltip title="Website">;
-                          <IconButton size="small">;
-                            <WebsiteIcon fontSize="small" />;
+                        <Tooltip title="Website">
+                          <IconButton size="small">
+                            <WebsiteIcon fontSize="small" />
                           </IconButton>
                         </Tooltip>
                       )}
                       {Object.entries(client.socialMedia || {}).map(([platform, url]) => (
                         url && (
                           <Tooltip key={platform} title={platform}>
-                            <IconButton size="small">;
+                            <IconButton size="small">
                               {getSocialIcon(platform)}
                             </IconButton>
                           </Tooltip>
@@ -408,8 +408,8 @@ const ClientsPage: React.FC = () => {
                       ))}
                     </Box>
 
-                    <Box display="flex" justifyContent="space-between" alignItems="center">;
-                      <Typography variant="caption" color="text.secondary">;
+                    <Box display="flex" justifyContent="space-between" alignItems="center">
+                      <Typography variant="caption" color="text.secondary">
                         {client.contacts?.length || 0} contacts
                       </Typography>
                       <Box display="flex" gap={0.5}>
@@ -443,18 +443,18 @@ const ClientsPage: React.FC = () => {
           onClose={handleMenuClose}
         >
           <MenuItem
-            onClick={() => {;
+            onClick={() => {
               handleMenuClose();
               if (selectedClient) handleOpenDialog(selectedClient);
             }}
           >
             <ListItemIcon>
-              <EditIcon fontSize="small" />;
+              <EditIcon fontSize="small" />
             </ListItemIcon>
             <ListItemText>Edit Client</ListItemText>
           </MenuItem>
           <MenuItem
-            onClick={() => {;
+            onClick={() => {
               handleMenuClose();
               if (selectedClient) {
                 setClientToDelete(selectedClient);
@@ -464,7 +464,7 @@ const ClientsPage: React.FC = () => {
             sx={{ color: 'error.main' }}
           >
             <ListItemIcon>
-              <DeleteIcon fontSize="small" color="error" />;
+              <DeleteIcon fontSize="small" color="error" />
             </ListItemIcon>
             <ListItemText>Delete Client</ListItemText>
           </MenuItem>

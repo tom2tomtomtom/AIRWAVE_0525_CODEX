@@ -108,7 +108,7 @@ class RedisStore {
 
     const now = Date.now();
     const windowStart = now - windowMs;
-    const pipeline = this.redis.pipeline();
+    const pipeline = (this.redis as any).pipeline();
 
     // Use sorted set to store timestamps
     pipeline.zremrangebyscore(key, 0, windowStart); // Remove old entries

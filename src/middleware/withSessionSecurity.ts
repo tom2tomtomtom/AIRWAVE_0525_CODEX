@@ -182,7 +182,9 @@ setInterval(() => sessionStore.cleanup(), 5 * 60 * 1000);
 function generateFingerprint(req: NextApiRequest): SessionFingerprint {
   const userAgent = req.headers['user-agent'] || '';
   const acceptLanguage = req.headers['accept-language'] || '';
-  const acceptEncoding = req.headers['accept-encoding'] || '';
+  const acceptEncoding = Array.isArray(req.headers['accept-encoding']) 
+    ? req.headers['accept-encoding'].join(', ') 
+    : req.headers['accept-encoding'] || '';
   const ip = getClientIp(req);
 
   // Generate subnet (first 3 octets for IPv4)
@@ -284,7 +286,7 @@ function extractSessionId(req: NextApiRequest): string | null {
   const cookies = req.headers.cookie;
   if (cookies) {
     const sessionMatch = cookies.match(/session_id=([^;]+)/);
-    if (sessionMatch) {
+    if (sessionMatch && sessionMatch[1]) {
       return sessionMatch[1];
     }
   }
@@ -545,7 +547,7 @@ export function createSecureSession(
     lastActiveAt: now,
     rotatedAt: now,
     issuedTokens: [],
-    deviceId,
+    ...(deviceId && { deviceId }),
     trusted: false, // Will be set to true after device verification
   };
 

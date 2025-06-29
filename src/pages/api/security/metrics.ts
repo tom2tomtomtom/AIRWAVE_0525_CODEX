@@ -1,5 +1,4 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { withAuth } from '@/middleware/withAuth';
 import { withRoles } from '@/middleware/withAuth';
 import { UserRole } from '@/types/auth';
 import { securityLogger } from '@/lib/security/security-logger';
@@ -199,7 +198,7 @@ function calculateSecurityScore(
 function calculateTrends(
   current: any,
   previous: any,
-  timeRange: number
+  _timeRange: number
 ): Record<string, { current: number; previous: number; change: number; trend: 'up' | 'down' | 'stable' }> {
   const currentPeriodEvents = current.totalEvents;
   const previousPeriodEvents = previous.totalEvents - current.totalEvents;

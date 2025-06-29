@@ -6,7 +6,7 @@ import { withAuth } from '@/middleware/withAuth';
 import { withCSRFProtection } from '@/lib/csrf';
 import { ProductionAICostController } from '@/lib/ai/production-cost-controller';
 
-import { loggers } from '@/lib/logger';
+// import { loggers } from '@/lib/logger'; // Unused
 import {
   estimateTokensForMotivations,
   estimateTokensForCopy,
@@ -111,7 +111,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse<CostCheckRespon
     const dailyRate = monthlyUsage.totalCost / daysElapsed;
     const daysInMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate();
     const projectedMonthly = dailyRate * daysInMonth;
-    const serviceConfig = fullReport.services[service];
+    const serviceConfig = (fullReport as any).services[service];
     const percentOfBudget = (monthlyUsage.totalCost / serviceConfig.budget) * 100;
 
     // Get model recommendation if budget is tight
@@ -127,12 +127,12 @@ async function handler(req: NextApiRequest, res: NextApiResponse<CostCheckRespon
 
     const response: CostCheckResponse = {
       allowed: budgetCheck.allowed,
-      reason: budgetCheck.reason,
-      fallbackModel: budgetCheck.fallbackModel,
+      ...(budgetCheck.reason && { reason: budgetCheck.reason }),
+      ...(budgetCheck.fallbackModel && { fallbackModel: budgetCheck.fallbackModel }),
       currentUsage: budgetCheck.currentUsage || 0,
       budgetRemaining: budgetCheck.budgetRemaining || 0,
       estimatedCost: recommendation?.cost || 0,
-      recommendation,
+      ...(recommendation && { recommendation }),
       usageStats: {
         dailyRate,
         projectedMonthly,

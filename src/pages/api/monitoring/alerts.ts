@@ -165,7 +165,9 @@ async function handleCreateRule(req: NextApiRequest, res: NextApiResponse) {
     const rule: AlertRule = {
       id: `rule_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       ...validatedData,
-    };
+      ...(validatedData.runbook ? { runbook: validatedData.runbook } : {}),
+      ...(validatedData.tags ? { tags: validatedData.tags } : {}),
+    } as AlertRule;
 
     alerting.addRule(rule);
 
@@ -214,12 +216,12 @@ async function handleUpdateRule(req: NextApiRequest, res: NextApiResponse) {
       });
     }
 
-    alerting.updateRule(ruleId, validatedData);
+    alerting.updateRule(ruleId, validatedData as Partial<AlertRule>);
     const updatedRule = alerting.getRule(ruleId);
 
     return res.status(200).json({
       success: true,
-      data: { rule: updatedRule  },
+      data: { rule: updatedRule! },
   meta: { timestamp: new Date().toISOString()  }
     });
   } catch (error) {
@@ -406,15 +408,15 @@ async function handleResolveAlert(req: NextApiRequest, res: NextApiResponse) {
   }
 
   // Manual resolution (would update alert state)
-  alert.state = 'resolved';
-  alert.resolvedAt = new Date();
+  (alert as any).state = 'resolved';
+  (alert as any).resolvedAt = new Date();
 
   return res.status(200).json({
     success: true,
     data: {
       resolved: true,
       alertId,
-      resolvedAt: alert.resolvedAt.toISOString() },
+      resolvedAt: (alert as any).resolvedAt.toISOString() },
     meta: { timestamp: new Date().toISOString()  }
   });
 }

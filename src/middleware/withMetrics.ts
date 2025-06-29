@@ -60,7 +60,7 @@ export function withMetrics(config: MetricsConfig = {}) {
         startTime,
         endpoint: sanitizeEndpoint(req.url || ''),
         method: req.method || 'GET',
-        userAgent: req.headers['user-agent'],
+        ...(req.headers['user-agent'] && { userAgent: req.headers['user-agent'] }),
         clientIp: getClientIp(req),
         userId: (req as any).user?.id,
         clientId: (req as any).user?.selectedClient?.id,
@@ -105,7 +105,7 @@ export function withMetrics(config: MetricsConfig = {}) {
       res.end = function (chunk?: unknown, encoding?: unknown) {
         const size = chunk ? Buffer.byteLength(chunk.toString(), 'utf8') : 0;
         interceptResponse(res.statusCode, size);
-        return originalEnd.call(this, chunk, encoding);
+        return originalEnd.call(this, chunk, encoding as BufferEncoding);
       };
 
       try {
@@ -343,8 +343,7 @@ function trackEndpointSpecificMetrics(
  * Sanitize endpoint for consistent metric naming
  */
 function sanitizeEndpoint(url: string): string {
-  return url
-    .split('?')[0] // Remove query parameters
+  return ((url || '').split('?')[0] || '')
     .replace(/\/\d+/g, '/:id') // Replace numeric IDs
     .replace(/\/[a-f0-9-]{36}/g, '/:uuid') // Replace UUIDs
     .replace(/\/[a-zA-Z0-9_-]{20}/g, '/:token') // Replace long tokens

@@ -103,7 +103,7 @@ async function handleWorkflowState(
   }
 }
 
-async function getWorkflowState(req: NextApiRequest, res: NextApiResponse, context: RouteContext) {
+async function getWorkflowState(_req: NextApiRequest, res: NextApiResponse, context: RouteContext) {
   const { workflowId } = context.query;
 
   // If no workflowId provided, return a default/new workflow state
@@ -127,7 +127,6 @@ async function getWorkflowState(req: NextApiRequest, res: NextApiResponse, conte
   };
 
   const data = workflow;
-  const _error = null;
 
   return successResponse(
     res,
@@ -155,7 +154,7 @@ async function getWorkflowState(req: NextApiRequest, res: NextApiResponse, conte
 }
 
 async function updateWorkflowState(
-  req: NextApiRequest,
+  _req: NextApiRequest,
   res: NextApiResponse,
   context: RouteContext
 ) {
@@ -208,7 +207,6 @@ async function updateWorkflowState(
   };
 
   const data = workflow;
-  const _error = null;
 
   return successResponse(
     res,
@@ -235,25 +233,6 @@ async function updateWorkflowState(
   );
 }
 
-async function _deleteWorkflowState(
-  req: NextApiRequest,
-  res: NextApiResponse,
-  context: RouteContext
-) {
-  const { workflowId } = context.query;
-
-  if (!workflowId) {
-    return errorResponse(res, ApiErrorCode.VALIDATION_ERROR, 'Workflow ID is required', 400);
-  }
-
-  // Mock successful deletion for testing
-  const _error = null;
-
-  return successResponse(res, { deleted: true }, 200, {
-    requestId: context.requestId,
-    timestamp: new Date().toISOString(),
-  });
-}
 
 // Workflow assets management
 async function handleWorkflowAssets(
@@ -273,7 +252,7 @@ async function handleWorkflowAssets(
   }
 }
 
-async function getWorkflowAssets(req: NextApiRequest, res: NextApiResponse, context: RouteContext) {
+async function getWorkflowAssets(_req: NextApiRequest, res: NextApiResponse, context: RouteContext) {
   const { clientId } = context.query;
 
   // Mock assets data for testing
@@ -307,7 +286,7 @@ async function getWorkflowAssets(req: NextApiRequest, res: NextApiResponse, cont
 }
 
 async function selectWorkflowAssets(
-  req: NextApiRequest,
+  _req: NextApiRequest,
   res: NextApiResponse,
   context: RouteContext
 ) {
@@ -319,7 +298,7 @@ async function selectWorkflowAssets(
 }
 
 async function removeWorkflowAsset(
-  req: NextApiRequest,
+  _req: NextApiRequest,
   res: NextApiResponse,
   context: RouteContext
 ) {
@@ -348,6 +327,7 @@ async function handleGenerateAssets(
 
   // Implementation for AI asset generation
   const { workflowId, prompt, style: _style, count = 1 } = context.body;
+  const imageCount = Number(count) || 1;
 
   if (!workflowId || !prompt) {
     return errorResponse(
@@ -366,7 +346,7 @@ async function handleGenerateAssets(
     {
       generationId,
       status: 'processing',
-      estimatedTime: count * 30, // 30 seconds per image
+      estimatedTime: imageCount * 30, // 30 seconds per image
     },
     200,
     {
@@ -377,7 +357,7 @@ async function handleGenerateAssets(
 }
 
 // Brief processing
-async function handleBrief(req: NextApiRequest, res: NextApiResponse, context: RouteContext) {
+async function handleBrief(_req: NextApiRequest, res: NextApiResponse, context: RouteContext) {
   if (context.method !== 'POST') {
     return methodNotAllowed(res, ['POST']);
   }
@@ -397,8 +377,6 @@ async function handleBrief(req: NextApiRequest, res: NextApiResponse, context: R
   const briefId = `brief_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
   // Mock successful brief storage for testing
-  const _error = null;
-
   return successResponse(
     res,
     {
@@ -430,11 +408,12 @@ async function handleMotivations(req: NextApiRequest, res: NextApiResponse, cont
 }
 
 async function generateMotivations(
-  req: NextApiRequest,
+  _req: NextApiRequest,
   res: NextApiResponse,
   context: RouteContext
 ) {
   const { workflowId, briefId, count = 5 } = context.body;
+  const motivationCount = Number(count) || 5;
 
   if (!workflowId || !briefId) {
     return errorResponse(
@@ -446,7 +425,7 @@ async function generateMotivations(
   }
 
   // Generate sample motivations based on brief
-  const motivations = Array.from({ length: count }, (_, i) => ({
+  const motivations = Array.from({ length: motivationCount }, (_, i) => ({
     id: `motivation_${i + 1}`,
     title: `Motivation ${i + 1}`,
     description: `Generated motivation ${i + 1} based on brief analysis`,
@@ -460,7 +439,7 @@ async function generateMotivations(
   });
 }
 
-async function selectMotivations(req: NextApiRequest, res: NextApiResponse, context: RouteContext) {
+async function selectMotivations(_req: NextApiRequest, res: NextApiResponse, context: RouteContext) {
   const { workflowId, selectedMotivations } = context.body;
 
   if (!workflowId || !selectedMotivations) {
@@ -473,8 +452,6 @@ async function selectMotivations(req: NextApiRequest, res: NextApiResponse, cont
   }
 
   // Mock successful motivation update for testing
-  const _error = null;
-
   return successResponse(res, { success: true }, 200, {
     requestId: context.requestId,
     timestamp: new Date().toISOString(),
@@ -492,8 +469,9 @@ async function handleCopy(req: NextApiRequest, res: NextApiResponse, context: Ro
   }
 }
 
-async function generateCopy(req: NextApiRequest, res: NextApiResponse, context: RouteContext) {
+async function generateCopy(_req: NextApiRequest, res: NextApiResponse, context: RouteContext) {
   const { workflowId, motivationIds, copyType, platform } = context.body;
+  const validMotivationIds = Array.isArray(motivationIds) ? motivationIds : [];
 
   if (!workflowId || !motivationIds) {
     return errorResponse(
@@ -505,7 +483,7 @@ async function generateCopy(req: NextApiRequest, res: NextApiResponse, context: 
   }
 
   // Generate sample copy variations
-  const copyVariations = motivationIds.flatMap((motivationId: string, index: number) =>
+  const copyVariations = validMotivationIds.flatMap((motivationId: string, index: number) =>
     Array.from({ length: 3 }, (_, i) => ({
       id: `copy_${motivationId}_${i + 1}`,
       motivationId,
@@ -523,7 +501,7 @@ async function generateCopy(req: NextApiRequest, res: NextApiResponse, context: 
   });
 }
 
-async function selectCopy(req: NextApiRequest, res: NextApiResponse, context: RouteContext) {
+async function selectCopy(_req: NextApiRequest, res: NextApiResponse, context: RouteContext) {
   const { workflowId, selectedCopy } = context.body;
 
   if (!workflowId || !selectedCopy) {
@@ -536,8 +514,6 @@ async function selectCopy(req: NextApiRequest, res: NextApiResponse, context: Ro
   }
 
   // Mock successful copy update for testing
-  const _error = null;
-
   return successResponse(res, { success: true }, 200, {
     requestId: context.requestId,
     timestamp: new Date().toISOString(),
@@ -555,7 +531,7 @@ async function handleTemplates(req: NextApiRequest, res: NextApiResponse, contex
   }
 }
 
-async function getTemplates(req: NextApiRequest, res: NextApiResponse, context: RouteContext) {
+async function getTemplates(_req: NextApiRequest, res: NextApiResponse, context: RouteContext) {
   const { platform, format } = context.query;
 
   // Generate sample templates
@@ -592,7 +568,7 @@ async function getTemplates(req: NextApiRequest, res: NextApiResponse, context: 
   });
 }
 
-async function selectTemplate(req: NextApiRequest, res: NextApiResponse, context: RouteContext) {
+async function selectTemplate(_req: NextApiRequest, res: NextApiResponse, context: RouteContext) {
   const { workflowId, templateId } = context.body;
 
   if (!workflowId || !templateId) {
@@ -605,20 +581,20 @@ async function selectTemplate(req: NextApiRequest, res: NextApiResponse, context
   }
 
   // Mock successful template update for testing
-  const _error = null;
-
   return successResponse(res, { success: true }, 200, {
     requestId: context.requestId,
     timestamp: new Date().toISOString(),
   });
 }
 
-async function handleMatrix(req: NextApiRequest, res: NextApiResponse, context: RouteContext) {
+async function handleMatrix(_req: NextApiRequest, res: NextApiResponse, context: RouteContext) {
   if (context.method !== 'POST') {
     return methodNotAllowed(res, ['POST']);
   }
 
   const { workflowId, selectedAssets, selectedCopy, templateId } = context.body;
+  const validSelectedAssets = Array.isArray(selectedAssets) ? selectedAssets : [];
+  const validSelectedCopy = Array.isArray(selectedCopy) ? selectedCopy : [];
 
   if (!workflowId || !selectedAssets || !selectedCopy || !templateId) {
     return errorResponse(
@@ -634,8 +610,8 @@ async function handleMatrix(req: NextApiRequest, res: NextApiResponse, context: 
     id: `matrix_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
     workflowId,
     templateId,
-    combinations: selectedAssets.flatMap((asset: Record<string, unknown>) =>
-      selectedCopy.map((copy: Record<string, unknown>) => ({
+    combinations: validSelectedAssets.flatMap((asset: Record<string, unknown>) =>
+      validSelectedCopy.map((copy: Record<string, unknown>) => ({
         id: `combo_${asset.id || asset}_${copy.id || copy}`,
         assetId: asset.id || asset,
         copyId: copy.id || copy,
@@ -643,7 +619,7 @@ async function handleMatrix(req: NextApiRequest, res: NextApiResponse, context: 
         createdAt: new Date().toISOString(),
       }))
     ),
-    totalCombinations: selectedAssets.length * selectedCopy.length,
+    totalCombinations: validSelectedAssets.length * validSelectedCopy.length,
     status: 'generated',
     createdAt: new Date().toISOString(),
   };
@@ -665,7 +641,7 @@ async function handleRender(req: NextApiRequest, res: NextApiResponse, context: 
   }
 }
 
-async function startRender(req: NextApiRequest, res: NextApiResponse, context: RouteContext) {
+async function startRender(_req: NextApiRequest, res: NextApiResponse, context: RouteContext) {
   const { workflowId, matrixId, renderOptions } = context.body;
 
   if (!workflowId || !matrixId) {
@@ -696,7 +672,7 @@ async function startRender(req: NextApiRequest, res: NextApiResponse, context: R
   );
 }
 
-async function getRenderStatus(req: NextApiRequest, res: NextApiResponse, context: RouteContext) {
+async function getRenderStatus(_req: NextApiRequest, res: NextApiResponse, context: RouteContext) {
   const { renderId } = context.query;
 
   if (!renderId) {

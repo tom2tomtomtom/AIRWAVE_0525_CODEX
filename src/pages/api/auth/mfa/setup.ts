@@ -46,7 +46,7 @@ async function handler(
     });
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('MFA setup error:', error);
+    console.error('MFA setup error:', message);
     return res.status(500).json({
       success: false,
       error: 'Failed to setup MFA. Please try again.',

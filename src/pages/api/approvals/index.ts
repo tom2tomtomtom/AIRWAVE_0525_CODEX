@@ -48,7 +48,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void>
     }
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Approvals API error:', error);
+    console.error('Approvals API error:', message);
     return res.status(500).json({
       error: 'Internal server error',
       details:
@@ -361,7 +361,7 @@ async function getApprovalItemDetails(itemType: string, itemId: string): Promise
     };
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Error getting approval item details:', error);
+    console.error('Error getting approval item details:', message);
     return null;
   }
 }
@@ -411,7 +411,7 @@ async function determineApprovalAssignee(
       .limit(1);
 
     if (approvers && approvers.length > 0) {
-      return approvers[0].user_id;
+      return approvers[0]?.user_id;
     }
 
     // Fallback: get any manager for this client
@@ -422,10 +422,10 @@ async function determineApprovalAssignee(
       .eq('role', 'manager')
       .limit(1);
 
-    return managers && managers.length > 0 ? managers[0].user_id : null;
+    return managers && managers.length > 0 ? managers[0]?.user_id : null;
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Error determining approval assignee:', error);
+    console.error('Error determining approval assignee:', message);
     return null;
   }
 }
@@ -447,11 +447,11 @@ async function updateItemApprovalStatus(
       .eq('id', itemId);
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Error updating item approval status:', error);
+    console.error('Error updating item approval status:', message);
   }
 }
 
-async function triggerApprovalNotification(approval: any, action: string): Promise<void> {
+async function triggerApprovalNotification(_approval: any, action: string): Promise<void> {
   try {
     // In a full implementation, this would trigger real-time notifications
     // via WebSocket, email, or push notifications
@@ -459,7 +459,7 @@ async function triggerApprovalNotification(approval: any, action: string): Promi
       loggers.general.error(`Triggering approval notification for action: ${action}`);
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Error triggering approval notification:', error);
+    console.error('Error triggering approval notification:', message);
   }
 }
 

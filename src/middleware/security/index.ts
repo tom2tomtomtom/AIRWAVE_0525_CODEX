@@ -15,7 +15,7 @@ export const getSecurityHeaders = () => {
   headers.set('X-XSS-Protection', '1; mode=block');
   
   // Strict Transport Security (HSTS)
-  if (config.ENABLE_SECURITY_HEADERS && config.isProduction) {
+  if (config.ENABLE_SECURITY_HEADERS && process.env.NODE_ENV === 'production') {
     headers.set('Strict-Transport-Security', `max-age=${config.HSTS_MAX_AGE}; includeSubDomains; preload`);
   }
   

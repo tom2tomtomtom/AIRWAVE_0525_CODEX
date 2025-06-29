@@ -41,7 +41,7 @@ export const compressionMiddleware = compression({
 
 // Performance headers middleware
 export function performanceHeaders(type: keyof typeof CACHE_CONTROL = 'api') {
-  return (req: NextApiRequest, res: NextApiResponse, next: () => void) => {
+  return (_req: NextApiRequest, res: NextApiResponse, next: () => void) => {
     // Add cache control headers
     res.setHeader('Cache-Control', CACHE_CONTROL[type]);
 
@@ -234,13 +234,19 @@ function setNestedField(obj: any, path: string[], value: any): void {
   let current = obj;
 
   for (let i = 0; i < path.length - 1; i++) {
-    if (!(path[i] in current)) {
-      current[path[i]] = {};
+    const key = path[i];
+    if (key && !(key in current)) {
+      current[key] = {};
     }
-    current = current[path[i]];
+    if (key) {
+      current = current[key];
+    }
   }
 
-  current[path[path.length - 1]] = value;
+  const lastKey = path[path.length - 1];
+  if (lastKey && current) {
+    current[lastKey] = value;
+  }
 }
 
 // ETags for caching

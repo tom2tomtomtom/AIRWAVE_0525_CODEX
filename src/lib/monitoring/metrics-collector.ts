@@ -52,7 +52,7 @@ class StatsDBackend implements MetricsBackend {
           },
         });
       } catch (error) {
-        console.warn('StatsD client not available:', error.message);
+        console.warn('StatsD client not available:', error instanceof Error ? error.message : String(error));
       }
     }
   }
@@ -240,8 +240,8 @@ export class MetricsCollector {
       name,
       value,
       type: 'counter',
-      tags,
       timestamp: Date.now(),
+      ...(tags && { tags }),
     });
   }
 
@@ -250,8 +250,8 @@ export class MetricsCollector {
       name,
       value,
       type: 'gauge',
-      tags,
       timestamp: Date.now(),
+      ...(tags && { tags }),
     });
   }
 
@@ -260,8 +260,8 @@ export class MetricsCollector {
       name,
       value,
       type: 'histogram',
-      tags,
       timestamp: Date.now(),
+      ...(tags && { tags }),
     });
   }
 
@@ -270,18 +270,23 @@ export class MetricsCollector {
       name,
       value,
       type: 'timer',
-      tags,
       timestamp: Date.now(),
+      ...(tags && { tags }),
     });
   }
 
   // Timer helpers
   public startTimer(name: string, tags?: Record<string, string>): TimerMetric {
-    return {
+    const timer: any = {
       name,
       startTime: performance.now(),
-      tags,
     };
+    
+    if (tags) {
+      timer.tags = tags;
+    }
+    
+    return timer;
   }
 
   public endTimer(timerMetric: TimerMetric): void {
@@ -457,7 +462,7 @@ export const metrics = MetricsCollector.getInstance();
 
 // Helper decorators for automatic metrics
 export function trackExecutionTime(metricName: string, tags?: Record<string, string>) {
-  return function (target: any, propertyName: string, descriptor: PropertyDescriptor) {
+  return function (_target: any, _propertyName: string, descriptor: PropertyDescriptor) {
     const method = descriptor.value;
 
     descriptor.value = async function (...args: any[]) {

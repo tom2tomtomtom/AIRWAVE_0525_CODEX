@@ -56,7 +56,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void>
     }
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Approval API error:', error);
+    console.error('Approval API error:', message);
     return res.status(500).json({
       error: 'Internal server error',
       details:
@@ -70,7 +70,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void>
 }
 
 async function handleGet(
-  req: NextApiRequest,
+  _req: NextApiRequest,
   res: NextApiResponse,
   user: any,
   approvalId: string
@@ -332,7 +332,7 @@ async function handleUpdate(
 }
 
 async function handleDelete(
-  req: NextApiRequest,
+  _req: NextApiRequest,
   res: NextApiResponse,
   user: any,
   approvalId: string
@@ -450,7 +450,7 @@ async function getApprovalItemDetails(itemType: string, itemId: string): Promise
     return data;
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Error getting approval item details:', error);
+    console.error('Error getting approval item details:', message);
     return null;
   }
 }
@@ -490,7 +490,7 @@ async function getApprovalHistory(approvalId: string): Promise<any[]> {
     return history;
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Error getting approval history:', error);
+    console.error('Error getting approval history:', message);
     return [];
   }
 }
@@ -518,7 +518,7 @@ async function getRelatedApprovals(
     return related || [];
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Error getting related approvals:', error);
+    console.error('Error getting related approvals:', message);
     return [];
   }
 }
@@ -565,7 +565,7 @@ async function verifyApprovalPermission(
     return permissions[action] || false;
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Error verifying approval permission:', error);
+    console.error('Error verifying approval permission:', message);
     return false;
   }
 }
@@ -594,7 +594,7 @@ async function updateItemStatusAfterDecision(
       .eq('id', itemId);
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Error updating item status after decision:', error);
+    console.error('Error updating item status after decision:', message);
   }
 }
 
@@ -622,30 +622,30 @@ async function triggerPostDecisionWorkflow(approval: any, decision: any): Promis
     }
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Error triggering post-decision workflow:', error);
+    console.error('Error triggering post-decision workflow:', message);
   }
 }
 
 async function logApprovalDecision(
   approvalId: string,
   action: string,
-  userId: string,
-  comments?: string
+  _userId: string,
+  _comments?: string
 ): Promise<void> {
   try {
     // In a full implementation, this would log to an approval_events table
     process.env.NODE_ENV === 'development' &&
-      loggers.general.error('Logging approval decision:', action, 'for approval:', approvalId);
+      loggers.general.error(`Logging approval decision: ${action} for approval: ${approvalId}`);
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Error logging approval decision:', error);
+    console.error('Error logging approval decision:', message);
   }
 }
 
 async function logApprovalUpdate(
   approvalId: string,
-  updateData: any,
-  userId: string
+  _updateData: any,
+  _userId: string
 ): Promise<void> {
   try {
     // In a full implementation, this would log to an approval_events table
@@ -653,18 +653,18 @@ async function logApprovalUpdate(
       loggers.general.error('Logging approval update for:', approvalId);
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Error logging approval update:', error);
+    console.error('Error logging approval update:', message);
   }
 }
 
-async function triggerApprovalNotification(approval: any, action: string): Promise<void> {
+async function triggerApprovalNotification(approval: any, _action: string): Promise<void> {
   try {
     // In a full implementation, this would trigger real-time notifications
     process.env.NODE_ENV === 'development' &&
       loggers.general.error('Triggering approval notification for:', approval.id);
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Error triggering approval notification:', error);
+    console.error('Error triggering approval notification:', message);
   }
 }
 
@@ -704,7 +704,7 @@ async function triggerApprovalWebhooks(approval: any, action: string, user: any)
     await triggerWebhookEvent(eventType, webhookData, approval.client_id);
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Error triggering approval webhooks:', error);
+    console.error('Error triggering approval webhooks:', message);
   }
 }
 

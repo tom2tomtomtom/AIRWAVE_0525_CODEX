@@ -35,11 +35,11 @@ export class RedisRateLimiter {
         password: config.password,
         database: config.db,
         socket: {
-          reconnectStrategy: retries => Math.min(retries * 50, 500),
+          reconnectStrategy: (retries: number) => Math.min(retries * 50, 500),
         },
       }) as RedisClientType;
 
-      this.client.on('error', error => {
+      this.client.on('error', (error: Error) => {
         loggers.general.error('Redis connection error', error);
         this.isConnected = false;
       });
@@ -147,15 +147,6 @@ export class RedisRateLimiter {
     }
   }
 
-  // Clean up expired entries from fallback store
-  private cleanupFallbackStore() {
-    const now = Date.now();
-    for (const [key, value] of this.fallbackStore.entries()) {
-      if (now > value.resetTime) {
-        this.fallbackStore.delete(key);
-      }
-    }
-  }
 
   async disconnect(): Promise<void> {
     if (this.client) {
@@ -214,8 +205,8 @@ export class RedisRateLimiter {
   async resetLimit(identifier: string): Promise<void> {
     if (this.isConnected && this.client) {
       try {
-        const now = Date.now();
-        const window = Math.floor(now / 60000); // Assume 1-minute windows for cleanup
+        // const now = Date.now();
+        // const _window = Math.floor(now / 60000); // Assume 1-minute windows for cleanup
         const pattern = `rate_limit:${identifier}:*`;
 
         // Get all keys matching the pattern

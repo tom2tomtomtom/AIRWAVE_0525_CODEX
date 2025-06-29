@@ -55,7 +55,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void>
     }
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Bulk Approvals API error:', error);
+    console.error('Bulk Approvals API error:', message);
     return res.status(500).json({
       error: 'Internal server error',
       details:
@@ -147,10 +147,13 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse, user: any):
   // Trigger notifications for each unique assignee
   const assigneeNotifications: Record<string, any[]> = {};
   createdApprovals.forEach((approval: any) => {
-    if (!assigneeNotifications[approval.assigned_to]) {
-      assigneeNotifications[approval.assigned_to] = [];
+    const assigneeId = approval.assigned_to;
+    if (assigneeId) {
+      if (!assigneeNotifications[assigneeId]) {
+        assigneeNotifications[assigneeId] = [];
+      }
+      assigneeNotifications[assigneeId]!.push(approval);
     }
-    assigneeNotifications[approval.assigned_to].push(approval);
   });
 
   await Promise.all(
@@ -284,11 +287,13 @@ async function handlePut(req: NextApiRequest, res: NextApiResponse, user: any): 
   // Group notifications by affected users
   const notificationGroups: Record<string, any[]> = {};
   updatedApprovals.forEach((approval: any) => {
-    const key = approval.created_by; // Notify creators
-    if (!notificationGroups[key]) {
-      notificationGroups[key] = [];
+    const createdById = approval.created_by; // Notify creators
+    if (createdById) {
+      if (!notificationGroups[createdById]) {
+        notificationGroups[createdById] = [];
+      }
+      notificationGroups[createdById]!.push(approval);
     }
-    notificationGroups[key].push(approval);
   });
 
   // Send bulk notifications
@@ -379,8 +384,7 @@ async function validateBulkItems(items: any[], clientId: string): Promise<any[]>
         }
 
         return { valid: true, item_id: item.item_id };
-      } catch (error: any) {
-        const message = getErrorMessage(error);
+      } catch (_error: any) {
         return { valid: false, item_id: item.item_id, reason: 'Validation error' };
       }
     })
@@ -445,14 +449,14 @@ async function determineApprovalAssignee(
       .from('user_clients')
       .select('user_id')
       .eq('client_id', clientId)
-      .in('role', roles)
+      .in('role', roles || ['manager'])
       .neq('user_id', requesterId)
       .limit(1);
 
-    return approvers && approvers.length > 0 ? approvers[0].user_id : null;
+    return approvers && approvers.length > 0 ? approvers[0]?.user_id : null;
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Error determining approval assignee:', error);
+    console.error('Error determining approval assignee:', message);
     return null;
   }
 }
@@ -473,7 +477,7 @@ async function updateItemsApprovalStatus(items: any[], status: string): Promise<
           .eq('id', item.item_id);
       } catch (error: any) {
         const message = getErrorMessage(error);
-        console.error(`Error updating item ${item.item_id} status:`, error);
+        console.error(`Error updating item ${item.item_id} status:`, message);
       }
     })
   );
@@ -503,7 +507,7 @@ async function updateItemsStatusAfterDecision(items: any[], decision: string): P
           .eq('id', item.item_id);
       } catch (error: any) {
         const message = getErrorMessage(error);
-        console.error(`Error updating item ${item.item_id} status after decision:`, error);
+        console.error(`Error updating item ${item.item_id} status after decision:`, message);
       }
     })
   );
@@ -531,7 +535,7 @@ async function verifyApprovalPermission(
     return permissions[action] || false;
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Error verifying approval permission:', error);
+    console.error('Error verifying approval permission:', message);
     return false;
   }
 }
@@ -556,26 +560,26 @@ async function triggerPostDecisionWorkflow(approval: any, decision: any): Promis
     }
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Error triggering post-decision workflow:', error);
+    console.error('Error triggering post-decision workflow:', message);
   }
 }
 
 async function logBulkApprovalDecision(
-  approvalIds: string[],
-  action: string,
-  userId: string,
-  comments?: string
+  _approvalIds: string[],
+  _action: string,
+  _userId: string,
+  _comments?: string
 ): Promise<void> {
   try {
     // Empty try block
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Error logging bulk approval decision:', error);
+    console.error('Error logging bulk approval decision:', message);
   }
 }
 
 async function triggerBulkNotification(
-  userId: string,
+  _userId: string,
   approvals: any[],
   action: string
 ): Promise<void> {
@@ -589,7 +593,7 @@ async function triggerBulkNotification(
       );
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Error triggering bulk notification:', error);
+    console.error('Error triggering bulk notification:', message);
   }
 }
 

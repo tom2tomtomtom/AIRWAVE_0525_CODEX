@@ -5,7 +5,7 @@ import DashboardLayout from '@/components/DashboardLayout';
 import AIImageGenerator from '@/components/AIImageGenerator';
 
 const AIToolsPage: React.FC = () => {
-  const handleImageGenerated = (image: any) => {
+  const handleImageGenerated = (_image: any) => {
     // Image generated successfully
   };
 

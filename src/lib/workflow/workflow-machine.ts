@@ -21,7 +21,7 @@ const initialContext: WorkflowMachineContext = {
 
 // Guards
 const guards = {
-  hasBriefData: (context: WorkflowMachineContext, event: WorkflowEvent) =>
+  hasBriefData: (_context: WorkflowMachineContext, event: WorkflowEvent) =>
     event.type === 'CONFIRM_BRIEF' && event.briefData !== null,
   briefIsConfirmed: (context: WorkflowMachineContext) => context.briefConfirmed,
   hasSelectedMotivations: (context: WorkflowMachineContext) =>

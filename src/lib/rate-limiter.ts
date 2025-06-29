@@ -74,8 +74,8 @@ function getIdentifier(req: NextApiRequest): string {
   // Fall back to IP address
   const forwarded = req.headers['x-forwarded-for'];
   const ip = forwarded
-    ? (typeof forwarded === 'string' ? forwarded : forwarded[0]).split(',')[0]
-    : req.socket.remoteAddress;
+    ? (typeof forwarded === 'string' ? forwarded : forwarded[0])?.split(',')[0]
+    : req.socket?.remoteAddress;
 
   return `ip:${ip || 'unknown'}`;
 }

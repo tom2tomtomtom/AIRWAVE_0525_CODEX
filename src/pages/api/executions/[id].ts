@@ -37,7 +37,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void>
     }
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Execution API error:', error);
+    console.error('Execution API error:', message, error);
     return res.status(500).json({ 
       error: 'Internal server error',
       details: process.env.NODE_ENV === 'development' ? (error instanceof Error ? error.message : 'Unknown error') : undefined
@@ -202,7 +202,7 @@ async function handlePut(req: NextApiRequest, res: NextApiResponse, user: any, e
   return res.json({ data: execution });
 }
 
-async function handleDelete(req: NextApiRequest, res: NextApiResponse, user: any, executionId: string): Promise<void> {
+async function handleDelete(_req: NextApiRequest, res: NextApiResponse, user: any, executionId: string): Promise<void> {
   // Verify user has access to this execution
   const { data: existingExecution } = await supabase
     .from('executions')
@@ -300,7 +300,7 @@ async function getExecutionLogs(executionId: string): Promise<any[]> {
     return logs;
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Error getting execution logs:', error);
+    console.error('Error getting execution logs:', message, error);
     return [];
   }
 }
@@ -331,7 +331,7 @@ async function getExecutionAnalytics(executionId: string): Promise<any> {
       daily_data: analytics};
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Error getting execution analytics:', error);
+    console.error('Error getting execution analytics:', message, error);
     return { has_data: false, error: 'Failed to retrieve analytics' };
   }
 }
@@ -339,7 +339,6 @@ async function getExecutionAnalytics(executionId: string): Promise<any> {
 function calculateExecutionProgress(execution: any): any {
   const now = new Date().getTime();
   const created = new Date(execution.created_at).getTime();
-  const updated = new Date(execution.updated_at).getTime();
 
   let progressPercentage = 0;
   let estimatedCompletion = null;
@@ -388,7 +387,7 @@ async function getRelatedExecutions(matrixId: string, excludeId: string): Promis
     return executions || [];
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Error getting related executions:', error);
+    console.error('Error getting related executions:', message, error);
     return [];
   }
 }
@@ -454,24 +453,24 @@ function validateStatusTransition(currentStatus: string, newStatus: string): { v
   return { valid: true };
 }
 
-async function logExecutionEvent(executionId: string, eventType: string, details: any): Promise<void> {
+async function logExecutionEvent(_executionId: string, _eventType: string, _details: any): Promise<void> {
   try {
     // In a full implementation, this would log to an execution_events table
     process.env.NODE_ENV === 'development' && loggers.general.error('Logging execution event:', event);
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Error logging execution event:', error);
+    console.error('Error logging execution event:', message, error);
   }
 }
 
-async function triggerExecutionNotification(execution: any, status: string): Promise<void> {
+async function triggerExecutionNotification(execution: any, _status: string): Promise<void> {
   try {
     // In a full implementation, this would trigger real-time notifications
     // via WebSocket or Server-Sent Events
     process.env.NODE_ENV === 'development' && loggers.general.error('Triggering execution notification for:', execution.id);
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Error triggering execution notification:', error);
+    console.error('Error triggering execution notification:', message, error);
   }
 }
 

@@ -28,7 +28,6 @@ const WebhookCreateSchema = z.object({
   timeout_ms: z.number().min(1000).max(30000).default(10000)
 });
 
-const WebhookUpdateSchema = WebhookCreateSchema.partial().omit(['client_id'] as any);
 
 const WebhookFilterSchema = z.object({
   client_id: z.string().uuid().optional(),
@@ -160,7 +159,6 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse, user: any): 
       }
     });
   } catch (error: any) {
-    const message = getErrorMessage(error);
     console.error('Error in handleGet:', error);
     return res.status(500).json({ error: 'Failed to fetch webhooks' });
   }
@@ -259,7 +257,6 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse, user: any):
       }
     });
   } catch (error: any) {
-    const message = getErrorMessage(error);
     console.error('Error creating webhook:', error);
     return res.status(500).json({ error: 'Failed to create webhook' });
   }
@@ -350,7 +347,6 @@ async function calculateWebhookStatistics(clientIds: string[]): Promise<any> {
       event_distribution: eventDistribution
     };
   } catch (error: any) {
-    const message = getErrorMessage(error);
     console.error('Error calculating webhook statistics:', error);
     return getEmptyWebhookStatistics();
   }
@@ -382,7 +378,6 @@ async function logWebhookEvent(webhookId: string, action: string, userId: string
         timestamp: new Date().toISOString()
       });
   } catch (error: any) {
-    const message = getErrorMessage(error);
     console.error('Error logging webhook event:', error);
   }
 }
@@ -403,7 +398,6 @@ async function triggerTestWebhook(webhook: any): Promise<void> {
 
     await deliverWebhook(webhook, payload);
   } catch (error: any) {
-    const message = getErrorMessage(error);
     console.error('Error sending test webhook:', error);
   }
 }
@@ -462,12 +456,10 @@ export async function deliverWebhook(webhook: any, payload: any): Promise<{ succ
         delivered_at: new Date().toISOString()
       });
 
-    return { 
-      success: response.ok,
-      error: response.ok ? undefined : `HTTP ${response.status}: ${response.statusText}`
-    };
+    return response.ok 
+      ? { success: true }
+      : { success: false, error: `HTTP ${response.status}: ${response.statusText}` };
   } catch (error: any) {
-    const message = getErrorMessage(error);
     // Update failed delivery count
     await supabase
       .from('webhooks')
@@ -534,7 +526,6 @@ export async function triggerWebhookEvent(
 
     await Promise.allSettled(deliveryPromises);
   } catch (error: any) {
-    const message = getErrorMessage(error);
     console.error('Error triggering webhook event:', error);
   }
 }

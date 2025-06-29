@@ -32,7 +32,7 @@ const checkDatabase = async (): Promise<HealthCheck> => {
     const supabase = createServiceClient();
 
     // Simple query to test database connectivity
-    const { data, error } = await supabase.from('profiles').select('id').limit(1);
+    const { data: _data, error } = await supabase.from('profiles').select('id').limit(1);
 
     if (error) throw error;
 

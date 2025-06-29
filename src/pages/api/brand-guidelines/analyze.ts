@@ -176,7 +176,7 @@ export default async function handler(
       maxFiles: 1,
     });
 
-    const [fields, files] = await form.parse(req);
+    const [_fields, files] = await form.parse(req);
     const file = Array.isArray(files.file) ? files.file[0] : files.file;
 
     if (!file) {
@@ -197,7 +197,7 @@ export default async function handler(
     const guidelines = await analyzeBrandGuidelines(documentText);
 
     // Save guidelines to client profile
-    const { error: updateError } = await supabase
+    const { error: updateError } = await supabase!
       .from('clients')
       .update({
         brand_guidelines: guidelines,

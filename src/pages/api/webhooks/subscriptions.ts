@@ -93,7 +93,7 @@ async function handlePut(req: NextApiRequest, res: NextApiResponse, userId: stri
   res.status(200).json({ subscription });
 }
 
-async function handleDelete(req: NextApiRequest, res: NextApiResponse, userId: string): Promise<void> {
+async function handleDelete(req: NextApiRequest, res: NextApiResponse, _userId: string): Promise<void> {
   const { id } = req.query;
   
   if (!id || typeof id !== 'string') {

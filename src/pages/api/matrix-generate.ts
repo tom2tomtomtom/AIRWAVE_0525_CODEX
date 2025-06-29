@@ -33,7 +33,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void>
     variation_count,
   } = parseResult.data;
   // Fetch template, assets, and content
-  const { data: template, error: templateError } = await supabase
+  const { data: template, error: templateError } = await supabase!
     .from('templates')
     .select('*')
     .eq('id', template_id)
@@ -41,14 +41,14 @@ async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void>
   if (templateError || !template) {
     return res.status(404).json({ success: false, message: 'Template not found' });
   }
-  const { data: assets, error: assetError } = await supabase
+  const { data: assets, error: assetError } = await supabase!
     .from('assets')
     .select('*')
     .in('id', asset_ids);
   if (assetError || !assets || assets.length === 0) {
     return res.status(404).json({ success: false, message: 'Assets not found' });
   }
-  const { data: content, error: contentError } = await supabase
+  const { data: content, error: contentError } = await supabase!
     .from('generated_content')
     .select('*')
     .eq('id', content_id)
@@ -76,7 +76,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void>
 
     const variations = completion.choices[0]?.message?.content;
     // Save matrix
-    const { data: matrix, error: saveError } = await supabase
+    const { data: matrix, error: saveError } = await supabase!
       .from('matrices')
       .insert({
         template_id,

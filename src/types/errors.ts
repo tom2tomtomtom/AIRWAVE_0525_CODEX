@@ -90,8 +90,12 @@ export class AppError extends Error {
     this.name = 'AppError';
     this.code = code;
     this.statusCode = statusCode;
-    this.context = context;
-    this.details = details;
+    if (context !== undefined) {
+      this.context = context;
+    }
+    if (details !== undefined) {
+      this.details = details;
+    }
     this.isOperational = isOperational;
     this.timestamp = new Date();
 
@@ -132,7 +136,11 @@ export class DatabaseError extends AppError {
 // Validation specific errors
 export class ValidationError extends AppError {
   constructor(message: string, field: string, value?: unknown, allowedValues?: unknown[]) {
-    const details: ErrorDetails = { field, value, allowedValues };
+    const details: ErrorDetails = { 
+      field, 
+      value, 
+      ...(allowedValues !== undefined && { allowedValues }) 
+    };
     super(message, ErrorCode.VALIDATION_INVALID_FORMAT, 400, undefined, details);
     this.name = 'ValidationError';
   }
@@ -223,9 +231,9 @@ export const formatErrorResponse = (error: AppError, requestId?: string): ErrorR
     error: {
       code: error.code,
       message: error.message,
-      details: error.details,
+      ...(error.details !== undefined && { details: error.details }),
       timestamp: error.timestamp,
-      requestId,
+      ...(requestId !== undefined && { requestId }),
     },
   };
 };

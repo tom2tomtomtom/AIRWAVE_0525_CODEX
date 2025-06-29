@@ -74,7 +74,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void>
 
 async function getDashboardStats(userId: string): Promise<DashboardStats> {
   // Get user's accessible clients
-  const { data: userClients } = await supabase
+  const { data: userClients } = await supabase!
     .from('user_clients')
     .select('client_id')
     .eq('user_id', userId);
@@ -106,14 +106,14 @@ async function getDashboardStats(userId: string): Promise<DashboardStats> {
     analytics,
   ] = await Promise.all([
     // Current assets (last 30 days)
-    supabase
+    supabase!
       .from('assets')
       .select('id, created_at, metadata')
       .in('client_id', clientIds)
       .gte('created_at', thirtyDaysAgoStr),
 
     // Previous assets (30-60 days ago)
-    supabase
+    supabase!
       .from('assets')
       .select('id, created_at, metadata')
       .in('client_id', clientIds)
@@ -121,14 +121,14 @@ async function getDashboardStats(userId: string): Promise<DashboardStats> {
       .lt('created_at', thirtyDaysAgoStr),
 
     // Current campaigns
-    supabase
+    supabase!
       .from('campaigns')
       .select('id, status, created_at')
       .in('client_id', clientIds)
       .gte('created_at', thirtyDaysAgoStr),
 
     // Previous campaigns
-    supabase
+    supabase!
       .from('campaigns')
       .select('id, status, created_at')
       .in('client_id', clientIds)
@@ -136,13 +136,13 @@ async function getDashboardStats(userId: string): Promise<DashboardStats> {
       .lt('created_at', thirtyDaysAgoStr),
 
     // Matrices (for templates used)
-    supabase
+    supabase!
       .from('matrices')
       .select('id, template_id, created_at')
       .gte('created_at', thirtyDaysAgoStr),
 
     // Pending approvals
-    supabase.from('approvals').select('id, status, created_at').eq('status', 'pending'),
+    supabase!.from('approvals').select('id, status, created_at').eq('status', 'pending'),
 
     // Recent activities
     getRecentActivities(clientIds, userId),
@@ -226,10 +226,10 @@ async function getDashboardStats(userId: string): Promise<DashboardStats> {
   };
 }
 
-async function getRecentActivities(clientIds: string[], userId: string): Promise<Array<any>> {
+async function getRecentActivities(clientIds: string[], _userId: string): Promise<Array<any>> {
   try {
     // Get recent campaigns
-    const { data: campaigns } = await supabase
+    const { data: campaigns } = await supabase!
       .from('campaigns')
       .select(
         `
@@ -242,7 +242,7 @@ async function getRecentActivities(clientIds: string[], userId: string): Promise
       .limit(5);
 
     // Get recent assets
-    const { data: assets } = await supabase
+    const { data: assets } = await supabase!
       .from('assets')
       .select(
         `
@@ -255,7 +255,7 @@ async function getRecentActivities(clientIds: string[], userId: string): Promise
       .limit(5);
 
     // Get recent matrices
-    const { data: matrices } = await supabase
+    const { data: matrices } = await supabase!
       .from('matrices')
       .select(
         `
@@ -320,7 +320,7 @@ async function getRecentActivities(clientIds: string[], userId: string): Promise
 async function getPerformanceMetrics(clientIds: string[]): Promise<any> {
   try {
     // Get campaign analytics for accessible clients
-    const { data: analytics } = await supabase
+    const { data: analytics } = await supabase!
       .from('campaign_analytics')
       .select(
         `

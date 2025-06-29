@@ -130,7 +130,7 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse, user: any): 
     });
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Error in handleGet:', error);
+    console.error('Error in handleGet:', error, 'Message:', message);
     return res.status(500).json({ error: 'Failed to fetch social posts' });
   }
 }
@@ -248,7 +248,7 @@ async function handleCreate(req: NextApiRequest, res: NextApiResponse, user: any
     }
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Error creating social post:', error);
+    console.error('Error creating social post:', error, 'Message:', message);
     return res.status(500).json({ error: 'Failed to create social post' });
   }
 }
@@ -337,7 +337,7 @@ async function handleUpdate(req: NextApiRequest, res: NextApiResponse, user: any
     });
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Error updating social post:', error);
+    console.error('Error updating social post:', error, 'Message:', message);
     return res.status(500).json({ error: 'Failed to update social post' });
   }
 }
@@ -388,14 +388,14 @@ async function handleDelete(req: NextApiRequest, res: NextApiResponse, user: any
     return res.json({ message: 'Social post deleted successfully' });
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Error deleting social post:', error);
+    console.error('Error deleting social post:', error, 'Message:', message);
     return res.status(500).json({ error: 'Failed to delete social post' });
   }
 }
 
 // Helper function to publish to multiple platforms
 async function publishToMPlatforms(
-  post: any,
+  _post: any,
   platforms: string[],
   clientId: string
 ): Promise<any[]> {

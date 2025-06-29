@@ -102,9 +102,9 @@ export class BriefParser {
       return briefData;
     } catch (error: any) {
       const classified = classifyError(error as Error, {
-        route: 'brief-parser',
+        action: 'brief-parser',
         metadata: { fileName: file.name, fileSize: file.size },
-      });
+      } as any);
 
       logger.error('Brief parsing failed', classified.originalError);
       throw error;
@@ -141,7 +141,7 @@ export class BriefParser {
   private async extractFromPDF(file: File): Promise<string> {
     // In a real implementation, you'd use a PDF parsing library like pdf-parse
     // For now, we'll use a placeholder
-    const buffer = await file.arrayBuffer();
+    await file.arrayBuffer();
 
     try {
       // This would use pdf-parse or similar library
@@ -157,7 +157,7 @@ export class BriefParser {
 
   private async extractFromDocx(file: File): Promise<string> {
     // In a real implementation, you'd use a library like mammoth
-    const buffer = await file.arrayBuffer();
+    await file.arrayBuffer();
 
     try {
       // This would use mammoth or similar library
@@ -231,7 +231,7 @@ If information is not clearly stated, use null for that field. Be accurate and d
     `;
   }
 
-  private async callAIService(prompt: string): Promise<string> {
+  private async callAIService(_prompt: string): Promise<string> {
     // Placeholder for AI service integration
     // This would integrate with OpenAI, Anthropic, or your preferred AI service
 
@@ -449,7 +449,7 @@ If information is not clearly stated, use null for that field. Be accurate and d
         ...brief.metadata,
         enhanced: true,
         enhancedAt: new Date(),
-      },
+      } as any,
     };
   }
 
@@ -498,8 +498,6 @@ export const parseBrief = (file: File, options?: BriefExtractionOptions): Promis
   return getBriefParser().parse(file, options);
 };
 
-export const validateBrief = (
-  brief: ParsedBrief
-): Promise<ReturnType<BriefParser['validateParsedBrief']>> => {
+export const validateBrief = (brief: ParsedBrief) => {
   return getBriefParser().validateParsedBrief(brief);
 };

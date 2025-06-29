@@ -28,8 +28,6 @@ export type AuthenticatedHandler = (
 // Enhanced token validation with multiple fallback methods
 async function validateUserToken(req: NextApiRequest): Promise<any> {
   let supabase;
-  const user: unknown = null;
-  const error: unknown = null;
 
   // Method 1: Try Supabase SSR with cookies (primary method)
   try {
@@ -41,10 +39,10 @@ async function validateUserToken(req: NextApiRequest): Promise<any> {
           get(name: string) {
             return req.cookies[name];
           },
-          set(name: string, value: string, options: unknown) {
+          set(_name: string, _value: string, _options: unknown) {
             // We don't need to set cookies in API routes
           },
-          remove(name: string, options: unknown) {
+          remove(_name: string, _options: unknown) {
             // We don't need to remove cookies in API routes
           },
         },
@@ -128,7 +126,7 @@ async function validateUserToken(req: NextApiRequest): Promise<any> {
 }
 
 // Enhanced user profile handling with better error recovery
-async function getUserProfile(supabase: unknown, user: unknown): Promise<any> {
+async function getUserProfile(supabase: any, user: any): Promise<any> {
   try {
     const { data: profile, error: profileError } = await supabase
       .from('profiles')
@@ -139,17 +137,17 @@ async function getUserProfile(supabase: unknown, user: unknown): Promise<any> {
     if (profileError) {
       // If profile doesn't exist, create a basic one
       if (profileError.code === 'PGRST116') {
-        const userName = user.user_metadata?.name || user.email?.split('@')[0] || 'User';
+        const userName = user?.user_metadata?.name || user?.email?.split('@')[0] || 'User';
         const nameParts = userName.split(' ');
 
         const { data: newProfile, error: createError } = await supabase
           .from('profiles')
           .insert({
-            id: user.id,
+            id: user?.id,
             first_name: nameParts[0] || userName,
             last_name: nameParts.slice(1).join(' ') || '',
             role: 'user',
-            email: user.email,
+            email: user?.email,
             created_at: new Date().toISOString(),
             updated_at: new Date().toISOString(),
           })
@@ -176,12 +174,12 @@ async function getUserProfile(supabase: unknown, user: unknown): Promise<any> {
 }
 
 // Create fallback profile when database operations fail
-function createFallbackProfile(user: unknown): unknown {
+function createFallbackProfile(user: any): any {
   return {
-    id: user.id,
-    email: user.email || '',
-    first_name: user.user_metadata?.name?.split(' ')[0] || user.email?.split('@')[0] || 'User',
-    last_name: user.user_metadata?.name?.split(' ').slice(1).join(' ') || '',
+    id: user?.id,
+    email: user?.email || '',
+    first_name: user?.user_metadata?.name?.split(' ')[0] || user?.email?.split('@')[0] || 'User',
+    last_name: user?.user_metadata?.name?.split(' ').slice(1).join(' ') || '',
     role: 'user',
     permissions: [],
     tenant_id: null,
@@ -191,7 +189,7 @@ function createFallbackProfile(user: unknown): unknown {
 }
 
 // Enhanced client access fetching with error handling
-async function getUserClients(supabase: unknown, userId: string): Promise<string[]> {
+async function getUserClients(supabase: any, userId: string): Promise<string[]> {
   try {
     const { data: userClients, error: clientsError } = await supabase
       .from('user_clients')
@@ -250,7 +248,7 @@ export function withAuth(handler: AuthenticatedHandler) {
       return await handler(req as AuthenticatedRequest, res);
     } catch (error: unknown) {
       const message = getErrorMessage(error);
-      console.error('❌ Authentication error:', error);
+      console.error('❌ Authentication error:', message);
       return errorResponse(
         res,
         ErrorCode.INTERNAL_SERVER_ERROR,

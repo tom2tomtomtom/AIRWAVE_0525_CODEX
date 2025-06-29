@@ -119,7 +119,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     // Upload file to Supabase storage
     const fileName = `${Date.now()}-${uploadedFile.originalFilename}`;
-    const { data: _uploadData, error: uploadError } = await supabase.storage
+    const { data: _uploadData, error: uploadError } = await supabase!.storage
       .from('briefs')
       .upload(`${client_id}/${fileName}`, fileContent, {
         contentType: uploadedFile.mimetype || 'application/octet-stream',
@@ -134,12 +134,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     // Get public URL
-    const { data: urlData } = supabase.storage
+    const { data: urlData } = supabase!.storage
       .from('briefs')
       .getPublicUrl(`${client_id}/${fileName}`);
 
     // Create brief record
-    const { data: brief, error: briefError } = await supabase
+    const { data: brief, error: briefError } = await supabase!
       .from('briefs')
       .insert({
         client_id,
@@ -178,7 +178,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Brief upload error:', error);
+    console.error('Brief upload error:', message, error);
     return res.status(500).json({
       success: false,
       message: 'Failed to upload brief',
@@ -202,6 +202,6 @@ async function parseBriefAsync(briefId: string, content: string): Promise<void> 
     });
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Failed to trigger parsing:', error);
+    console.error('Failed to trigger parsing:', message, error);
   }
 }

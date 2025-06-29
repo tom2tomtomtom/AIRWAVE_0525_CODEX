@@ -104,7 +104,8 @@ export class WorkflowMetricsCollector {
       action: 'step_start',
       timestamp: Date.now(),
       success: true,
-      metadata};
+      ...(metadata && { metadata })
+    };
 
     await this.recordMetric(metric);
     
@@ -136,8 +137,9 @@ export class WorkflowMetricsCollector {
       timestamp: Date.now(),
       duration,
       success,
-      errorMessage,
-      metadata};
+      ...(errorMessage && { errorMessage }),
+      ...(metadata && { metadata })
+    };
 
     await this.recordMetric(metric);
     
@@ -160,8 +162,9 @@ export class WorkflowMetricsCollector {
       action: 'workflow_abandoned',
       timestamp: Date.now(),
       success: false,
-      errorMessage: reason,
-      metadata: { abandonmentPoint: lastStep }};
+      ...(reason && { errorMessage: reason }),
+      metadata: { abandonmentPoint: lastStep }
+    };
 
     await this.recordMetric(metric);
     
@@ -185,7 +188,8 @@ export class WorkflowMetricsCollector {
       timestamp: Date.now(),
       duration: totalDuration,
       success: true,
-      metadata};
+      ...(metadata && { metadata })
+    };
 
     await this.recordMetric(metric);
     
@@ -215,13 +219,14 @@ export class WorkflowMetricsCollector {
       timestamp: Date.now(),
       duration,
       success,
-      errorMessage,
+      ...(errorMessage && { errorMessage }),
       metadata: {
         service,
         model,
         tokensUsed,
         cost,
-        costPerToken: cost / tokensUsed },
+        costPerToken: cost / tokensUsed
+      }
     };
 
     await this.recordMetric(metric);
@@ -363,19 +368,21 @@ export class WorkflowMetricsCollector {
     for (const metric of metrics) {
       if (metric.action === 'step_completion' && stepMetrics[metric.workflowStep]) {
         const step = stepMetrics[metric.workflowStep];
-        step.totalAttempts++;
-        
-        if (metric.success) {
-          step.successfulCompletions++;
-          if (metric.duration) {
-            if (!stepCompletions[metric.workflowStep]) {
-              stepCompletions[metric.workflowStep] = [];
-            }
-            stepCompletions[metric.workflowStep].push(metric.duration);
+        if (step) {
+          step.totalAttempts++;
+          
+          if (metric.success) {
+            step.successfulCompletions++;
+            if (metric.duration) {
+              if (!stepCompletions[metric.workflowStep]) {
+                stepCompletions[metric.workflowStep] = [];
+              }
+              stepCompletions[metric.workflowStep]?.push(metric.duration);
           }
-        } else {
-          if (metric.errorMessage) {
-            step.commonErrors[metric.errorMessage] = (step.commonErrors[metric.errorMessage] || 0) + 1;
+          } else {
+            if (metric.errorMessage && step) {
+              step.commonErrors[metric.errorMessage] = (step.commonErrors[metric.errorMessage] || 0) + 1;
+            }
           }
         }
       }
@@ -383,24 +390,27 @@ export class WorkflowMetricsCollector {
 
     // Calculate averages and rates
     for (const [stepName, step] of Object.entries(stepMetrics)) {
-      if (step.totalAttempts > 0) {
+      if (step && step.totalAttempts > 0) {
         step.errorRate = (step.totalAttempts - step.successfulCompletions) / step.totalAttempts;
         
-        if (stepCompletions[stepName] && stepCompletions[stepName].length > 0) {
-          step.averageDuration = stepCompletions[stepName].reduce((a, b) => a + b, 0) / stepCompletions[stepName].length;
+        const completions = stepCompletions[stepName];
+        if (completions && completions.length > 0) {
+          step.averageDuration = completions.reduce((a, b) => a + b, 0) / completions.length;
         }
       }
     }
 
     // Calculate user journey and drop-off rates
     const userJourney = this.workflowSteps.map((step, index) => {
-      const stepAttempts = stepMetrics[step].totalAttempts;
-      const previousStepAttempts = index > 0 ? stepMetrics[this.workflowSteps[index - 1]].totalAttempts : sessions.size;
+      const stepAttempts = stepMetrics[step]?.totalAttempts || 0;
+      const previousStep = this.workflowSteps[index - 1];
+      const previousStepAttempts = index > 0 && previousStep ? stepMetrics[previousStep]?.totalAttempts || 0 : sessions.size;
       
       return {
         step,
         dropOffRate: previousStepAttempts > 0 ? 1 - (stepAttempts / previousStepAttempts) : 0,
-        averageTimeSpent: stepMetrics[step].averageDuration};
+        averageTimeSpent: stepMetrics[step]?.averageDuration || 0
+      };
     });
 
     // Calculate session duration

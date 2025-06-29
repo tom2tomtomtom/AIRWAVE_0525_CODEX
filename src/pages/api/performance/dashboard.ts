@@ -188,7 +188,7 @@ class PerformanceAnalyzer {
    */
   private analyzeCachePerformance(
     cacheStats: any,
-    queryOptimizerStats: any
+    _queryOptimizerStats: any
   ): PerformanceDashboard['data']['cache'] {
     const totalCachedItems = Object.values(cacheStats.memoryStats || {}).reduce(
       (sum: number, stats: any) => sum + (stats?.size || 0),

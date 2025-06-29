@@ -91,7 +91,7 @@ function buildCSP(options: SecurityHeadersOptions): string {
 
   // Add CSP report URI if specified
   if (options.cspReportUri) {
-    cspDirectives['report-uri'] = [options.cspReportUri];
+    (cspDirectives as any)['report-uri'] = [options.cspReportUri];
   }
 
   // In production, remove unsafe-inline and unsafe-eval where possible

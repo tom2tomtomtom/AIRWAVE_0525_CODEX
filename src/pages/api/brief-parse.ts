@@ -10,7 +10,8 @@ const BriefParseSchema = z.object({
 async function extractTextFromFile(fileUrl: string): Promise<string> {
   try {
     // Get the file from Supabase storage
-    const { data: fileData, error: downloadError } = await supabase.storage
+    const { data: fileData, error: downloadError } = await supabase!
+      .storage
       .from(env.STORAGE_BUCKET)
       .download(fileUrl);
 
@@ -30,7 +31,7 @@ async function extractTextFromFile(fileUrl: string): Promise<string> {
       // For PDF files, try to extract text using pdf-parse
       try {
         const pdf = require('pdf-parse') as (buffer: Buffer) => Promise<{ text: string }>;
-        const data = await pdf(uint8Array);
+        const data = await pdf(Buffer.from(uint8Array));
         return data.text;
       } catch (pdfError: any) {
         console.error('PDF parsing error:', pdfError);
@@ -127,7 +128,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       .json({ success: false, message: 'Invalid input', errors: parseResult.error.errors });
   }
   const { brief_id } = parseResult.data;
-  const { data: brief, error } = await supabase
+  const { data: brief, error } = await supabase!
     .from('briefs')
     .select('*')
     .eq('id', brief_id)
@@ -139,7 +140,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const text = await extractTextFromFile(brief.file_url);
     const parsed = await aiParseBrief(text);
     // Save parsed data to DB
-    const { data: updatedBrief, error: updateError } = await supabase
+    const { data: updatedBrief, error: updateError } = await supabase!
       .from('briefs')
       .update({ extracted_data: parsed, status: 'parsed' })
       .eq('id', brief_id)

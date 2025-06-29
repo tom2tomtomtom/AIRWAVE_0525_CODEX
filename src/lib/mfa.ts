@@ -1,4 +1,4 @@
-import { getErrorMessage } from '@/utils/errorUtils';
+// import { getErrorMessage } from '@/utils/errorUtils'; // Not used
 /**
  * Multi-Factor Authentication (MFA) Implementation
  *
@@ -139,7 +139,6 @@ export async function verifyAndEnableMFA(
 
     return { success: true };
   } catch (error: any) {
-    const message = getErrorMessage(error);
     console.error('MFA verification error:', error);
     return { success: false, error: 'Internal server error' };
   }
@@ -155,6 +154,9 @@ export async function validateMFAToken(
 ): Promise<MFAValidationResult> {
   try {
     // Get user's MFA configuration
+    if (!supabase) {
+      throw new Error('Supabase client not available');
+    }
     const { data: mfaConfig, error } = await supabase
       .from('user_mfa')
       .select('secret_encrypted, backup_codes_encrypted, is_enabled, used_backup_codes')
@@ -176,6 +178,9 @@ export async function validateMFAToken(
 
       // Mark backup code as used
       const updatedUsedCodes = [...usedCodes, token];
+      if (!supabase) {
+        throw new Error('Supabase client not available');
+      }
       const { error: updateError } = await supabase
         .from('user_mfa')
         .update({
@@ -200,6 +205,9 @@ export async function validateMFAToken(
       }
 
       // Update last used timestamp
+      if (!supabase) {
+        throw new Error('Supabase client not available');
+      }
       const { error: updateError } = await supabase
         .from('user_mfa')
         .update({
@@ -215,7 +223,6 @@ export async function validateMFAToken(
       return { success: true };
     }
   } catch (error: any) {
-    const message = getErrorMessage(error);
     console.error('MFA validation error:', error);
     return { success: false, error: 'Internal server error' };
   }
@@ -226,6 +233,9 @@ export async function validateMFAToken(
  */
 export async function isMFAEnabled(userId: string): Promise<boolean> {
   try {
+    if (!supabase) {
+      throw new Error('Supabase client not available');
+    }
     const { data, error } = await supabase
       .from('user_mfa')
       .select('is_enabled')
@@ -238,7 +248,6 @@ export async function isMFAEnabled(userId: string): Promise<boolean> {
 
     return data.is_enabled || false;
   } catch (error: any) {
-    const message = getErrorMessage(error);
     console.error('Error checking MFA status:', error);
     return false;
   }
@@ -259,6 +268,9 @@ export async function disableMFA(
     }
 
     // Disable MFA
+    if (!supabase) {
+      throw new Error('Supabase client not available');
+    }
     const { error } = await supabase
       .from('user_mfa')
       .update({
@@ -274,7 +286,6 @@ export async function disableMFA(
 
     return { success: true };
   } catch (error: any) {
-    const message = getErrorMessage(error);
     console.error('MFA disable error:', error);
     return { success: false, error: 'Internal server error' };
   }
@@ -291,12 +302,15 @@ export async function regenerateBackupCodes(
     // First verify the token
     const validation = await validateMFAToken(userId, verificationToken);
     if (!validation.success) {
-      return { success: false, error: validation.error };
+      return { success: false, error: validation.error || 'Validation failed' };
     }
 
     // Generate new backup codes
     const newBackupCodes = generateBackupCodes();
 
+    if (!supabase) {
+      throw new Error('Supabase client not available');
+    }
     const { error } = await supabase
       .from('user_mfa')
       .update({
@@ -312,7 +326,6 @@ export async function regenerateBackupCodes(
 
     return { success: true, backupCodes: newBackupCodes };
   } catch (error: any) {
-    const message = getErrorMessage(error);
     console.error('Backup code regeneration error:', error);
     return { success: false, error: 'Internal server error' };
   }

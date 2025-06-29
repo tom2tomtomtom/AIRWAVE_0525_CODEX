@@ -91,9 +91,12 @@ export class AIRateLimiter {
     operation: string,
     customConfig?: Partial<RateLimitConfig>
   ): Promise<RateLimitResult> {
-    const config = {
-      ...(this.defaultLimits[operation] || this.defaultLimits.default),
-      ...customConfig,
+    const defaultConfig = this.defaultLimits[operation] || this.defaultLimits.default;
+    const config: RateLimitConfig = {
+      windowMs: customConfig?.windowMs ?? defaultConfig?.windowMs ?? 60000,
+      maxRequests: customConfig?.maxRequests ?? defaultConfig?.maxRequests ?? 100,
+      ...(customConfig?.keyGenerator && { keyGenerator: customConfig.keyGenerator }),
+      ...(defaultConfig?.keyGenerator && !customConfig?.keyGenerator && { keyGenerator: defaultConfig.keyGenerator }),
     };
 
     const key = this.generateKey(userId, operation);
@@ -226,6 +229,9 @@ export class AIRateLimiter {
     totalRequests: number;
   }> {
     const config = this.defaultLimits[operation] || this.defaultLimits.default;
+    if (!config) {
+      throw new Error(`No rate limit configuration found for operation: ${operation}`);
+    }
     const key = this.generateKey(userId, operation);
 
     if (this.useRedis) {
@@ -289,9 +295,12 @@ export class AIRateLimiter {
    * Update rate limit configuration for an operation
    */
   updateConfig(operation: string, config: Partial<RateLimitConfig>): void {
+    const existingConfig = this.defaultLimits[operation] || this.defaultLimits.default;
     this.defaultLimits[operation] = {
-      ...(this.defaultLimits[operation] || this.defaultLimits.default),
-      ...config,
+      windowMs: config.windowMs ?? existingConfig?.windowMs ?? 60000,
+      maxRequests: config.maxRequests ?? existingConfig?.maxRequests ?? 100,
+      ...(config.keyGenerator && { keyGenerator: config.keyGenerator }),
+      ...(existingConfig?.keyGenerator && !config.keyGenerator && { keyGenerator: existingConfig.keyGenerator }),
     };
   }
 

@@ -88,14 +88,14 @@ function sendSSEMessage(res: NextApiResponse, event: string, data: any) {
     res.write(`event: ${event}\n`);
     res.write(`data: ${JSON.stringify(data)}\n\n`);
   } catch (error: any) {
-    const message = getErrorMessage(error);
+    getErrorMessage(error);
     // Connection already closed
   }
 }
 
 // Export functions for broadcasting events
 export function broadcastToUser(userId: string, event: string, data: any) {
-  for (const [id, conn] of connections.entries()) {
+  for (const [_id, conn] of connections.entries()) {
     if (conn.userId === userId) {
       sendSSEMessage(conn.res, event, data);
     }
@@ -103,7 +103,7 @@ export function broadcastToUser(userId: string, event: string, data: any) {
 }
 
 export function broadcastToAll(event: string, data: any) {
-  for (const [id, conn] of connections.entries()) {
+  for (const [_id, conn] of connections.entries()) {
     sendSSEMessage(conn.res, event, data);
   }
 }
@@ -165,7 +165,7 @@ export function broadcastNotification(
 export function getConnectionStats() {
   const userStats = new Map<string, number>();
 
-  for (const [id, conn] of connections.entries()) {
+  for (const [_id, conn] of connections.entries()) {
     const current = userStats.get(conn.userId) || 0;
     userStats.set(conn.userId, current + 1);
   }

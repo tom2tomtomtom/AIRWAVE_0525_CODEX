@@ -76,9 +76,10 @@ class SessionManager {
       role: data.role,
       createdAt: new Date(),
       lastActivity: new Date(),
-      ipAddress: data.ipAddress,
-      userAgent: data.userAgent,
-      metadata: data.metadata };
+      ...(data.ipAddress && { ipAddress: data.ipAddress }),
+      ...(data.userAgent && { userAgent: data.userAgent }),
+      ...(data.metadata && { metadata: data.metadata })
+    };
 
     if (this.useMemoryFallback) {
       this.memorySessions.set(sessionId, session);

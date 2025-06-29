@@ -41,7 +41,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void>
     }
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Brief API error:', error);
+    console.error('Brief API error:', message, error);
     return res.status(500).json({
       error: 'Internal server error',
       details:
@@ -55,7 +55,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void>
 }
 
 async function handleGet(
-  req: NextApiRequest,
+  _req: NextApiRequest,
   res: NextApiResponse,
   user: any,
   briefId: string
@@ -196,7 +196,7 @@ async function handlePut(
 }
 
 async function handleDelete(
-  req: NextApiRequest,
+  _req: NextApiRequest,
   res: NextApiResponse,
   user: any,
   briefId: string

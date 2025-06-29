@@ -160,7 +160,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void>
     });
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Brief status API error:', error);
+    console.error('Brief status API error:', message, error);
     return res.status(500).json({
       error: 'Internal server error',
       details:

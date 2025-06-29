@@ -15,7 +15,7 @@ export class ErrorReporter {
   constructor() {
     this.sessionId = this.generateSessionId();
     // In browser environment, setup global error handlers
-    if (typeof window !== 'undefined' && window?.addEventListener) {
+    if (typeof window !== 'undefined') {
       this.setupGlobalErrorHandlers();
     }
   }
@@ -38,7 +38,7 @@ export class ErrorReporter {
   private setupGlobalErrorHandlers() {
 
     // Handle unhandled promise rejections
-    window.addEventListener('unhandledrejection', (_event) => {
+    window.addEventListener('unhandledrejection', (event) => {
       this.reportError(new Error(`Unhandled Promise Rejection: ${event.reason}`), {
         action: 'unhandled_promise_rejection',
         metadata: {
@@ -48,7 +48,7 @@ export class ErrorReporter {
     });
 
     // Handle global JavaScript errors
-    window.addEventListener('error', (_event) => {
+    window.addEventListener('error', (event) => {
       this.reportError(new Error(event.message), {
         action: 'global_error',
         metadata: {

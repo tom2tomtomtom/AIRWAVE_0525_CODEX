@@ -30,7 +30,7 @@ export interface StructuredLogEntry {
 
 export class StructuredLogger {
   private logger: winston.Logger;
-  private config = getLoggingConfig();
+  private config = this.getDefaultLoggingConfig();
   private service: string;
   private version: string;
 
@@ -38,6 +38,24 @@ export class StructuredLogger {
     this.service = service;
     this.version = version;
     this.logger = this.createLogger();
+  }
+
+  private getDefaultLoggingConfig() {
+    return {
+      level: 'info',
+      environment: 'development',
+      console: {
+        enabled: true,
+        level: 'debug',
+      },
+      file: {
+        enabled: false,
+        level: 'info',
+        path: './logs/app.log',
+        maxSize: 10485760,
+        maxFiles: 5,
+      },
+    };
   }
 
   private createLogger(): winston.Logger {

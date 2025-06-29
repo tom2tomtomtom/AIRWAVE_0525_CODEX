@@ -94,9 +94,9 @@ async function getOptimizedClients(
   const queryString = query.toString();
   const cached = QueryOptimizer.getCachedQuery(req.url || '', queryString);
 
-  let result;
+  let result: { data: any[] | null; count: number | null };
   if (cached) {
-    result = cached;
+    result = cached as { data: any[] | null; count: number | null };
   } else {
     const { data, error, count } = await query;
 

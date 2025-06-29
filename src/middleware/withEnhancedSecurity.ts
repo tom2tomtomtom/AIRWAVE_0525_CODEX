@@ -79,13 +79,13 @@ export function withEnhancedSecurity(
       }
 
       // 3. Apply security headers
-      if (config.headers !== false) {
-        await applySecurityHeaders(req, res, config.headers || {});
+      if (config.headers && typeof config.headers === 'object') {
+        await applySecurityHeaders(req, res, config.headers);
       }
 
       // 4. Apply rate limiting
       if (config.rateLimit) {
-        const rateLimitHandler = withRateLimit(config.rateLimit, handler);
+        const rateLimitHandler = withRateLimit('api', config.rateLimit)(handler);
         await rateLimitHandler(req, res);
         return;
       }
@@ -277,11 +277,11 @@ function analyzeRequest(
   // Log suspicious activity if configured
   if (analysisConfig.logSuspiciousActivity && suspiciousReasons.length > 0) {
     loggers.general.warn('Suspicious request detected', {
-      ip: req.headers['x-forwarded-for'] || req.socket.remoteAddress,
+      ip: (Array.isArray(req.headers['x-forwarded-for']) ? req.headers['x-forwarded-for'][0] : req.headers['x-forwarded-for']) || req.socket.remoteAddress,
       userAgent: req.headers['user-agent'],
       endpoint: req.url,
       method: req.method,
-      reasons: suspiciousReasons,
+      reasons: suspiciousReasons.join(', '),
       willBlock: shouldBlock
     });
   }
@@ -302,14 +302,14 @@ async function applySecurityHeaders(
   headersConfig: NonNullable<EnhancedSecurityConfig['headers']>
 ) {
   const securityHeadersHandler = withSecurityHeaders(
-    async (req, res) => {
+    async (_req, _res) => {
       // No-op handler, we just want the headers applied
     },
     {
-      enableCSP: headersConfig.enableCSP,
-      enableHSTS: headersConfig.enableHSTS,
-      cspReportUri: headersConfig.cspReportUri,
-      customHeaders: headersConfig.customHeaders
+      ...(headersConfig.enableCSP !== undefined && { enableCSP: headersConfig.enableCSP }),
+      ...(headersConfig.enableHSTS !== undefined && { enableHSTS: headersConfig.enableHSTS }),
+      ...(headersConfig.cspReportUri && { cspReportUri: headersConfig.cspReportUri }),
+      ...(headersConfig.customHeaders && { customHeaders: headersConfig.customHeaders })
     }
   );
 

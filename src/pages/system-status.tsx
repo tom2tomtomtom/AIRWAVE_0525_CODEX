@@ -51,7 +51,7 @@ export default function SystemStatusPage() {
         setStatus(data);
         setLoading(false);
       })
-      .catch(err => {
+      .catch(_err => {
         setError('Failed to fetch system status');
         setLoading(false);
       });

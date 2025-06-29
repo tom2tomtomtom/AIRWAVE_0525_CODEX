@@ -120,7 +120,6 @@ export interface BatchRenderJob {
 export class CampaignRenderer {
   private supabase = createClient();
   private readonly STORAGE_BUCKET = 'rendered-campaigns';
-  private readonly MAX_RENDER_TIME = 300000; // 5 minutes
   private readonly QUALITY_SETTINGS = {
     draft: { scale: 0.5, quality: 60, dpi: 72 },
     preview: { scale: 0.8, quality: 80, dpi: 96 },
@@ -128,13 +127,6 @@ export class CampaignRenderer {
     print: { scale: 1.0, quality: 100, dpi: 300 }
   };
 
-  private readonly DEFAULT_FORMATS: Record<string, RenderOutput['format'][]> = {
-    social: ['jpg', 'png', 'webp'],
-    web: ['png', 'webp', 'svg'],
-    email: ['jpg', 'png'],
-    print: ['pdf', 'png'],
-    video: ['mp4', 'gif']
-  };
 
   async renderCampaign(
     populatedTemplate: PopulatedTemplate,
@@ -157,7 +149,7 @@ export class CampaignRenderer {
         briefId: populatedTemplate.briefId,
         quality,
         format,
-        outputFormats
+        outputFormats: outputFormats.join(', ')
       });
 
       // Validate render request
@@ -251,13 +243,7 @@ export class CampaignRenderer {
 
     } catch (error: any) {
       const classified = classifyError(error as Error, {
-        route: 'campaign-renderer',
-        metadata: { 
-          templateId: populatedTemplate.templateId,
-          briefId: populatedTemplate.briefId,
-          quality,
-          format
-        }
+        route: 'campaign-renderer'
       });
       
       logger.error('Campaign render failed', classified.originalError);
@@ -286,21 +272,26 @@ export class CampaignRenderer {
       logger.info('Starting batch render', {
         jobId: job.id,
         templateCount: templates.length,
-        options
+        quality: options.quality,
+        format: options.format
       });
 
       job.status = 'processing';
       const startTime = Date.now();
 
       for (let i = 0; i < templates.length; i++) {
+        const template = templates[i];
+        if (!template) continue;
+        
         try {
-          const rendered = await this.renderCampaign(templates[i], options);
+          const rendered = await this.renderCampaign(template, options);
           job.results.push(rendered);
           job.progress = Math.round(((i + 1) / templates.length) * 100);
         } catch (error: any) {
           const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-          job.errors.push(`Template ${templates[i].id}: ${errorMessage}`);
-          logger.warn('Batch render item failed', { templateId: templates[i].id, error: errorMessage });
+          const templateId = template.templateId || template.id || `template_${i}`;
+          job.errors.push(`Template ${templateId}: ${errorMessage}`);
+          logger.warn('Batch render item failed', { templateId, error: errorMessage });
         }
       }
 
@@ -364,7 +355,7 @@ export class CampaignRenderer {
     return {
       status: campaign.status,
       progress: campaign.progress,
-      estimatedTimeRemaining
+      ...(estimatedTimeRemaining !== undefined && { estimatedTimeRemaining })
     };
   }
 
@@ -478,14 +469,14 @@ export class CampaignRenderer {
     const heightMatch = html.match(/height:\s*(\d+)px/);
     
     return {
-      width: widthMatch ? parseInt(widthMatch[1]) : 1920,
-      height: heightMatch ? parseInt(heightMatch[1]) : 1080
+      width: widthMatch && widthMatch[1] ? parseInt(widthMatch[1]) : 1920,
+      height: heightMatch && heightMatch[1] ? parseInt(heightMatch[1]) : 1080
     };
   }
 
   private async prepareRenderData(
     populatedTemplate: PopulatedTemplate,
-    options: RenderOptions
+    _options: RenderOptions
   ): Promise<{
     html: string;
     css: string;
@@ -545,22 +536,22 @@ export class CampaignRenderer {
     }
   }
 
-  private async renderWithHtml2Canvas(renderData: any, campaign: RenderedCampaign): Promise<Buffer> {
+  private async renderWithHtml2Canvas(_renderData: any, _campaign: RenderedCampaign): Promise<Buffer> {
     // Placeholder - would use html2canvas or similar
     return Buffer.from('mock-html2canvas-render');
   }
 
-  private async renderWithPuppeteer(renderData: any, campaign: RenderedCampaign): Promise<Buffer> {
+  private async renderWithPuppeteer(_renderData: any, _campaign: RenderedCampaign): Promise<Buffer> {
     // Placeholder - would use puppeteer for PDF/image generation
     return Buffer.from('mock-puppeteer-render');
   }
 
-  private async renderWithCanvas(renderData: any, campaign: RenderedCampaign): Promise<Buffer> {
+  private async renderWithCanvas(_renderData: any, _campaign: RenderedCampaign): Promise<Buffer> {
     // Placeholder - would use canvas for programmatic rendering
     return Buffer.from('mock-canvas-render');
   }
 
-  private async renderWithSvg(renderData: any, campaign: RenderedCampaign): Promise<Buffer> {
+  private async renderWithSvg(_renderData: any, _campaign: RenderedCampaign): Promise<Buffer> {
     // Placeholder - would generate SVG
     return Buffer.from('mock-svg-render');
   }
@@ -594,12 +585,12 @@ export class CampaignRenderer {
     return buffer;
   }
 
-  private async applyFilters(buffer: Buffer, filters: string[]): Promise<Buffer> {
+  private async applyFilters(buffer: Buffer, _filters: string[]): Promise<Buffer> {
     // Placeholder for filter effects
     return buffer;
   }
 
-  private async compressImage(buffer: Buffer, targetSize?: number): Promise<Buffer> {
+  private async compressImage(buffer: Buffer, _targetSize?: number): Promise<Buffer> {
     // Placeholder for image compression
     return buffer;
   }
@@ -659,12 +650,12 @@ export class CampaignRenderer {
     return outputs;
   }
 
-  private async convertFormat(buffer: Buffer, format: RenderOutput['format']): Promise<Buffer> {
+  private async convertFormat(buffer: Buffer, _format: RenderOutput['format']): Promise<Buffer> {
     // Placeholder for format conversion using Sharp or similar
     return buffer;
   }
 
-  private async applyWatermark(buffer: Buffer, watermark: NonNullable<RenderOptions['watermark']>): Promise<Buffer> {
+  private async applyWatermark(buffer: Buffer, _watermark: NonNullable<RenderOptions['watermark']>): Promise<Buffer> {
     // Placeholder for watermark application
     return buffer;
   }

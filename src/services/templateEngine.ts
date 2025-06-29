@@ -177,8 +177,10 @@ export interface TemplateMatchingOptions {
 }
 
 export class TemplateEngine {
-  private readonly TEMPLATE_CATEGORIES = ['social', 'web', 'email', 'print', 'video', 'display', 'outdoor'];
-  private readonly COMPONENT_TYPES = ['text', 'image', 'video', 'button', 'icon', 'background', 'overlay', 'divider'];
+  // Template categories for future categorization
+  // private readonly TEMPLATE_CATEGORIES = ['social', 'web', 'email', 'print', 'video', 'display', 'outdoor'];
+  // Component types for validation (for future use)
+  // private readonly COMPONENT_TYPES = ['text', 'image', 'video', 'button', 'icon', 'background', 'overlay', 'divider'];
   
   private templateLibrary: Map<string, CampaignTemplate> = new Map();
   
@@ -207,10 +209,10 @@ export class TemplateEngine {
     recommendations: string[];
   }> {
     const {
-      preferredPlatforms = [],
-      preferredFormats = [],
-      complexity = 'moderate',
-      urgency = 'medium'
+      preferredPlatforms: _preferredPlatforms = [],
+      preferredFormats: _preferredFormats = [],
+      complexity: _complexity = 'moderate',
+      urgency: _urgency = 'medium'
     } = options;
 
     try {
@@ -428,7 +430,7 @@ export class TemplateEngine {
   // Private methods
   private async calculateTemplateMatchScore(
     template: CampaignTemplate,
-    brief: ParsedBrief,
+    _brief: ParsedBrief,
     motivation: PsychologicalMotivation,
     availableCopy: CopyVariant[],
     availableAssets: Asset[],
@@ -581,8 +583,8 @@ export class TemplateEngine {
   private generateTemplateRecommendations(
     templates: Array<{ template: CampaignTemplate; matchScore: number }>,
     brief: ParsedBrief,
-    motivation: PsychologicalMotivation,
-    options: TemplateMatchingOptions
+    _motivation: PsychologicalMotivation,
+    _options: TemplateMatchingOptions
   ): string[] {
     const recommendations: string[] = [];
     
@@ -639,14 +641,14 @@ export class TemplateEngine {
     // Create copy lookup by type
     const copyByType = copy.reduce((acc, c) => {
       if (!acc[c.type]) acc[c.type] = [];
-      acc[c.type].push(c);
+      acc[c.type]!.push(c);
       return acc;
     }, {} as Record<string, CopyVariant[]>);
     
     // Create asset lookup by type and category
     const assetsByType = assets.reduce((acc, a) => {
       if (!acc[a.fileType]) acc[a.fileType] = [];
-      acc[a.fileType].push(a);
+      acc[a.fileType]!.push(a);
       return acc;
     }, {} as Record<string, Asset[]>);
     
@@ -696,7 +698,7 @@ export class TemplateEngine {
     }));
     
     scored.sort((a, b) => b.score - a.score);
-    return scored[0].copy;
+    return scored[0]!.copy;
   }
 
   private scoreCopyForComponent(
@@ -737,7 +739,7 @@ export class TemplateEngine {
     }));
     
     scored.sort((a, b) => b.score - a.score);
-    return scored[0].asset;
+    return scored[0]!.asset;
   }
 
   private scoreAssetForComponent(asset: Asset, component: TemplateComponent): number {
@@ -896,18 +898,18 @@ export class TemplateEngine {
     return containerCSS + componentCSS;
   }
 
-  private generateJavaScript(template: CampaignTemplate, components: PopulatedComponent[]): string {
+  private generateJavaScript(_template: CampaignTemplate, _components: PopulatedComponent[]): string {
     // Generate basic interactivity if needed
     return `
 document.addEventListener('DOMContentLoaded', function() {
-  // Template: ${template.name}
+  // Template: ${_template.name}
   // Add any interactive functionality here
 });`;
   }
 
   private async generatePreviews(
-    renderData: PopulatedTemplate['renderData'],
-    template: CampaignTemplate
+    _renderData: PopulatedTemplate['renderData'],
+    _template: CampaignTemplate
   ): Promise<PopulatedTemplate['preview']> {
     // Placeholder for preview generation
     // In production, would use headless browser or canvas rendering

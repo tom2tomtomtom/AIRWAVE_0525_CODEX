@@ -48,11 +48,10 @@ async function handler(
       multiples: true
     });
 
-    let fields: any;
     let files: any;
 
     try {
-      [fields, files] = await form.parse(req);
+      [, files] = await form.parse(req);
           } catch (parseError: any) {
       console.error('❌ Form parsing error:', parseError);
       return res.status(400).json({ 
@@ -108,7 +107,7 @@ async function handler(
         loggers.general.error(`🏷️ Asset type determined: ${assetType} (${mimeType})`);
 
         // Upload to Supabase Storage
-        const { data: uploadData, error: uploadError } = await supabase.storage
+        const { data: _uploadData, error: uploadError } = await supabase.storage
           .from('assets')
           .upload(storagePath, fileContent, {
             contentType: mimeType,

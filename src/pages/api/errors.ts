@@ -60,13 +60,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     if (process.env.NODE_ENV === 'production') {
       // Example: Store in database
-      // await storeErrorReport(enhancedReport);
+      await _storeErrorReport(enhancedReport);
       // Example: Send to monitoring service
-      // await sendToMonitoringService(enhancedReport);
+      await sendToMonitoringService(enhancedReport);
       // Example: Check if this is a critical error and alert
-      // if (isCriticalError(errorReport)) {
-      //   await sendAlert(enhancedReport);
-      // }
+      if (isCriticalError(errorReport)) {
+        await sendAlert(enhancedReport);
+      }
     }
 
     return res.status(200).json({
@@ -85,7 +85,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 // Helper functions for production error handling
 
-async function storeErrorReport(report: any) {
+async function _storeErrorReport(_report: any) {
   // Example implementation - store in your database
   // const { supabase } = require('@/lib/supabase/client');
   //
@@ -102,7 +102,7 @@ async function storeErrorReport(report: any) {
   // });
 }
 
-async function sendToMonitoringService(report: any) {
+async function sendToMonitoringService(_report: any) {
   // Example: Send to external monitoring service
   // if (process.env.ERROR_REPORTING_URL) {
   //   await fetch(process.env.ERROR_REPORTING_URL, {

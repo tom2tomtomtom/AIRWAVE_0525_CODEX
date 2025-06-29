@@ -472,7 +472,7 @@ async function createAsset(req: NextApiRequest, res: NextApiResponse, user: any)
     });
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Create asset error:', error);
+    console.error('Create asset error:', message);
     return res.status(500).json({
       success: false,
       message: 'Failed to create asset',
@@ -560,7 +560,7 @@ async function updateAsset(req: NextApiRequest, res: NextApiResponse, user: any)
     });
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Update asset error:', error);
+    console.error('Update asset error:', message);
     return res.status(500).json({
       success: false,
       message: 'Failed to update asset',
@@ -618,7 +618,7 @@ async function deleteAsset(req: NextApiRequest, res: NextApiResponse, user: any)
     });
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Delete asset error:', error);
+    console.error('Delete asset error:', message);
     return res.status(500).json({
       success: false,
       message: 'Failed to delete asset',

@@ -31,7 +31,6 @@ const MotivationCreateSchema = z.object({
   effectiveness_rating: z.number().min(1).max(5).optional(),
 });
 
-const MotivationUpdateSchema = MotivationCreateSchema.partial().omit(['client_id'] as any);
 
 async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
   const { method } = req;
@@ -276,7 +275,7 @@ async function getMotivationUsageStats(motivationId: string): Promise<any> {
     };
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Error calculating usage stats:', error);
+    console.error('Error calculating usage stats:', message, error);
     return {
       strategy_usage: 0,
       content_usage: 0,
@@ -333,7 +332,7 @@ async function calculateRelevanceScore(
     return Math.round(relevanceScore);
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Error calculating relevance score:', error);
+    console.error('Error calculating relevance score:', message, error);
     return 50; // Default score on error
   }
 }

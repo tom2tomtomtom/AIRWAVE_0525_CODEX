@@ -69,19 +69,18 @@ const generateText = async (
       .slice(0, 3);
     return variations.length > 0 ? variations.map((v: any) => v.trim()) : [content];
   } catch (error: any) {
-    const message = getErrorMessage(error);
     console.error('OpenAI text generation error:', error);
     return mockGenerateText(prompt);
   }
 };
 
 // Cleaned: Mock AI generation functions removed for production
-const mockGenerateText = (prompt: string): string[] => {
+const mockGenerateText = (_prompt: string): string[] => {
   // Cleaned: was mock AI responses
   return [];
 };
 
-const mockGenerateImage = (prompt: string): string => {
+const mockGenerateImage = (_prompt: string): string => {
   // Cleaned: was mock AI responses
   return '';
 };
@@ -109,7 +108,6 @@ const generateImage = async (prompt: string, parameters?: Record<string, any>): 
 
     return imageUrl;
   } catch (error: any) {
-    const message = getErrorMessage(error);
     console.error('DALL-E image generation error:', error);
     return mockGenerateImage(prompt);
   }
@@ -139,13 +137,12 @@ const enhanceImagePrompt = async (
 
     return completion.choices[0]?.message?.content?.trim() || prompt;
   } catch (error: any) {
-    const message = getErrorMessage(error);
     console.error('Prompt enhancement error:', error);
     return prompt;
   }
 };
 
-const generateVideo = async (prompt: string, parameters?: Record<string, any>): Promise<string> => {
+const generateVideo = async (_prompt: string, _parameters?: Record<string, any>): Promise<string> => {
   if (!hasRunway) {
     throw new Error(
       'Video generation service not configured. Please set up Runway ML integration.'
@@ -162,7 +159,7 @@ const generateVideo = async (prompt: string, parameters?: Record<string, any>): 
   }
 };
 
-const generateVoice = async (prompt: string, parameters?: Record<string, any>): Promise<string> => {
+const generateVoice = async (_prompt: string, _parameters?: Record<string, any>): Promise<string> => {
   if (!hasElevenLabs) {
     throw new Error(
       'Voice generation service not configured. Please set up ElevenLabs integration.'
@@ -171,8 +168,8 @@ const generateVoice = async (prompt: string, parameters?: Record<string, any>): 
 
   try {
     // Implement ElevenLabs voice generation
-    const voice = parameters?.voice || 'alloy';
-    const language = parameters?.language || 'en';
+    // const _voice = parameters?.voice || 'alloy';
+    // const _language = parameters?.language || 'en';
 
     process.env.NODE_ENV === 'development' && loggers.general.error('ElevenLabs voice generation requested');
     throw new Error('ElevenLabs integration not yet implemented');
@@ -248,7 +245,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseData>):
     });
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Error generating content:', error);
+    console.error('Error generating content:', message);
     return res.status(500).json({ success: false, message: 'Internal server error' });
   }
 }

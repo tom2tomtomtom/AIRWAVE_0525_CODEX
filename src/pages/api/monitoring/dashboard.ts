@@ -32,7 +32,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 }
 
 async function handleGetDashboard(req: NextApiRequest, res: NextApiResponse) {
-  const { section, timeWindow } = req.query;
+  const { section, timeWindow: _timeWindow } = req.query;
 
   try {
     if (section === 'alerts') {
@@ -119,7 +119,7 @@ async function handleGetDashboard(req: NextApiRequest, res: NextApiResponse) {
 }
 
 async function handleUpdateMetric(req: NextApiRequest, res: NextApiResponse) {
-  const { metric, value, timestamp } = req.body;
+  const { metric, value, timestamp: _timestamp } = req.body;
 
   if (!metric || typeof value !== 'number') {
     return res.status(400).json({

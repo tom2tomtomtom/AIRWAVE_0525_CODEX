@@ -209,8 +209,9 @@ async function validateGenerationContext(generateData: any, userId: string): Pro
           return { valid: false, error: 'No accessible clients found' };
         }
 
-        clientId = userClients[0].client_id;
-        context = { client: userClients[0].clients, type: 'standalone' };
+        const firstClient = userClients[0];
+        clientId = firstClient?.client_id;
+        context = { client: firstClient?.clients, type: 'standalone' };
         break;
     }
 
@@ -232,14 +233,13 @@ async function validateGenerationContext(generateData: any, userId: string): Pro
 
     return { valid: true, client_id: clientId, context };
   } catch (error: any) {
-    const message = getErrorMessage(error);
     return { valid: false, error: 'Error validating generation context' };
   }
 }
 
 async function checkGenerationLimits(
   clientId: string,
-  userId: string
+  _userId: string
 ): Promise<{ allowed: boolean; details?: string }> {
   try {
     // Check daily generation limit
@@ -277,7 +277,6 @@ async function checkGenerationLimits(
 
     return { allowed: true };
   } catch (error: any) {
-    const message = getErrorMessage(error);
     console.error('Error checking generation limits:', error);
     return {
       allowed: false,
@@ -378,7 +377,7 @@ async function processVideoGeneration(jobsData: any): Promise<any> {
   for (const job of jobsData.jobs) {
     try {
       // Create generation record in database
-      const { data: generation, error } = await supabase
+      const { data: _generation, error } = await supabase
         .from('video_generations')
         .insert({
           id: job.id,
@@ -628,7 +627,7 @@ function selectCreatomateTemplate(config: any): string {
   };
 
   const key = config.platform ? `${config.platform}_${config.aspect_ratio}` : 'default';
-  return templateMap[key] || templateMap.default;
+  return templateMap[key] || templateMap.default || 'template-1';
 }
 
 export default withAuth(withSecurityHeaders(handler));

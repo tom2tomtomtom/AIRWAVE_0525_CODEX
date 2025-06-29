@@ -35,7 +35,7 @@ async function handler(
     }
 
     // Get comprehensive MFA status using the database function
-    const { data, error } = await supabase.rpc('get_mfa_status', { p_user_id: user.id });
+    const { data, error } = await supabase!.rpc('get_mfa_status', { p_user_id: user.id });
 
     if (error) {
       console.error('Error fetching MFA status:', error);
@@ -59,7 +59,7 @@ async function handler(
     });
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('MFA status error:', error);
+    console.error('MFA status error:', message);
     return res.status(500).json({
       success: false,
       error: 'Failed to get MFA status. Please try again.',

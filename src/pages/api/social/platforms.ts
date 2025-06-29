@@ -17,7 +17,6 @@ interface Platform {
 
 async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
   const userId = req.headers['x-user-id'] as string;
-  const clientId = req.headers['x-client-id'] as string;
 
   try {
     if (req.method === 'GET') {
@@ -68,7 +67,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void>
     return res.status(405).json({ success: false, error: 'Method not allowed' });
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Platforms API error:', error);
+    console.error('Platforms API error:', error, 'Message:', message);
     return res.status(500).json({
       success: false,
       error: 'Internal server error',

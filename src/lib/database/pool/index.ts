@@ -1,7 +1,7 @@
 // Database pool functionality disabled - pg dependency not available
 // This file would require the 'pg' package to be installed
 
-import { getDatabaseConfig } from '@/lib/config';
+// import { getDatabaseConfig } from '@/lib/config'; // Not available
 import { loggers } from '@/lib/logger';
 
 export interface ConnectionPoolOptions {
@@ -29,8 +29,8 @@ export interface PoolStats {
 
 // Stub implementation to prevent import errors
 export class DatabaseConnectionPool {
-  private _config: ConnectionPoolOptions;
-  private _isInitialized = false;
+  // private _config: ConnectionPoolOptions;
+  // private _isInitialized = false;
   private stats = {
     totalQueries: 0,
     totalDuration: 0,
@@ -38,32 +38,32 @@ export class DatabaseConnectionPool {
     errors: 0,
   };
 
-  constructor(options: Partial<ConnectionPoolOptions> = {}) {
-    const _dbConfig = getDatabaseConfig();
+  constructor(_options: Partial<ConnectionPoolOptions> = {}) {
+    // const _dbConfig = getDatabaseConfig();
     
-    this._config = {
-      // Connection settings - would need proper database config
-      min: 2,
-      max: 20,
-      idleTimeoutMillis: 30000,
-      connectionTimeoutMillis: 2000,
-      statement_timeout: 30000,
-      query_timeout: 30000,
-      application_name: 'airflow-app',
-      ssl: true,
-      ...options,
-    };
+    // this._config = {
+    //   // Connection settings - would need proper database config
+    //   min: 2,
+    //   max: 20,
+    //   idleTimeoutMillis: 30000,
+    //   connectionTimeoutMillis: 2000,
+    //   statement_timeout: 30000,
+    //   query_timeout: 30000,
+    //   application_name: 'airflow-app',
+    //   ssl: true,
+    //   ...options,
+    // };
     
     loggers.general.warn('Database pool is disabled - pg package not available');
   }
 
   async initialize(): Promise<void> {
-    this._isInitialized = true;
+    // this._isInitialized = true;
     loggers.general.info('Database pool stub initialized (no actual connections)');
   }
 
   async shutdown(): Promise<void> {
-    this._isInitialized = false;
+    // this._isInitialized = false;
     loggers.general.info('Database pool stub shutdown');
   }
 

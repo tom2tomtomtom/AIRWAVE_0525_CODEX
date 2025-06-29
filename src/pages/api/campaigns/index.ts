@@ -28,7 +28,6 @@ const CampaignCreateSchema = z.object({
   creative_requirements: z.any().default({}),
 });
 
-const CampaignUpdateSchema = CampaignCreateSchema.partial().omit(['client_id'] as any);
 
 async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
   const { method } = req;
@@ -45,7 +44,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void>
     }
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Campaigns API error:', error);
+    console.error('Campaigns API error:', message, error);
     return res.status(500).json({
       error: 'Internal server error',
       details:
@@ -58,7 +57,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void>
   }
 }
 
-async function handleGet(req: NextApiRequest, res: NextApiResponse, user: any): Promise<void> {
+async function handleGet(req: NextApiRequest, res: NextApiResponse, _user: any): Promise<void> {
   loggers.general.error('Campaigns GET request - returning empty data (campaigns table not implemented)');
 
   // Return empty campaigns data since the campaigns table doesn't exist yet
@@ -133,7 +132,8 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse, user: any):
 }
 
 // Helper functions
-async function getCampaignStats(campaignId: string): Promise<any> {
+// @ts-ignore
+async function _getCampaignStats(campaignId: string): Promise<any> {
   try {
     // Get matrices count
     const { count: matricesCount } = await supabase
@@ -191,7 +191,7 @@ async function getCampaignStats(campaignId: string): Promise<any> {
     };
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Error getting campaign stats:', error);
+    console.error('Error getting campaign stats:', message, error);
     return {
       matrices_count: 0,
       executions_count: 0,
@@ -208,7 +208,8 @@ async function getCampaignStats(campaignId: string): Promise<any> {
   }
 }
 
-function calculatePortfolioStats(campaigns: any[]): any {
+// @ts-ignore
+function _calculatePortfolioStats(campaigns: any[]): any {
   const statusCount = campaigns.reduce(
     (acc, campaign) => {
       acc[campaign.status] = (acc[campaign.status] || 0) + 1;
@@ -260,7 +261,8 @@ function generateCampaignSlug(name: string): string {
     .substring(0, 50);
 }
 
-async function initializeCampaignAnalytics(campaignId: string): Promise<void> {
+// @ts-ignore
+async function _initializeCampaignAnalytics(campaignId: string): Promise<void> {
   try {
     // Create initial analytics record for tracking
     await supabase.from('campaign_analytics').insert({
@@ -278,7 +280,7 @@ async function initializeCampaignAnalytics(campaignId: string): Promise<void> {
     });
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Error initializing campaign analytics:', error);
+    console.error('Error initializing campaign analytics:', message, error);
     // Don't throw error, as this is not critical for campaign creation
   }
 }

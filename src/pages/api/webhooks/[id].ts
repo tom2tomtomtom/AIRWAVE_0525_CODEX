@@ -63,7 +63,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void>
 }
 
 async function handleGet(
-  req: NextApiRequest,
+  _req: NextApiRequest,
   res: NextApiResponse,
   user: any,
   webhookId: string
@@ -134,7 +134,6 @@ async function handleGet(
       events: Object.values(WEBHOOK_EVENTS),
     });
   } catch (error: any) {
-    const message = getErrorMessage(error);
     console.error('Error in handleGet:', error);
     return res.status(500).json({ error: 'Failed to fetch webhook' });
   }
@@ -251,14 +250,13 @@ async function handleUpdate(
       },
     });
   } catch (error: any) {
-    const message = getErrorMessage(error);
     console.error('Error updating webhook:', error);
     return res.status(500).json({ error: 'Failed to update webhook' });
   }
 }
 
 async function handleDelete(
-  req: NextApiRequest,
+  _req: NextApiRequest,
   res: NextApiResponse,
   user: any,
   webhookId: string
@@ -309,7 +307,6 @@ async function handleDelete(
 
     return res.json({ success: true });
   } catch (error: any) {
-    const message = getErrorMessage(error);
     console.error('Error deleting webhook:', error);
     return res.status(500).json({ error: 'Failed to delete webhook' });
   }
@@ -414,14 +411,13 @@ async function handleTestWebhook(
       payload,
     });
   } catch (error: any) {
-    const message = getErrorMessage(error);
     console.error('Error testing webhook:', error);
     return res.status(500).json({ error: 'Failed to test webhook' });
   }
 }
 
 async function handleRegenerateSecret(
-  req: NextApiRequest,
+  _req: NextApiRequest,
   res: NextApiResponse,
   user: any,
   webhookId: string
@@ -461,7 +457,7 @@ async function handleRegenerateSecret(
     const newSecret = generateWebhookSecret();
 
     // Update webhook with new secret
-    const { data: updatedWebhook, error } = await supabase
+    const { data: _updatedWebhook, error } = await supabase
       .from('webhooks')
       .update({
         secret: newSecret,
@@ -487,14 +483,13 @@ async function handleRegenerateSecret(
       secret: `${newSecret.substring(0, 8)}...`,
     });
   } catch (error: any) {
-    const message = getErrorMessage(error);
     console.error('Error regenerating webhook secret:', error);
     return res.status(500).json({ error: 'Failed to regenerate secret' });
   }
 }
 
 async function handleToggleWebhook(
-  req: NextApiRequest,
+  _req: NextApiRequest,
   res: NextApiResponse,
   user: any,
   webhookId: string
@@ -531,7 +526,7 @@ async function handleToggleWebhook(
     const newActiveState = !webhook.active;
 
     // Update webhook active state
-    const { data: updatedWebhook, error } = await supabase
+    const { data: _updatedWebhook, error } = await supabase
       .from('webhooks')
       .update({
         active: newActiveState,
@@ -557,7 +552,6 @@ async function handleToggleWebhook(
       active: newActiveState,
     });
   } catch (error: any) {
-    const message = getErrorMessage(error);
     console.error('Error toggling webhook:', error);
     return res.status(500).json({ error: 'Failed to toggle webhook' });
   }
@@ -628,7 +622,6 @@ async function logWebhookEvent(
       timestamp: new Date().toISOString(),
     });
   } catch (error: any) {
-    const message = getErrorMessage(error);
     console.error('Error logging webhook event:', error);
   }
 }

@@ -29,7 +29,8 @@ async function loadPDFParse(): Promise<(buffer: Buffer) => Promise<PDFData>> {
  */
 async function loadPDFJSExtract(): Promise<PDFJSExtract> {
   const pdfExtract = await import('pdf.js-extract');
-  return pdfExtract.default || pdfExtract;
+  const ExtractClass = pdfExtract.default || pdfExtract;
+  return new (ExtractClass as any)();
 }
 
 /**
@@ -113,11 +114,7 @@ export async function getPDFMetadata(buffer: Buffer) {
   
   try {
     const pdfParse = await loadPDFParse();
-    const data = await pdfParse(buffer, { 
-      // Only extract metadata, not full text content
-      version: 'v1.10.100',
-      max: 0 // Don't extract pages
-    });
+    const data = await pdfParse(buffer); // Remove invalid options
     
     return {
       pages: data.numpages,

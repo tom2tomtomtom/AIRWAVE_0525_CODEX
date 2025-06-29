@@ -1,9 +1,5 @@
 import { z } from 'zod';
 
-const safeTextSchema = z
-  .string()
-  .transform(str => str.trim())
-  .refine(str => !/<script[^>]*>.*?<\/script>/gi.test(str), 'Script tags not allowed');
 
 const safeTextWithLength = (min?: number, max?: number) => {
   let schema = z.string();

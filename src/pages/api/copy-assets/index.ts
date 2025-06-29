@@ -47,7 +47,6 @@ const CopyAssetCreateSchema = z.object({
   brand_compliance_score: z.number().min(0).max(100).optional(),
 });
 
-const CopyAssetUpdateSchema = CopyAssetCreateSchema.partial().omit(['client_id'] as any);
 
 async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
   const { method } = req;
@@ -64,7 +63,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void>
     }
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Copy Assets API error:', error);
+    console.error('Copy Assets API error:', message, error);
     return res.status(500).json({
       error: 'Internal server error',
       details:
@@ -304,7 +303,7 @@ function analyzeSentiment(text: string): 'positive' | 'neutral' | 'negative' {
 
 function generateTitleFromContent(content: string, type: string): string {
   // Generate a title based on content and type
-  const firstLine = content.split('\n')[0].trim();
+  const firstLine = content.split('\n')[0]?.trim() || '';
   const preview = firstLine.length > 50 ? firstLine.substring(0, 47) + '...' : firstLine;
 
   const typeLabels: Record<string, string> = {

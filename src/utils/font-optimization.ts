@@ -22,7 +22,7 @@ export const optimizeFontLoading = () => {
     linkElem.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap';
     linkElem.rel = 'preload';
     linkElem.as = 'style';
-    linkElem.onload = function() { this.rel = 'stylesheet'; };
+    linkElem.onload = function() { (this as HTMLLinkElement).rel = 'stylesheet'; };
     document.head.appendChild(linkElem);
   }
 };

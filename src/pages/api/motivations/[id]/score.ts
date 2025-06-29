@@ -53,7 +53,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void>
 }
 
 async function handleGet(
-  req: NextApiRequest,
+  _req: NextApiRequest,
   res: NextApiResponse,
   user: any,
   motivationId: string
@@ -138,7 +138,7 @@ async function handleGet(
 }
 
 async function handlePost(
-  req: NextApiRequest,
+  _req: NextApiRequest,
   res: NextApiResponse,
   user: any,
   motivationId: string
@@ -428,7 +428,7 @@ async function getComparativeScoring(
     };
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Error getting comparative scoring:', error);
+    console.error('Error getting comparative scoring:', message, error);
     return {
       has_comparison_data: false,
       message: 'Error retrieving comparison data',
@@ -436,14 +436,14 @@ async function getComparativeScoring(
   }
 }
 
-async function getScoringHistory(motivationId: string): Promise<any[]> {
+async function getScoringHistory(_motivationId: string): Promise<any[]> {
   try {
     // This would typically come from an audit table or version history
     // For now, we'll return empty array since we don't have scoring history table
     return [];
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Error getting scoring history:', error);
+    console.error('Error getting scoring history:', message, error);
     return [];
   }
 }
@@ -473,8 +473,11 @@ function generateScoringRecommendations(
     aspiration: 'Connect to future-state visioning',
   };
 
-  if (categoryRecommendations[motivation.category]) {
-    recommendations.push(categoryRecommendations[motivation.category]);
+  if (motivation.category && categoryRecommendations[motivation.category]) {
+    const categoryRec = categoryRecommendations[motivation.category];
+    if (categoryRec) {
+      recommendations.push(categoryRec);
+    }
   }
 
   // Comparative recommendations
@@ -568,13 +571,13 @@ function calculateEmotionalImpact(category: string, description: string): number
   return Math.min(100, base + (categoryImpact[category] || 50));
 }
 
-function calculateBrandFit(brandGuidelines: any, motivation: any): number {
+function calculateBrandFit(_brandGuidelines: any, _motivation: any): number {
   // Placeholder brand fit calculation
   // In real implementation, this would analyze brand voice, values, etc.
   return Math.floor(Math.random() * 30) + 70; // Random score between 70-100
 }
 
-async function calculateMarketDifferentiation(motivation: any): Promise<number> {
+async function calculateMarketDifferentiation(_motivation: any): Promise<number> {
   // Placeholder market differentiation calculation
   // In real implementation, this would analyze competitor motivations
   return Math.floor(Math.random() * 40) + 60; // Random score between 60-100
@@ -628,7 +631,7 @@ function calculateContentQuality(description: string): number {
   return Math.min(100, score);
 }
 
-async function calculateUniqueness(motivation: any): Promise<number> {
+async function calculateUniqueness(_motivation: any): Promise<number> {
   // Placeholder uniqueness calculation
   // In real implementation, this would compare against existing motivations
   return Math.floor(Math.random() * 30) + 70; // Random score between 70-100

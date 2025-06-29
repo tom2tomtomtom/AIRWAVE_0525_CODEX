@@ -139,9 +139,11 @@ class AnalyticsAggregator {
 
     // Process results
     for (let i = 0; i < results.length; i++) {
-      const metric = queries[i].metric;
+      const metric = queries[i]?.metric;
       const result = results[i];
-      data[metric] = this.processMetricData(result, params.granularity);
+      if (metric) {
+        data[metric] = this.processMetricData(result, params.granularity);
+      }
     }
 
     return data;
@@ -152,7 +154,7 @@ class AnalyticsAggregator {
    */
   private buildMetricQuery(
     metric: string,
-    params: z.infer<typeof AnalyticsQuerySchema>,
+    _params: z.infer<typeof AnalyticsQuerySchema>,
     startDate: string,
     endDate: string
   ): any {
@@ -243,7 +245,7 @@ class AnalyticsAggregator {
       if (!grouped[date]) {
         grouped[date] = [];
       }
-      grouped[date].push(item);
+      grouped[date]?.push(item);
     });
 
     return grouped;

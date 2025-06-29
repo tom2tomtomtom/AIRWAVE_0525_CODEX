@@ -3,7 +3,6 @@ import { withAuth } from '@/middleware/withAuth';
 import { withAIRateLimit } from '@/lib/rate-limiter';
 import { withCSRFProtection } from '@/lib/csrf';
 import OpenAI from 'openai';
-import { loggers } from '@/lib/logger';
 
 
 interface Motivation {
@@ -359,12 +358,20 @@ function generateCopyWithTemplates(
 
   topMotivations.forEach((motivation, motivationIndex) => {
     const motivationType = getMotivationType(motivation.title);
-    const templates = copyTemplates[motivationType] || copyTemplates.emotional;
+    const templates = copyTemplates[motivationType] || copyTemplates.emotional || [];
     const platformConfig = platformAdaptations[primaryPlatform] || platformAdaptations.Facebook;
 
     // Generate 3 variations per motivation for faster processing
     for (let i = 0; i < 3; i++) {
-      const template = templates[i % templates.length];
+      if (templates.length === 0) {
+        console.warn('No templates available for motivation:', motivation.title);
+        continue;
+      }
+      const template = templates[i % templates.length] || templates[0];
+      if (!template) {
+        console.warn('No template available for motivation:', motivation.title);
+        continue;
+      }
 
       // Generate copy text based on template and brief data
       const copyText = generateCopyText(template, briefData, motivation, platformConfig);
@@ -404,7 +411,7 @@ function getMotivationType(motivationTitle: string): string {
   };
 
   for (const [key, value] of Object.entries(typeMap)) {
-    if (motivationTitle.includes(key.split(' ')[0])) {
+    if (motivationTitle.includes(key.split(' ')[0]!)) {
       return value;
     }
   }
@@ -482,7 +489,7 @@ function getToneFromMotivation(motivationTitle: string): string {
   return 'friendly';
 }
 
-function generateCTA(motivation: Motivation, platform: string): string {
+function generateCTA(motivation: Motivation, _platform: string): string {
   const ctas: Record<string, string[]> = {
     emotional: ['Join us', 'Start now', 'Connect today'],
     social_proof: ['See why', 'Join thousands', 'Learn more'],
@@ -498,8 +505,11 @@ function generateCTA(motivation: Motivation, platform: string): string {
 
   const motivationType = getMotivationType(motivation.title);
   const typeCTAs = ctas[motivationType] || ctas.emotional;
+  if (!typeCTAs || typeCTAs.length === 0) {
+    return 'Learn more';
+  }
 
-  return typeCTAs[Math.floor(Math.random() * typeCTAs.length)];
+  return typeCTAs[Math.floor(Math.random() * typeCTAs.length)] || 'Learn more';
 }
 
 // Helper functions for extracting content from brief data
@@ -521,7 +531,7 @@ function extractBenefit(objective: string): string {
   return 'benefits';
 }
 
-function extractTransformation(objective: string): string {
+function extractTransformation(_objective: string): string {
   return 'transformation';
 }
 
@@ -537,32 +547,32 @@ function extractCommunity(audience: string): string {
   return audience.split(' ').slice(0, 2).join(' ') || 'community';
 }
 
-function extractProblem(objective: string): string {
+function extractProblem(_objective: string): string {
   return 'your challenges';
 }
 
-function extractPainPoint(objective: string): string {
+function extractPainPoint(_objective: string): string {
   return 'frustrations';
 }
 
-function extractLifestyle(audience: string): string {
+function extractLifestyle(_audience: string): string {
   return 'lifestyle';
 }
 
-function extractDream(objective: string): string {
+function extractDream(_objective: string): string {
   return 'dreams';
 }
 
-function extractAspiration(objective: string): string {
+function extractAspiration(_objective: string): string {
   return 'aspirations';
 }
 
 function getRandomNumber(): string {
   const numbers = ['1000', '5000', '10000', '50000'];
-  return numbers[Math.floor(Math.random() * numbers.length)];
+  return numbers[Math.floor(Math.random() * numbers.length)]!;
 }
 
-function extractOffer(objective: string): string {
+function extractOffer(_objective: string): string {
   return 'special offer';
 }
 
@@ -570,11 +580,11 @@ function extractService(title: string): string {
   return title.split(' ').slice(-1)[0] || 'service';
 }
 
-function extractCurrentState(objective: string): string {
+function extractCurrentState(_objective: string): string {
   return 'current situation';
 }
 
-function extractDesiredState(objective: string): string {
+function extractDesiredState(_objective: string): string {
   return 'ideal outcome';
 }
 
@@ -582,7 +592,7 @@ function extractCategory(title: string): string {
   return title.split(' ').slice(-1)[0] || 'solution';
 }
 
-function extractResult(objective: string): string {
+function extractResult(_objective: string): string {
   return 'proven results';
 }
 
@@ -613,7 +623,7 @@ function shuffleArray<T>(array: T[]): T[] {
   const shuffled = [...array];
   for (let i = shuffled.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    [shuffled[i], shuffled[j]] = [shuffled[j]!, shuffled[i]!];
   }
   return shuffled;
 }

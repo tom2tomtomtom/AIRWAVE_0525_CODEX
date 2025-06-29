@@ -227,22 +227,6 @@ const ExecutePage: React.FC = () => {
     }
   };
 
-  // Handle individual execution actions
-  const handleExecutionAction = async (executionId: string, action: 'cancel' | 'retry') => {
-    try {
-      const response = await fetch(`/api/executions/${executionId}/${action}`, {
-        method: 'POST'});
-
-      if (response.ok) {
-        showNotification(`Execution ${action} successful`, 'success');
-        loadExecutionData();
-      } else {
-        throw new Error(`Failed to ${action} execution`);
-      }
-    } catch (err: any) {
-      showNotification(`Failed to ${action} execution`, 'error');
-    }
-  };
 
   // Get status color
   const getStatusColor = (status: string) => {

@@ -42,7 +42,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void>
     }
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Copy Asset API error:', error);
+    console.error('Copy Asset API error:', message, error);
     return res.status(500).json({ 
       error: 'Internal server error',
       details: process.env.NODE_ENV === 'development' ? (error instanceof Error ? error.message : 'Unknown error') : undefined
@@ -50,7 +50,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void>
   }
 }
 
-async function handleGet(req: NextApiRequest, res: NextApiResponse, user: any, assetId: string): Promise<void> {
+async function handleGet(_req: NextApiRequest, res: NextApiResponse, user: any, assetId: string): Promise<void> {
   // First verify user has access to this copy asset
   const { data: asset, error } = await supabase
     .from('copy_assets')
@@ -229,7 +229,7 @@ async function handlePut(req: NextApiRequest, res: NextApiResponse, user: any, a
   return res.json({ data: asset });
 }
 
-async function handleDelete(req: NextApiRequest, res: NextApiResponse, user: any, assetId: string): Promise<void> {
+async function handleDelete(_req: NextApiRequest, res: NextApiResponse, user: any, assetId: string): Promise<void> {
   // First verify user has access to this copy asset
   const { data: existingAsset } = await supabase
     .from('copy_assets')

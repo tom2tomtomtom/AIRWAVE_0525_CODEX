@@ -176,9 +176,9 @@ export const ActionButton: React.FC<ActionButtonProps> = ({
       endIcon={iconPosition === 'end' ? endIcon : undefined}
       sx={{
         ...sizeStyles,
-        ...variantStyles.sx,
-        ...sx,
-      }}
+        ...(variantStyles.sx || {}),
+        ...(sx || {}),
+      } as any}
     >
       <Box
         sx={{

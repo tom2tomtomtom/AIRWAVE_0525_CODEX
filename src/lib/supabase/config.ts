@@ -72,7 +72,8 @@ export function validateSupabaseConfig(): SupabaseConfig {
   return {
     url: url.trim(),
     anonKey: cleanedAnonKey,
-    serviceRoleKey: cleanedServiceRoleKey};
+    ...(cleanedServiceRoleKey && { serviceRoleKey: cleanedServiceRoleKey })
+  };
 }
 
 // Get Supabase URL for public access

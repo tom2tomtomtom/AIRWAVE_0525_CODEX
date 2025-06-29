@@ -4,11 +4,6 @@ import { withAuthRateLimit } from '@/lib/rate-limiter';
 import { supabase } from '@/lib/supabase';
 import { loggers } from '@/lib/logger';
 
-interface LoginRequest {
-  email: string;
-  password: string;
-}
-
 interface LoginResponse {
   success: boolean;
   user?: {
@@ -74,7 +69,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse<LoginResponse>)
 
   try {
     // Use Supabase authentication
-    const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+    const { data: authData, error: authError } = await supabase!.auth.signInWithPassword({
       email,
       password,
     });
@@ -92,7 +87,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse<LoginResponse>)
     let profileError: any = null;
 
     // First try the current schema format (first_name, last_name)
-    const { data: profileData1, error: error1 } = await supabase
+    const { data: profileData1, error: error1 } = await supabase!
       .from('profiles')
       .select('*')
       .eq('id', authData.user.id)
@@ -116,7 +111,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse<LoginResponse>)
         authData.user.user_metadata?.name || authData.user.email?.split('@')[0] || 'User';
       const nameParts = userName.split(' ');
 
-      const { data: newProfile, error: createError } = await supabase
+      const { data: newProfile, error: createError } = await supabase!
         .from('profiles')
         .insert({
           id: authData.user.id,
@@ -135,7 +130,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse<LoginResponse>)
           console.error('First profile creation failed, trying alternative schema...', createError);
         }
 
-        const { data: altProfile, error: altError } = await supabase
+        const { data: altProfile, error: altError } = await supabase!
           .from('profiles')
           .insert({
             id: authData.user.id,
@@ -177,7 +172,6 @@ async function handler(req: NextApiRequest, res: NextApiResponse<LoginResponse>)
 
     // Set secure HTTP-only cookie with the session token
     const maxAge = 7 * 24 * 60 * 60; // 7 days in seconds
-    const isProduction = process.env.NODE_ENV === 'production';
     const isHttps =
       req.headers.host?.includes('netlify.app') ||
       req.headers.host?.includes('vercel.app') ||
@@ -206,7 +200,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse<LoginResponse>)
     });
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Login error:', error);
+    console.error('Login error:', message);
     return res.status(500).json({
       success: false,
       error: 'Internal server error',

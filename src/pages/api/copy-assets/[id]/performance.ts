@@ -27,7 +27,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void>
     const message = getErrorMessage(error);
     // Only log errors in development to prevent information leakage
     if (process.env.NODE_ENV === 'development') {
-      console.error('Copy Asset Performance API error:', error);
+      console.error('Copy Asset Performance API error:', message, error);
     }
     return res.status(500).json({
       error: 'Internal server error',

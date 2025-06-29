@@ -1,4 +1,4 @@
-import { getErrorMessage } from '@/utils/errorUtils';
+// import { getErrorMessage } from '@/utils/errorUtils'; // Unused
 import { NextRequest, NextResponse } from 'next/server';
 import { z, ZodError, ZodSchema } from 'zod';
 import { loggers } from '@/lib/logger';
@@ -98,9 +98,9 @@ export function sanitizeObject<T extends Record<string, unknown>>(obj: T): T {
   for (const [key, value] of Object.entries(obj)) {
     if (!dangerous.includes(key)) {
       if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
-        cleaned[key as keyof T] = sanitizeObject(value);
+        cleaned[key as keyof T] = sanitizeObject(value as Record<string, unknown>) as T[keyof T];
       } else {
-        cleaned[key as keyof T] = value;
+        cleaned[key as keyof T] = value as T[keyof T];
       }
     }
   }
@@ -162,7 +162,7 @@ export async function validateRequest<T>(
           input = JSON.parse(text);
 
           // Sanitize object to prevent prototype pollution
-          input = sanitizeObject(input);
+          input = sanitizeObject(input as Record<string, unknown>);
         } else {
           input = {};
         }
@@ -182,7 +182,6 @@ export async function validateRequest<T>(
 
     return { data, error: null };
   } catch (error: unknown) {
-    const message = getErrorMessage(error);
     if (error instanceof ZodError) {
       return { data: {} as T, error: validationErrorResponse(error) };
     }

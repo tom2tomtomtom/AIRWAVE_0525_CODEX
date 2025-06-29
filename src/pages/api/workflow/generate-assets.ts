@@ -64,7 +64,7 @@ class AICostController {
     return new AICostController();
   }
 
-  async checkBudget(service: string, model: string, tokens: number, userId: string): Promise<any> {
+  async checkBudget(_service: string, _model: string, _tokens: number, _userId: string): Promise<any> {
     return { allowed: true, budgetRemaining: 1000, reason: 'Budget check passed' };
   }
 
@@ -73,7 +73,7 @@ class AICostController {
     model: string,
     tokens: number,
     cost: number,
-    userId: string,
+    _userId: string,
     metadata: any
   ): Promise<void> {
     loggers.general.error(`Tracked usage: ${service}/${model} - ${tokens} tokens, $${cost}`, metadata);
@@ -160,6 +160,7 @@ async function generateWorkflowAssets(
     // Process each prompt
     for (let i = 0; i < prompts.length; i++) {
       const prompt = prompts[i];
+      if (!prompt) continue;
 
       try {
         // Check AI cost budget

@@ -181,15 +181,15 @@ export function useFormValidation<T extends FieldValues>({
   schema,
   onSubmitSuccess,
   onSubmitError,
-  autoSave = false,
-  autoSaveDelay = 1000,
+  autoSave: _autoSave = false,
+  autoSaveDelay: _autoSaveDelay = 1000,
   ...formOptions
 }: UseFormValidationOptions<T> = {}) {
   const formConfig: any = {
     ...formOptions,
   };
   if (schema) {
-    formConfig.resolver = zodResolver(schema);
+    formConfig.resolver = zodResolver(schema as any);
   }
   const form = useForm<T>(formConfig);
 

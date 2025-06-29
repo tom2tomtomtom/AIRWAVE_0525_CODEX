@@ -23,7 +23,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
   const { matrix_id, platform, schedule_time, budget, user_id, config } = parseResult.data;
   // Save execution record
-  const { data, error } = await supabase
+  const { data, error } = await supabase!
     .from('executions')
     .insert({
       matrix_id,
@@ -41,5 +41,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       .status(500)
       .json({ success: false, message: 'Failed to schedule execution', error: error.message });
   }
-  return res.status(200).json({ success: true, execution: data });
+  return res.status(200).json({ success: true, execution: data! });
 }

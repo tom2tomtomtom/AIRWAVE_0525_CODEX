@@ -34,7 +34,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void>
     return handleRetry(req, res, user, id);
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Execution Retry API error:', error);
+    console.error('Execution Retry API error:', message, error);
     return res.status(500).json({
       error: 'Internal server error',
       details:
@@ -239,7 +239,7 @@ function checkRetryability(
 }
 
 async function checkRetryLimits(
-  executionId: string,
+  _executionId: string,
   execution: any,
   resetAttempts: boolean
 ): Promise<{ allowed: boolean; details?: string }> {
@@ -282,7 +282,7 @@ async function checkRetryLimits(
     return { allowed: true };
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Error checking retry limits:', error);
+    console.error('Error checking retry limits:', message, error);
     return {
       allowed: false,
       details: 'Error checking retry limits',
@@ -374,7 +374,7 @@ async function triggerRetryExecution(retryExecution: any, delaySeconds: number):
     };
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Error triggering retry execution:', error);
+    console.error('Error triggering retry execution:', message, error);
     return {
       success: false,
       type: 'error',
@@ -410,6 +410,7 @@ async function triggerExecutionPipeline(execution: any): Promise<any> {
     }
   } catch (error: any) {
     const message = getErrorMessage(error);
+    console.error('Execution pipeline trigger error:', message);
     return {
       success: false,
       error: getErrorMessage(error),
@@ -418,17 +419,17 @@ async function triggerExecutionPipeline(execution: any): Promise<any> {
 }
 
 async function logRetryEvent(
-  originalId: string,
-  retryId: string,
-  userId: string,
-  reason?: string
+  _originalId: string,
+  _retryId: string,
+  _userId: string,
+  _reason?: string
 ): Promise<void> {
   try {
     // In a full implementation, this would log to an execution_events table
-    process.env.NODE_ENV === 'development' && loggers.general.error('Logging retry event:', event);
+    process.env.NODE_ENV === 'development' && loggers.general.error('Retry event logged successfully');
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Error logging retry event:', error);
+    console.error('Error logging retry event:', message, error);
   }
 }
 
@@ -481,7 +482,7 @@ async function triggerExecutionRetryWebhook(
     await triggerWebhookEvent(WEBHOOK_EVENTS.EXECUTION_STARTED, webhookData, clientId);
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Error triggering execution retry webhook:', error);
+    console.error('Error triggering execution retry webhook:', message, error);
   }
 }
 

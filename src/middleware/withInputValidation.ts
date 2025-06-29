@@ -81,7 +81,7 @@ export function withInputValidation(
           ...(config.body?.map(r => `body.${r.field}`) || []),
           ...(config.query?.map(r => `query.${r.field}`) || []),
           ...(config.headers?.map(r => `headers.${r.field}`) || [])
-        ]
+        ].join(', ')
       });
 
       return handler(req, res);

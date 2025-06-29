@@ -1,4 +1,4 @@
-import { getErrorMessage } from '@/utils/errorUtils';
+// import { getErrorMessage } from '@/utils/errorUtils'; // Not used
 import { env } from './env';
 
 // Define Express types locally to avoid dependency
@@ -176,7 +176,6 @@ export function logPerformance<T>(
     logger.debug(`${operation} completed`, { duration: `${duration.toFixed(2)}ms` });
     return result;
   } catch (error: any) {
-    const message = getErrorMessage(error);
     const duration = performance.now() - start;
     logger.error(`${operation} failed`, error, { duration: `${duration.toFixed(2)}ms` });
     throw error;

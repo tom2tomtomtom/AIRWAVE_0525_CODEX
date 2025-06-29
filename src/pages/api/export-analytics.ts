@@ -23,7 +23,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   try {
     if (export_type === 'bundle') {
       // Gather all assets for the campaign and return download links (could be zipped in production)
-      const { data: assets, error } = await supabase
+      const { data: assets, error } = await supabase!
         .from('assets')
         .select('*')
         .eq('campaign_id', campaign_id);
@@ -36,7 +36,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
     if (export_type === 'analytics') {
       // Return analytics for the campaign
-      const { data: analytics, error } = await supabase
+      const { data: analytics, error } = await supabase!
         .from('analytics')
         .select('*')
         .eq('campaign_id', campaign_id);
@@ -49,7 +49,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
     if (export_type === 'comparisons') {
       // Return variation comparison data
-      const { data: comparisons, error } = await supabase
+      const { data: comparisons, error } = await supabase!
         .from('analytics')
         .select('variation_id,metrics')
         .eq('campaign_id', campaign_id);
@@ -62,7 +62,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
     if (export_type === 'insights') {
       // Return insights/recommendations
-      const { data: insights, error } = await supabase
+      const { data: insights, error } = await supabase!
         .from('analytics')
         .select('insights')
         .eq('campaign_id', campaign_id);

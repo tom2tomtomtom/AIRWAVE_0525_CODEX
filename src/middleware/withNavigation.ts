@@ -9,7 +9,7 @@ export interface NavigationState {
   lastRedirectTime?: number;
 }
 
-export function withNavigationProtection(handler: unknown) {
+export function withNavigationProtection(handler: (req: NextApiRequest, res: NextApiResponse) => Promise<void>) {
   return async (req: NextApiRequest, res: NextApiResponse) => {
     try {
       const navigationState: NavigationState = {
@@ -52,7 +52,7 @@ export function withNavigationProtection(handler: unknown) {
 }
 
 export function withAuthRedirect(redirectTo: string = '/login') {
-  return (handler: unknown) => {
+  return (handler: (req: NextApiRequest, res: NextApiResponse) => Promise<void>) => {
     return async (req: NextApiRequest, res: NextApiResponse) => {
       try {
         const user = (req as any).user;

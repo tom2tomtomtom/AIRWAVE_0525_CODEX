@@ -15,11 +15,17 @@ export const supabase = typeof window !== 'undefined' ? getSupabaseBrowserClient
 // Re-export essential functions from the new module structure
 export {
   getSupabaseBrowserClient,
+} from './supabase/client';
+export {
   createServerSupabaseClient,
+} from './supabase/server';
+export {
   getAdminSupabaseClient,
+} from './supabase/admin';
+export {
   validateSupabaseConfig,
   hasServiceRoleAccess,
-} from './supabase';
+} from './supabase/config';
 
 // Legacy function - Get service role client (server-side only)
 export const getServiceSupabase = () => {
@@ -59,6 +65,7 @@ export async function getUserFromToken(
       operation: 'getUserFromToken',
       metadata: { hasToken: !!token  }
     });
+    throw error;
   }
 }
 

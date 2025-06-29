@@ -259,7 +259,7 @@ async function handlePut(
 }
 
 async function handleDelete(
-  req: NextApiRequest,
+  _req: NextApiRequest,
   res: NextApiResponse,
   user: any,
   matrixId: string
@@ -368,7 +368,7 @@ function extractAssetIdsFromMatrix(matrix: any): string[] {
     return [...new Set(assetIds)]; // Remove duplicates
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Error extracting asset IDs:', error);
+    console.error('Error extracting asset IDs:', message, error);
     return [];
   }
 }
@@ -447,7 +447,7 @@ async function getMatrixAnalytics(matrixId: string): Promise<any> {
     };
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Error getting matrix analytics:', error);
+    console.error('Error getting matrix analytics:', message, error);
     return {
       has_data: false,
       error: 'Failed to retrieve analytics data',
@@ -578,14 +578,14 @@ function generateMatrixInsights(matrix: any): string[] {
   return insights;
 }
 
-async function getMatrixVersionHistory(matrixId: string): Promise<any[]> {
+async function getMatrixVersionHistory(_matrixId: string): Promise<any[]> {
   try {
     // This would come from a matrix_versions table in a full implementation
     // For now, return empty array as we don't have version tracking table
     return [];
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Error getting matrix version history:', error);
+    console.error('Error getting matrix version history:', message, error);
     return [];
   }
 }
@@ -593,8 +593,8 @@ async function getMatrixVersionHistory(matrixId: string): Promise<any[]> {
 async function handleMatrixStatusChange(
   matrixId: string,
   newStatus: string,
-  userId: string,
-  comments?: string
+  _userId: string,
+  _comments?: string
 ): Promise<{ success: boolean; error?: string }> {
   // Define valid status transitions
   const validTransitions: Record<string, string[]> = {
@@ -649,8 +649,8 @@ async function handleMatrixStatusChange(
 
 async function createMatrixVersionEntry(
   matrixId: string,
-  changes: any,
-  userId: string
+  _changes: any,
+  _userId: string
 ): Promise<void> {
   try {
     // In a full implementation, this would create entries in a matrix_versions table
@@ -659,7 +659,7 @@ async function createMatrixVersionEntry(
       loggers.general.error('Creating matrix version entry for:', matrixId);
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Error creating matrix version entry:', error);
+    console.error('Error creating matrix version entry:', message, error);
   }
 }
 

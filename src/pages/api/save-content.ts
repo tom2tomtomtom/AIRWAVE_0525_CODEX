@@ -72,7 +72,7 @@ export default async function handler(
 
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Save content API error:', error);
+    console.error('Save content API error:', error, 'Message:', message);
     
     return res.status(500).json({
       success: false,

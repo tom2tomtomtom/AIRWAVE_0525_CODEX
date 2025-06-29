@@ -8,7 +8,7 @@ const theme = createTheme();
 const TestFlowPage: React.FC = () => {
   const [openWorkflow, setOpenWorkflow] = useState(false);
 
-  const handleWorkflowComplete = (data: any) => {
+  const handleWorkflowComplete = (_data: any) => {
     setOpenWorkflow(false);
   };
 

@@ -261,7 +261,7 @@ export class FileUploadSecurity {
 
     let validSignature = false;
 
-    for (const [format, signature] of Object.entries(signatures)) {
+    for (const [_format, signature] of Object.entries(signatures)) {
       if (this.checkFileSignature(buffer, signature)) {
         validSignature = true;
         break;

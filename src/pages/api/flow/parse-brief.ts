@@ -403,7 +403,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       multiples: false
     });
 
-        const [fields, files] = await form.parse(req);
+        const [_fields, files] = await form.parse(req);
     loggers.general.error('File upload parsing completed. Files:', Object.keys(files));
     const uploadedFile = Array.isArray(files.file) ? files.file[0] : files.file;
 
@@ -544,7 +544,7 @@ async function parseDocumentContent(content: string, title: string): Promise<Bri
   
   for (const pattern of objectivePatterns) {
     const match = content.match(pattern);
-    if (match) {
+    if (match?.[1]) {
       objective = match[1].trim();
       break;
     }
@@ -560,7 +560,7 @@ async function parseDocumentContent(content: string, title: string): Promise<Bri
   
   for (const pattern of audiencePatterns) {
     const match = content.match(pattern);
-    if (match) {
+    if (match?.[1]) {
       targetAudience = match[1].trim();
       break;
     }
@@ -575,7 +575,7 @@ async function parseDocumentContent(content: string, title: string): Promise<Bri
   
   for (const pattern of messagePatterns) {
     const match = content.match(pattern);
-    if (match) {
+    if (match?.[1]) {
       const messages = match[1].split(/[,\n\-\•]/).map((m: any) => m.trim()).filter((m: any) => m.length > 0);
       keyMessages.push(...messages.slice(0, 5)); // Limit to 5 messages
       break;
@@ -596,7 +596,7 @@ async function parseDocumentContent(content: string, title: string): Promise<Bri
   let budget = '';
   const budgetPattern = /budget[:\s]+[\$]?([0-9,]+)/i;
   const budgetMatch = content.match(budgetPattern);
-  if (budgetMatch) {
+  if (budgetMatch?.[1]) {
     budget = `$${budgetMatch[1]}`;
   }
 
@@ -611,7 +611,7 @@ async function parseDocumentContent(content: string, title: string): Promise<Bri
   for (const pattern of timelinePatterns) {
     const match = content.match(pattern);
     if (match) {
-      timeline = match[1] ? match[1].trim() : match[0].trim();
+      timeline = match[1] ? match[1].trim() : match[0]?.trim() || '';
       break;
     }
   }
@@ -620,7 +620,7 @@ async function parseDocumentContent(content: string, title: string): Promise<Bri
   let brandGuidelines = '';
   const guidelinesPattern = /brand guidelines?[:\s]+(.*?)(?:\n\n|\n[A-Z]|$)/i;
   const guidelinesMatch = content.match(guidelinesPattern);
-  if (guidelinesMatch) {
+  if (guidelinesMatch?.[1]) {
     brandGuidelines = guidelinesMatch[1].trim();
   }
 
@@ -633,7 +633,7 @@ async function parseDocumentContent(content: string, title: string): Promise<Bri
   
   for (const pattern of requirementPatterns) {
     const match = content.match(pattern);
-    if (match) {
+    if (match?.[1]) {
       const reqs = match[1].split(/[,\n\-\•]/).map((r: any) => r.trim()).filter((r: any) => r.length > 0);
       requirements.push(...reqs.slice(0, 10)); // Limit to 10 requirements
       break;
@@ -651,7 +651,7 @@ async function parseDocumentContent(content: string, title: string): Promise<Bri
   
   for (const pattern of productPatterns) {
     const match = content.match(pattern);
-    if (match) {
+    if (match?.[1]) {
       product = match[1].trim();
       break;
     }
@@ -667,7 +667,7 @@ async function parseDocumentContent(content: string, title: string): Promise<Bri
   
   for (const pattern of servicePatterns) {
     const match = content.match(pattern);
-    if (match) {
+    if (match?.[1]) {
       service = match[1].trim();
       break;
     }
@@ -685,7 +685,7 @@ async function parseDocumentContent(content: string, title: string): Promise<Bri
   
   for (const pattern of valuePropositionPatterns) {
     const match = content.match(pattern);
-    if (match) {
+    if (match?.[1]) {
       valueProposition = match[1].trim();
       break;
     }
@@ -702,7 +702,7 @@ async function parseDocumentContent(content: string, title: string): Promise<Bri
   
   for (const pattern of industryPatterns) {
     const match = content.match(pattern);
-    if (match) {
+    if (match?.[1]) {
       industry = match[1].trim();
       break;
     }
@@ -718,7 +718,7 @@ async function parseDocumentContent(content: string, title: string): Promise<Bri
   
   for (const pattern of competitorPatterns) {
     const match = content.match(pattern);
-    if (match) {
+    if (match?.[1]) {
       const comps = match[1].split(/[,\n\-\•]/).map((c: any) => c.trim()).filter((c: any) => c.length > 0);
       competitors.push(...comps.slice(0, 5)); // Limit to 5 competitors
       break;

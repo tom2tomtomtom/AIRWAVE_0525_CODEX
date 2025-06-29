@@ -48,6 +48,9 @@ export function formatFullName(firstName: string | null, lastName: string | null
  * Get user profile by ID
  */
 export async function getUserProfile(userId: string): Promise<Profile | null> {
+  if (!supabase) {
+    throw new Error('Supabase client not initialized');
+  }
   const { data, error } = await supabase.from('profiles').select('*').eq('id', userId).single();
 
   if (error) {
@@ -63,6 +66,11 @@ export async function getUserProfile(userId: string): Promise<Profile | null> {
  */
 export async function createUserProfile(profileData: CreateProfileData): Promise<Profile | null> {
   const { firstName, lastName } = parseFullName(profileData.name);
+
+  if (!supabase) {
+    loggers.general.error('Supabase client not available in server context');
+    return null;
+  }
 
   const { data, error } = await supabase
     .from('profiles')
@@ -91,6 +99,9 @@ export async function updateUserProfile(
   userId: string,
   updates: Partial<{ name: string; role: string; [key: string]: any }>
 ): Promise<Profile | null> {
+  if (!supabase) {
+    throw new Error('Supabase client not initialized');
+  }
   const profileUpdates: any = {
     updated_at: new Date().toISOString() };
 
@@ -152,7 +163,7 @@ export async function getOrCreateUserProfile(
     profile = await createUserProfile({
       id: userId,
       name: name,
-      email: userData.email || undefined });
+      email: userData.email || 'unknown@email.com' });
   }
 
   if (!profile) {
@@ -196,6 +207,9 @@ export function validateProfileData(data: any): { isValid: boolean; errors: stri
  */
 export async function migrateLegacyProfile(userId: string): Promise<boolean> {
   try {
+    if (!supabase) {
+      throw new Error('Supabase client not initialized');
+    }
     const { data: profile, error } = await supabase
       .from('profiles')
       .select('*')
@@ -210,6 +224,9 @@ export async function migrateLegacyProfile(userId: string): Promise<boolean> {
     if ((profile as any).full_name && !profile.first_name && !profile.last_name) {
       const { firstName, lastName } = parseFullName((profile as any).full_name);
 
+      if (!supabase) {
+        throw new Error('Supabase client not initialized');
+      }
       const { error: updateError } = await supabase
         .from('profiles')
         .update({
@@ -223,8 +240,9 @@ export async function migrateLegacyProfile(userId: string): Promise<boolean> {
         return false;
       }
 
-      process.env.NODE_ENV === 'development' &&
+      if (process.env.NODE_ENV === 'development') {
         loggers.general.error(`Migrated legacy profile for user ${userId}`);
+      }
     }
 
     return true;

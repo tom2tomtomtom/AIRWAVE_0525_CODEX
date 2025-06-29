@@ -137,7 +137,7 @@ async function handleExecute(
       : [matrix.templates.platform];
 
   // Check execution limits
-  const executionLimit = await checkExecutionLimits(matrix.campaigns.client_id, user.id);
+  const executionLimit = await checkExecutionLimits(matrix.campaigns.client_id);
   if (!executionLimit.allowed) {
     return res.status(429).json({
       error: 'Execution limit exceeded',
@@ -192,8 +192,7 @@ async function handleExecute(
 
 // Helper functions
 async function checkExecutionLimits(
-  clientId: string,
-  userId: string
+  clientId: string
 ): Promise<{ allowed: boolean; details?: string }> {
   try {
     // Check daily execution limit
@@ -231,7 +230,6 @@ async function checkExecutionLimits(
 
     return { allowed: true };
   } catch (error: any) {
-    const message = getErrorMessage(error);
     console.error('Error checking execution limits:', error);
     return {
       allowed: false,
@@ -476,14 +474,13 @@ async function triggerRenderJob(execution: any): Promise<any> {
     if (execution.template_data.is_creatomate) {
       return await triggerCreatomateRender(execution);
     } else {
-      return await triggerCustomRender(execution);
+      return await triggerCustomRender();
     }
   } catch (error: any) {
-    const message = getErrorMessage(error);
     console.error('Error triggering render job:', error);
     return {
       success: false,
-      error: message,
+      error: error instanceof Error ? error.message : 'Unknown error',
     };
   }
 }
@@ -492,12 +489,7 @@ async function triggerCreatomateRender(execution: any): Promise<any> {
   // Integration with Creatomate API
   // This would call the actual Creatomate service
 
-  const renderJob = {
-    template_id: execution.template_data.creatomate_id,
-    modifications: convertFieldDataToCreatomateFormat(execution.field_data),
-    output_format: execution.settings.formats || ['mp4'],
-    quality: execution.settings.quality || 'standard',
-  };
+  convertFieldDataToCreatomateFormat(execution.field_data);
 
   // Simulate API call
   const jobId = `creatomate-${Date.now()}`;
@@ -510,7 +502,7 @@ async function triggerCreatomateRender(execution: any): Promise<any> {
   };
 }
 
-async function triggerCustomRender(execution: any): Promise<any> {
+async function triggerCustomRender(): Promise<any> {
   // Custom render pipeline
   const jobId = `custom-${Date.now()}`;
 

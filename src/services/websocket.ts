@@ -1,4 +1,3 @@
-import { getErrorMessage } from '@/utils/errorUtils';
 // WebSocket Service for Real-Time Updates
 // Provides real-time communication for render progress, notifications, and live updates
 
@@ -97,7 +96,6 @@ class WebSocketService extends EventEmitter {
           const message: WebSocketMessage = JSON.parse(event.data);
           this.handleMessage(message);
         } catch (error: any) {
-          const message = getErrorMessage(error);
           if (process.env.NODE_ENV === 'development') {
             console.error('Failed to parse WebSocket message:', error);
           }
@@ -123,7 +121,6 @@ class WebSocketService extends EventEmitter {
         this.emit('error', error);
       };
     } catch (error: any) {
-      const message = getErrorMessage(error);
       if (process.env.NODE_ENV === 'development') {
         console.error('Failed to create WebSocket connection:', error);
       }
@@ -211,7 +208,6 @@ class WebSocketService extends EventEmitter {
         try {
           ws.send(messageStr);
         } catch (error: any) {
-          const message = getErrorMessage(error);
           if (process.env.NODE_ENV === 'development') {
             console.error(`Failed to send message to connection ${connectionId}:`, error);
           }
@@ -235,7 +231,6 @@ class WebSocketService extends EventEmitter {
         try {
           ws.send(messageStr);
         } catch (error: any) {
-          const message = getErrorMessage(error);
           if (process.env.NODE_ENV === 'development') {
             console.error(`Failed to send message to user ${userId}:`, error);
           }
@@ -251,7 +246,7 @@ class WebSocketService extends EventEmitter {
       type: 'render_progress',
       payload: data,
       timestamp: Date.now(),
-      userId,
+      ...(userId && { userId }),
     };
 
     if (userId) {
@@ -266,7 +261,7 @@ class WebSocketService extends EventEmitter {
       type: 'render_complete',
       payload: data,
       timestamp: Date.now(),
-      userId,
+      ...(userId && { userId }),
     };
 
     if (userId) {
@@ -281,7 +276,7 @@ class WebSocketService extends EventEmitter {
       type: 'notification',
       payload: data,
       timestamp: Date.now(),
-      userId,
+      ...(userId && { userId }),
     };
 
     if (userId) {
@@ -296,7 +291,7 @@ class WebSocketService extends EventEmitter {
       type: 'activity_update',
       payload: data,
       timestamp: Date.now(),
-      userId,
+      ...(userId && { userId }),
     };
 
     if (userId) {

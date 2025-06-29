@@ -84,11 +84,11 @@ export async function processIncomingWebhook(
  * Webhook manager class for compatibility
  */
 export class WebhookManager {
-  async sendWebhook(endpoint: WebhookEndpoint, event: WebhookEvent) : Promise<void> {
+  async sendWebhook(endpoint: WebhookEndpoint, event: WebhookEvent) : Promise<{ success: boolean; status?: number; error?: string }> {
     return sendWebhook(endpoint, event);
   }
 
-  async processIncomingWebhook(payload: any, headers: Record<string, string>) : Promise<void> {
+  async processIncomingWebhook(payload: any, headers: Record<string, string>) : Promise<{ success: boolean; message: string }> {
     return processIncomingWebhook(payload, headers);
   }
 

@@ -26,7 +26,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     // If only asset_id provided, get job_id from asset metadata
     if (!jobId && asset_id) {
-      const { data: asset, error } = await supabase
+      const { data: asset, error } = await supabase!
         .from('assets')
         .select('metadata')
         .eq('id', asset_id)
@@ -39,7 +39,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         });
       }
 
-      jobId = asset.metadata.generation_job_id;
+      jobId = asset!.metadata.generation_job_id;
     }
 
     // Check render status from Creatomate
@@ -55,7 +55,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // Get asset details if we have asset_id
     let asset = null;
     if (asset_id) {
-      const { data } = await supabase.from('assets').select('*').eq('id', asset_id).single();
+      const { data } = await supabase!.from('assets').select('*').eq('id', asset_id).single();
       asset = data;
     }
 
@@ -75,7 +75,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Status check error:', error);
+    console.error('Status check error:', message, error);
 
     if (error instanceof Error && error.message.includes('not found')) {
       return res.status(404).json({

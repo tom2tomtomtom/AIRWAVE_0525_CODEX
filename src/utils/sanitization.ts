@@ -16,7 +16,7 @@ export function escapeHtml(text: string): string {
     '=': '&#x3D;'
   };
 
-  return text.replace(/[&<>"'`=/]/g, s => map[s]);
+  return text.replace(/[&<>"'`=/]/g, s => map[s] || s);
 }
 
 /**
@@ -227,11 +227,11 @@ function containsSQLInjection(input: string): boolean {
   const sqlPatterns = [
     /(\b(SELECT|INSERT|UPDATE|DELETE|DROP|CREATE|ALTER|EXEC|EXECUTE|UNION)\b)/i,
     /('|(\\')|(;)|(\\)|(\/)(\*)|(\\*)(\/))/,
-    /(\b(OR|AND)\b.{1,6}?(=|>|<|\!=|<>|<=|>=))/i,
-    /(\b(OR|AND)\b\s.{1,3}?(=|>|<|\!=|<>|<=|>=))/i,
+    /(\b(OR|AND)\b.{1,6}?(=|>|<|!=|<>|<=|>=))/i,
+    /(\b(OR|AND)\b\s.{1,3}?(=|>|<|!=|<>|<=|>=))/i,
     /(HAVING|GROUP\s+BY|ORDER\s+BY)/i,
     /(\bUNION\b.{1,20}?\bSELECT\b)/i,
-    /(\'\s*(OR|AND)\s*\'\w*\'\s*=\s*\'\w*)/i
+    /('\s*(OR|AND)\s*'\w*'\s*=\s*'\w*)/i
   ];
 
   return sqlPatterns.some(pattern => pattern.test(input));

@@ -39,7 +39,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void>
 }
 
 async function handleGenerationStatus(
-  req: NextApiRequest,
+  _req: NextApiRequest,
   res: NextApiResponse,
   user: any,
   generationId: string
@@ -121,7 +121,6 @@ async function handleGenerationStatus(
             }
           }
         } catch (error: any) {
-          const message = getErrorMessage(error);
           console.error('Error updating generation status:', error);
         }
       }
@@ -156,7 +155,7 @@ async function handleGenerationStatus(
 }
 
 async function handleJobStatus(
-  req: NextApiRequest,
+  _req: NextApiRequest,
   res: NextApiResponse,
   user: any,
   jobId: string
@@ -232,7 +231,6 @@ async function handleJobStatus(
         }
       }
     } catch (error: any) {
-      const message = getErrorMessage(error);
       console.error('Error updating job status:', error);
     }
   }
@@ -317,7 +315,6 @@ async function saveVideoToAssets(generation: any, videoUrl: string): Promise<str
 
     return asset.id;
   } catch (error: any) {
-    const message = getErrorMessage(error);
     console.error('Error saving video to assets:', error);
     return null;
   }

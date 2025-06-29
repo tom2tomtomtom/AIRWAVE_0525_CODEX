@@ -24,7 +24,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
   const { selected_motivation_id, content_types, tone, style, user_id } = parseResult.data;
   // Get selected motivations
-  const { data: selection, error } = await supabase
+  const { data: selection, error } = await supabase!
     .from('selected_motivations')
     .select('*')
     .eq('id', selected_motivation_id)
@@ -34,7 +34,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
   try {
     // Compose prompt for AI
-    const prompt = `Generate the following campaign content types for a creative campaign, using these motivations and context.\n\nMotivations:\n${selection.selected.map((i: number, idx: number) => `${idx + 1}. ${selection.motivations[i] || ''}`).join('\n')}\n\nCustom motivations:\n${(selection.custom || []).join('\n')}\n\nContent types: ${content_types.join(', ')}\nTone: ${tone || 'default'}\nStyle: ${style || 'default'}\n\nFor each type, provide 3 variations. Return results as a JSON object: { type: string, variations: string[] }[]`;
+    const prompt = `Generate the following campaign content types for a creative campaign, using these motivations and context.\n\nMotivations:\n${selection!.selected.map((i: number, idx: number) => `${idx + 1}. ${selection!.motivations[i] || ''}`).join('\n')}\n\nCustom motivations:\n${(selection!.custom || []).join('\n')}\n\nContent types: ${content_types.join(', ')}\nTone: ${tone || 'default'}\nStyle: ${style || 'default'}\n\nFor each type, provide 3 variations. Return results as a JSON object: { type: string, variations: string[] }[]`;
     // Initialize OpenAI client
     const openai = new OpenAI({
       apiKey: env.OPENAI_API_KEY
@@ -52,7 +52,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const content = completion.choices[0]?.message?.content;
     // Save generated content
-    const { data: saved, error: saveError } = await supabase
+    const { data: saved, error: saveError } = await supabase!
       .from('generated_content')
       .insert({
         selected_motivation_id,

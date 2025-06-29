@@ -116,7 +116,6 @@ export function validateEnv(env: Record<string, string | undefined> = process.en
   try {
     return envSchema.parse(env);
   } catch (error: any) {
-    const message = getErrorMessage(error);
     if (error instanceof z.ZodError) {
       const errors = error.errors
         .map((err: any) => `${err.path.join('.')}: ${err.message}`)
@@ -242,7 +241,6 @@ export function logEnvironmentStatus(): void {
       }
     }
   } catch (error: any) {
-    const message = getErrorMessage(error);
     if (process.env.NODE_ENV === 'development') {
       console.error('❌ Environment validation failed:', error);
     }

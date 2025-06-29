@@ -44,7 +44,9 @@ export function createSupabaseBrowserClient(): SupabaseClient<Database> {
           schema: 'public',
         },
         realtime: {
-          enabled: false, // Disable realtime by default
+          params: {
+            eventsPerSecond: 10,
+          },
         },
       }
     );

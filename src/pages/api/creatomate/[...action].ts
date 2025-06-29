@@ -24,7 +24,7 @@ export default async function handler(
       return res.status(500).json({
         success: false,
         error: 'Creatomate API key not configured',
-        action: actionPath,
+        ...(actionPath && { action: actionPath }),
       });
     }
 
@@ -150,7 +150,7 @@ export default async function handler(
         return res.status(404).json({
           success: false,
           error: `Unknown action: ${actionPath}. Available actions: test, templates, renders, account`,
-          action: actionPath,
+          ...(actionPath && { action: actionPath }),
         });
     }
 
@@ -189,7 +189,7 @@ export default async function handler(
     return res.status(statusCode).json({
       success: false,
       error: errorMessage,
-      action: actionPath,
+      ...(actionPath && { action: actionPath }),
       timestamp: new Date().toISOString(),
     });
   }

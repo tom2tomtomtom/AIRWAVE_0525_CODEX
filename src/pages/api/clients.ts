@@ -223,7 +223,7 @@ import { getAdminSupabaseClient } from '@/lib/supabase';
 // Get admin Supabase client for server-side operations
 const supabase = getAdminSupabaseClient();
 // GET handler - List clients with filtering and pagination (optimized)
-async function handleGet(req: NextApiRequest, res: NextApiResponse, user: any): Promise<void> {
+async function handleGet(req: NextApiRequest, res: NextApiResponse, _user: any): Promise<void> {
   try {
     const {
       search,
@@ -318,15 +318,13 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse, user: any): 
     return successResponse(res, clients, 200, {
       pagination: paginationMeta,
       timestamp: new Date().toISOString(),
-      optimized: true,
-      query_type: include_stats === 'true' ? 'with_stats' : 'basic',
     });
   } catch (error: any) {
     return handleApiError(res, error, 'handleGet');
   }
 }
 // POST handler - Create new client
-async function handlePost(req: NextApiRequest, res: NextApiResponse, user: any): Promise<void> {
+async function handlePost(req: NextApiRequest, res: NextApiResponse, _user: any): Promise<void> {
   try {
     const {
       name,

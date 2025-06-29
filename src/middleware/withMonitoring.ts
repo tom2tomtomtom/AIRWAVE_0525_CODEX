@@ -99,7 +99,7 @@ export function withMonitoring(config: MonitoringConfig = {}) {
           );
         }
       } catch (error) {
-        const _duration = Date.now() - startTime;
+        // const _duration = Date.now() - startTime;
 
         // Track error metrics
         if (finalConfig.collectMetrics) {
@@ -121,15 +121,15 @@ export function withMonitoring(config: MonitoringConfig = {}) {
  * Track request initiation for performance monitoring
  */
 function trackRequestStart(
-  endpoint: string,
-  method: string,
-  customTags: Record<string, string>
+  _endpoint: string,
+  _method: string,
+  _customTags: Record<string, string>
 ): void {
-  const _tags = {
-    endpoint: sanitizeEndpoint(endpoint),
-    method,
-    ...customTags,
-  };
+  // const _tags = {
+  //   endpoint: sanitizeEndpoint(endpoint),
+  //   method,
+  //   ...customTags,
+  // };
 
   // Update dashboard with real-time data
   performanceDashboard.updateMetric('api.requests.active', 1);
@@ -181,7 +181,7 @@ function trackRequestCompletion(
   updateErrorRate(sanitizedEndpoint, isError);
 
   // Track slow requests
-  if (duration > config.performanceThresholds.responseTime) {
+  if (config.performanceThresholds?.responseTime && duration > config.performanceThresholds.responseTime) {
     metrics.counter('api.requests.slow', 1, {
       ...tags,
       threshold: config.performanceThresholds.responseTime.toString(),
@@ -246,7 +246,7 @@ async function monitorSystemHealth(
     alerting.updateMetric('system.memory.usage_percent', heapUsedPercent);
 
     // Check if memory threshold is exceeded
-    if (heapUsedPercent > thresholds.memoryUsage) {
+    if (thresholds.memoryUsage && heapUsedPercent > thresholds.memoryUsage) {
       metrics.counter('system.memory.threshold_exceeded', 1, {
         threshold: thresholds.memoryUsage.toString(),
         current: heapUsedPercent.toString(),
@@ -280,7 +280,7 @@ async function checkPerformanceThresholds(
   const sanitizedEndpoint = sanitizeEndpoint(endpoint);
 
   // Check response time threshold
-  if (duration > thresholds.responseTime) {
+  if (thresholds.responseTime && duration > thresholds.responseTime) {
     metrics.counter('alerts.performance.slow_response', 1, {
       endpoint: sanitizedEndpoint,
       duration: duration.toString(),
@@ -303,7 +303,7 @@ async function triggerErrorAlert(endpoint: string, error: unknown): Promise<void
 
   metrics.counter('alerts.errors.triggered', 1, {
     endpoint: sanitizedEndpoint,
-    error_type: error.constructor.name,
+    error_type: (error as Error).constructor.name,
     severity,
   });
 
@@ -317,7 +317,7 @@ async function triggerErrorAlert(endpoint: string, error: unknown): Promise<void
  * Update rolling error rate for an endpoint
  */
 function updateErrorRate(endpoint: string, isError: boolean): void {
-  const _errorRateKey = `error_rate:${endpoint}`;
+  // const _errorRateKey = `error_rate:${endpoint}`;
 
   // In a real implementation, this would use a sliding window
   // For now, we'll update the metrics for alerting
@@ -417,8 +417,7 @@ function determineErrorSeverity(error: unknown): string {
  * Sanitize endpoint for consistent metric naming
  */
 function sanitizeEndpoint(url: string): string {
-  return url
-    .split('?')[0] // Remove query parameters
+  return ((url || '').split('?')[0] || '')
     .replace(/\/\d+/g, '/:id') // Replace numeric IDs
     .replace(/\/[a-f0-9-]{36}/g, '/:uuid') // Replace UUIDs
     .replace(/\/[a-zA-Z0-9_-]{20}/g, '/:token') // Replace long tokens

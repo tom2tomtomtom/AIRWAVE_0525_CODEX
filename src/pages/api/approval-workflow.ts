@@ -21,7 +21,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
   const { execution_id, user_id, action, comment, version } = parseResult.data;
   // Save approval action
-  const { data, error } = await supabase
+  const { data, error } = await supabase!
     .from('approvals')
     .insert({
       execution_id,

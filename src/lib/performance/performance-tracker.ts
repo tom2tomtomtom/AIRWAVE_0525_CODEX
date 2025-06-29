@@ -101,7 +101,10 @@ export class ProductionPerformanceTracker {
 
     if (contextData) {
       // For now, just use the provided userId and metadata
-      context = { userId, metadata: {} };
+      context = { 
+        ...(userId && { userId }), 
+        metadata: {} 
+      };
     }
 
     // Create metric object
@@ -109,8 +112,9 @@ export class ProductionPerformanceTracker {
       operationName,
       duration,
       timestamp,
-      userId: userId || context.userId,
-      metadata: context.metadata };
+      ...(userId || context.userId ? { userId: userId || context.userId } : {}),
+      ...(context.metadata ? { metadata: context.metadata } : {})
+    };
 
     // Log the result
     // eslint-disable-next-line no-console
@@ -276,8 +280,8 @@ export class ProductionPerformanceTracker {
       operationName,
       duration: value,
       timestamp: Date.now(),
-      userId,
-      metadata,
+      ...(userId && { userId }),
+      ...(metadata && { metadata }),
     };
 
     // eslint-disable-next-line no-console

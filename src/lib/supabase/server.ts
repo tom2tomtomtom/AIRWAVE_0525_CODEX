@@ -21,7 +21,7 @@ export function createServerSupabaseClient(
           get(name: string) {
             return req?.cookies[name];
           },
-          set(name: string, value: string, options: CookieOptions) {
+          set(name: string, value: string, _options: CookieOptions) {
             if (res) {
               try {
                 // Use Next.js API response to set cookies
@@ -32,7 +32,7 @@ export function createServerSupabaseClient(
               }
             }
           },
-          remove(name: string, options: CookieOptions) {
+          remove(name: string, _options: CookieOptions) {
             if (res) {
               try {
                 // Use Next.js API response to remove cookies

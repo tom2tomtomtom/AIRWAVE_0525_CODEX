@@ -35,10 +35,10 @@ export function withAuth(handler: AuthenticatedHandler) {
             get(name: string) {
               return req.cookies[name];
             },
-            set(name: string, value: string, options: unknown) {
+            set(_name: string, _value: string, _options: unknown) {
               // We don't need to set cookies in API routes
             },
-            remove(name: string, options: unknown) {
+            remove(_name: string, _options: unknown) {
               // We don't need to remove cookies in API routes
             },
           },
@@ -164,7 +164,7 @@ export function withAuth(handler: AuthenticatedHandler) {
         email: user.email || '',
         role: (profile?.role as UserRole) || UserRole.VIEWER,
         permissions: profile?.permissions || [],
-        clientIds: userClients.map((uc: { client_id: string }) => uc.client_id) || [],
+        clientIds: userClients.map((uc: any) => uc.client_id) || [],
         tenantId: profile?.tenant_id || '',
       };
 
@@ -172,7 +172,7 @@ export function withAuth(handler: AuthenticatedHandler) {
       return await handler(req as AuthenticatedRequest, res);
     } catch (error: unknown) {
       const message = getErrorMessage(error);
-      console.error('💥 withAuth: Authentication error:', error);
+      console.error('💥 withAuth: Authentication error:', message);
       console.error('Stack trace:', (error as any)?.stack);
       return errorResponse(
         res,

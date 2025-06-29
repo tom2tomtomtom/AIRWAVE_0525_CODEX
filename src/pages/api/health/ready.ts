@@ -71,7 +71,7 @@ export default async function handler(
     checks.push({
       service: 'configuration',
       ready: hasBasicConfig,
-      error: hasBasicConfig ? undefined : 'Basic environment configuration missing' });
+      ...(!hasBasicConfig && { error: 'Basic environment configuration missing' }) });
 
     // Check database connectivity
     try {
@@ -83,7 +83,7 @@ export default async function handler(
       checks.push({
         service: 'database',
         ready: !error,
-        error: error?.message });
+        ...(error?.message && { error: error.message }) });
     } catch (error) {
       checks.push({
         service: 'database',
@@ -99,14 +99,14 @@ export default async function handler(
     checks.push({
       service: 'secrets',
       ready: secretsReady,
-      error: secretsReady ? undefined : 'Required authentication secrets missing' });
+      ...(!secretsReady && { error: 'Required authentication secrets missing' }) });
 
     // Check if in maintenance mode
     const maintenanceMode = process.env.MAINTENANCE_MODE === 'true';
     checks.push({
       service: 'maintenance',
       ready: !maintenanceMode,
-      error: maintenanceMode ? 'Application in maintenance mode' : undefined });
+      ...(maintenanceMode && { error: 'Application in maintenance mode' }) });
 
     const allReady = checks.every(check => check.ready);
 
@@ -116,7 +116,10 @@ export default async function handler(
       checks,
     };
 
-    loggers.general.debug('Readiness check completed', { ready: allReady, checks });
+    loggers.general.debug('Readiness check completed', { 
+      ready: allReady, 
+      checks: JSON.parse(JSON.stringify(checks))
+    });
 
     res.status(allReady ? 200 : 503).json(response);
   } catch (error) {

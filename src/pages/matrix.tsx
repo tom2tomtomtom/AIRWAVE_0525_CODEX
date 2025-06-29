@@ -140,8 +140,8 @@ const templatesWithFields: Template[] = demoTemplates.map((template: any) => ({
 // Matrix Page Component
 const MatrixPage: React.FC = () => {
   const router = useRouter();
-  const { user } = useAuth();
-  const { activeClient: selectedClient } = useClient();
+  const { user: _user } = useAuth();
+  const { activeClient: _selectedClient } = useClient();
   const [selectedTemplate, setSelectedTemplate] = useState<Template | null>(null);
   const [fieldAssignments, setFieldAssignments] = useState<Record<string, FieldAssignment>>({});
   const [loading, setLoading] = useState(false);
@@ -171,14 +171,19 @@ const MatrixPage: React.FC = () => {
   };
 
   const handleFieldUpdate = (fieldId: string, value?: string, assetId?: string) => {
-    setFieldAssignments(prev => ({
-      ...prev,
-      [fieldId]: {
+    setFieldAssignments(prev => {
+      const assignment: FieldAssignment = {
+        fieldId,
+        status: value || assetId ? 'completed' : 'empty',
         ...prev[fieldId],
-        value,
-        assetId,
-        status: value || assetId ? 'completed' : 'empty' },
-    }));
+        ...(value && { value }),
+        ...(assetId && { assetId }),
+      };
+      return {
+        ...prev,
+        [fieldId]: assignment,
+      };
+    });
   };
 
   const handleSaveMatrix = async () => {

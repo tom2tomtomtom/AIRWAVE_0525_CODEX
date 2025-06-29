@@ -28,7 +28,7 @@ const rateLimitStore: RateLimitStore = {};
  */
 function cleanupExpiredEntries(): void {
   const now = Date.now();
-  Object.keys(rateLimitStore).forEach((key: unknown) => {
+  Object.keys(rateLimitStore).forEach((key: string) => {
     const entry = rateLimitStore[key];
     if (entry && entry.resetTime < now) {
       delete rateLimitStore[key];
@@ -242,5 +242,5 @@ export function getRateLimitStats(): {
  * Clear all rate limit entries (for testing)
  */
 export function clearRateLimitStore(): void {
-  Object.keys(rateLimitStore).forEach((key: unknown) => delete rateLimitStore[key]);
+  Object.keys(rateLimitStore).forEach((key: string) => delete rateLimitStore[key]);
 }

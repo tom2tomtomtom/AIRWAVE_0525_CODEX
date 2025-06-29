@@ -53,27 +53,33 @@ export const createAccessibleField = (
 
   const describedByIds = [descriptionId, errorId].filter(Boolean).join(' ');
 
-  return {
+  const result: any = {
     fieldProps: {
       id: fieldId,
       'aria-label': label,
-      'aria-describedby': describedByIds || undefined,
-      'aria-required': options.required,
-      'aria-invalid': options.invalid,
+      ...(describedByIds && { 'aria-describedby': describedByIds }),
+      ...(options.required !== undefined && { 'aria-required': options.required }),
+      ...(options.invalid !== undefined && { 'aria-invalid': options.invalid }),
     },
     labelProps: {
       htmlFor: fieldId,
       id: labelId,
     },
-    descriptionProps: descriptionId ? { id: descriptionId } : undefined,
-    errorProps: errorId
-      ? {
-          id: errorId,
-          role: 'alert',
-          'aria-live': 'polite' as const,
-        }
-      : undefined,
   };
+
+  if (descriptionId) {
+    result.descriptionProps = { id: descriptionId };
+  }
+
+  if (errorId) {
+    result.errorProps = {
+      id: errorId,
+      role: 'alert',
+      'aria-live': 'polite' as const,
+    };
+  }
+
+  return result;
 };
 
 // Focus management utilities
@@ -178,11 +184,11 @@ export const getContrastRatio = (color1: string, color2: string): number => {
     const g = parseInt(hex.substr(2, 2), 16) / 255;
     const b = parseInt(hex.substr(4, 2), 16) / 255;
 
-    const sRGB = [r, g, b].map((c: unknown) =>
+    const sRGB = [r, g, b].map((c: number) =>
       c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4)
     );
 
-    return 0.2126 * sRGB[0] + 0.7152 * sRGB[1] + 0.0722 * sRGB[2];
+    return 0.2126 * sRGB[0]! + 0.7152 * sRGB[1]! + 0.0722 * sRGB[2]!;
   };
 
   const lum1 = getLuminance(color1);
@@ -224,12 +230,20 @@ export const createModalProps = (title?: string, description?: string): ModalA11
   const titleId = title ? generateId('modal-title') : undefined;
   const descId = description ? generateId('modal-desc') : undefined;
 
-  return {
+  const props: any = {
     'aria-modal': true,
-    'aria-labelledby': titleId,
-    'aria-describedby': descId,
     role: 'dialog',
   };
+
+  if (titleId) {
+    props['aria-labelledby'] = titleId;
+  }
+
+  if (descId) {
+    props['aria-describedby'] = descId;
+  }
+
+  return props;
 };
 
 // Loading state accessibility
@@ -271,14 +285,31 @@ export const createButtonProps = (
     type?: 'button' | 'submit' | 'reset';
   } = {}
 ): ButtonA11yProps => {
-  return {
+  const props: any = {
     type: options.type || 'button',
-    'aria-pressed': options.pressed,
-    'aria-expanded': options.expanded,
-    'aria-controls': options.controls,
-    'aria-describedby': options.describedBy,
-    disabled: options.disabled,
   };
+
+  if (options.pressed !== undefined) {
+    props['aria-pressed'] = options.pressed;
+  }
+
+  if (options.expanded !== undefined) {
+    props['aria-expanded'] = options.expanded;
+  }
+
+  if (options.controls) {
+    props['aria-controls'] = options.controls;
+  }
+
+  if (options.describedBy) {
+    props['aria-describedby'] = options.describedBy;
+  }
+
+  if (options.disabled !== undefined) {
+    props.disabled = options.disabled;
+  }
+
+  return props;
 };
 
 // Navigation accessibility
@@ -292,11 +323,19 @@ export const createNavProps = (
   label?: string,
   current?: 'page' | 'step' | 'location' | 'date' | 'time'
 ): NavA11yProps => {
-  return {
+  const props: any = {
     role: 'navigation',
-    'aria-label': label,
-    'aria-current': current,
   };
+
+  if (label) {
+    props['aria-label'] = label;
+  }
+
+  if (current) {
+    props['aria-current'] = current;
+  }
+
+  return props;
 };
 
 // Table accessibility

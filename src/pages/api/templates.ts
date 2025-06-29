@@ -43,9 +43,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   switch (req.method) {
     case 'GET': {
       // Get all templates
-      const { data, error } = await supabase.from('templates').select('*');
+      const { data, error } = await supabase!.from('templates').select('*');
       if (error) return res.status(500).json({ error: error.message });
-      return res.status(200).json(data as TemplateRow[]);
+      return res.status(200).json(data! as TemplateRow[]);
     }
     case 'POST': {
       // Validate and create a new template
@@ -55,9 +55,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
       // Remove undefined values to satisfy exactOptionalPropertyTypes
       const body = removeUndefined(parseResult.data) as TemplateInsert;
-      const { data, error } = await supabase.from('templates').insert([body]).select('*');
+      const { data, error } = await supabase!.from('templates').insert([body]).select('*');
       if (error) return res.status(500).json({ error: error.message });
-      return res.status(201).json(data?.[0] as TemplateRow);
+      return res.status(201).json(data![0] as TemplateRow);
     }
     case 'PUT':
     case 'PATCH': {
@@ -70,13 +70,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (!id) return res.status(400).json({ error: 'Missing template id' });
       // Remove undefined values to satisfy exactOptionalPropertyTypes
       const cleanedUpdates = removeUndefined(updates) as TemplateUpdate;
-      const { data, error } = await supabase
+      const { data, error } = await supabase!
         .from('templates')
         .update(cleanedUpdates)
         .eq('id', id)
         .select('*');
       if (error) return res.status(500).json({ error: error.message });
-      return res.status(200).json(data?.[0] as TemplateRow);
+      return res.status(200).json(data![0] as TemplateRow);
     }
     case 'DELETE': {
       // Delete a template (expects id in body)
@@ -85,10 +85,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         res.status(400).json({ error: 'Missing template id' });
         return;
       }
-      const { error } = await supabase.from('templates').delete().eq('id', id);
+      const { error } = await supabase!.from('templates').delete().eq('id', id);
       if (error) {
-        res.status(500).json({ error: error.message });
-        return;
+        return res.status(500).json({ error: error.message });
       }
       res.status(204).end();
       return;

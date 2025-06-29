@@ -252,7 +252,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
   } catch (error: any) {
     const message = getErrorMessage(error);
-    console.error('Image generation error:', error);
+    console.error('Image generation error:', message, error);
 
     if (error instanceof OpenAI.APIError) {
       if (error.status === 400) {
