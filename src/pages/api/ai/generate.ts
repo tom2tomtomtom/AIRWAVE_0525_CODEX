@@ -2,9 +2,11 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { getErrorMessage } from '@/utils/errorUtils';
 import OpenAI from 'openai';
 import { env, hasOpenAI, hasElevenLabs, hasRunway } from '@/lib/env';
-import { withAIRateLimit } from '@/lib/rate-limiter';
 import { loggers } from '@/lib/logger';
-
+import { withEnhancedSecurity, SecurityConfigs } from '@/middleware/withEnhancedSecurity';
+import { withAuth } from '@/middleware/withAuth';
+import { securityValidation } from '@/utils/validation-utils';
+import { z } from 'zod';
 
 export interface GenerationPrompt {
   prompt: string;
@@ -27,13 +29,40 @@ type ResponseData = {
   success: boolean;
   message?: string;
   result?: GenerationResult;
+  errors?: any[];
+  warnings?: string[];
 };
 
 // Initialize OpenAI client
 const openai = hasOpenAI
   ? new OpenAI({
-      apiKey: env.OPENAI_API_KEY })
+      apiKey: env.OPENAI_API_KEY,
+    })
   : null;
+
+// Enhanced validation schema for AI generation
+const AIGenerationSchema = z.object({
+  prompt: z.string().min(1, 'Prompt is required').max(4000, 'Prompt too long'),
+  type: z.enum(['text', 'image', 'video', 'voice'], {
+    errorMap: () => ({ message: 'Type must be one of: text, image, video, voice' }),
+  }),
+  clientId: z.string().uuid('Invalid client ID format'),
+  parameters: z
+    .object({
+      // Text generation parameters
+      tone: z.string().optional(),
+      style: z.string().optional(),
+      purpose: z.string().optional(),
+      // Image generation parameters
+      size: z.enum(['1024x1024', '1792x1024', '1024x1792']).optional(),
+      quality: z.enum(['standard', 'hd']).optional(),
+      enhance: z.boolean().optional(),
+      // Voice generation parameters
+      voice: z.string().optional(),
+      language: z.string().optional(),
+    })
+    .optional(),
+});
 
 // Real AI generation functions
 const generateText = async (
@@ -56,10 +85,12 @@ const generateText = async (
         },
         {
           role: 'user',
-          content: `Create content variations for: "${prompt}". ${parameters?.tone ? `Tone: ${parameters.tone}. ` : ''}${parameters?.style ? `Style: ${parameters.style}. ` : ''}${parameters?.purpose ? `Purpose: ${parameters.purpose}. ` : ''}Provide 3 distinct variations.` },
+          content: `Create content variations for: "${prompt}". ${parameters?.tone ? `Tone: ${parameters.tone}. ` : ''}${parameters?.style ? `Style: ${parameters.style}. ` : ''}${parameters?.purpose ? `Purpose: ${parameters.purpose}. ` : ''}Provide 3 distinct variations.`,
+        },
       ],
       temperature: 0.8,
-      max_tokens: 500 });
+      max_tokens: 500,
+    });
 
     const content = completion.choices[0]?.message?.content || '';
     // Parse the content into variations (split by numbered lists or line breaks)
@@ -101,7 +132,8 @@ const generateImage = async (prompt: string, parameters?: Record<string, any>): 
       size: (parameters?.size as '1024x1024' | '1792x1024' | '1024x1792') || '1024x1024',
       quality: (parameters?.quality as 'standard' | 'hd') || 'standard',
       style: (parameters?.style as 'vivid' | 'natural') || 'vivid',
-      n: 1 });
+      n: 1,
+    });
 
     const imageUrl = response.data?.[0]?.url;
     if (!imageUrl) throw new Error('No image URL returned');
@@ -130,10 +162,12 @@ const enhanceImagePrompt = async (
         },
         {
           role: 'user',
-          content: `Enhance this image prompt for DALL-E 3: "${prompt}". ${parameters?.purpose ? `Purpose: ${parameters.purpose}. ` : ''}${parameters?.style ? `Artistic style: ${parameters.style}. ` : ''}Make it more specific and visually descriptive while keeping the original intent.` },
+          content: `Enhance this image prompt for DALL-E 3: "${prompt}". ${parameters?.purpose ? `Purpose: ${parameters.purpose}. ` : ''}${parameters?.style ? `Artistic style: ${parameters.style}. ` : ''}Make it more specific and visually descriptive while keeping the original intent.`,
+        },
       ],
       temperature: 0.3,
-      max_tokens: 200 });
+      max_tokens: 200,
+    });
 
     return completion.choices[0]?.message?.content?.trim() || prompt;
   } catch (error: any) {
@@ -142,7 +176,10 @@ const enhanceImagePrompt = async (
   }
 };
 
-const generateVideo = async (_prompt: string, _parameters?: Record<string, any>): Promise<string> => {
+const generateVideo = async (
+  _prompt: string,
+  _parameters?: Record<string, any>
+): Promise<string> => {
   if (!hasRunway) {
     throw new Error(
       'Video generation service not configured. Please set up Runway ML integration.'
@@ -151,7 +188,8 @@ const generateVideo = async (_prompt: string, _parameters?: Record<string, any>)
 
   try {
     // Implement Runway ML video generation
-    process.env.NODE_ENV === 'development' && loggers.general.error('Runway ML video generation requested');
+    process.env.NODE_ENV === 'development' &&
+      loggers.general.error('Runway ML video generation requested');
     throw new Error('Runway ML integration not yet implemented');
   } catch (error: any) {
     console.error('Runway video generation error:', error);
@@ -159,7 +197,10 @@ const generateVideo = async (_prompt: string, _parameters?: Record<string, any>)
   }
 };
 
-const generateVoice = async (_prompt: string, _parameters?: Record<string, any>): Promise<string> => {
+const generateVoice = async (
+  _prompt: string,
+  _parameters?: Record<string, any>
+): Promise<string> => {
   if (!hasElevenLabs) {
     throw new Error(
       'Voice generation service not configured. Please set up ElevenLabs integration.'
@@ -171,7 +212,8 @@ const generateVoice = async (_prompt: string, _parameters?: Record<string, any>)
     // const _voice = parameters?.voice || 'alloy';
     // const _language = parameters?.language || 'en';
 
-    process.env.NODE_ENV === 'development' && loggers.general.error('ElevenLabs voice generation requested');
+    process.env.NODE_ENV === 'development' &&
+      loggers.general.error('ElevenLabs voice generation requested');
     throw new Error('ElevenLabs integration not yet implemented');
   } catch (error: any) {
     console.error('ElevenLabs voice generation error:', error);
@@ -186,42 +228,65 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseData>):
   }
 
   try {
-    // Extract user ID from authorization header
-    const userId = req.headers.authorization?.split(' ')[1] || 'user_123';
+    // Extract user ID from headers (set by withAuth middleware)
+    const userId = req.headers['x-user-id'] as string;
 
-    // Extract generation prompt from request body
-    const { prompt, type, parameters: _parameters, clientId }: GenerationPrompt = req.body;
+    // Enhanced validation using Zod schema
+    const validationResult = AIGenerationSchema.safeParse(req.body);
 
-    // Basic validation
-    if (!prompt || !type || !clientId) {
+    if (!validationResult.success) {
       return res.status(400).json({
         success: false,
-        message: 'Prompt, type, and client ID are required',
+        message: 'Invalid input',
+        errors: validationResult.error.errors,
       });
     }
 
-    // Validate generation type
-    if (!['text', 'image', 'video', 'voice'].includes(type)) {
+    const { prompt, type, parameters: _parameters, clientId } = validationResult.data;
+
+    // Security validation on prompt
+    const securityCheck = securityValidation.validateAndSanitize(prompt, {
+      allowHTML: false,
+      maxLength: 4000,
+      checkMalicious: true,
+      throwOnMalicious: false,
+    });
+
+    if (!securityCheck.isValid) {
+      loggers.general.warn('Malicious content detected in AI generation prompt', {
+        userId,
+        type,
+        prompt: prompt.substring(0, 100),
+        warnings: securityCheck.warnings.join(', '),
+        ip: Array.isArray(req.headers['x-forwarded-for'])
+          ? req.headers['x-forwarded-for'][0]
+          : req.headers['x-forwarded-for'] || req.socket.remoteAddress,
+      });
+
       return res.status(400).json({
         success: false,
-        message: 'Type must be one of: text, image, video, voice',
+        message: 'Prompt contains potentially harmful content',
+        warnings: securityCheck.warnings,
       });
     }
 
-    // Generate content based on type
+    // Use sanitized prompt
+    const sanitizedPrompt = securityCheck.sanitized;
+
+    // Generate content based on type using sanitized prompt
     let content: string | string[];
     switch (type) {
       case 'text':
-        content = await generateText(prompt, _parameters);
+        content = await generateText(sanitizedPrompt, _parameters);
         break;
       case 'image':
-        content = await generateImage(prompt, _parameters);
+        content = await generateImage(sanitizedPrompt, _parameters);
         break;
       case 'video':
-        content = await generateVideo(prompt, _parameters);
+        content = await generateVideo(sanitizedPrompt, _parameters);
         break;
       case 'voice':
-        content = await generateVoice(prompt, _parameters);
+        content = await generateVoice(sanitizedPrompt, _parameters);
         break;
       default:
         content = [];
@@ -232,7 +297,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseData>):
       id: 'gen_' + Math.random().toString(36).substring(2, 9),
       type: type as 'text' | 'image' | 'video' | 'voice',
       content,
-      prompt,
+      prompt: sanitizedPrompt,
       dateCreated: new Date().toISOString(),
       clientId,
       userId,
@@ -250,5 +315,26 @@ async function handler(req: NextApiRequest, res: NextApiResponse<ResponseData>):
   }
 }
 
-// Apply AI rate limiting to prevent abuse and cost overruns
-export default withAIRateLimit(handler);
+// Apply enhanced security with authentication and comprehensive AI protection
+export default withAuth(
+  withEnhancedSecurity(
+    {
+      ...SecurityConfigs.api,
+      rateLimit: { windowMs: 15 * 60 * 1000, max: 30 }, // 30 requests per 15 minutes (balanced for AI)
+      analysis: {
+        ...SecurityConfigs.api.analysis,
+        checkUserAgent: true,
+        detectBots: true,
+        logSuspiciousActivity: true,
+      },
+      validation: {
+        body: [
+          { field: 'prompt', type: 'string', required: true, minLength: 1, maxLength: 4000 },
+          { field: 'type', type: 'string', required: true },
+          { field: 'clientId', type: 'string', required: true },
+        ],
+      },
+    },
+    handler
+  )
+);
