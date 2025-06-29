@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
+import TemplateSelector from '@/components/video-studio/TemplateSelector';
 import {
   Box,
   Typography,
   Card,
   CardContent,
-  CardMedia,
   Button,
   Grid,
   TextField,
@@ -381,88 +381,12 @@ const VideoStudioPage: React.FC = () => {
             <Grid size={{ xs: 12, md: 8 }}>
               {/* Step 0: Template Selection */}
               {activeStep === 0 && (
-                <Card>
-                  <CardContent>
-                    <Typography variant="h6" gutterBottom>
-                      Choose a Video Template
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary" paragraph>
-                      Select a template that best fits your video needs
-                    </Typography>
-
-                    <Grid container spacing={2}>
-                      {templates.map((template: any) => (
-                        <Grid size={{ xs: 12, sm: 6, md: 6 }} key={template.id}>
-                          <Card
-                            variant="outlined"
-                            sx={{
-                              cursor: 'pointer',
-                              transition: 'all 0.2s',
-                              border:
-                                selectedTemplate?.id === template.id ? '2px solid' : '1px solid',
-                              borderColor:
-                                selectedTemplate?.id === template.id ? 'primary.main' : 'divider',
-                              '&:hover': {
-                                boxShadow: 2,
-                                transform: 'translateY(-2px)',
-                              },
-                            }}
-                            onClick={() => setSelectedTemplate(template)}
-                          >
-                            <CardMedia
-                              component="img"
-                              height="140"
-                              image={template.thumbnail}
-                              alt={template.name}
-                            />
-                            <CardContent>
-                              <Typography variant="h6" gutterBottom>
-                                {template.name}
-                              </Typography>
-                              <Typography variant="body2" color="text.secondary" paragraph>
-                                {template.description}
-                              </Typography>
-                              <Box display="flex" gap={0.5} mb={1}>
-                                <Chip label={template.category} size="small" />
-                                <Chip
-                                  label={template.aspect_ratio}
-                                  size="small"
-                                  variant="outlined"
-                                />
-                                <Chip
-                                  label={`${template.duration}s`}
-                                  size="small"
-                                  variant="outlined"
-                                />
-                              </Box>
-                              <Box display="flex" flexWrap="wrap" gap={0.5}>
-                                {template.platform.map((platform: any) => (
-                                  <Chip
-                                    key={platform}
-                                    label={platform}
-                                    size="small"
-                                    variant="outlined"
-                                    sx={{ fontSize: '0.7rem' }}
-                                  />
-                                ))}
-                              </Box>
-                            </CardContent>
-                          </Card>
-                        </Grid>
-                      ))}
-                    </Grid>
-
-                    <Box mt={3}>
-                      <Button
-                        variant="contained"
-                        onClick={() => setActiveStep(1)}
-                        disabled={!selectedTemplate}
-                      >
-                        Continue with Selected Template
-                      </Button>
-                    </Box>
-                  </CardContent>
-                </Card>
+                <TemplateSelector
+                  templates={templates}
+                  selectedTemplate={selectedTemplate}
+                  onTemplateSelect={setSelectedTemplate}
+                  onContinue={() => setActiveStep(1)}
+                />
               )}
 
               {/* Step 1: Configure Video */}
@@ -797,7 +721,8 @@ const VideoStudioPage: React.FC = () => {
                                         },
                                       });
                                     } else {
-                                      const { voice_over, ...elementsWithoutVoiceOver } = contentElements;
+                                      const { voice_over, ...elementsWithoutVoiceOver } =
+                                        contentElements;
                                       setContentElements(elementsWithoutVoiceOver);
                                     }
                                   }}

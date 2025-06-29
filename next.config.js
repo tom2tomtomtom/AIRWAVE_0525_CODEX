@@ -1,15 +1,79 @@
+// Bundle analyzer for performance optimization
+let withBundleAnalyzer;
+try {
+  withBundleAnalyzer = require('@next/bundle-analyzer')({
+    enabled: process.env.ANALYZE === 'true',
+  });
+} catch (e) {
+  withBundleAnalyzer = config => config;
+}
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+
+  // Performance optimizations
+  swcMinify: true,
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production',
+  },
+
+  // TypeScript configuration - will fix errors separately
   typescript: {
-    // TODO: Re-enable once remaining ~150 TypeScript errors are fixed
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: true, // Temporary until TypeScript errors are resolved
   },
+
   eslint: {
-    // TODO: Re-enable once TypeScript errors are resolved
-    ignoreDuringBuilds: true,
+    ignoreDuringBuilds: true, // Temporary until TypeScript errors are resolved
   },
-  webpack: (config, { isServer }) => {
+
+  // Image optimization
+  images: {
+    domains: [
+      'localhost',
+      process.env.NEXT_PUBLIC_SUPABASE_URL?.replace('https://', ''),
+      process.env.AWS_S3_BUCKET ? `${process.env.AWS_S3_BUCKET}.s3.amazonaws.com` : '',
+    ].filter(Boolean),
+    formats: ['image/avif', 'image/webp'],
+  },
+
+  // Bundle optimization
+  experimental: {
+    optimizePackageImports: [
+      '@mui/material',
+      '@mui/icons-material',
+      'lodash',
+      'date-fns',
+      'recharts',
+    ],
+    turbo: {
+      rules: {
+        '*.svg': {
+          loaders: ['@svgr/webpack'],
+          as: '*.js',
+        },
+      },
+    },
+  },
+
+  // Exclude test files and directories from pages
+  pageExtensions: ['tsx', 'ts', 'jsx', 'js'],
+
+  // Webpack configuration for bundle optimization
+  webpack: (config, { isServer, dev, webpack }) => {
+    // Ignore test files and __tests__ directories
+    config.plugins.push(
+      new webpack.IgnorePlugin({
+        resourceRegExp: /\.(test|spec)\.(js|jsx|ts|tsx)$/,
+      })
+    );
+
+    config.plugins.push(
+      new webpack.IgnorePlugin({
+        resourceRegExp: /__tests__/,
+      })
+    );
+    // Client-side bundle optimizations
     if (!isServer) {
       config.resolve.fallback = {
         fs: false,
@@ -31,15 +95,57 @@ const nextConfig = {
         buffer: false,
         events: false,
       };
+
+      // Production bundle splitting and optimization
+      if (!dev) {
+        config.optimization = {
+          ...config.optimization,
+          splitChunks: {
+            chunks: 'all',
+            cacheGroups: {
+              vendor: {
+                test: /[\\/]node_modules[\\/]/,
+                name: 'vendors',
+                chunks: 'all',
+                maxSize: 244000, // 244KB chunks
+              },
+              mui: {
+                test: /[\\/]node_modules[\\/]@mui[\\/]/,
+                name: 'mui',
+                chunks: 'all',
+                priority: 10,
+              },
+              common: {
+                name: 'common',
+                minChunks: 2,
+                chunks: 'all',
+                enforce: true,
+              },
+            },
+          },
+        };
+      }
     }
 
+    // Alias configurations to reduce bundle size
     config.resolve.alias = {
       ...config.resolve.alias,
       ioredis: false,
+      // Optimize lodash imports
+      lodash: 'lodash-es',
     };
 
     return config;
   },
+
+  // Performance optimizations
+  skipMiddlewareUrlNormalize: true,
+  skipTrailingSlashRedirect: true,
+
+  // Environment variables
+  env: {
+    CUSTOM_KEY: 'my-value',
+  },
 };
 
-module.exports = nextConfig;
+module.exports = withBundleAnalyzer(nextConfig);

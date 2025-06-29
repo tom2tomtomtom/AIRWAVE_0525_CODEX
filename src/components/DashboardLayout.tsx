@@ -1,44 +1,43 @@
 import React, { useState, useEffect } from 'react';
-import {
-  AppBar,
-  Box,
-  CssBaseline,
-  Drawer,
-  IconButton,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  Toolbar,
-  Typography,
-  useTheme,
-  useMediaQuery,
-  Divider,
-  Chip,
-  InputAdornment,
-  TextField,
-} from '@mui/material';
-import {
-  Menu as MenuIcon,
-  Dashboard as DashboardIcon,
-  Business as ClientsIcon,
-  Campaign as CampaignIcon,
-  Image as AssetsIcon,
-  ViewModule as MatrixIcon,
-  Description as TemplatesIcon,
-  Psychology as StrategicIcon,
-  PlayArrow as ExecuteIcon,
-  Visibility as PreviewIcon,
-  TrendingUp as FlowIcon,
-  Assignment as ApprovalsIcon,
-  Analytics as AnalyticsIcon,
-  Webhook as WebhookIcon,
-  Share as SocialIcon,
-  Search as SearchIcon,
-  LightMode as LightModeIcon,
-  DarkMode as DarkModeIcon,
-} from '@mui/icons-material';
+// Optimized MUI imports - individual components for better tree shaking
+import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+import CssBaseline from '@mui/material/CssBaseline';
+import Drawer from '@mui/material/Drawer';
+import IconButton from '@mui/material/IconButton';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import Divider from '@mui/material/Divider';
+import Chip from '@mui/material/Chip';
+import InputAdornment from '@mui/material/InputAdornment';
+import TextField from '@mui/material/TextField';
+
+// Optimized icon imports - individual icons to reduce bundle size
+import MenuIcon from '@mui/icons-material/Menu';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import BusinessIcon from '@mui/icons-material/Business';
+import CampaignIcon from '@mui/icons-material/Campaign';
+import ImageIcon from '@mui/icons-material/Image';
+import ViewModuleIcon from '@mui/icons-material/ViewModule';
+import DescriptionIcon from '@mui/icons-material/Description';
+import PsychologyIcon from '@mui/icons-material/Psychology';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import TrendingUpIcon from '@mui/icons-material/TrendingUp';
+import AssignmentIcon from '@mui/icons-material/Assignment';
+import AnalyticsIcon from '@mui/icons-material/Analytics';
+import WebhookIcon from '@mui/icons-material/Webhook';
+import ShareIcon from '@mui/icons-material/Share';
+import SearchIcon from '@mui/icons-material/Search';
+import LightModeIcon from '@mui/icons-material/LightMode';
+import DarkModeIcon from '@mui/icons-material/DarkMode';
 import { useRouter } from 'next/router';
 import ClientSelector from './ClientSelector';
 import UserMenu from './UserMenu';
@@ -50,24 +49,24 @@ const drawerWidth = 240;
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: DashboardIcon },
-  { name: 'Clients', href: '/clients', icon: ClientsIcon },
+  { name: 'Clients', href: '/clients', icon: BusinessIcon },
   { name: 'Campaigns', href: '/campaigns', icon: CampaignIcon },
-  { name: 'Flow', href: '/flow', icon: FlowIcon },
+  { name: 'Flow', href: '/flow', icon: TrendingUpIcon },
   { divider: true },
-  { name: 'Strategy', href: '/strategy', icon: StrategicIcon },
+  { name: 'Strategy', href: '/strategy', icon: PsychologyIcon },
   { name: 'Analytics', href: '/analytics', icon: AnalyticsIcon },
-  { name: 'Assets', href: '/assets', icon: AssetsIcon },
-  { name: 'Templates', href: '/templates', icon: TemplatesIcon },
-  { name: 'Matrix', href: '/matrix', icon: MatrixIcon },
+  { name: 'Assets', href: '/assets', icon: ImageIcon },
+  { name: 'Templates', href: '/templates', icon: DescriptionIcon },
+  { name: 'Matrix', href: '/matrix', icon: ViewModuleIcon },
   { divider: true },
-  { name: 'Execute', href: '/execute', icon: ExecuteIcon },
-  { name: 'Approvals', href: '/approvals', icon: ApprovalsIcon },
-  { name: 'Preview', href: '/preview', icon: PreviewIcon },
+  { name: 'Execute', href: '/execute', icon: PlayArrowIcon },
+  { name: 'Approvals', href: '/approvals', icon: AssignmentIcon },
+  { name: 'Preview', href: '/preview', icon: VisibilityIcon },
   { divider: true },
   {
     name: 'Social Publishing',
     href: '/social-publishing',
-    icon: SocialIcon,
+    icon: ShareIcon,
     disabled: true,
     comingSoon: true,
   },
