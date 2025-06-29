@@ -7,7 +7,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { loggers } from '@/lib/logger';
 
-
 export interface SecurityHeadersOptions {
   enableCSP?: boolean;
   enableHSTS?: boolean;
@@ -49,13 +48,13 @@ function buildCSP(options: SecurityHeadersOptions): string {
     'default-src': ["'self'"],
     'script-src': [
       "'self'",
-      "'unsafe-inline'", // Required for Next.js hydration in development
-      "'unsafe-eval'", // Required for development mode
+      "'unsafe-inline'", // DEVELOPMENT ONLY - Required for Next.js hydration
+      "'unsafe-eval'", // DEVELOPMENT ONLY - Required for HMR and development tools
       ...(options.additionalCSPSources?.scriptSrc || []),
     ],
     'style-src': [
       "'self'",
-      "'unsafe-inline'", // Required for styled-components and Material-UI
+      "'unsafe-inline'", // DEVELOPMENT ONLY - Required for styled-components and Material-UI
       'https://fonts.googleapis.com',
       ...(options.additionalCSPSources?.styleSrc || []),
     ],
@@ -94,15 +93,18 @@ function buildCSP(options: SecurityHeadersOptions): string {
     (cspDirectives as any)['report-uri'] = [options.cspReportUri];
   }
 
-  // In production, remove unsafe-inline and unsafe-eval where possible
+  // In production, remove unsafe-inline and unsafe-eval for enhanced security
   if (process.env.NODE_ENV === 'production') {
     // Remove unsafe-eval from script-src in production
     cspDirectives['script-src'] = cspDirectives['script-src'].filter(
-      src => src !== "'unsafe-eval'"
+      src => src !== "'unsafe-eval'" && src !== "'unsafe-inline'"
     );
 
-    // Consider removing unsafe-inline in production with nonce-based CSP
-    // This would require implementing nonce generation for inline scripts
+    // Remove unsafe-inline from style-src in production for stricter security
+    // Keep only essential style sources for production
+    cspDirectives['style-src'] = cspDirectives['style-src']
+      .filter(src => src !== "'unsafe-inline'")
+      .concat(["'sha256-47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU='"]); // Allow empty inline styles
   }
 
   // Convert to CSP string format
