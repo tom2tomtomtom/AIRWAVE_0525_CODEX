@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, memo } from 'react';
 import Head from 'next/head';
 import TemplateSelector from '@/components/video-studio/TemplateSelector';
 import VideoOverview from '@/components/video-studio/VideoOverview';
@@ -99,7 +99,7 @@ interface ContentElements {
   };
 }
 
-const VideoStudioPage: React.FC = () => {
+const VideoStudioPage: React.FC = memo(() => {
   const { activeClient } = useClient();
   const { showNotification } = useNotification();
 
@@ -139,8 +139,8 @@ const VideoStudioPage: React.FC = () => {
     save_to_assets: true,
   });
 
-  // Mock templates data
-  const mockTemplates: VideoTemplate[] = [
+  // Memoize templates data to prevent recreating on every render
+  const mockTemplates: VideoTemplate[] = useMemo(() => [
     {
       id: 'template-1',
       name: 'Social Media Promo',
@@ -185,27 +185,32 @@ const VideoStudioPage: React.FC = () => {
       category: 'Corporate',
       tags: ['corporate', 'professional', 'presentation'],
     },
-  ];
+  ], []);
 
   useEffect(() => {
     setTemplates(mockTemplates);
+  }, [mockTemplates]);
+
+  // Memoize brand elements update to prevent unnecessary re-renders
+  const updateBrandElements = useCallback((client: any) => {
+    if (client) {
+      setContentElements(prev => ({
+        ...prev,
+        brand_elements: {
+          logo_url: client.logo,
+          color_scheme: [client.primaryColor, client.secondaryColor],
+        },
+      }));
+    }
   }, []);
 
   // Update brand elements when client changes
   useEffect(() => {
-    if (activeClient) {
-      setContentElements(prev => ({
-        ...prev,
-        brand_elements: {
-          logo_url: activeClient.logo,
-          color_scheme: [activeClient.primaryColor, activeClient.secondaryColor],
-        },
-      }));
-    }
-  }, [activeClient]);
+    updateBrandElements(activeClient);
+  }, [activeClient, updateBrandElements]);
 
-  // Generate video
-  const handleGenerateVideo = async () => {
+  // Memoize video generation handler to prevent recreation on every render
+  const handleGenerateVideo = useCallback(async () => {
     if (!activeClient) {
       showNotification('Please select a client first', 'error');
       return;
@@ -260,10 +265,10 @@ const VideoStudioPage: React.FC = () => {
     } finally {
       setGenerating(false);
     }
-  };
+  }, [activeClient, videoConfig.prompt, selectedTemplate?.id, videoConfig, contentElements, generationSettings, showNotification]);
 
-  // Refresh job status
-  const refreshJobStatus = async () => {
+  // Memoize job status refresh to prevent recreation on every render
+  const refreshJobStatus = useCallback(async () => {
     if (videoJobs.length === 0) return;
 
     try {
@@ -284,18 +289,19 @@ const VideoStudioPage: React.FC = () => {
     } catch (error: any) {
       console.error('Error refreshing job status:', error);
     }
-  };
+  }, [videoJobs]);
 
-  // Auto-refresh job status
+  // Auto-refresh job status with optimized dependency array
   useEffect(() => {
     const interval = setInterval(() => {
       refreshJobStatus();
     }, 5000);
 
     return () => clearInterval(interval);
-  }, [videoJobs]);
+  }, [refreshJobStatus]);
 
-  const steps = ['Select Template', 'Configure Video', 'Customize Content', 'Generate & Monitor'];
+  // Memoize steps array to prevent recreation
+  const steps = useMemo(() => ['Select Template', 'Configure Video', 'Customize Content', 'Generate & Monitor'], []);
 
   return (
     <>
@@ -384,18 +390,18 @@ const VideoStudioPage: React.FC = () => {
                               </Typography>
                               <Button
                                 variant="outlined"
-                                onClick={() => {
-                                  setContentElements({
-                                    ...contentElements,
+                                onClick={useCallback(() => {
+                                  setContentElements(prev => ({
+                                    ...prev,
                                     text_overlays: [
-                                      ...contentElements.text_overlays,
+                                      ...prev.text_overlays,
                                       {
                                         text: '',
                                         position: 'center',
                                       },
                                     ],
-                                  });
-                                }}
+                                  }));
+                                }, [])}
                               >
                                 Add Text Overlay
                               </Button>
@@ -484,18 +490,18 @@ const VideoStudioPage: React.FC = () => {
                               <Button
                                 variant="outlined"
                                 sx={{ mt: 2 }}
-                                onClick={() => {
-                                  setContentElements({
-                                    ...contentElements,
+                                onClick={useCallback(() => {
+                                  setContentElements(prev => ({
+                                    ...prev,
                                     text_overlays: [
-                                      ...contentElements.text_overlays,
+                                      ...prev.text_overlays,
                                       {
                                         text: '',
                                         position: 'center',
                                       },
                                     ],
-                                  });
-                                }}
+                                  }));
+                                }, [])}
                               >
                                 Add Another Overlay
                               </Button>
@@ -512,12 +518,12 @@ const VideoStudioPage: React.FC = () => {
                               control={
                                 <Switch
                                   checked={contentElements.background_music}
-                                  onChange={e =>
-                                    setContentElements({
-                                      ...contentElements,
+                                  onChange={useCallback((e: React.ChangeEvent<HTMLInputElement>) =>
+                                    setContentElements(prev => ({
+                                      ...prev,
                                       background_music: e.target.checked,
-                                    })
-                                  }
+                                    }))
+                                  , [])}
                                 />
                               }
                               label="Include Background Music"
@@ -529,22 +535,23 @@ const VideoStudioPage: React.FC = () => {
                               control={
                                 <Switch
                                   checked={!!contentElements.voice_over}
-                                  onChange={e => {
+                                  onChange={useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
                                     if (e.target.checked) {
-                                      setContentElements({
-                                        ...contentElements,
+                                      setContentElements(prev => ({
+                                        ...prev,
                                         voice_over: {
                                           text: videoConfig.prompt,
                                           voice: 'neural',
                                           language: 'en',
                                         },
-                                      });
+                                      }));
                                     } else {
-                                      const { voice_over, ...elementsWithoutVoiceOver } =
-                                        contentElements;
-                                      setContentElements(elementsWithoutVoiceOver);
+                                      setContentElements(prev => {
+                                        const { voice_over, ...elementsWithoutVoiceOver } = prev;
+                                        return elementsWithoutVoiceOver;
+                                      });
                                     }
-                                  }}
+                                  }, [videoConfig.prompt])}
                                 />
                               }
                               label="Include Voice Over"
@@ -560,15 +567,15 @@ const VideoStudioPage: React.FC = () => {
                                   rows={3}
                                   label="Voice Over Text"
                                   value={contentElements.voice_over.text}
-                                  onChange={e =>
-                                    setContentElements({
-                                      ...contentElements,
+                                  onChange={useCallback((e: React.ChangeEvent<HTMLInputElement>) =>
+                                    setContentElements(prev => ({
+                                      ...prev,
                                       voice_over: {
-                                        ...contentElements.voice_over!,
+                                        ...prev.voice_over!,
                                         text: e.target.value,
                                       },
-                                    })
-                                  }
+                                    }))
+                                  , [])}
                                 />
                               </Grid>
                               <Grid size={{ xs: 12, md: 6 }}>
@@ -577,15 +584,15 @@ const VideoStudioPage: React.FC = () => {
                                   <Select
                                     value={contentElements.voice_over.voice}
                                     label="Voice"
-                                    onChange={e =>
-                                      setContentElements({
-                                        ...contentElements,
+                                    onChange={useCallback((e: any) =>
+                                      setContentElements(prev => ({
+                                        ...prev,
                                         voice_over: {
-                                          ...contentElements.voice_over!,
+                                          ...prev.voice_over!,
                                           voice: e.target.value,
                                         },
-                                      })
-                                    }
+                                      }))
+                                    , [])}
                                   >
                                     <MenuItem value="neural">Neural (Default)</MenuItem>
                                     <MenuItem value="male">Male</MenuItem>
@@ -599,15 +606,15 @@ const VideoStudioPage: React.FC = () => {
                                   <Select
                                     value={contentElements.voice_over.language}
                                     label="Language"
-                                    onChange={e =>
-                                      setContentElements({
-                                        ...contentElements,
+                                    onChange={useCallback((e: any) =>
+                                      setContentElements(prev => ({
+                                        ...prev,
                                         voice_over: {
-                                          ...contentElements.voice_over!,
+                                          ...prev.voice_over!,
                                           language: e.target.value,
                                         },
-                                      })
-                                    }
+                                      }))
+                                    , [])}
                                   >
                                     <MenuItem value="en">English</MenuItem>
                                     <MenuItem value="es">Spanish</MenuItem>
@@ -638,15 +645,15 @@ const VideoStudioPage: React.FC = () => {
                               fullWidth
                               label="Logo URL"
                               value={contentElements.brand_elements?.logo_url || ''}
-                              onChange={e =>
-                                setContentElements({
-                                  ...contentElements,
+                              onChange={useCallback((e: React.ChangeEvent<HTMLInputElement>) =>
+                                setContentElements(prev => ({
+                                  ...prev,
                                   brand_elements: {
-                                    ...contentElements.brand_elements,
+                                    ...prev.brand_elements,
                                     logo_url: e.target.value,
                                   },
-                                })
-                              }
+                                }))
+                              , [])}
                               placeholder="https://example.com/logo.png"
                             />
                           </Grid>
@@ -656,15 +663,15 @@ const VideoStudioPage: React.FC = () => {
                               fullWidth
                               label="Font Family"
                               value={contentElements.brand_elements?.font_family || ''}
-                              onChange={e =>
-                                setContentElements({
-                                  ...contentElements,
+                              onChange={useCallback((e: React.ChangeEvent<HTMLInputElement>) =>
+                                setContentElements(prev => ({
+                                  ...prev,
                                   brand_elements: {
-                                    ...contentElements.brand_elements,
+                                    ...prev.brand_elements,
                                     font_family: e.target.value,
                                   },
-                                })
-                              }
+                                }))
+                              , [])}
                               placeholder="Arial, Helvetica, sans-serif"
                             />
                           </Grid>
@@ -718,12 +725,12 @@ const VideoStudioPage: React.FC = () => {
                               </Typography>
                               <Slider
                                 value={generationSettings.variations_count}
-                                onChange={(_, value) =>
-                                  setGenerationSettings({
-                                    ...generationSettings,
+                                onChange={useCallback((_: Event, value: number | number[]) =>
+                                  setGenerationSettings(prev => ({
+                                    ...prev,
                                     variations_count: value as number,
-                                  })
-                                }
+                                  }))
+                                , [])}
                                 min={1}
                                 max={5}
                                 step={1}
@@ -741,12 +748,12 @@ const VideoStudioPage: React.FC = () => {
                               control={
                                 <Switch
                                   checked={generationSettings.include_captions}
-                                  onChange={e =>
-                                    setGenerationSettings({
-                                      ...generationSettings,
+                                  onChange={useCallback((e: React.ChangeEvent<HTMLInputElement>) =>
+                                    setGenerationSettings(prev => ({
+                                      ...prev,
                                       include_captions: e.target.checked,
-                                    })
-                                  }
+                                    }))
+                                  , [])}
                                 />
                               }
                               label="Include Captions"
@@ -758,12 +765,12 @@ const VideoStudioPage: React.FC = () => {
                               control={
                                 <Switch
                                   checked={generationSettings.auto_optimize_for_platform}
-                                  onChange={e =>
-                                    setGenerationSettings({
-                                      ...generationSettings,
+                                  onChange={useCallback((e: React.ChangeEvent<HTMLInputElement>) =>
+                                    setGenerationSettings(prev => ({
+                                      ...prev,
                                       auto_optimize_for_platform: e.target.checked,
-                                    })
-                                  }
+                                    }))
+                                  , [])}
                                 />
                               }
                               label="Auto-optimize for Platform"
@@ -775,12 +782,12 @@ const VideoStudioPage: React.FC = () => {
                               control={
                                 <Switch
                                   checked={generationSettings.save_to_assets}
-                                  onChange={e =>
-                                    setGenerationSettings({
-                                      ...generationSettings,
+                                  onChange={useCallback((e: React.ChangeEvent<HTMLInputElement>) =>
+                                    setGenerationSettings(prev => ({
+                                      ...prev,
                                       save_to_assets: e.target.checked,
-                                    })
-                                  }
+                                    }))
+                                  , [])}
                                 />
                               }
                               label="Save to Assets Library"
@@ -799,7 +806,7 @@ const VideoStudioPage: React.FC = () => {
                       >
                         {generating ? 'Generating...' : 'Generate Video'}
                       </Button>
-                      <Button variant="outlined" onClick={() => setActiveStep(1)}>
+                      <Button variant="outlined" onClick={useCallback(() => setActiveStep(1), [])}>
                         Back to Configuration
                       </Button>
                     </Box>
@@ -832,7 +839,7 @@ const VideoStudioPage: React.FC = () => {
       </DashboardLayout>
     </>
   );
-};
+});
 
 // Helper function to get aspect ratio for platform
 const getAspectRatioForPlatform = (platform: string): string => {
@@ -846,5 +853,8 @@ const getAspectRatioForPlatform = (platform: string): string => {
   };
   return platformRatios[platform] || '16:9';
 };
+
+//Add display name for debugging
+VideoStudioPage.displayName = 'VideoStudioPage';
 
 export default VideoStudioPage;

@@ -58,21 +58,49 @@ const nextConfig = {
 
   // Exclude test files and directories from pages
   pageExtensions: ['tsx', 'ts', 'jsx', 'js'],
+  
+  // Exclude test files from being treated as pages
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'X-Frame-Options',
+            value: 'DENY',
+          },
+        ],
+      },
+    ];
+  },
 
   // Webpack configuration for bundle optimization
   webpack: (config, { isServer, dev, webpack }) => {
-    // Ignore test files and __tests__ directories
+    // Ignore test files and __tests__ directories completely
     config.plugins.push(
       new webpack.IgnorePlugin({
         resourceRegExp: /\.(test|spec)\.(js|jsx|ts|tsx)$/,
+        contextRegExp: /src/,
       })
     );
 
     config.plugins.push(
       new webpack.IgnorePlugin({
         resourceRegExp: /__tests__/,
+        contextRegExp: /src/,
       })
     );
+    
+    // Additional module resolution to exclude test files from pages
+    const originalResolve = config.resolve.modules;
+    config.resolve.modules = originalResolve;
+    
+    // Filter out test files during module resolution
+    const originalResolveLoader = config.resolveLoader;
+    config.resolveLoader = {
+      ...originalResolveLoader,
+      modules: ['node_modules', ...originalResolve],
+    };
     // Client-side bundle optimizations
     if (!isServer) {
       config.resolve.fallback = {

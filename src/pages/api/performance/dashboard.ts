@@ -1,393 +1,247 @@
-/**
- * Performance Dashboard API
- * Provides real-time performance metrics and optimization insights
- */
-
+// API endpoint for performance dashboard data
 import { NextApiRequest, NextApiResponse } from 'next';
-import {
-  getAPIPerformanceStats,
-  clearPerformanceData,
-} from '@/middleware/performance/apiOptimization';
-import { cacheManager } from '@/lib/cache/strategy';
+import { metrics } from './vitals';
 
-interface PerformanceDashboard {
-  success: true;
-  data: {
-    overview: {
-      total_requests: number;
-      average_response_time: number;
-      cache_hit_rate: number;
-      total_endpoints: number;
-      slow_endpoints: string[];
-      error_rate: number;
-    };
-    endpoints: {
-      [endpoint: string]: {
-        request_count: number;
-        average_response_time: number;
-        min_response_time: number;
-        max_response_time: number;
-        cache_hits: number;
-        cache_misses: number;
-        error_count: number;
-        last_accessed: string;
-        performance_grade: 'A' | 'B' | 'C' | 'D' | 'F';
-      };
-    };
-    cache: {
-      memory_usage: any;
-      total_cached_items: number;
-      cache_efficiency: number;
-      top_cached_items: Array<{
-        key: string;
-        namespace: string;
-        access_count: number;
-        last_accessed: string;
-      }>;
-    };
-    system: {
-      memory_usage: NodeJS.MemoryUsage;
-      uptime: number;
-      cpu_usage?: number;
-      active_connections?: number;
-    };
-    recommendations: Array<{
-      type: 'cache' | 'query' | 'endpoint' | 'system';
-      severity: 'low' | 'medium' | 'high';
-      message: string;
-      endpoint?: string;
-      action: string;
-    }>;
+interface DashboardData {
+  overview: {
+    totalSessions: number;
+    totalMetrics: number;
+    timeRange: string;
+    lastUpdated: string;
   };
-  meta: {
-    generated_at: string;
-    data_window: string;
-    auto_refresh_interval: number;
+  coreWebVitals: {
+    lcp: MetricSummary;
+    fid: MetricSummary;
+    cls: MetricSummary;
   };
+  loadingMetrics: {
+    fcp: MetricSummary;
+    ttfb: MetricSummary;
+  };
+  trends: {
+    hourly: Array<{ hour: string; good: number; poor: number; total: number }>;
+    daily: Array<{ date: string; averageScore: number; totalMetrics: number }>;
+  };
+  topIssues: Array<{
+    url: string;
+    metric: string;
+    averageValue: number;
+    occurrences: number;
+    rating: string;
+  }>;
 }
 
-/**
- * Performance analyzer class
- */
-class PerformanceAnalyzer {
-  /**
-   * Analyze API performance metrics
-   */
-  analyzePerformance(): PerformanceDashboard['data'] {
-    const stats = getAPIPerformanceStats();
-    const cacheStats = cacheManager.getStats();
-
-    // Analyze endpoints
-    const endpointAnalysis = this.analyzeEndpoints(stats.monitor);
-    const overview = this.buildOverview(endpointAnalysis);
-    const cache = this.analyzeCachePerformance(cacheStats, stats.queryOptimizer);
-    const system = this.getSystemMetrics();
-    const recommendations = this.generateRecommendations(endpointAnalysis, cache, system);
-
-    return {
-      overview,
-      endpoints: endpointAnalysis,
-      cache,
-      system,
-      recommendations,
-    };
-  }
-
-  /**
-   * Analyze individual endpoint performance
-   */
-  private analyzeEndpoints(monitorData: any): PerformanceDashboard['data']['endpoints'] {
-    const endpoints: PerformanceDashboard['data']['endpoints'] = {};
-
-    for (const [endpoint, metrics] of Object.entries(monitorData)) {
-      const metricArray = metrics as any[];
-      if (!metricArray || metricArray.length === 0) continue;
-
-      const responseTimes = metricArray.filter(m => m.duration).map(m => m.duration);
-
-      const cacheHits = metricArray.filter(m => m.cacheHit).length;
-      const cacheMisses = metricArray.length - cacheHits;
-      const errors = metricArray.filter(m => m.error).length;
-
-      const avgResponseTime =
-        responseTimes.length > 0
-          ? responseTimes.reduce((a, b) => a + b, 0) / responseTimes.length
-          : 0;
-
-      const minResponseTime = responseTimes.length > 0 ? Math.min(...responseTimes) : 0;
-      const maxResponseTime = responseTimes.length > 0 ? Math.max(...responseTimes) : 0;
-
-      const lastAccessed =
-        metricArray.length > 0
-          ? new Date(Math.max(...metricArray.map(m => m.startTime))).toISOString()
-          : new Date().toISOString();
-
-      const performanceGrade = this.calculatePerformanceGrade(
-        avgResponseTime,
-        cacheHits / (cacheHits + cacheMisses) || 0,
-        errors / metricArray.length || 0
-      );
-
-      endpoints[endpoint] = {
-        request_count: metricArray.length,
-        average_response_time: Math.round(avgResponseTime),
-        min_response_time: minResponseTime,
-        max_response_time: maxResponseTime,
-        cache_hits: cacheHits,
-        cache_misses: cacheMisses,
-        error_count: errors,
-        last_accessed: lastAccessed,
-        performance_grade: performanceGrade,
-      };
-    }
-
-    return endpoints;
-  }
-
-  /**
-   * Build overview statistics
-   */
-  private buildOverview(
-    endpointAnalysis: PerformanceDashboard['data']['endpoints']
-  ): PerformanceDashboard['data']['overview'] {
-    const endpoints = Object.entries(endpointAnalysis);
-    const totalRequests = endpoints.reduce((sum, [_, data]) => sum + data.request_count, 0);
-    const totalResponseTime = endpoints.reduce(
-      (sum, [_, data]) => sum + data.average_response_time * data.request_count,
-      0
-    );
-    const totalCacheHits = endpoints.reduce((sum, [_, data]) => sum + data.cache_hits, 0);
-    const totalCacheMisses = endpoints.reduce((sum, [_, data]) => sum + data.cache_misses, 0);
-    const totalErrors = endpoints.reduce((sum, [_, data]) => sum + data.error_count, 0);
-
-    const avgResponseTime = totalRequests > 0 ? totalResponseTime / totalRequests : 0;
-    const cacheHitRate =
-      totalCacheHits + totalCacheMisses > 0
-        ? (totalCacheHits / (totalCacheHits + totalCacheMisses)) * 100
-        : 0;
-    const errorRate = totalRequests > 0 ? (totalErrors / totalRequests) * 100 : 0;
-
-    // Identify slow endpoints (> 1 second average)
-    const slowEndpoints = endpoints
-      .filter(([_, data]) => data.average_response_time > 1000)
-      .map(([endpoint]) => endpoint)
-      .slice(0, 5);
-
-    return {
-      total_requests: totalRequests,
-      average_response_time: Math.round(avgResponseTime),
-      cache_hit_rate: Math.round(cacheHitRate * 100) / 100,
-      total_endpoints: endpoints.length,
-      slow_endpoints: slowEndpoints,
-      error_rate: Math.round(errorRate * 100) / 100,
-    };
-  }
-
-  /**
-   * Analyze cache performance
-   */
-  private analyzeCachePerformance(
-    cacheStats: any,
-    _queryOptimizerStats: any
-  ): PerformanceDashboard['data']['cache'] {
-    const totalCachedItems = Object.values(cacheStats.memoryStats || {}).reduce(
-      (sum: number, stats: any) => sum + (stats?.size || 0),
-      0
-    );
-
-    // Calculate cache efficiency (simplified)
-    const cacheEfficiency = totalCachedItems > 0 ? 85 : 0; // Mock calculation
-
-    // Mock top cached items (would come from actual cache statistics)
-    const topCachedItems = [
-      {
-        key: 'api-responses:clients',
-        namespace: 'api-responses',
-        access_count: 45,
-        last_accessed: new Date().toISOString(),
-      },
-      {
-        key: 'api-responses:analytics',
-        namespace: 'api-responses',
-        access_count: 32,
-        last_accessed: new Date().toISOString(),
-      },
-    ];
-
-    return {
-      memory_usage: cacheStats.memoryStats,
-      total_cached_items: totalCachedItems,
-      cache_efficiency: cacheEfficiency,
-      top_cached_items: topCachedItems,
-    };
-  }
-
-  /**
-   * Get system metrics
-   */
-  private getSystemMetrics(): PerformanceDashboard['data']['system'] {
-    return {
-      memory_usage: process.memoryUsage(),
-      uptime: process.uptime(),
-      // cpu_usage and active_connections would require additional monitoring
-    };
-  }
-
-  /**
-   * Generate performance recommendations
-   */
-  private generateRecommendations(
-    endpointAnalysis: PerformanceDashboard['data']['endpoints'],
-    cache: PerformanceDashboard['data']['cache'],
-    system: PerformanceDashboard['data']['system']
-  ): PerformanceDashboard['data']['recommendations'] {
-    const recommendations: PerformanceDashboard['data']['recommendations'] = [];
-
-    // Check for slow endpoints
-    Object.entries(endpointAnalysis).forEach(([endpoint, data]) => {
-      if (data.average_response_time > 1000) {
-        recommendations.push({
-          type: 'endpoint',
-          severity: 'high',
-          message: `Endpoint ${endpoint} has slow response time (${data.average_response_time}ms)`,
-          endpoint,
-          action: 'Optimize database queries, add caching, or implement pagination',
-        });
-      }
-
-      if (
-        data.cache_hits / (data.cache_hits + data.cache_misses) < 0.3 &&
-        data.request_count > 10
-      ) {
-        recommendations.push({
-          type: 'cache',
-          severity: 'medium',
-          message: `Low cache hit rate for ${endpoint} (${((data.cache_hits / (data.cache_hits + data.cache_misses)) * 100).toFixed(1)}%)`,
-          endpoint,
-          action: 'Increase cache TTL or improve cache key strategy',
-        });
-      }
-
-      if (data.error_count / data.request_count > 0.05) {
-        recommendations.push({
-          type: 'endpoint',
-          severity: 'high',
-          message: `High error rate for ${endpoint} (${((data.error_count / data.request_count) * 100).toFixed(1)}%)`,
-          endpoint,
-          action: 'Investigate error causes and improve error handling',
-        });
-      }
-    });
-
-    // Check cache efficiency
-    if (cache.cache_efficiency < 70) {
-      recommendations.push({
-        type: 'cache',
-        severity: 'medium',
-        message: `Cache efficiency is below optimal (${cache.cache_efficiency}%)`,
-        action: 'Review cache strategy and increase cache hit rate',
-      });
-    }
-
-    // Check memory usage
-    const memoryUsagePercent = (system.memory_usage.heapUsed / system.memory_usage.heapTotal) * 100;
-    if (memoryUsagePercent > 80) {
-      recommendations.push({
-        type: 'system',
-        severity: 'high',
-        message: `High memory usage (${memoryUsagePercent.toFixed(1)}%)`,
-        action: 'Investigate memory leaks or increase available memory',
-      });
-    }
-
-    return recommendations;
-  }
-
-  /**
-   * Calculate performance grade for an endpoint
-   */
-  private calculatePerformanceGrade(
-    avgResponseTime: number,
-    cacheHitRate: number,
-    errorRate: number
-  ): 'A' | 'B' | 'C' | 'D' | 'F' {
-    let score = 100;
-
-    // Response time scoring
-    if (avgResponseTime > 2000) score -= 40;
-    else if (avgResponseTime > 1000) score -= 20;
-    else if (avgResponseTime > 500) score -= 10;
-
-    // Cache hit rate scoring
-    if (cacheHitRate < 0.3) score -= 20;
-    else if (cacheHitRate < 0.5) score -= 10;
-
-    // Error rate scoring
-    if (errorRate > 0.05) score -= 30;
-    else if (errorRate > 0.01) score -= 10;
-
-    if (score >= 90) return 'A';
-    if (score >= 80) return 'B';
-    if (score >= 70) return 'C';
-    if (score >= 60) return 'D';
-    return 'F';
-  }
+interface MetricSummary {
+  average: number;
+  p75: number;
+  p90: number;
+  good: number;
+  needsImprovement: number;
+  poor: number;
+  totalSamples: number;
+  trend: 'improving' | 'stable' | 'degrading';
 }
 
-/**
- * Main handler
- */
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<PerformanceDashboard | { success: false; error: string }>
-): Promise<void> {
+export default async function handler(req: NextApiRequest, res: NextApiResponse<DashboardData | { error: string }>) {
+  if (req.method !== 'GET') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
+
   try {
-    // Handle different actions
-    if (req.method === 'DELETE') {
-      // Clear performance data
-      clearPerformanceData();
-      res.status(200).json({
-        success: true,
-        data: {} as any,
-        meta: {
-          generated_at: new Date().toISOString(),
-          data_window: 'cleared',
-          auto_refresh_interval: 30,
-        },
-      });
-      return;
-    }
+    const { timeRange = '24h' } = req.query;
+    
+    // Filter metrics by time range
+    const now = Date.now();
+    const timeRangeMs = getTimeRangeMs(timeRange as string);
+    const filteredMetrics = metrics.filter(m => now - m.timestamp < timeRangeMs);
 
-    if (req.method !== 'GET') {
-      res.setHeader('Allow', ['GET', 'DELETE']);
-      res.status(405).json({ success: false, error: 'Method not allowed' });
-      return;
-    }
-
-    // Generate performance dashboard
-    const analyzer = new PerformanceAnalyzer();
-    const data = analyzer.analyzePerformance();
-
-    const response: PerformanceDashboard = {
-      success: true,
-      data,
-      meta: {
-        generated_at: new Date().toISOString(),
-        data_window: 'last_hour', // Could be configurable
-        auto_refresh_interval: 30, // seconds
-      },
+    // Generate dashboard data
+    const dashboardData: DashboardData = {
+      overview: generateOverview(filteredMetrics, timeRange as string),
+      coreWebVitals: generateCoreWebVitals(filteredMetrics),
+      loadingMetrics: generateLoadingMetrics(filteredMetrics),
+      trends: generateTrends(filteredMetrics),
+      topIssues: generateTopIssues(filteredMetrics),
     };
 
-    // Set cache headers (short cache for real-time data)
-    res.setHeader('Cache-Control', 'public, max-age=30');
-    res.setHeader('X-Refresh-Interval', '30');
+    res.status(200).json(dashboardData);
 
-    res.status(200).json(response);
   } catch (error) {
-    console.error('Performance dashboard error:', error);
-    res.status(500).json({
-      success: false,
-      error: error instanceof Error ? error.message : 'Internal server error',
+    console.error('Error generating dashboard data:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+function getTimeRangeMs(timeRange: string): number {
+  switch (timeRange) {
+    case '1h': return 60 * 60 * 1000;
+    case '24h': return 24 * 60 * 60 * 1000;
+    case '7d': return 7 * 24 * 60 * 60 * 1000;
+    case '30d': return 30 * 24 * 60 * 60 * 1000;
+    default: return 24 * 60 * 60 * 1000;
+  }
+}
+
+function generateOverview(metrics: any[], timeRange: string) {
+  const uniqueSessions = new Set(metrics.map(m => m.sessionId)).size;
+  
+  return {
+    totalSessions: uniqueSessions,
+    totalMetrics: metrics.length,
+    timeRange,
+    lastUpdated: new Date().toISOString(),
+  };
+}
+
+function generateCoreWebVitals(metrics: any[]) {
+  const lcpMetrics = metrics.filter(m => m.metric.name === 'LCP').map(m => m.metric);
+  const fidMetrics = metrics.filter(m => m.metric.name === 'FID').map(m => m.metric);
+  const clsMetrics = metrics.filter(m => m.metric.name === 'CLS').map(m => m.metric);
+
+  return {
+    lcp: generateMetricSummary(lcpMetrics),
+    fid: generateMetricSummary(fidMetrics),
+    cls: generateMetricSummary(clsMetrics),
+  };
+}
+
+function generateLoadingMetrics(metrics: any[]) {
+  const fcpMetrics = metrics.filter(m => m.metric.name === 'FCP').map(m => m.metric);
+  const ttfbMetrics = metrics.filter(m => m.metric.name === 'TTFB').map(m => m.metric);
+
+  return {
+    fcp: generateMetricSummary(fcpMetrics),
+    ttfb: generateMetricSummary(ttfbMetrics),
+  };
+}
+
+function generateMetricSummary(metricValues: any[]): MetricSummary {
+  if (metricValues.length === 0) {
+    return {
+      average: 0,
+      p75: 0,
+      p90: 0,
+      good: 0,
+      needsImprovement: 0,
+      poor: 0,
+      totalSamples: 0,
+      trend: 'stable',
+    };
+  }
+
+  const values = metricValues.map(m => m.value).sort((a, b) => a - b);
+  const ratings = metricValues.map(m => m.rating);
+
+  return {
+    average: values.reduce((sum, val) => sum + val, 0) / values.length,
+    p75: values[Math.floor(values.length * 0.75)] || 0,
+    p90: values[Math.floor(values.length * 0.90)] || 0,
+    good: ratings.filter(r => r === 'good').length,
+    needsImprovement: ratings.filter(r => r === 'needs-improvement').length,
+    poor: ratings.filter(r => r === 'poor').length,
+    totalSamples: values.length,
+    trend: calculateTrend(metricValues),
+  };
+}
+
+function calculateTrend(metricValues: any[]): 'improving' | 'stable' | 'degrading' {
+  if (metricValues.length < 10) return 'stable';
+
+  const sorted = metricValues.sort((a, b) => a.timestamp - b.timestamp);
+  const midpoint = Math.floor(sorted.length / 2);
+  
+  const firstHalf = sorted.slice(0, midpoint);
+  const secondHalf = sorted.slice(midpoint);
+  
+  const firstAvg = firstHalf.reduce((sum, m) => sum + m.value, 0) / firstHalf.length;
+  const secondAvg = secondHalf.reduce((sum, m) => sum + m.value, 0) / secondHalf.length;
+  
+  const change = ((secondAvg - firstAvg) / firstAvg) * 100;
+  
+  if (change < -5) return 'improving';
+  if (change > 5) return 'degrading';
+  return 'stable';
+}
+
+function generateTrends(metrics: any[]) {
+  const now = Date.now();
+  const hourly = [];
+  const daily = [];
+
+  // Generate hourly trends for last 24 hours
+  for (let i = 23; i >= 0; i--) {
+    const hourStart = now - (i * 60 * 60 * 1000);
+    const hourEnd = hourStart + (60 * 60 * 1000);
+    
+    const hourMetrics = metrics.filter(m => 
+      m.timestamp >= hourStart && m.timestamp < hourEnd
+    );
+    
+    const good = hourMetrics.filter(m => m.metric.rating === 'good').length;
+    const poor = hourMetrics.filter(m => m.metric.rating === 'poor').length;
+    
+    hourly.push({
+      hour: new Date(hourStart).toISOString().slice(11, 16),
+      good,
+      poor,
+      total: hourMetrics.length,
     });
   }
+
+  // Generate daily trends for last 7 days
+  for (let i = 6; i >= 0; i--) {
+    const dayStart = now - (i * 24 * 60 * 60 * 1000);
+    const dayEnd = dayStart + (24 * 60 * 60 * 1000);
+    
+    const dayMetrics = metrics.filter(m => 
+      m.timestamp >= dayStart && m.timestamp < dayEnd
+    );
+    
+    const averageScore = dayMetrics.length > 0 
+      ? dayMetrics.reduce((sum, m) => sum + (m.metric.rating === 'good' ? 100 : m.metric.rating === 'needs-improvement' ? 75 : 50), 0) / dayMetrics.length
+      : 0;
+    
+    daily.push({
+      date: new Date(dayStart).toISOString().slice(0, 10),
+      averageScore,
+      totalMetrics: dayMetrics.length,
+    });
+  }
+
+  return { hourly, daily };
+}
+
+function generateTopIssues(metrics: any[]) {
+  const issueMap = new Map<string, { values: number[]; ratings: string[] }>();
+
+  metrics.forEach(m => {
+    if (m.metric.rating !== 'good') {
+      const key = `${m.url}:${m.metric.name}`;
+      if (!issueMap.has(key)) {
+        issueMap.set(key, { values: [], ratings: [] });
+      }
+      issueMap.get(key)!.values.push(m.metric.value);
+      issueMap.get(key)!.ratings.push(m.metric.rating);
+    }
+  });
+
+  const issues = Array.from(issueMap.entries()).map(([key, data]) => {
+    const [url, metric] = key.split(':');
+    const safeUrl = url || 'unknown';
+    const safeMetric = metric || 'unknown';
+    const averageValue = data.values.reduce((sum, val) => sum + val, 0) / data.values.length;
+    const poorCount = data.ratings.filter(r => r === 'poor').length;
+    
+    return {
+      url: safeUrl.length > 50 ? safeUrl.slice(0, 50) + '...' : safeUrl,
+      metric: safeMetric,
+      averageValue,
+      occurrences: data.values.length,
+      rating: poorCount > data.values.length / 2 ? 'poor' : 'needs-improvement',
+    };
+  });
+
+  return issues
+    .sort((a, b) => b.occurrences - a.occurrences)
+    .slice(0, 10);
 }
