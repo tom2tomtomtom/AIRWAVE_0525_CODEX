@@ -47,7 +47,7 @@ export class AuthStateManager {
   private notifyListeners(): void {
     this.listeners.forEach((listener: unknown) => {
       try {
-        listener(this.getState());
+        (listener as (state: AuthState) => void)(this.getState());
       } catch (error: unknown) {
         console.error('Auth state listener error:', error);
       }
@@ -69,7 +69,6 @@ export class AuthStateManager {
     this.updateState({
       checkInProgress: true,
       loading: true,
-      error: undefined,
     });
 
     try {
@@ -90,7 +89,6 @@ export class AuthStateManager {
           loading: false,
           lastCheck: now,
           checkInProgress: false,
-          error: undefined,
         });
       } else {
         this.updateState({
@@ -130,10 +128,8 @@ export class AuthStateManager {
 
     this.updateState({
       isAuthenticated: false,
-      user: undefined,
       loading: false,
       lastCheck: Date.now(),
-      error: undefined,
     });
   }
 }

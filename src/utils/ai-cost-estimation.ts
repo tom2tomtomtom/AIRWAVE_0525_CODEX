@@ -87,7 +87,7 @@ export function estimateTokensForCopy(
  */
 export function estimateTokensForImageGeneration(
   briefData: BriefData,
-  motivations: Motivation[],
+  _motivations: Motivation[],
   imageCount: number = 1
 ): number {
   const basePromptTokens = 200;
@@ -206,6 +206,9 @@ export function getRecommendedModel(
 
   // If nothing fits, return cheapest with warning
   const cheapest = serviceModels[serviceModels.length - 1];
+  if (!cheapest) {
+    throw new Error(`No models available for service: ${service}`);
+  }
   return {
     model: cheapest.name,
     cost: estimateCost(service, cheapest.name, estimatedTokens),

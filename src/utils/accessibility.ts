@@ -357,10 +357,10 @@ export const createTableProps = (
 
   return {
     role: 'table',
-    'aria-label': label,
-    'aria-describedby': descId,
-    'aria-rowcount': rowCount,
-    'aria-colcount': colCount,
+    ...(label && { 'aria-label': label }),
+    ...(descId && { 'aria-describedby': descId }),
+    ...(rowCount && { 'aria-rowcount': rowCount }),
+    ...(colCount && { 'aria-colcount': colCount }),
   };
 };
 

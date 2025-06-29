@@ -44,7 +44,7 @@ export function verifyCSRFToken(token: string, sessionId?: string): boolean {
     const [tokenPart, timestamp, signature] = parts;
 
     // Check if token is not too old (1 hour max)
-    const tokenAge = Date.now() - parseInt(timestamp);
+    const tokenAge = Date.now() - parseInt(timestamp || '0');
     if (tokenAge > 3600000) {
       // 1 hour in milliseconds
       return false;
@@ -57,7 +57,7 @@ export function verifyCSRFToken(token: string, sessionId?: string): boolean {
     const expectedSignature = hmac.digest('hex');
 
     return crypto.timingSafeEqual(
-      Buffer.from(signature, 'hex'),
+      Buffer.from(signature || '', 'hex'),
       Buffer.from(expectedSignature, 'hex')
     );
   } catch (error: any) {

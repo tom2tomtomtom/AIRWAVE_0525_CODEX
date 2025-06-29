@@ -1,4 +1,3 @@
-import { getErrorMessage } from '@/utils/errorUtils';
 // API utility functions for making requests to the backend
 import type { NextApiResponse } from 'next';
 
@@ -40,7 +39,6 @@ const getAuthToken = (): string | null => {
     const userData = JSON.parse(user);
     return userData.token || null;
   } catch (error: unknown) {
-    const message = getErrorMessage(error);
     if (process.env.NODE_ENV === 'development') {
       console.error('Error getting auth token:', error);
     }
@@ -77,7 +75,6 @@ export const apiRequest = async <T>(url: string, options: RequestInit = {}): Pro
 
     return data as T;
   } catch (error: unknown) {
-    const message = getErrorMessage(error);
     if (process.env.NODE_ENV === 'development') {
       console.error(`API request error for ${url}:`, error);
     }

@@ -373,10 +373,11 @@ export const mockExternalServices = () => {
     OpenAI: jest.fn().mockImplementation(() => ({
       chat: {
         completions: {
+          // @ts-ignore - Jest mock typing issue
           create: jest.fn().mockResolvedValue({
             choices: [{ message: { content: 'Mock AI response' } }],
             usage: { total_tokens: 100, prompt_tokens: 50, completion_tokens: 50 },
-          } as any),
+          }),
         },
       },
     })),
@@ -386,13 +387,20 @@ export const mockExternalServices = () => {
   jest.mock('ioredis', () => ({
     __esModule: true,
     default: jest.fn().mockImplementation(() => ({
-      get: jest.fn().mockResolvedValue(null as any),
-      set: jest.fn().mockResolvedValue('OK' as any),
-      del: jest.fn().mockResolvedValue(1 as any),
-      incr: jest.fn().mockResolvedValue(1 as any),
-      expire: jest.fn().mockResolvedValue(1 as any),
-      connect: jest.fn().mockResolvedValue(undefined as any),
-      disconnect: jest.fn().mockResolvedValue(undefined as any),
+      // @ts-ignore - Jest mock typing issues
+      get: jest.fn().mockResolvedValue(null),
+      // @ts-ignore - Jest mock typing issues
+      set: jest.fn().mockResolvedValue('OK'),
+      // @ts-ignore - Jest mock typing issues
+      del: jest.fn().mockResolvedValue(1),
+      // @ts-ignore - Jest mock typing issues
+      incr: jest.fn().mockResolvedValue(1),
+      // @ts-ignore - Jest mock typing issues
+      expire: jest.fn().mockResolvedValue(1),
+      // @ts-ignore - Jest mock typing issues
+      connect: jest.fn().mockResolvedValue(undefined),
+      // @ts-ignore - Jest mock typing issues
+      disconnect: jest.fn().mockResolvedValue(undefined),
     })),
   }));
 
