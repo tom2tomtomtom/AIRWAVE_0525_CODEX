@@ -4,6 +4,7 @@ import TemplateSelector from '@/components/video-studio/TemplateSelector';
 import VideoOverview from '@/components/video-studio/VideoOverview';
 import VideoStudioStepper from '@/components/video-studio/VideoStudioStepper';
 import VideoConfigForm from '@/components/video-studio/VideoConfigForm';
+import GenerationMonitor from '@/components/video-studio/GenerationMonitor';
 import {
   Box,
   Typography,
@@ -16,20 +17,12 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  Chip,
   Alert,
   CircularProgress,
   Paper,
   Accordion,
   AccordionSummary,
   AccordionDetails,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  LinearProgress,
-  IconButton,
-  Tooltip,
   Tabs,
   Tab,
   Switch,
@@ -40,13 +33,7 @@ import {
   VideoLibrary,
   Settings,
   ExpandMore,
-  Refresh,
-  Download,
-  Share,
   Edit,
-  CheckCircle,
-  Schedule,
-  Error as ErrorIcon,
   AutoAwesome,
   Palette,
   MusicNote,
@@ -309,32 +296,6 @@ const VideoStudioPage: React.FC = () => {
   }, [videoJobs]);
 
   const steps = ['Select Template', 'Configure Video', 'Customize Content', 'Generate & Monitor'];
-
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case 'completed':
-        return <CheckCircle color="success" />;
-      case 'processing':
-        return <CircularProgress size={20} />;
-      case 'failed':
-        return <ErrorIcon color="error" />;
-      default:
-        return <Schedule color="action" />;
-    }
-  };
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'completed':
-        return 'success';
-      case 'processing':
-        return 'primary';
-      case 'failed':
-        return 'error';
-      default:
-        return 'default';
-    }
-  };
 
   return (
     <>
@@ -848,90 +809,12 @@ const VideoStudioPage: React.FC = () => {
 
               {/* Step 3: Generate & Monitor */}
               {activeStep === 3 && (
-                <Card>
-                  <CardContent>
-                    <Box display="flex" alignItems="center" justifyContent="space-between" mb={3}>
-                      <Typography variant="h6">Video Generation Progress</Typography>
-                      <Button
-                        variant="outlined"
-                        startIcon={<Refresh />}
-                        onClick={refreshJobStatus}
-                        disabled={generating}
-                      >
-                        Refresh Status
-                      </Button>
-                    </Box>
-
-                    {videoJobs.length === 0 ? (
-                      <Alert severity="info">
-                        No video generation jobs yet. Go back to configure and generate your first
-                        video.
-                      </Alert>
-                    ) : (
-                      <List>
-                        {videoJobs.map((job: any) => (
-                          <ListItem key={job.id} divider>
-                            <ListItemIcon>{getStatusIcon(job.status)}</ListItemIcon>
-                            <ListItemText
-                              primary={`Video ${job.variation_index} (${job.generation_id})`}
-                              secondary={
-                                <Box>
-                                  <Typography variant="body2">
-                                    Status: {job.status} • Progress: {job.progress}%
-                                  </Typography>
-                                  {job.status === 'processing' && (
-                                    <LinearProgress
-                                      variant="determinate"
-                                      value={job.progress}
-                                      sx={{ mt: 1 }}
-                                    />
-                                  )}
-                                  {job.estimated_completion && (
-                                    <Typography variant="caption" color="text.secondary">
-                                      ETA: {new Date(job.estimated_completion).toLocaleTimeString()}
-                                    </Typography>
-                                  )}
-                                  {job.error_message && (
-                                    <Typography variant="caption" color="error">
-                                      Error: {job.error_message}
-                                    </Typography>
-                                  )}
-                                </Box>
-                              }
-                            />
-                            <Box display="flex" gap={1}>
-                              <Chip
-                                size="small"
-                                label={job.status}
-                                color={getStatusColor(job.status) as any}
-                              />
-                              {job.output_url && (
-                                <>
-                                  <Tooltip title="Download">
-                                    <IconButton size="small" href={job.output_url} target="_blank">
-                                      <Download />
-                                    </IconButton>
-                                  </Tooltip>
-                                  <Tooltip title="Share">
-                                    <IconButton size="small">
-                                      <Share />
-                                    </IconButton>
-                                  </Tooltip>
-                                </>
-                              )}
-                            </Box>
-                          </ListItem>
-                        ))}
-                      </List>
-                    )}
-
-                    <Box mt={3}>
-                      <Button variant="outlined" onClick={() => setActiveStep(0)}>
-                        Create Another Video
-                      </Button>
-                    </Box>
-                  </CardContent>
-                </Card>
+                <GenerationMonitor
+                  videoJobs={videoJobs}
+                  generating={generating}
+                  onRefresh={refreshJobStatus}
+                  onCreateAnother={() => setActiveStep(0)}
+                />
               )}
             </Grid>
 
