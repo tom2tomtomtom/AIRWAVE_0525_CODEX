@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import TemplateSelector from '@/components/video-studio/TemplateSelector';
 import VideoOverview from '@/components/video-studio/VideoOverview';
+import VideoStudioStepper from '@/components/video-studio/VideoStudioStepper';
 import {
   Box,
   Typography,
@@ -17,9 +18,6 @@ import {
   Chip,
   Alert,
   CircularProgress,
-  Stepper,
-  Step,
-  StepLabel,
   Paper,
   Accordion,
   AccordionSummary,
@@ -365,15 +363,7 @@ const VideoStudioPage: React.FC = () => {
           <Grid container spacing={3}>
             {/* Progress Stepper */}
             <Grid size={{ xs: 12 }}>
-              <Paper sx={{ p: 3, mb: 3 }}>
-                <Stepper activeStep={activeStep} orientation="horizontal">
-                  {steps.map((label, _index) => (
-                    <Step key={label}>
-                      <StepLabel>{label}</StepLabel>
-                    </Step>
-                  ))}
-                </Stepper>
-              </Paper>
+              <VideoStudioStepper activeStep={activeStep} steps={steps} />
             </Grid>
 
             {/* Main Content */}
