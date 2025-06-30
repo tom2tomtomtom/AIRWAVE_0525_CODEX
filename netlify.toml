@@ -19,7 +19,6 @@
   # DO NOT override environment variables here - let Netlify UI values take precedence
 
 [functions]
-  directory = "netlify/functions"
   external_node_modules = ["openai", "@supabase/supabase-js", "elevenlabs"]
   node_bundler = "esbuild"
 
