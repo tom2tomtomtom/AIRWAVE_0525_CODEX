@@ -90,6 +90,13 @@ const SAFE_PATTERNS = [
   'short-secret', // Test JWT secret for validation
   "JWT_SECRET: 'too-short'", // Test validation context
   "JWT_SECRET: 'short-secret'", // Test validation context
+  'JBSWY3DPEHPK3PXP', // Test MFA secret in MFA tests
+  'NEWSECRET123', // Test MFA secret in MFA tests
+  'TESTSECRET', // Test MFA secret in MFA tests
+  'SUPERSECRET123', // Test MFA secret in MFA tests
+  'should-not-be-exposed', // Test internal secret in session tests
+  'classified', // Test server config secret in session tests
+  'testpassword123', // Test password in verification script
 ];
 
 function shouldIgnoreFile(filePath) {
