@@ -1,15 +1,11 @@
 [build]
   command = "npm ci --ignore-scripts && npm run build"
-  publish = ".next"
+  publish = ".next/standalone"
   ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF"
 
-[[plugins]]
-  package = "@netlify/plugin-nextjs"
-  
-  [plugins.inputs]
-    # Explicitly disable static export
-    generateStaticHTML = false
-    buildOnly = false
+# Temporarily disable plugin to test manual configuration
+# [[plugins]]
+#   package = "@netlify/plugin-nextjs"
 
 [build.environment]
   NODE_VERSION = "20.11.0"
@@ -27,6 +23,7 @@
   # DO NOT override environment variables here - let Netlify UI values take precedence
 
 [functions]
+  directory = "netlify/functions"
   external_node_modules = ["openai", "@supabase/supabase-js", "elevenlabs"]
   node_bundler = "esbuild"
 

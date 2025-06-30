@@ -12,7 +12,8 @@ try {
 const nextConfig = {
   reactStrictMode: true,
 
-  // Ensure server-side rendering for API routes (not static export)
+  // Force standalone output for serverless functions
+  output: 'standalone',
   trailingSlash: false,
 
   // Performance optimizations
