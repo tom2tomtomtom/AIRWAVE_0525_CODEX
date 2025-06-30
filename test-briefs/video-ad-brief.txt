@@ -1,0 +1,222 @@
+# Video Advertisement Campaign Brief
+
+## Campaign Overview
+**Campaign Name:** "Morning Rituals" - Premium Coffee Experience
+**Brand:** Artisan Roast Coffee Co.
+**Campaign Type:** Digital Video Advertising
+**Duration:** 4 weeks (October 1-28, 2024)
+**Total Budget:** $150,000
+
+## Video Specifications Required
+**Primary Video (Hero Ad):**
+- Duration: 30 seconds
+- Format: 16:9 (1920x1080)
+- Platform: YouTube, Facebook, Instagram Feed
+- Style: Cinematic, warm, aspirational
+
+**Social Media Cut-downs:**
+- Instagram Stories: 15 seconds (9:16 - 1080x1920)
+- TikTok Version: 15 seconds (9:16 - 1080x1920)
+- Instagram Reels: 30 seconds (9:16 - 1080x1920)
+- Facebook Stories: 15 seconds (9:16 - 1080x1920)
+
+**Display Ad Versions:**
+- YouTube Bumper: 6 seconds (16:9)
+- Instagram Feed Square: 30 seconds (1:1 - 1080x1080)
+
+## Campaign Objectives
+**Primary Goals:**
+- Drive 30% increase in premium coffee line sales
+- Reach 2.5M target audience members
+- Achieve 75% video completion rate
+- Generate 50,000 website visits from video ads
+
+**Brand Objectives:**
+- Position as premium, artisanal coffee experience
+- Emphasize quality and craftsmanship
+- Build emotional connection with morning routine
+- Drive subscription service sign-ups (target: 5,000 new subscribers)
+
+## Target Audience
+**Primary Demographic:**
+- Age: 28-45 years old
+- Income: $60K+ household income
+- Education: College-educated professionals
+- Lifestyle: Urban/suburban, health-conscious, quality-focused
+
+**Psychographics:**
+- Values quality over quantity
+- Willing to pay premium for exceptional experiences
+- Appreciates craftsmanship and artisanal products
+- Views morning coffee as essential ritual
+- Active on social media, influences others' purchasing decisions
+
+**Behavioral Patterns:**
+- Shops for premium food and beverages
+- Subscribes to quality services (Netflix, Spotify, meal kits)
+- Engages with lifestyle and food content online
+- Makes purchasing decisions based on brand values
+- Shares experiences on social media
+
+## Brand Guidelines
+**Visual Identity:**
+- Primary Colors: Deep Brown (#3C2415), Cream (#F5F1EB)
+- Secondary Colors: Gold Accent (#D4AF37), Forest Green (#2D5016)
+- Typography: Modern serif for headlines, clean sans-serif for body
+- Logo: Must appear for minimum 3 seconds
+- Font: Playfair Display (headlines), Source Sans Pro (body)
+
+**Brand Voice & Tone:**
+- Sophisticated yet approachable
+- Passionate about quality
+- Knowledgeable without being pretentious
+- Warm and inviting
+- Authentic and genuine
+
+## Creative Concept Direction
+**Core Message:** "Every morning deserves extraordinary"
+
+**Visual Story Arc:**
+1. **Opening (0-5 seconds):** Peaceful morning scene, natural lighting
+2. **Product Introduction (5-15 seconds):** Coffee preparation ritual
+3. **Sensory Experience (15-25 seconds):** Steam, aroma, first sip
+4. **Brand Connection (25-30 seconds):** Logo, tagline, call-to-action
+
+**Visual Elements to Include:**
+- Artisanal coffee preparation process
+- Steam rising from freshly brewed coffee
+- Close-up shots of coffee beans
+- Hands holding warm mug
+- Natural morning lighting (golden hour preferred)
+- Minimal, premium kitchen/café setting
+
+## Audio Requirements
+**Music Style:**
+- Acoustic, organic instruments preferred
+- Warm, inviting tone
+- Builds subtly throughout video
+- No jarring transitions
+- Licensed for commercial use across all platforms
+
+**Sound Design:**
+- Coffee grinding sounds
+- Brewing process audio
+- Gentle morning ambiance
+- Subtle product sizzle/steam
+- No harsh or jarring sounds
+
+**Voiceover Requirements:**
+- Gender: Neutral (could be male or female)
+- Age: 30-40 years old sound
+- Tone: Warm, confident, inviting
+- Accent: Neutral American or slight regional warmth
+- Pace: Measured, not rushed
+- Volume: Conversational, intimate
+
+## Script Guidelines
+**Voiceover Script Structure:**
+- Opening hook (2-3 words)
+- Problem/desire statement (5-8 words)
+- Solution presentation (8-12 words)
+- Brand benefit (5-8 words)
+- Call to action (3-5 words)
+
+**On-Screen Text Requirements:**
+- Minimal text overlay
+- Brand name must appear clearly
+- Website URL or "Learn More"
+- Subscription offer if applicable
+- Accessibility: All text must have high contrast
+
+## Platform-Specific Adaptations
+**YouTube Ads:**
+- Include 5-second hook for non-skippable intro
+- Clear value proposition within first 10 seconds
+- Strong call-to-action in final 5 seconds
+- Branded end card with website link
+
+**Instagram/Facebook:**
+- Optimized for mobile viewing
+- Captions/subtitles for sound-off viewing
+- Square version for feed placement
+- Stories version with interactive elements
+
+**TikTok:**
+- Native platform feel, less "ad-like"
+- Quick cuts and visual interest
+- Trending audio integration if appropriate
+- Clear brand integration without being pushy
+
+## Technical Specifications
+**Video Quality:**
+- Minimum 4K recording for downscaling
+- 24fps or 30fps (consistent throughout)
+- Color grading: Warm, premium feel
+- No handheld shots unless intentionally stylistic
+- Professional lighting setup required
+
+**Audio Specifications:**
+- 48kHz sample rate minimum
+- Stereo mix required
+- -16 LUFS for broadcast standards
+- Clean audio with noise reduction applied
+- Separate music and voice tracks for editing flexibility
+
+## Deliverables Timeline
+**Week 1:** Concept development and script approval
+**Week 2:** Pre-production planning and casting
+**Week 3:** Production and initial edit
+**Week 4:** Post-production, revisions, and final delivery
+
+**Final Deliverables Required:**
+- Master video file (30 seconds, 16:9, 4K)
+- YouTube-optimized version (30 seconds, 1080p)
+- Instagram Feed square version (30 seconds, 1080x1080)
+- Instagram Stories version (15 seconds, 9:16)
+- TikTok version (15 seconds, 9:16, platform-optimized)
+- YouTube Bumper version (6 seconds, 16:9)
+- Caption/subtitle files (.SRT format)
+- Behind-the-scenes content for social media
+
+## Success Metrics
+**Engagement Metrics:**
+- Video completion rate: Target 75%+
+- Click-through rate: Target 3.5%+
+- Social shares: Target 1,000+ shares
+- Comments and engagement: Target 500+ interactions
+
+**Business Metrics:**
+- Website traffic from video: 50,000+ visits
+- Conversion rate: 2.5%+ from video traffic
+- New customer acquisitions: 1,000+ customers
+- Subscription sign-ups: 5,000+ new subscribers
+- Revenue attribution: $300,000+ from video campaign
+
+## Budget Breakdown
+- Pre-production: $20,000 (13%)
+- Production: $50,000 (33%)
+- Post-production: $30,000 (20%)
+- Media spend: $40,000 (27%)
+- Contingency: $10,000 (7%)
+
+## Approval Process
+**Required Approvals:**
+1. Creative concept and script approval
+2. Final video approval before media spend
+3. Legal clearance for music and talent
+4. Brand compliance review
+5. Platform-specific version approvals
+
+**Stakeholder Sign-offs:**
+- Marketing Director: Overall campaign approval
+- Brand Manager: Brand compliance and messaging
+- Legal Team: Rights and clearances
+- CEO: Final budget and creative approval
+
+## Additional Requirements
+- All talent must sign usage rights for 12 months
+- Behind-the-scenes content for social media inclusion
+- Raw footage archive for future use
+- Detailed production notes and asset inventory
+- Performance reporting dashboard setup
+- A/B testing capabilities for different creative versions

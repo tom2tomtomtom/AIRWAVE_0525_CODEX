@@ -29,6 +29,39 @@ This codebase previously suffered catastrophic damage from automated "fix-all" s
 
 AIRWAVE is a comprehensive AI-powered video marketing platform that enables users to create, manage, and deploy video campaigns. The platform integrates multiple AI services (OpenAI, Anthropic, ElevenLabs) with video generation (Creatomate), asset management, and campaign workflows.
 
+## 🎬 **REAL VIDEO GENERATION INSTRUCTIONS**
+
+### **Production Environment Setup**
+
+- **Live Deployment:** https://airwave-complete.netlify.app/
+- **All API Keys Configured:** OpenAI, ElevenLabs, Creatomate are set up in Netlify environment variables
+- **Real Video Generation:** Use the deployed app with Playwright to generate actual MP4 outputs
+
+### **How to Generate Real Videos:**
+
+1. **Use the Production URL:** https://airwave-complete.netlify.app/
+2. **All environment variables are configured in Netlify** (not in local .env)
+3. **Use Playwright to interact with live APIs** for real video generation
+4. **Test video generation endpoints directly** on the deployed platform
+
+### **Real Video Generation Commands:**
+
+```bash
+# Test real video generation on production
+npx playwright test tests/real-video-generation.spec.ts --headed
+
+# Use production APIs for actual MP4 creation
+# All API keys (OpenAI, ElevenLabs, Creatomate) are live in Netlify
+```
+
+### **Production API Endpoints for Real Videos:**
+
+- `https://airwave-complete.netlify.app/api/video/generate` (Live OpenAI + Creatomate)
+- `https://airwave-complete.netlify.app/api/ai/generate` (Live AI script generation)
+- `https://airwave-complete.netlify.app/api/elevenlabs/generate` (Live voice generation)
+
+**IMPORTANT:** Don't use local environment - use the live Netlify deployment with configured API keys for real video outputs.
+
 ## 🛡️ **SAFE DEVELOPMENT WORKFLOW**
 
 ### **1. Before ANY Change**

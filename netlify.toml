@@ -15,20 +15,27 @@
   ENABLE_AI_FEATURES = "true"
   ENABLE_VIDEO_GENERATION = "true"
   ENABLE_SOCIAL_PUBLISHING = "true"
-  # Security: All sensitive values should be set in Netlify UI Environment Variables
-  # These are build-time placeholders only - real values must be configured in deployment
-  JWT_SECRET = "demo_jwt_secret_key_for_build_only_12345678901234567890"
-  OPENAI_API_KEY = "sk-demo_openai_key_placeholder_for_build_testing_only"
-  # Supabase Demo Configuration - Replace with real values in Netlify UI
-  NEXT_PUBLIC_SUPABASE_URL = "https://your-project.supabase.co"
-  NEXT_PUBLIC_SUPABASE_ANON_KEY = "your-anon-key-here"
-  # For demo mode, disable auth requirements
-  DEMO_MODE = "true"
-  DISABLE_AUTH = "true"
+  # Production mode - use real API keys from Netlify environment variables
+  # DO NOT override environment variables here - let Netlify UI values take precedence
 
 [functions]
-  external_node_modules = ["openai"]
+  external_node_modules = ["openai", "@supabase/supabase-js", "elevenlabs"]
   node_bundler = "esbuild"
+
+[functions."api/ai/generate"]
+  timeout = 60
+
+[functions."api/video/generate"]
+  timeout = 300
+
+[functions."api/elevenlabs/generate"]
+  timeout = 60
+
+[functions."api/auth/login"]
+  timeout = 30
+
+[functions."api/health"]
+  timeout = 10
 
 [functions."api/flow/generate-copy"]
   timeout = 26
