@@ -42,7 +42,6 @@ const nextConfig = {
 
   // Bundle optimization
   experimental: {
-    isrMemoryCacheSize: 0, // Disable ISR cache for Netlify
     optimizePackageImports: [
       '@mui/material',
       '@mui/icons-material',
