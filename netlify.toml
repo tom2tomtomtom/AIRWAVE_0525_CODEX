@@ -5,6 +5,11 @@
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
+  
+  [plugins.inputs]
+    # Explicitly disable static export
+    generateStaticHTML = false
+    buildOnly = false
 
 [build.environment]
   NODE_VERSION = "20.11.0"
@@ -15,6 +20,9 @@
   ENABLE_AI_FEATURES = "true"
   ENABLE_VIDEO_GENERATION = "true"
   ENABLE_SOCIAL_PUBLISHING = "true"
+  # Force Next.js server mode - prevent static export
+  NETLIFY_NEXT_PLUGIN_SKIP = "false"
+  NEXT_EXPORT = "false"
   # Production mode - use real API keys from Netlify environment variables
   # DO NOT override environment variables here - let Netlify UI values take precedence
 
