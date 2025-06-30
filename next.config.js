@@ -12,6 +12,10 @@ try {
 const nextConfig = {
   reactStrictMode: true,
 
+  // Explicitly disable static export for Netlify Functions
+  output: undefined, // Ensure we don't force static export
+  trailingSlash: false,
+
   // Performance optimizations
   swcMinify: true,
   compiler: {
@@ -58,7 +62,7 @@ const nextConfig = {
 
   // Exclude test files and directories from pages
   pageExtensions: ['tsx', 'ts', 'jsx', 'js'],
-  
+
   // Exclude test files from being treated as pages
   async headers() {
     return [
@@ -90,11 +94,11 @@ const nextConfig = {
         contextRegExp: /src/,
       })
     );
-    
+
     // Additional module resolution to exclude test files from pages
     const originalResolve = config.resolve.modules;
     config.resolve.modules = originalResolve;
-    
+
     // Filter out test files during module resolution
     const originalResolveLoader = config.resolveLoader;
     config.resolveLoader = {
