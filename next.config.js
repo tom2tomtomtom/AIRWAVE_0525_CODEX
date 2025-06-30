@@ -12,8 +12,7 @@ try {
 const nextConfig = {
   reactStrictMode: true,
 
-  // Explicitly disable static export for Netlify Functions
-  output: undefined, // Ensure we don't force static export
+  // Ensure server-side rendering for API routes (not static export)
   trailingSlash: false,
 
   // Performance optimizations
@@ -43,6 +42,7 @@ const nextConfig = {
 
   // Bundle optimization
   experimental: {
+    isrMemoryCacheSize: 0, // Disable ISR cache for Netlify
     optimizePackageImports: [
       '@mui/material',
       '@mui/icons-material',
