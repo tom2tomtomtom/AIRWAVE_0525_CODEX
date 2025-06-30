@@ -3,6 +3,7 @@ import { SupabaseClient } from '@supabase/supabase-js';
 import { Database } from '@/types/database';
 import { validateSupabaseConfig } from './config';
 import { loggers } from '@/lib/logger';
+import { isDemoMode, getMockSupabaseClient } from '@/lib/demo-mode';
 
 // Singleton instance to prevent multiple GoTrueClient warnings
 let browserClientInstance: SupabaseClient<Database> | null = null;
@@ -23,40 +24,36 @@ export function createSupabaseBrowserClient(): SupabaseClient<Database> {
 
   try {
     // Create new instance with singleton pattern
-    browserClientInstance = createBrowserClient<Database>(
-      config.url,
-      config.anonKey,
-      {
-        auth: {
-          autoRefreshToken: true,
-          persistSession: true,
-          detectSessionInUrl: true,
-          storageKey: 'airwave-auth-token',
-          storage: window.localStorage,
+    browserClientInstance = createBrowserClient<Database>(config.url, config.anonKey, {
+      auth: {
+        autoRefreshToken: true,
+        persistSession: true,
+        detectSessionInUrl: true,
+        storageKey: 'airwave-auth-token',
+        storage: window.localStorage,
+      },
+      global: {
+        headers: {
+          'x-application-name': 'airwave',
+          'x-client-info': 'airwave-web',
         },
-        global: {
-          headers: {
-            'x-application-name': 'airwave',
-            'x-client-info': 'airwave-web',
-          },
+      },
+      db: {
+        schema: 'public',
+      },
+      realtime: {
+        params: {
+          eventsPerSecond: 10,
         },
-        db: {
-          schema: 'public',
-        },
-        realtime: {
-          params: {
-            eventsPerSecond: 10,
-          },
-        },
-      }
-    );
+      },
+    });
 
     loggers.supabase.info('Browser Supabase client initialized');
-    
+
     if (!browserClientInstance) {
       throw new Error('Failed to create Supabase client instance');
     }
-    
+
     return browserClientInstance;
   } catch (error: any) {
     loggers.supabase.error('Failed to create browser Supabase client', error);
@@ -69,6 +66,12 @@ export function getSupabaseBrowserClient(): SupabaseClient<Database> {
   if (typeof window === 'undefined') {
     throw new Error('Browser Supabase client can only be used in browser environment');
   }
+
+  // Return mock client in demo mode
+  if (isDemoMode()) {
+    return getMockSupabaseClient() as SupabaseClient<Database>;
+  }
+
   return createSupabaseBrowserClient();
 }
 

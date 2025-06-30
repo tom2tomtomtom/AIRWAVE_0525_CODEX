@@ -8,24 +8,21 @@ import { Database } from '@/types/database';
 import { handleSupabaseError } from './supabase/errors';
 import { withRetry, queryWithCache } from './supabase/helpers';
 import { loggers } from './logger';
+import { isDemoMode, getMockSupabaseClient } from './demo-mode';
 
 // Export the primary client getter based on environment
-export const supabase = typeof window !== 'undefined' ? getSupabaseBrowserClient() : null; // Server components should use createServerSupabaseClient
+export const supabase =
+  typeof window !== 'undefined'
+    ? isDemoMode()
+      ? (getMockSupabaseClient() as any)
+      : getSupabaseBrowserClient()
+    : null; // Server components should use createServerSupabaseClient
 
 // Re-export essential functions from the new module structure
-export {
-  getSupabaseBrowserClient,
-} from './supabase/client';
-export {
-  createServerSupabaseClient,
-} from './supabase/server';
-export {
-  getAdminSupabaseClient,
-} from './supabase/admin';
-export {
-  validateSupabaseConfig,
-  hasServiceRoleAccess,
-} from './supabase/config';
+export { getSupabaseBrowserClient } from './supabase/client';
+export { createServerSupabaseClient } from './supabase/server';
+export { getAdminSupabaseClient } from './supabase/admin';
+export { validateSupabaseConfig, hasServiceRoleAccess } from './supabase/config';
 
 // Legacy function - Get service role client (server-side only)
 export const getServiceSupabase = () => {
@@ -63,7 +60,7 @@ export async function getUserFromToken(
   } catch (error: any) {
     await handleSupabaseError(error, {
       operation: 'getUserFromToken',
-      metadata: { hasToken: !!token  }
+      metadata: { hasToken: !!token },
     });
     throw error;
   }

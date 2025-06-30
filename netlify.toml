@@ -19,8 +19,12 @@
   # These are build-time placeholders only - real values must be configured in deployment
   JWT_SECRET = "demo_jwt_secret_key_for_build_only_12345678901234567890"
   OPENAI_API_KEY = "sk-demo_openai_key_placeholder_for_build_testing_only"
-  NEXT_PUBLIC_SUPABASE_URL = "https://demo.supabase.co"
-  NEXT_PUBLIC_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRlbW8iLCJyb2xlIjoiYW5vbiIsImlhdCI6MTY0MTQ2NjAyNCwiZXhwIjoxOTU3MDQyMDI0fQ.8B69e9wOlbdYO7_Gu2qGYQW5r8n5p9M7X9r5s8o1wPs"
+  # Supabase Demo Configuration - Replace with real values in Netlify UI
+  NEXT_PUBLIC_SUPABASE_URL = "https://your-project.supabase.co"
+  NEXT_PUBLIC_SUPABASE_ANON_KEY = "your-anon-key-here"
+  # For demo mode, disable auth requirements
+  DEMO_MODE = "true"
+  DISABLE_AUTH = "true"
 
 [functions]
   external_node_modules = ["openai"]
@@ -43,6 +47,7 @@
     X-XSS-Protection = "1; mode=block"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
+    Content-Security-Policy = "default-src 'self'; font-src 'self' fonts.gstatic.com; style-src 'self' 'unsafe-inline' fonts.googleapis.com; img-src 'self' data: https: blob:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests; script-src 'self' 'unsafe-inline' 'unsafe-eval' 'unsafe-hashes'; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.openai.com https://api.elevenlabs.io https://api.creatomate.com https://graph.facebook.com https://api.twitter.com https://api.linkedin.com"
 
 # Headers for fonts
 [[headers]]
