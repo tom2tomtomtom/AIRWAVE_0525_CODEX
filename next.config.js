@@ -12,8 +12,7 @@ try {
 const nextConfig = {
   reactStrictMode: true,
 
-  // Force standalone output for serverless functions
-  output: 'standalone',
+  // Use default output for Netlify plugin
   trailingSlash: false,
 
   // Performance optimizations
